@@ -1,16 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cryptlib", "cryptlib.2008.vcproj", "{3423EC9A-52E4-4A4D-9753-EDEBC38785EF}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cryptlib", "cryptlib.2008.vcxproj", "{3423EC9A-52E4-4A4D-9753-EDEBC38785EF}"
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 1
-		SccProjectName0 = Perforce\u0020Project
-		SccLocalPath0 = ..
-		SccProvider0 = MSSCCI:Perforce\u0020SCM
-		SccProjectFilePathRelativizedFromConnection0 = cryptopp\\
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		DLL-Import Debug|Win32 = DLL-Import Debug|Win32
 		DLL-Import Debug|x64 = DLL-Import Debug|x64
@@ -41,5 +36,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30DF6468-B8B8-40E8-947E-80F2EAAB76CF}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,5 @@
+# Generated build files
+.vs
+/**/Debug/
+/**/Release/
+/**/Win32/
