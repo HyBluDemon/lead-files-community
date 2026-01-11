@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <string.h>
 #include <stdio.h>
 #include "../../libthecore/include/memcpy.h"

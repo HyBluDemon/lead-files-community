@@ -1,7 +1,8 @@
-//#define __MATRIX_MAIN_ENABLE__ // define 되어 있으면 main 함수가 포함된다. Unit test 시에 사용
-#ifndef __MATRIX_MAIN_ENABLE__
 #include "stdafx.h"
-#else
+
+//#define __MATRIX_MAIN_ENABLE__ // define 되어 있으면 main 함수가 포함된다. Unit test 시에 사용
+
+#ifdef __MATRIX_MAIN_ENABLE__
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

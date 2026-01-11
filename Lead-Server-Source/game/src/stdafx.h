@@ -1,3 +1,5 @@
+#pragma once
+
 // Basic features
 // Enable or disable memory pooling for specific object types
 //#define M2_USE_POOL
@@ -49,3 +51,12 @@
 
 #define IN
 #define OUT
+
+// TODO: Remove workaround by using mysqlclient build from vcpkg
+//       This is just needed to make the compiler shut up for now.
+extern "C" {
+	FILE* __cdecl __iob_func(void) {
+		static FILE* iob[3] = { stdin, stdout, stderr };
+		return iob[0];
+	}
+}

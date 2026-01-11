@@ -7,8 +7,8 @@
 #include <string>
 
 #ifdef _WIN32
-// needed only for using openssl
-#pragma comment(lib, "libeay32")
+// TODO: Check for what this lib is needed exactly
+// #pragma comment(lib, "libeay32")
 #endif
 
 struct rsa_st;

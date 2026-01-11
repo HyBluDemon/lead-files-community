@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 //#define __MAIN__
 #ifdef __MAIN__
 
@@ -15,10 +17,7 @@ typedef unsigned char BYTE;
 typedef unsigned long DWORD;
 
 #else
-
-#include "stdafx.h"
 #include "ip_ban.h"
-
 #endif
 
 class IP

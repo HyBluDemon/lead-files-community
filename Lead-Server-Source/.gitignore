@@ -4,6 +4,12 @@
 /**/Release/
 /**/*.idb
 /**/*.pdb
+/libgame/**/*.lib
+/libpoly/**/*.lib
+/liblua/**/*.lib
+/libpoly/**/*.lib
+/libserverkey/**/*.lib
+/libsql/**/*.lib
 /db/db_d.exe
 /game/game_d.exe
 /game/src/quest/qc.exe

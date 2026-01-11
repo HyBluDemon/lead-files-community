@@ -46,7 +46,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader />
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -55,7 +55,7 @@
     <Link>
       <AdditionalDependencies>mysqlclient.lib;ws2_32.lib;DevIL-1.7.8d.lib;DevILU-1.7.8d.lib;DevILUT-1.7.8d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_d.exe</OutputFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)../../libmysql/6.0.2/win32/lib;$(ProjectDir)../../libdevil/win32/lib;$(ProjectDir)../../../Extern/lib;$(ProjectDir)../../../Extern/openssl/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)../../libmysql/6.0.2/win32/lib;$(ProjectDir)../../libdevil/win32/lib;$(SolutionDir)../Lead-Extern/lib;$(ProjectDir)../../../Extern/openssl/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -162,7 +162,9 @@
     <ClCompile Include="marriage.cpp" />
     <ClCompile Include="matrix_card.cpp" />
     <ClCompile Include="messenger_manager.cpp" />
-    <ClCompile Include="minilzo.c" />
+    <ClCompile Include="minilzo.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="mining.cpp" />
     <ClCompile Include="mob_manager.cpp" />
     <ClCompile Include="monarch.cpp" />
@@ -222,6 +224,9 @@
     <ClCompile Include="skill_power.cpp" />
     <ClCompile Include="SpeedServer.cpp" />
     <ClCompile Include="start_position.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="target.cpp" />
     <ClCompile Include="text_file_loader.cpp" />
     <ClCompile Include="threeway_war.cpp" />
