@@ -82,7 +82,6 @@
     <ClCompile Include="GuildManager.cpp" />
     <ClCompile Include="ItemAwardManager.cpp" />
     <ClCompile Include="ItemIDRangeManager.cpp" />
-    <ClCompile Include="Lock.cpp" />
     <ClCompile Include="LoginData.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Marriage.cpp" />
@@ -110,7 +109,6 @@
     <ClInclude Include="GuildManager.h" />
     <ClInclude Include="ItemAwardManager.h" />
     <ClInclude Include="ItemIDRangeManager.h" />
-    <ClInclude Include="Lock.h" />
     <ClInclude Include="LoginData.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Marriage.h" />
