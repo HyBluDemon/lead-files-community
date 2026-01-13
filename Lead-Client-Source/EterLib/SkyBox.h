@@ -104,7 +104,7 @@ protected:
 	typedef std::vector<CSkyObjectQuad> TSkyObjectQuadVector;
 	typedef TSkyObjectQuadVector::iterator TSkyObjectQuadIterator;
 	
-	typedef struct
+	typedef struct SSkyObjectFace
 	{
 		void StartTransition();
 		bool Update();
@@ -112,7 +112,7 @@ protected:
 		std::string m_strfacename;
 		std::string m_strFaceTextureFileName;
 		TSkyObjectQuadVector m_SkyObjectQuadVector;
-	}TSkyObjectFace;
+	} TSkyObjectFace;
 
 	typedef std::map <std::string, CGraphicImageInstance*> TGraphicImageInstanceMap;
 
