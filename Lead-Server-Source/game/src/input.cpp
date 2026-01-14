@@ -17,7 +17,6 @@
 #include "priv_manager.h"
 #include "castle.h"
 #include "dev_log.h"
-#include "HackShield_Impl.h"
 
 extern time_t get_global_time();
 extern bool g_bNoPasspod;

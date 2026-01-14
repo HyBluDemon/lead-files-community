@@ -105,11 +105,6 @@ extern bool g_protectNormalPlayer;      // 범법자가 "평화모드" 인 일반유저를 공�
 
 extern DWORD g_GoldDropTimeLimitValue;
 
-extern bool isHackShieldEnable;
-extern int  HackShield_FirstCheckWaitTime;
-extern int  HackShield_CheckCycleTime;
-extern bool bXTrapEnabled;
-
 extern int gPlayerMaxLevel;
 
 extern bool g_BlockCharCreation;

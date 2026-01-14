@@ -118,12 +118,6 @@ void		LoadValidCRCList();
 bool		LoadClientVersion();
 bool            g_protectNormalPlayer   = false;        // 범법자가 "평화모드" 인 일반유저를 공격하지 못함
 
-bool		isHackShieldEnable = false;
-int			HackShield_FirstCheckWaitTime = passes_per_sec * 30;
-int			HackShield_CheckCycleTime = passes_per_sec * 180;
-
-bool		bXTrapEnabled = false;
-
 int gPlayerMaxLevel = 99;
 
 bool g_BlockCharCreation = false;
@@ -1038,46 +1032,6 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("protect_normal_player")
 		{
 			str_to_number(g_protectNormalPlayer, value_string);
-		}
-
-		TOKEN("hackshield_enable")
-		{
-			int flag = 0;
-
-			str_to_number(flag, value_string);
-
-			//if (1 == flag && LC_IsEurope() )
-			if (1 == flag)
-			{
-				isHackShieldEnable = true;
-			}
-		}
-
-		TOKEN("hackshield_first_check_time")
-		{
-			int secs = 30;
-			str_to_number(secs, value_string);
-
-			HackShield_FirstCheckWaitTime = passes_per_sec * secs;
-		}
-
-		TOKEN("hackshield_check_cycle_time")
-		{
-			int secs = 180;
-			str_to_number(secs, value_string);
-
-			HackShield_CheckCycleTime = passes_per_sec * secs;
-		}
-
-		TOKEN("xtrap_enable")
-		{
-			int flag = 0;
-			str_to_number(flag, value_string);
-
-			if (1 == flag )
-			{
-				bXTrapEnabled = true;
-			}
 		}
 
 		TOKEN("pk_protect_level")

@@ -47,14 +47,6 @@ INCDIR += -I../../../Extern/include
 LIBDIR += -L../../../Extern/lib
 LIBS += -lcryptopp -lgtest
 
-# HackShield
-INCDIR += -I../../libhackshield/include
-LIBDIR += -L../../libhackshield/lib
-LIBS += -lanticpxsvr
-
-# XTrap
-INCDIR += -I../../libxtrap/include
-
 # openssl
 #INCDIR += -I/usr/include
 #LIBS += -lssl
@@ -98,8 +90,8 @@ CPPFILE = BattleArena.cpp FSM.cpp MarkConvert.cpp MarkImage.cpp MarkManager.cpp 
 		  skill.cpp start_position.cpp target.cpp text_file_loader.cpp trigger.cpp utils.cpp vector.cpp war_map.cpp\
 		  wedding.cpp xmas_event.cpp version.cpp panama.cpp threeway_war.cpp map_location.cpp auth_brazil.cpp\
 		  BlueDragon.cpp BlueDragon_Binder.cpp DragonLair.cpp questlua_dragonlair.cpp\
-		  HackShield.cpp HackShield_Impl.cpp char_hackshield.cpp skill_power.cpp affect.cpp\
-		  SpeedServer.cpp questlua_speedserver.cpp XTrapManager.cpp\
+		  skill_power.cpp affect.cpp\
+		  SpeedServer.cpp questlua_speedserver.cpp\
 		  auction_manager.cpp ClientPackageCryptInfo.cpp cipher.cpp\
 		  buff_on_attributes.cpp check_server.cpp dragon_soul_table.cpp DragonSoul.cpp\
 		  group_text_parse_tree.cpp char_dragonsoul.cpp questlua_dragonsoul.cpp\

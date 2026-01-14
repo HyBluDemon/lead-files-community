@@ -58,10 +58,8 @@
 #include "threeway_war.h"
 #include "auth_brazil.h"
 #include "DragonLair.h"
-#include "HackShield.h"
 #include "skill_power.h"
 #include "SpeedServer.h"
-#include "XTrapManager.h"
 #include "DragonSoul.h"
 #include <boost/bind.hpp>
 
@@ -462,9 +460,6 @@ int main(int argc, char **argv)
 	CThreeWayWar	threeway_war;
 	CDragonLairManager	dl_manager;
 
-	CHackShieldManager	HSManager;
-	CXTrapManager		XTManager;
-
 	CSpeedServerManager SSManager;
 	DSManager dsManager;
 
@@ -510,37 +505,6 @@ int main(int argc, char **argv)
 
 	//if game server
 	if (!g_bAuthServer)
-	{
-		//hackshield
-		if (isHackShieldEnable)
-		{
-			if (!HSManager.Initialize())
-			{
-				fprintf(stderr, "Failed To Initialize HS");
-				CleanUpForEarlyExit();
-				return 0;
-			}
-		}
-
-		//xtrap
-		if(bXTrapEnabled)
-		{
-			if (!XTManager.LoadXTrapModule())
-			{
-				CleanUpForEarlyExit();
-				return 0;
-			}
-		}
-	}
-
-	// Client PackageCrypt
-
-	//TODO : make it config
-	const std::string strPackageCryptInfoDir = "package/";
-	if( !desc_manager.LoadClientPackageCryptInfo( strPackageCryptInfoDir.c_str() ) )
-	{
-		sys_err("Failed to Load ClientPackageCryptInfo File(%s)", strPackageCryptInfoDir.c_str());	
-	}
 
 #if defined (__FreeBSD__) && defined(__FILEMONITOR__)
 	PFN_FileChangeListener pPackageNotifyFunc =  &(DESC_MANAGER::NotifyClientPackageFileChanged);
@@ -604,16 +568,6 @@ int main(int argc, char **argv)
 	quest_manager.Destroy();
 	sys_log(0, "<shutdown> Destroying building::CManager...");
 	building_manager.Destroy();
-
-	if (!g_bAuthServer)
-	{
-		if (isHackShieldEnable)
-		{
-			sys_log(0, "<shutdown> Releasing HackShield manager...");
-			HSManager.Release();
-		}
-	}
-
 	sys_log(0, "<shutdown> Flushing TrafficProfiler...");
 	trafficProfiler.Flush();
 

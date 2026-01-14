@@ -70,9 +70,6 @@
     <ClCompile Include="char_dragonsoul.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="char_hackshield.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="char_horse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -200,12 +197,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="guild_war.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HackShield.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HackShield_Impl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="horse_rider.cpp">
@@ -508,9 +499,6 @@
     <ClCompile Include="xmas_event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="XTrapManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -682,12 +670,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="guild_manager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HackShield.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HackShield_Impl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="horse_rider.h">
@@ -919,9 +901,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="xmas_event.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XTrapManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="check_server.h" />

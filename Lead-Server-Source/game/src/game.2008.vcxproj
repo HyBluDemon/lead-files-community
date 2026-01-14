@@ -97,7 +97,6 @@
     <ClCompile Include="char_battle.cpp" />
     <ClCompile Include="char_change_empire.cpp" />
     <ClCompile Include="char_dragonsoul.cpp" />
-    <ClCompile Include="char_hackshield.cpp" />
     <ClCompile Include="char_horse.cpp" />
     <ClCompile Include="char_item.cpp" />
     <ClCompile Include="char_manager.cpp" />
@@ -141,8 +140,6 @@
     <ClCompile Include="guild.cpp" />
     <ClCompile Include="guild_manager.cpp" />
     <ClCompile Include="guild_war.cpp" />
-    <ClCompile Include="HackShield.cpp" />
-    <ClCompile Include="HackShield_Impl.cpp" />
     <ClCompile Include="horsename_manager.cpp" />
     <ClCompile Include="horse_rider.cpp" />
     <ClCompile Include="input.cpp" />
@@ -248,7 +245,6 @@
     <ClCompile Include="war_map.cpp" />
     <ClCompile Include="wedding.cpp" />
     <ClCompile Include="xmas_event.cpp" />
-    <ClCompile Include="XTrapManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="affect.h" />
@@ -308,8 +304,6 @@
     <ClInclude Include="group_text_parse_tree.h" />
     <ClInclude Include="guild.h" />
     <ClInclude Include="guild_manager.h" />
-    <ClInclude Include="HackShield.h" />
-    <ClInclude Include="HackShield_Impl.h" />
     <ClInclude Include="horsename_manager.h" />
     <ClInclude Include="horse_rider.h" />
     <ClInclude Include="IFileMonitor.h" />
@@ -387,7 +381,6 @@
     <ClInclude Include="war_map.h" />
     <ClInclude Include="wedding.h" />
     <ClInclude Include="xmas_event.h" />
-    <ClInclude Include="XTrapManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="any_function.inc" />

@@ -363,10 +363,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\char_hackshield.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\char_horse.cpp"
 				>
 			</File>
@@ -1404,14 +1400,6 @@
 			</File>
 			<File
 				RelativePath=".\xmas_event.h"
-				>
-			</File>
-			<File
-				RelativePath=".\XTrapManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\XTrapManager.h"
 				>
 			</File>
 		</Filter>
