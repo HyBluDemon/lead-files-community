@@ -167,8 +167,6 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 void CInputProcessor::Pong(LPDESC d)
 {
 	d->SetPong(true);
-
-	extern bool Metin2Server_IsInvalid();
 }
 
 void CInputProcessor::Handshake(LPDESC d, const char * c_pData)
