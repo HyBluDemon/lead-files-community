@@ -1514,7 +1514,7 @@ PyObject* netSendRequestRefineInfoPacket(PyObject* poSelf, PyObject* poArgs)
 
 //	CPythonNetworkStream& rns=CPythonNetworkStream::Instance();
 //	rns.SendRequestRefineInfoPacket(iSlotIndex);
-	assert(!"netSendRequestRefineInfoPacket - ´õÀÌ»ó »ç¿ëÇÏÁö ¾Ê´Â ÇÔ¼ö ÀÔ´Ï´Ù");
+	assert(!"netSendRequestRefineInfoPacket - ë”ì´ìƒ ì‚¬ìš©í•˜ì§€ ì•ŠëŠ” í•¨ìˆ˜ ì…ë‹ˆë‹¤");
 
 	return Py_BuildNone();
 }

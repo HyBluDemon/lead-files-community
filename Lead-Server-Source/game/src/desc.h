@@ -46,14 +46,14 @@ class CLoginKey
 };
 
 
-// sequence ¹ö±× Ã£±â¿ë µ¥ÀÌÅ¸
+// sequence ë²„ê·¸ ì°¾ê¸°ìš© ë°ì´íƒ€
 struct seq_t
 {
 	BYTE	hdr;
 	BYTE	seq;
 };
 typedef std::vector<seq_t>	seq_vector_t;
-// sequence ¹ö±× Ã£±â¿ë µ¥ÀÌÅ¸
+// sequence ë²„ê·¸ ì°¾ê¸°ìš© ë°ì´íƒ€
 
 class DESC
 {
@@ -114,7 +114,7 @@ class DESC
 
 		void			Log(const char * format, ...);
 
-		// ÇÚµå½¦ÀÌÅ© (½Ã°£ µ¿±âÈ­)
+		// í•¸ë“œì‰ì´í¬ (ì‹œê°„ ë™ê¸°í™”)
 		void			StartHandshake(DWORD _dw);
 		void			SendHandshake(DWORD dwCurTime, long lNewDelta);
 		bool			HandshakeProcess(DWORD dwTime, long lDelta, bool bInfiniteRetry=false);
@@ -135,7 +135,7 @@ class DESC
 		const DWORD *	GetDecryptionKey() const { return &m_adwDecryptionKey[0]; }
 #endif
 
-		// Á¦±¹
+		// ì œêµ­
 		BYTE			GetEmpire();
 
 		// for p2p
@@ -144,7 +144,7 @@ class DESC
 		void			DisconnectOfSameLogin();
 
 		void			SetAdminMode();
-		bool			IsAdminMode();		// Handshake ¿¡¼­ ¾îµå¹Î ¸í·ÉÀ» ¾µ¼öÀÖ³ª?
+		bool			IsAdminMode();		// Handshake ì—ì„œ ì–´ë“œë¯¼ ëª…ë ¹ì„ ì“¸ìˆ˜ìˆë‚˜?
 
 		void			SetPong(bool b);
 		bool			IsPong();
@@ -219,7 +219,7 @@ class DESC
 		WORD			m_wP2PPort;
 		BYTE			m_bP2PChannel;
 
-		bool			m_bAdminMode; // Handshake ¿¡¼­ ¾îµå¹Î ¸í·ÉÀ» ¾µ¼öÀÖ³ª?
+		bool			m_bAdminMode; // Handshake ì—ì„œ ì–´ë“œë¯¼ ëª…ë ¹ì„ ì“¸ìˆ˜ìˆë‚˜?
 		bool			m_bPong;
 
 		int			m_iCurrentSequence;
@@ -271,7 +271,7 @@ class DESC
 		void RawPacket(const void * c_pvData, int iSize);
 		void ChatPacket(BYTE type, const char * format, ...);
 
-		/* ½ÃÄö½º ¹ö±× Ã£±â¿ë ÄÚµå */
+		/* ì‹œí€€ìŠ¤ ë²„ê·¸ ì°¾ê¸°ìš© ì½”ë“œ */
 	public:
 		seq_vector_t	m_seq_vector;
 		void			push_seq (BYTE hdr, BYTE seq);

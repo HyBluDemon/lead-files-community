@@ -99,7 +99,7 @@ void CPythonNetworkStream::SetLoginPhase()
 		else
 			SendLoginPacket(m_stID.c_str(), m_stPassword.c_str());
 
-		// ºñ¹Ğ¹øÈ£¸¦ ¸Ş¸ğ¸®¿¡ °è¼Ó °®°í ÀÖ´Â ¹®Á¦°¡ ÀÖ¾î¼­, »ç¿ë Áï½Ã ³¯¸®´Â °ÍÀ¸·Î º¯°æ
+		// ë¹„ë°€ë²ˆí˜¸ë¥¼ ë©”ëª¨ë¦¬ì— ê³„ì† ê°–ê³  ìˆëŠ” ë¬¸ì œê°€ ìˆì–´ì„œ, ì‚¬ìš© ì¦‰ì‹œ ë‚ ë¦¬ëŠ” ê²ƒìœ¼ë¡œ ë³€ê²½
 		ClearLoginInfo();
 		CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();
@@ -111,7 +111,7 @@ void CPythonNetworkStream::SetLoginPhase()
 		else
 			SendLoginPacket(m_stID.c_str(), m_stPassword.c_str());
 
-		// ºñ¹Ğ¹øÈ£¸¦ ¸Ş¸ğ¸®¿¡ °è¼Ó °®°í ÀÖ´Â ¹®Á¦°¡ ÀÖ¾î¼­, »ç¿ë Áï½Ã ³¯¸®´Â °ÍÀ¸·Î º¯°æ
+		// ë¹„ë°€ë²ˆí˜¸ë¥¼ ë©”ëª¨ë¦¬ì— ê³„ì† ê°–ê³  ìˆëŠ” ë¬¸ì œê°€ ìˆì–´ì„œ, ì‚¬ìš© ì¦‰ì‹œ ë‚ ë¦¬ëŠ” ê²ƒìœ¼ë¡œ ë³€ê²½
 		ClearLoginInfo();
 		CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();

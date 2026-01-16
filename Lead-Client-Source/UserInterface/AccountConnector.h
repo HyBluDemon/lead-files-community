@@ -62,8 +62,8 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 		bool __AuthState_RecvHybridCryptSDB(int VarSize);
 
 		bool __AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CAccountConnector::*pfnDispatchPacket)());
-		// TODO:  Áö±Ý ÇöÀç´Â ÀÓ½Ã´Ù.  headerµÚ¿¡ size 4byte°¡ ¹«Á¶°Ç ¿Â´Ù´Â °¡Á¤ÀÓ.
-		// Á¦´ë·Î ÇÏ·Á¸é  Packet System RefactoringÇØ¾ß ÇÑ´Ù. 
+		// TODO:  ì§€ê¸ˆ í˜„ìž¬ëŠ” ìž„ì‹œë‹¤.  headerë’¤ì— size 4byteê°€ ë¬´ì¡°ê±´ ì˜¨ë‹¤ëŠ” ê°€ì •ìž„.
+		// ì œëŒ€ë¡œ í•˜ë ¤ë©´  Packet System Refactoringí•´ì•¼ í•œë‹¤. 
 		bool __AnalyzeVarSizePacket(UINT uHeader, bool (CAccountConnector::*pfnDispatchPacket)(int));
 
 #ifndef _IMPROVED_PACKET_ENCRYPTION_
