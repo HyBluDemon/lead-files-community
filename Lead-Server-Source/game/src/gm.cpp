@@ -49,7 +49,7 @@ void gm_new_insert( const tAdminInfo &rAdminInfo )
 
 }
 
-void gm_new_host_inert( const char * host )
+void gm_new_host_insert( const char * host )
 {
 	g_set_Host.insert( host );
 	sys_log( 0, "InsertGMHost(ip:%s)", host );
