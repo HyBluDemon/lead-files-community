@@ -4297,7 +4297,7 @@ bool CHARACTER::RequestToParty(LPCHARACTER leader)
 			return false;
 
 		case PERR_LVBOUNDARY:
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> -30 ~ +30 레벨 이내의 상대방만 초대할 수 있습니다.")); 
+			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<파티> -%d ~ +%d 레벨 이내의 상대방만 초대할 수 있습니다."), gPartyGapLevel, gPartyGapLevel); 
 			return false;
 
 		case PERR_LOWLEVEL:
@@ -4637,7 +4637,7 @@ CHARACTER::PartyJoinErrCode CHARACTER::IsPartyJoinableCondition(const LPCHARACTE
 
 static bool __party_can_join_by_level(LPCHARACTER leader, LPCHARACTER quest)
 {
-	return (abs(leader->GetLevel() - quest->GetLevel()) <= 30);
+	return (abs(leader->GetLevel() - quest->GetLevel()) <= gPartyGapLevel);
 }
 
 CHARACTER::PartyJoinErrCode CHARACTER::IsPartyJoinableMutableCondition(const LPCHARACTER pchLeader, const LPCHARACTER pchGuest)

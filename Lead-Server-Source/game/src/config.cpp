@@ -105,6 +105,7 @@ bool		LoadClientVersion();
 bool            g_protectNormalPlayer   = false;        // 범법자가 "평화모드" 인 일반유저를 공격하지 못함
 
 int gPlayerMaxLevel = 99;
+BYTE gPartyGapLevel = 30;
 
 bool g_BlockCharCreation = false;
 
@@ -1015,6 +1016,15 @@ void config_init(const string& st_localeServiceName)
 			gPlayerMaxLevel = MINMAX(1, gPlayerMaxLevel, PLAYER_MAX_LEVEL_CONST);
 
 			fprintf(stderr, "PLAYER_MAX_LEVEL: %d\n", gPlayerMaxLevel);
+		}
+
+		TOKEN("party_gap_level")
+		{
+			str_to_number(gPartyGapLevel, value_string);
+
+			gPlayerMaxLevel = MINMAX(1, gPartyGapLevel, PLAYER_MAX_LEVEL_CONST);
+
+			fprintf(stderr, "PARTY_GAP_LEVEL: %d\n", gPartyGapLevel);
 		}
 
 		TOKEN("block_char_creation")
