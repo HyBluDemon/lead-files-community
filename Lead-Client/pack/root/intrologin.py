@@ -51,6 +51,9 @@ elif localeInfo.IsHONGKONG():
 
 elif localeInfo.IsJAPAN():
 	FULL_BACK_IMAGE = True
+	
+elif localeInfo.IsBRAZIL():
+	LOGIN_DELAY_SEC = 60.0
 
 def IsFullBackImage():
 	global FULL_BACK_IMAGE
@@ -266,13 +269,13 @@ class LoginWindow(ui.ScriptWindow):
 
 		print "---------------------------------------------------------------------------- CLOSE LOGIN WINDOW "
 		#
-		# selectMusic¿¿ ¿¿¿¿¿¿ BGM¿¿ ¿¿¿¿¿¿ ¿¿¿ ¿¿ ü¿¿¿¿. 
+		# selectMusicï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ BGMï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½Î°ï¿½ ï¿½ï¿½ Ã¼Å©ï¿½Ñ´ï¿½. 
 		#
 		if musicInfo.loginMusic != "" and musicInfo.selectMusic != "":
 			snd.FadeOutMusic("BGM/"+musicInfo.loginMusic)
 
-		## NOTE : idEditLine¿¿ pwdEditLine¿¿ ¿¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿ ¿¿¿¿¿¿
-		##        Event¿¿ ¿¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿¿¿¿ ¿¿¿¿ - [levites]
+		## NOTE : idEditLineï¿½ï¿½ pwdEditLineï¿½ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½Ö¾î¼­
+		##        Eventï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½Ö¾ï¿½ß¸ï¿½ ï¿½Õ´Ï´ï¿½ - [levites]
 		self.idEditLine.SetTabEvent(0)
 		self.idEditLine.SetReturnEvent(0)
 		self.pwdEditLine.SetReturnEvent(0)
@@ -358,11 +361,11 @@ class LoginWindow(ui.ScriptWindow):
 
 	def SetPasswordEditLineFocus(self):
 		if localeInfo.IsEUROPE():
-			if self.idEditLine != None: #0000862: [M2EU] ¿¿¿¿¿â ¿¿¿ ¿¿¿¿: ¿¿¿¿¿ ¿¿¿¿ None ¿¿¿¿¿¿
+			if self.idEditLine != None: #0000862: [M2EU] ï¿½Î±ï¿½ï¿½ï¿½Ã¢ ï¿½Ë¾ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ None ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				self.idEditLine.SetText("")
-				self.idEditLine.SetFocus() #0000685: [M2EU] ¿¿¿¿¿/¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿ ¿¿¿¿ ¿¿¿¿: ¿¿¿¿¿¿ ¿¿¿¿¿¿ ¿¿¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿¿
+				self.idEditLine.SetFocus() #0000685: [M2EU] ï¿½ï¿½ï¿½Ìµï¿½/ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 
-			if self.pwdEditLine != None: #0000862: [M2EU] ¿¿¿¿¿â ¿¿¿ ¿¿¿¿: ¿¿¿¿¿ ¿¿¿¿ None ¿¿¿¿¿¿
+			if self.pwdEditLine != None: #0000862: [M2EU] ï¿½Î±ï¿½ï¿½ï¿½Ã¢ ï¿½Ë¾ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ None ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				self.pwdEditLine.SetText("")
 		else:
 			if self.pwdEditLine != None:
@@ -370,7 +373,10 @@ class LoginWindow(ui.ScriptWindow):
 
 	def OnEndCountDown(self):
 		self.isNowCountDown = False
-		self.timeOutMsg = False
+		if localeInfo.IsBRAZIL():
+			self.timeOutMsg = True
+		else:
+			self.timeOutMsg = False
 		self.OnConnectFailure()
 
 	def OnConnectFailure(self):
@@ -417,7 +423,7 @@ class LoginWindow(ui.ScriptWindow):
 				loginFailureMsg = localeInfo.LOGIN_FAILURE_UNKNOWN  + error
 
 
-		#0000685: [M2EU] ¿¿¿¿¿/¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿ ¿¿¿¿ ¿¿¿¿: ¿¿¿¿¿¿ ¿¿¿¿¿¿¿¿ ¿¿¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿¿
+		#0000685: [M2EU] ï¿½ï¿½ï¿½Ìµï¿½/ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 		loginFailureFunc=self.loginFailureFuncDict.get(error, self.SetPasswordEditLineFocus)
 
 		if app.loggined:
@@ -476,7 +482,10 @@ class LoginWindow(ui.ScriptWindow):
 			if self.virtualKeyboard:
 				self.VIRTUAL_KEY_ALPHABET_UPPERS = Suffle(localeInfo.VIRTUAL_KEY_ALPHABET_UPPERS)
 				self.VIRTUAL_KEY_ALPHABET_LOWERS = "".join([localeInfo.VIRTUAL_KEY_ALPHABET_LOWERS[localeInfo.VIRTUAL_KEY_ALPHABET_UPPERS.index(e)] for e in self.VIRTUAL_KEY_ALPHABET_UPPERS])
-				self.VIRTUAL_KEY_SYMBOLS = Suffle(localeInfo.VIRTUAL_KEY_SYMBOLS)
+				if localeInfo.IsBRAZIL():
+					self.VIRTUAL_KEY_SYMBOLS_BR = Suffle(localeInfo.VIRTUAL_KEY_SYMBOLS_BR)
+				else:
+					self.VIRTUAL_KEY_SYMBOLS = Suffle(localeInfo.VIRTUAL_KEY_SYMBOLS)
 				self.VIRTUAL_KEY_NUMBERS = Suffle(localeInfo.VIRTUAL_KEY_NUMBERS)
 				self.__VirtualKeyboard_SetAlphabetMode()
 			
@@ -558,7 +567,10 @@ class LoginWindow(ui.ScriptWindow):
 		if self.virtualKeyboardMode == "ALPHABET":
 			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_ALPHABET_UPPERS)
 		elif self.virtualKeyboardMode == "NUMBER":
-			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS)
+			if localeInfo.IsBRAZIL():
+				self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS_BR)
+			else:	
+				self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS)
 		else:
 			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_NUMBERS)
 			
@@ -569,8 +581,11 @@ class LoginWindow(ui.ScriptWindow):
 			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_ALPHABET_LOWERS)
 		elif self.virtualKeyboardMode == "NUMBER":
 			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_NUMBERS)			
-		else:	
-			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS)
+		else:
+			if localeInfo.IsBRAZIL():
+				self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS_BR)
+			else:	
+				self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS)
 			
 	def __VirtualKeyboard_SetAlphabetMode(self):
 		self.virtualKeyboardIsUpper = False
@@ -585,7 +600,10 @@ class LoginWindow(ui.ScriptWindow):
 	def __VirtualKeyboard_SetSymbolMode(self):		
 		self.virtualKeyboardIsUpper = False
 		self.virtualKeyboardMode = "SYMBOL"
-		self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS)
+		if localeInfo.IsBRAZIL():
+			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS_BR)
+		else:	
+			self.__VirtualKeyboard_SetKeys(self.VIRTUAL_KEY_SYMBOLS)
 				
 	def Connect(self, id, pwd):
 
@@ -621,18 +639,18 @@ class LoginWindow(ui.ScriptWindow):
 			execfile(loginInfoFileName, loginInfo)
 		except IOError:
 			print(\
-				"¿¿¿ ¿¿¿¿¿¿¿ ¿¿÷¿¿¿" + loginInfoFileName + "¿¿¿¿¿¿ ¿¿¿¿¿¿¿¿¿¿\n"\
+				"ï¿½Úµï¿½ ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï½Ã·ï¿½ï¿½ï¿½" + loginInfoFileName + "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û¼ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½\n"\
 				"\n"\
-				"¿¿¿¿:\n"\
+				"ï¿½ï¿½ï¿½ï¿½:\n"\
 				"================================================================\n"\
-				"addr=¿¿¿\n"\
-				"port=¿¿¿\n"\
-				"id=¿¿¿¿¿\n"\
-				"pwd=¿¿¿¿¿\n"\
-				"slot=¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿¿ (¿¿¿¿¿ -1¿¿¿ ¿¿¿ ¿¿¿¿ ¿¿¿¿)\n"\
-				"autoLogin=¿¿¿ ¿¿¿¿ ¿¿¿¿\n"
-				"autoSelect=¿¿¿ ¿¿¿¿ ¿¿¿¿\n"
-				"locale=(ymir) LC_Ymir ¿¿¿¿ ymir¿¿ ¿¿¿. ¿¿¿¿¿¿¿¿ ¿¿¿¿¿¿ korea¿¿ ¿¿¿\n"
+				"addr=ï¿½Ö¼ï¿½\n"\
+				"port=ï¿½ï¿½Æ®\n"\
+				"id=ï¿½ï¿½ï¿½Ìµï¿½\n"\
+				"pwd=ï¿½ï¿½Ð¹ï¿½È£\n"\
+				"slot=Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½Å³ï¿½ -1ï¿½Ì¸ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)\n"\
+				"autoLogin=ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n"
+				"autoSelect=ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n"
+				"locale=(ymir) LC_Ymir ï¿½Ï°ï¿½ï¿½ ymirï¿½ï¿½ ï¿½Ûµï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ koreaï¿½ï¿½ ï¿½Ûµï¿½\n"
 			);
 
 		id=loginInfo.get("id", "")
@@ -656,7 +674,7 @@ class LoginWindow(ui.ScriptWindow):
 					self.__SetServerInfo(locale.CHANNEL_TEST_SERVER)
 				except:
 					import exception
-					exception.Abort("LoginWindow.__LoadLoginInfo - ¿¿¿¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿¿¿¿")
+					exception.Abort("LoginWindow.__LoadLoginInfo - ï¿½×½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼Ò°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½")
 
 		else:
 			addr=loginInfo.get("addr", "")
@@ -670,7 +688,7 @@ class LoginWindow(ui.ScriptWindow):
 				net.SetMarkServer(addr, port)
 
 				if locale == "ymir" :
-					net.SetServerInfo("õ¿¿ ¿¿¿¿")
+					net.SetServerInfo("Ãµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
 					self.serverInfo.SetText("Y:"+addr+":"+str(port))
 				else:
 					net.SetServerInfo(addr+":"+str(port))
@@ -701,7 +719,7 @@ class LoginWindow(ui.ScriptWindow):
 			self.Connect(id, pwd)
 			
 			print "=================================================================================="
-			print "¿¿¿ ¿¿¿¿¿: %s - %s:%d %s" % (loginInfoFileName, addr, port, id)
+			print "ï¿½Úµï¿½ ï¿½Î±ï¿½ï¿½ï¿½: %s - %s:%d %s" % (loginInfoFileName, addr, port, id)
 			print "=================================================================================="
 
 		
@@ -788,7 +806,7 @@ class LoginWindow(ui.ScriptWindow):
 			if channelIndex >= 0:
 				self.channelList.SelectItem(channelIndex)
 
-		## Show/Hide ¿¿¿ ¿¿¿¿¿¿ ¿¿¿ ¿¿¿ - [levites]
+		## Show/Hide ï¿½Úµå¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾î¼­ ï¿½Ó½ï¿½ - [levites]
 		self.serverBoard.SetPosition(self.xServerBoard, self.yServerBoard)
 		self.serverBoard.Show()
 		self.connectBoard.Hide()
@@ -860,6 +878,9 @@ class LoginWindow(ui.ScriptWindow):
 		visible_index = 1
 		for id, regionDataDict in regionDict.items():
 			name = regionDataDict.get("name", "noname")
+			if localeInfo.IsBRAZIL() or localeInfo.IsCANADA():
+				self.serverList.InsertItem(id, "%s" % (name))
+			else:
 				try:
 					server_id = serverInfo.SERVER_ID_DICT[id]
 				except:
@@ -1000,7 +1021,7 @@ class LoginWindow(ui.ScriptWindow):
 			self.PopupNotifyMessage(localeInfo.CHANNEL_SELECT_CHANNEL)
 			return
 
-		# ¿¿¿°¿ FULL ¿¿ ¿¿¿¿¿¿ ¿¿¿¿ ¿¿¿¿
+		# ï¿½ï¿½ï¿½Â°ï¿½ FULL ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if state == serverInfo.STATE_DICT[3]: 
 			self.PopupNotifyMessage(localeInfo.CHANNEL_NOTIFY_FULL)
 			return
@@ -1012,9 +1033,9 @@ class LoginWindow(ui.ScriptWindow):
 			channelName = serverInfo.REGION_DICT[regionID][serverID]["channel"][channelID]["name"]
 			addrKey = serverInfo.REGION_DICT[regionID][serverID]["channel"][channelID]["key"]
 			
-			if "õ¿¿ ¿¿¿¿" == serverName:			
+			if "Ãµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½" == serverName:			
 				app.ForceSetLocale("ymir", "locale/ymir")
-			elif "¿¿ ¿¿¿¿" == serverName:			
+			elif "ï¿½èµµ ï¿½ï¿½ï¿½ï¿½" == serverName:			
 				app.ForceSetLocale("we_korea", "locale/we_korea")				
 				
 		except:
@@ -1029,7 +1050,7 @@ class LoginWindow(ui.ScriptWindow):
 			tcp_port = serverInfo.REGION_DICT[regionID][serverID]["channel"][channelID]["tcp_port"]
 		except:
 			import exception
-			exception.Abort("LoginWindow.__OnClickSelectServerButton - ¿¿¿¿ ¿¿¿¿ ¿¿¿¿")
+			exception.Abort("LoginWindow.__OnClickSelectServerButton - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
 
 		try:
 			account_ip = serverInfo.REGION_AUTH_SERVER_DICT[regionID][serverID]["ip"]
@@ -1049,13 +1070,13 @@ class LoginWindow(ui.ScriptWindow):
 
 		except:
 			import exception
-			exception.Abort("LoginWindow.__OnClickSelectServerButton - ¿¿¿ ¿¿¿¿ ¿¿¿¿")
+			exception.Abort("LoginWindow.__OnClickSelectServerButton - ï¿½ï¿½Å© ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
 
 
 		if app.USE_OPENID and not app.OPENID_TEST :
-			## 2012.07.19 OpenID : ¿¿¿¿
-			# ä¿¿ ¿¿¿¿ ¿¿¿¿¿ "¿¿¿"(SelectServerButton) ¿¿ ¿¿¿¿¿¿¿¿,
-			# ¿¿¿¿¿ ¿¿¿¿¿¿¿ ¿¿¿¿¿ ¿¿¿ ¿¿¿ ¿¿¿¿¿¿ OpenID ¿¿¿¿¿¿¿ ¿¿¿¿¿¿¿¿ ¿¿¿¿
+			## 2012.07.19 OpenID : ï¿½ï¿½ï¿½ï¿½
+			# Ã¤ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½é¿¡ï¿½ï¿½ "È®ï¿½ï¿½"(SelectServerButton) ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,
+			# ï¿½Î±ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾î°¡ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ OpenID ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			self.stream.SetConnectInfo(ip, tcp_port, account_ip, account_port)
 			self.Connect(0, 0)
 		else :
