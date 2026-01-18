@@ -338,14 +338,6 @@ typedef struct SPacketGGNotice
 	long	lSize;
 } TPacketGGNotice;
 
-//FORKED_ROAD
-typedef struct SPacketGGForkedMapInfo
-{
-	BYTE	bHeader;
-	BYTE	bPass;
-	BYTE	bSungzi;
-} TPacketGGForkedMapInfo;
-//END_FORKED_ROAD
 typedef struct SPacketGGShutdown
 {
 	BYTE	bHeader;

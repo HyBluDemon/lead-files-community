@@ -17,7 +17,6 @@
 #include "locale_service.h"
 #include "questmanager.h"
 #include "skill.h"
-#include "threeway_war.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -69,7 +69,6 @@
     <ClCompile Include="input_login.cpp" />
     <ClCompile Include="input_main.cpp" />
     <ClCompile Include="input_p2p.cpp" />
-    <ClCompile Include="input_teen.cpp" />
     <ClCompile Include="ip_ban.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="item_addon.cpp" />
@@ -111,7 +110,6 @@
     <ClCompile Include="questlua_dragonlair.cpp" />
     <ClCompile Include="questlua_dragonsoul.cpp" />
     <ClCompile Include="questlua_dungeon.cpp" />
-    <ClCompile Include="questlua_forked.cpp" />
     <ClCompile Include="questlua_game.cpp" />
     <ClCompile Include="questlua_global.cpp" />
     <ClCompile Include="questlua_guild.cpp" />
@@ -143,7 +141,6 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="target.cpp" />
     <ClCompile Include="text_file_loader.cpp" />
-    <ClCompile Include="threeway_war.cpp" />
     <ClCompile Include="trigger.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="vector.cpp" />
@@ -267,7 +264,6 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="target.h" />
     <ClInclude Include="text_file_loader.h" />
-    <ClInclude Include="threeway_war.h" />
     <ClInclude Include="typedef.h" />
     <ClInclude Include="unique_item.h" />
     <ClInclude Include="utils.h" />
