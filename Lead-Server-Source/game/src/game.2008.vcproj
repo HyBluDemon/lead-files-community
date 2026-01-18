@@ -470,18 +470,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\debug_allocator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\debug_allocator_adapter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\debug_ptr.h"
-				>
-			</File>
-			<File
 				RelativePath=".\desc.cpp"
 				>
 			</File>
@@ -595,10 +583,6 @@
 			</File>
 			<File
 				RelativePath=".\exchange.h"
-				>
-			</File>
-			<File
-				RelativePath=".\fifo_allocator.h"
 				>
 			</File>
 			<File

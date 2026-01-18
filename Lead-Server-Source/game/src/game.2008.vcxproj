@@ -255,9 +255,6 @@
     <ClInclude Include="crc32.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="db.h" />
-    <ClInclude Include="debug_allocator.h" />
-    <ClInclude Include="debug_allocator_adapter.h" />
-    <ClInclude Include="debug_ptr.h" />
     <ClInclude Include="desc.h" />
     <ClInclude Include="desc_client.h" />
     <ClInclude Include="desc_manager.h" />
@@ -272,7 +269,6 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="event_queue.h" />
     <ClInclude Include="exchange.h" />
-    <ClInclude Include="fifo_allocator.h" />
     <ClInclude Include="file_loader.h" />
     <ClInclude Include="fishing.h" />
     <ClInclude Include="FSM.h" />
