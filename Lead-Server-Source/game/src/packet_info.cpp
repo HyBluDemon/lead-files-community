@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../../common/stl.h"
+#include "common/stl.h"
 #include "constants.h"
 #include "packet_info.h"
 
@@ -206,7 +206,7 @@ CPacketInfoCG::CPacketInfoCG()
 	Set(HEADER_CG_ANSWER_MAKE_GUILD, sizeof(TPacketCGAnswerMakeGuild), "AnswerMakeGuild", true);
 
 	Set(HEADER_CG_FISHING, sizeof(TPacketCGFishing), "Fishing", true);
-	Set(HEADER_CG_ITEM_GIVE, sizeof(TPacketCGGiveItem), "ItemGive", true);
+	Set(HEADER_CG_GIVE_ITEM, sizeof(TPacketCGGiveItem), "ItemGive", true);
 	Set(HEADER_CG_HACK, sizeof(TPacketCGHack), "Hack", true);
 	Set(HEADER_CG_MYSHOP, sizeof(TPacketCGMyShop), "MyShop", true);
 

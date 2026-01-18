@@ -1089,7 +1089,7 @@ void CInputDB::SafeboxWrongPassword(LPDESC d)
 	if (!d->GetCharacter())
 		return;
 
-	TPacketCGSafeboxWrongPassword p;
+	TPacketGCSafeboxWrongPassword p;
 	p.bHeader = HEADER_GC_SAFEBOX_WRONG_PASSWORD;
 	d->Packet(&p, sizeof(p));
 
