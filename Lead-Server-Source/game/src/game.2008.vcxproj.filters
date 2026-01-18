@@ -176,8 +176,6 @@
     <ClInclude Include="cube.h" />
     <ClInclude Include="db.h" />
     <ClInclude Include="debug_allocator.h" />
-    <ClInclude Include="debug_allocator_adapter.h" />
-    <ClInclude Include="debug_ptr.h" />
     <ClInclude Include="desc.h" />
     <ClInclude Include="desc_client.h" />
     <ClInclude Include="desc_manager.h" />
@@ -192,7 +190,6 @@
     <ClInclude Include="event.h" />
     <ClInclude Include="event_queue.h" />
     <ClInclude Include="exchange.h" />
-    <ClInclude Include="fifo_allocator.h" />
     <ClInclude Include="file_loader.h" />
     <ClInclude Include="fishing.h" />
     <ClInclude Include="FSM.h" />
@@ -202,7 +199,6 @@
     <ClInclude Include="guild_manager.h" />
     <ClInclude Include="horsename_manager.h" />
     <ClInclude Include="horse_rider.h" />
-    <ClInclude Include="IFileMonitor.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="ip_ban.h" />
     <ClInclude Include="item.h" />
@@ -232,7 +228,6 @@
     <ClInclude Include="party.h" />
     <ClInclude Include="PetSystem.h" />
     <ClInclude Include="polymorph.h" />
-    <ClInclude Include="pool.h" />
     <ClInclude Include="priv_manager.h" />
     <ClInclude Include="profiler.h" />
     <ClInclude Include="protocol.h" />

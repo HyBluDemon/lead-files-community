@@ -11,11 +11,6 @@
 extern void ContinueOnFatalError();
 extern void ShutdownOnFatalError();
 
-#ifdef M2_USE_POOL
-MemoryPool event_info_data::pool_;
-static ObjectPool<EVENT> event_pool;
-#endif
-
 static CEventQueue cxx_q;
 
 /* 이벤트를 생성하고 리턴한다 */
@@ -27,11 +22,7 @@ LPEVENT event_create_ex(TEVENTFUNC func, event_info_data* info, long when)
 	if (when < 1)
 		when = 1;
 
-#ifdef M2_USE_POOL
-	new_event = event_pool.Construct();
-#else
 	new_event = M2_NEW event;
-#endif
 
 	assert(NULL != new_event);
 
@@ -209,10 +200,6 @@ void intrusive_ptr_add_ref(EVENT* p) {
 
 void intrusive_ptr_release(EVENT* p) {
 	if ( --(p->ref_count) == 0 ) {
-#ifdef M2_USE_POOL
-		event_pool.Destroy(p);
-#else
 		M2_DELETE(p);
-#endif
 	}
 }
