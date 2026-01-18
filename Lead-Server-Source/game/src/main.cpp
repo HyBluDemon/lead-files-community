@@ -281,22 +281,6 @@ static void CleanUpForEarlyExit() {
 
 int main(int argc, char **argv)
 {
-#ifdef DEBUG_ALLOC
-	DebugAllocator::StaticSetUp();
-#endif
-
-#ifndef __WIN32__
-	// <Factor> start unit tests if option is set
-	if ( argc > 1 ) 
-	{
-		if ( strcmp( argv[1], "unittest" ) == 0 )
-		{
-			::testing::InitGoogleTest(&argc, argv);
-			return RUN_ALL_TESTS();
-		}
-	}
-#endif
-
 	ilInit(); // DevIL Initialize
 
 	WriteVersion();
