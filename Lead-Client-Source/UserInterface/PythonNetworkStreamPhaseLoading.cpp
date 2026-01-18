@@ -93,11 +93,6 @@ void CPythonNetworkStream::LoadingPhase()
 				return;
 			break;
 
-		case HEADER_GC_MAIN_CHARACTER_OLD:
-			if (RecvMainCharacter())
-				return;
-			break;
-
 		// SUPPORT_BGM
 		case HEADER_GC_MAIN_CHARACTER:
 			if (RecvMainCharacter2_EMPIRE())
