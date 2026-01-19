@@ -470,6 +470,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\debug_allocator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\desc.cpp"
 				>
 			</File>
@@ -662,7 +666,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\IFileMonitor.h"
 				>
 			</File>
 			<File
@@ -801,7 +804,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\malloc_allocator.h"
 				>
 			</File>
 			<File
@@ -963,7 +965,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\pool.h"
 				>
 			</File>
 			<File

@@ -63,19 +63,6 @@
 #endif
 
 extern void WriteVersion();
-//extern const char * _malloc_options;
-#if defined(__FreeBSD__) && defined(DEBUG_ALLOC)
-extern void (*_malloc_message)(const char* p1, const char* p2, const char* p3, const char* p4);
-// FreeBSD _malloc_message replacement
-void WriteMallocMessage(const char* p1, const char* p2, const char* p3, const char* p4) {
-	FILE* fp = ::fopen(DBGALLOC_LOG_FILENAME, "a");
-	if (fp == NULL) {
-		return;
-	}
-	::fprintf(fp, "%s %s %s %s\n", p1, p2, p3, p4);
-	::fclose(fp);
-}
-#endif
 
 // 게임과 연결되는 소켓
 volatile int	num_events_called = 0;
@@ -350,11 +337,6 @@ int main(int argc, char **argv)
 	ani_init();
 	PanamaLoad();
 
-#if defined (__FreeBSD__) && defined(__FILEMONITOR__)
-	PFN_FileChangeListener pPackageNotifyFunc =  &(DESC_MANAGER::NotifyClientPackageFileChanged);
-	//FileMonitorFreeBSD::Instance().AddWatch( strPackageCryptInfoName, pPackageNotifyFunc );
-#endif
-
 	while (idle());
 
 	sys_log(0, "<shutdown> Starting...");
@@ -415,10 +397,6 @@ int main(int argc, char **argv)
 
 	destroy();
 
-#ifdef DEBUG_ALLOC
-	DebugAllocator::StaticTearDown();
-#endif
-
 	return 1;
 }
 
@@ -439,9 +417,6 @@ int start(int argc, char **argv)
 	char ch;
 
 	//_malloc_options = "A";
-#if defined(__FreeBSD__) && defined(DEBUG_ALLOC)
-	_malloc_message = WriteMallocMessage;
-#endif
 
 	while ((ch = getopt(argc, argv, const_cast<char*>("npverltI"))) != -1)
 	{

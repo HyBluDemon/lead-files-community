@@ -1,10 +1,6 @@
 #ifndef __INC_ITEM_MANAGER__
 #define __INC_ITEM_MANAGER__
 
-#ifdef M2_USE_POOL
-#include "pool.h"
-#endif
-
 // special_item_group.txt에서 정의하는 속성 그룹
 // type attr로 선언할 수 있다.
 // 이 속성 그룹을 이용할 수 있는 것은 special_item_group.txt에서 Special type으로 정의된 그룹에 속한 UNIQUE ITEM이다.
@@ -369,11 +365,7 @@ class ITEM_MANAGER : public singleton<ITEM_MANAGER>
 		void			SaveSingleItem(LPITEM item);
 
 		LPITEM                  CreateItem(DWORD vnum, DWORD count = 1, DWORD dwID = 0, bool bTryMagic = false, int iRarePct = -1, bool bSkipSave = false);
-#ifndef DEBUG_ALLOC
 		void DestroyItem(LPITEM item);
-#else
-		void DestroyItem(LPITEM item, const char* file, size_t line);
-#endif
 		void			RemoveItem(LPITEM item, const char * c_pszReason=NULL); // 사용자로 부터 아이템을 제거
 
 		LPITEM			Find(DWORD id);
@@ -465,15 +457,8 @@ class ITEM_MANAGER : public singleton<ITEM_MANAGER>
 		const static int MAX_RARE_ATTR_NUM = 2;
 		bool ReadItemVnumMaskTable(const char * c_pszFileName);
 	private:
-#ifdef M2_USE_POOL
-		ObjectPool<CItem> pool_;
-#endif
 };
 
-#ifndef DEBUG_ALLOC
 #define M2_DESTROY_ITEM(ptr) ITEM_MANAGER::instance().DestroyItem(ptr)
-#else
-#define M2_DESTROY_ITEM(ptr) ITEM_MANAGER::instance().DestroyItem(ptr, __FILE__, __LINE__)
-#endif
 
 #endif
