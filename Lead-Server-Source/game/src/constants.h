@@ -104,7 +104,7 @@ extern const DWORD		exp_table_newcibn[PLAYER_EXP_TABLE_MAX + 1];
 extern const DWORD*		exp_table;
 
 extern const DWORD		guild_exp_table[GUILD_MAX_LEVEL + 1];
-extern const DWORD		guild_exp_table2[GUILD_MAX_LEVEL + 1];
+extern const DWORD		guild_exp_table[GUILD_MAX_LEVEL + 1];
 
 #define MAX_EXP_DELTA_OF_LEV	31
 #define PERCENT_LVDELTA(me, victim) aiPercentByDeltaLev[MINMAX(0, (victim + 15) - me, MAX_EXP_DELTA_OF_LEV - 1)]

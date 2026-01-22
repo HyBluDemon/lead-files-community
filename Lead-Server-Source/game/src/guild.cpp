@@ -1468,7 +1468,7 @@ void CGuild::UpdateSkill(BYTE skill_point, BYTE* skill_levels)
 static DWORD __guild_levelup_exp(int level)
 {
 
-	return guild_exp_table2[level];
+	return guild_exp_table[level];
 }
 
 void CGuild::GuildPointChange(BYTE type, int amount, bool save)
