@@ -124,10 +124,7 @@ void CStateManager::Restore()
 
 	for (i = 0; i < STATEMANAGER_MAX_STAGES; ++i)
 		for (j = 0; j < STATEMANAGER_MAX_TEXTURESTATES; ++j)
-		{
 			SetTextureStageState(i, D3DTEXTURESTAGESTATETYPE(j), m_CurrentState.m_TextureStates[i][j]);
-			SetTextureStageState(i, D3DTEXTURESTAGESTATETYPE(j), m_CurrentState.m_SamplerStates[i][j]);
-		}
 
 	for (i = 0; i < STATEMANAGER_MAX_STAGES; ++i)
 		SetTexture(i, m_CurrentState.m_Textures[i]);
