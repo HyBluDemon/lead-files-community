@@ -599,7 +599,7 @@ void CStateManager::GetVertexShader(LPDIRECT3DVERTEXSHADER9 * pdwShader)
 // Vertex Processing
 void CStateManager::SaveVertexProcessing(BOOL IsON)
 {
-	if (m_CurrentState.m_bVertexProcessing = IsON)
+	if (m_CurrentState.m_bVertexProcessing == IsON)
 		return;
 	m_CopyState.m_bVertexProcessing = m_CurrentState.m_bVertexProcessing;
 	m_lpD3DDev->SetSoftwareVertexProcessing(IsON);
@@ -607,7 +607,7 @@ void CStateManager::SaveVertexProcessing(BOOL IsON)
 }
 void CStateManager::RestoreVertexProcessing()
 {
-	if (m_CopyState.m_bVertexProcessing = m_CurrentState.m_bVertexProcessing)
+	if (m_CopyState.m_bVertexProcessing == m_CurrentState.m_bVertexProcessing)
 		return;
 	m_lpD3DDev->SetSoftwareVertexProcessing(m_CopyState.m_bVertexProcessing);
 }
