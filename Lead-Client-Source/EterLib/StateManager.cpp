@@ -647,8 +647,8 @@ void CStateManager::RestoreFVF()
 }
 void CStateManager::SetFVF(DWORD dwShader)
 {
-	//if (m_CurrentState.m_dwFVF == dwShader)
-	//	return;
+	if (m_CurrentState.m_dwFVF == dwShader)
+		return;
 	m_lpD3DDev->SetFVF(dwShader);
 	m_CurrentState.m_dwFVF = dwShader;
 }
