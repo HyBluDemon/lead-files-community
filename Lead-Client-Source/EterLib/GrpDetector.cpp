@@ -290,11 +290,6 @@ BOOL D3D_CDeviceInfo::Build(IDirect3D9& rkD3D, UINT iD3DAdapterInfo, UINT iDevTy
 	BOOL  aisFormatConfirmed[20];
 	DWORD adwD3DBehavior[20];
 	D3DFORMAT aeD3DFmtDepthStencil[20];
-	
-    BOOL isHALExists = FALSE;
-    BOOL isHALWindowedCompatible = FALSE;
-    BOOL isHALDesktopCompatible = FALSE;
-    BOOL isHALSampleCompatible = FALSE;
 
 	// GetFlagInfo
 	{
@@ -311,17 +306,6 @@ BOOL D3D_CDeviceInfo::Build(IDirect3D9& rkD3D, UINT iD3DAdapterInfo, UINT iDevTy
 			// SkipNoRenderTargetFormat;
 			if (FAILED(rkD3D.CheckDeviceType(iD3DAdapterInfo, m_eD3DDevType, eD3DFmtPixel, eD3DFmtPixel, FALSE)))
 				continue;
-
-			if (D3DDEVTYPE_HAL==m_eD3DDevType)
-			{
-				isHALExists=TRUE;
-				
-				isHALWindowedCompatible=TRUE;
-
-				if (iFmt==0)
-					isHALDesktopCompatible=TRUE;
-
-			}
 
 			// Confirm the device/format for HW vertex processing
 			if (m_kD3DCaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
