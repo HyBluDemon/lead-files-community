@@ -782,7 +782,7 @@ void CStateManager::RestorePixelShaderConstant(DWORD dwRegister, DWORD dwConstan
 
 void CStateManager::SetPixelShaderConstant(DWORD dwRegister,CONST void* pConstantData,DWORD dwConstantCount)
 {
-	m_lpD3DDev->SetVertexShaderConstantF(dwRegister, *(D3DXVECTOR4*)pConstantData, dwConstantCount);
+	m_lpD3DDev->SetPixelShaderConstantF(dwRegister, *(D3DXVECTOR4*)pConstantData, dwConstantCount);
 
 	// Set the renderstate and remember it.
 	for (DWORD i = 0; i < dwConstantCount; i++)
