@@ -10,9 +10,7 @@
 #ifndef __PACKET_DEBUG_H__
 #define __PACKET_DEBUG_H__
 
-#define ENABLE_PACKET_DEBUG
-
-#ifdef ENABLE_PACKET_DEBUG
+#ifdef _DEBUG
 
 #include <windows.h>
 #include <stdio.h>
@@ -20,7 +18,7 @@
 #include <map>
 #include <functional>
 
-#define PKT_DBG_LOG_FILE "debug_packet.log"
+#define PACKET_DEBUG_LOG_FILE "debug_packet.log"
 
 
 typedef std::function<void(FILE*, const void*, int)> PacketPrinter;
@@ -33,7 +31,7 @@ public:
     void Initialize()
     {
         if (m_bInit) return;
-        m_pFile = _fsopen(PKT_DBG_LOG_FILE, "a", _SH_DENYNO);
+        m_pFile = _fsopen(PACKET_DEBUG_LOG_FILE, "a", _SH_DENYNO);
         if (!m_pFile) return;
         setvbuf(m_pFile, NULL, _IONBF, 0);
         m_dwLastTime = GetTickCount();
@@ -112,17 +110,17 @@ private:
 #include "PacketDebugRegGen.h"
 
 // Macros
-#define PKT_DEBUG_INIT()      do { RegisterAllPacketsGenerated(); CPacketDebug::Instance().Initialize(); } while(0)
-#define PKT_DEBUG_SHUTDOWN()  CPacketDebug::Instance().Shutdown()
-#define PKT_DEBUG_SEND(d, s)  CPacketDebug::Instance().LogSend(d, s)
-#define PKT_DEBUG_RECV(d, s)  CPacketDebug::Instance().LogRecv(d, s)
+#define PACKET_DEBUG_INIT()      do { RegisterAllPacketsGenerated(); CPacketDebug::Instance().Initialize(); } while(0)
+#define PACKET_DEBUG_SHUTDOWN()  CPacketDebug::Instance().Shutdown()
+#define PACKET_DEBUG_SEND(d, s)  CPacketDebug::Instance().LogSend(d, s)
+#define PACKET_DEBUG_RECV(d, s)  CPacketDebug::Instance().LogRecv(d, s)
 
-#else
+#else // _DEBUG
 
-#define PKT_DEBUG_INIT()      ((void)0)
-#define PKT_DEBUG_SHUTDOWN()  ((void)0)
-#define PKT_DEBUG_SEND(d, s)  ((void)0)
-#define PKT_DEBUG_RECV(d, s)  ((void)0)
+#define PACKET_DEBUG_INIT()      ((void)0)
+#define PACKET_DEBUG_SHUTDOWN()  ((void)0)
+#define PACKET_DEBUG_SEND(d, s)  ((void)0)
+#define PACKET_DEBUG_RECV(d, s)  ((void)0)
 
-#endif
-#endif
+#endif // _DEBUG
+#endif // __PACKET_DEBUG_H__

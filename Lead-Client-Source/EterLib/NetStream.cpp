@@ -502,7 +502,7 @@ bool CNetworkStream::Recv(int size, char * pDestBuf)
 
 	m_recvBufOutputPos += size;
 	
-	PKT_DEBUG_RECV(pDestBuf, size);
+	PACKET_DEBUG_RECV(pDestBuf, size);
 	
 	return true;
 }
@@ -522,7 +522,7 @@ bool CNetworkStream::Send(int size, const char * pSrcBuf)
 	memcpy(m_sendBuf + m_sendBufInputPos, pSrcBuf, size);
 	m_sendBufInputPos += size;
 
-	PKT_DEBUG_SEND(pSrcBuf, size);
+	PACKET_DEBUG_SEND(pSrcBuf, size);
 
 #ifdef _PACKETDUMP
 	if (*pSrcBuf != 0 )

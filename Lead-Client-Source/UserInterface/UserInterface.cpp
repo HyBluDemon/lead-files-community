@@ -464,7 +464,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	//_CrtSetBreakAlloc( 110247 ); 
 #endif
 
-	PKT_DEBUG_INIT();
+	PACKET_DEBUG_INIT();
 
 	ApplicationStringTable_Initialize(hInstance);
 
@@ -564,7 +564,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	if(gs_szErrorString[0])
 		MessageBox(NULL, gs_szErrorString, ApplicationStringTable_GetStringz(IDS_APP_NAME, "APP_NAME"), MB_ICONSTOP);
 
-	PKT_DEBUG_SHUTDOWN();
+	PACKET_DEBUG_SHUTDOWN();
 
 Clean:
 	SAFE_FREE_GLOBAL(szArgv);
