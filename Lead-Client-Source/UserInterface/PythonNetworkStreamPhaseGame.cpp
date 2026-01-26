@@ -1344,6 +1344,12 @@ bool CPythonNetworkStream::RecvPointChange()
 				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnPickMoney", Py_BuildValue("(i)", PointChange.amount));
 			}
 		}
+		else if (POINT_LEVEL == PointChange.type)
+		{
+			CInstanceBase* pOtherInstance = CPythonCharacterManager::Instance().GetInstancePtr(PointChange.dwVID);
+			if (pOtherInstance)
+				pOtherInstance->UpdateTextTailLevel(PointChange.value);
+		}
 	}
 
 	return true;
