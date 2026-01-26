@@ -5357,7 +5357,7 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, ItemStackType count)
 			sys_log(0, "%s: ITEM_STACK %s (window: %d, cell : %d) -> (window:%d, cell %d) count %d", GetName(), item->GetName(), Cell.window_type, Cell.cell, 
 				DestCell.window_type, DestCell.cell, count);
 
-			count = MIN(g_bItemCountLimit - item2->GetCount(), count);
+			count = MIN(g_ItemCountLimit - item2->GetCount(), count);
 
 			item->SetCount(item->GetCount() - count);
 			item2->SetCount(item2->GetCount() + count);
@@ -5553,7 +5553,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 							if (j != ITEM_SOCKET_MAX_NUM)
 								continue;
 
-							ItemStackType bCount2 = MIN(g_bItemCountLimit - item2->GetCount(), bCount);
+							ItemStackType bCount2 = MIN(g_ItemCountLimit - item2->GetCount(), bCount);
 							bCount -= bCount2;
 
 							item2->SetCount(item2->GetCount() + bCount2);
@@ -6279,7 +6279,7 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, ItemStackType bCount, int iRare
 						bCount = p->alValues[1];
 				}
 
-				ItemStackType bCount2 = MIN(g_bItemCountLimit - item->GetCount(), bCount);
+				ItemStackType bCount2 = MIN(g_ItemCountLimit - item->GetCount(), bCount);
 				bCount -= bCount2;
 
 				item->SetCount(item->GetCount() + bCount2);
@@ -6318,7 +6318,7 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, ItemStackType bCount, int iRare
 					if (inv_item->GetSocket(0) == item->GetSocket(0) &&
 							inv_item->GetSocket(1) == item->GetSocket(1) &&
 							inv_item->GetSocket(2) == item->GetSocket(2) &&
-							inv_item->GetCount() < g_bItemCountLimit)
+							inv_item->GetCount() < g_ItemCountLimit)
 					{
 						inv_item->SetCount(inv_item->GetCount() + item->GetCount());
 						return inv_item;

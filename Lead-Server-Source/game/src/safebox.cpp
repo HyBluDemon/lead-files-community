@@ -199,7 +199,7 @@ bool CSafebox::MoveItem(BYTE bCell, BYTE bDestCell, ItemStackType count)
 			if (count == 0)
 				count = item->GetCount();
 
-			count = MIN(g_bItemCountLimit - item2->GetCount(), count);
+			count = MIN(g_ItemCountLimit - item2->GetCount(), count);
 
 			if (item->GetCount() >= count)
 				Remove(bCell);

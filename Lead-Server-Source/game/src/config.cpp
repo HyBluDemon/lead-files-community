@@ -99,7 +99,7 @@ BYTE g_PartyGapLevel = 30;
 int g_GuildCreateFee = 200000;
 int g_DeathExpLossCap = 800000;
 int g_SkillBookExp = 20000;
-ItemStackType g_bItemCountLimit = 200;
+ItemStackType g_ItemCountLimit = 200;
 // NEW CONFIG VARIABLES
 
 bool g_BlockCharCreation = false;
@@ -985,8 +985,8 @@ void config_init(const string& st_localeServiceName)
 
 		TOKEN("item_count_limit")
 		{
-			str_to_number(g_bItemCountLimit, value_string);
-			fprintf(stdout, "ITEM_COUNT_LIMIT: %d\n", g_bItemCountLimit);
+			str_to_number(g_ItemCountLimit, value_string);
+			fprintf(stdout, "ITEM_COUNT_LIMIT: %d\n", g_ItemCountLimit);
 			continue;
 		}
 
