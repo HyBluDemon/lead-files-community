@@ -168,7 +168,6 @@ void CPythonApplication::RenderGame()
 	CCullingManager::Instance().Process();
 
 	m_kChrMgr.Deform();
-	m_kEftMgr.Update();
 
 	m_pyBackground.RenderCharacterShadowToTexture();
 
@@ -237,6 +236,7 @@ void CPythonApplication::UpdateGame()
 	m_GameEventManager.SetCenterPosition(kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
 	m_GameEventManager.Update();
 
+	m_kEftMgr.Update();
 	m_kEftMgr.UpdateSound();
 	m_FlyingManager.Update();
 	m_pyItem.Update(ptMouse);
