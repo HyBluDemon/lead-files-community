@@ -263,12 +263,12 @@ class TargetBoard(ui.ThinBoard):
 					self.AppendWindow(itemListBox, 15)
 					itemListBox.SetBasePos(0)
 
-					if len(MONSTER_INFO_DATA[race]["items"]) > itemListBox.GetViewItemCount():
+					if height > itemListBox.GetHeight():
 						itemScrollBar = ui.ScrollBar()
 						itemScrollBar.SetParent(self)
 						itemScrollBar.SetPosition(itemListBox.GetRight(), itemListBox.GetTop())
-						itemScrollBar.SetScrollBarSize(32 * self.MAX_ITEM_COUNT + 5 * (self.MAX_ITEM_COUNT - 1))
-						itemScrollBar.SetMiddleBarSize(float(self.MAX_ITEM_COUNT) / float(height / (32 + 5)))
+						itemScrollBar.SetScrollBarSize(itemListBox.GetHeight())
+						itemScrollBar.SetMiddleBarSize(float(itemListBox.GetHeight()) / float(height))
 						itemScrollBar.Show()
 						itemListBox.SetScrollBar(itemScrollBar)
 			else:
@@ -297,26 +297,31 @@ class TargetBoard(ui.ThinBoard):
 			if type(vnums) == int:
 				vnum = vnums
 			else:
+				vnums.sort()
 				vnum = vnums[0]
 
 			item.SelectItem(vnum)
 			itemName = item.GetItemName()
+
 			if type(vnums) != int and len(vnums) > 1:
-				vnums = sorted(vnums)
-				realName = itemName[:itemName.find("+")]
 				if item.GetItemType() == item.ITEM_TYPE_METIN:
 					realName = localeInfo.TARGET_INFO_STONE_NAME
-					itemName = realName + "+0 - +4"
+					itemName = "%s +%d - +%d" % (realName, vnums[0] % 10, vnums[-1] % 10)
 				else:
-					itemName = realName + "+" + str(vnums[0] % 10) + " - +" + str(vnums[len(vnums) - 1] % 10)
-				vnum = vnums[len(vnums) - 1]
+					pos = itemName.find("+")
+					realName = itemName[:pos] if pos != -1 else itemName
+					itemName = "%s +%d - +%d" % (realName.strip(), vnums[0] % 10, vnums[-1] % 10)
+				
+				vnum = vnums[-1]
 
 			myItem = self.ItemListBoxItem(listBox.GetWidth())
 			myItem.LoadImage(item.GetIconImageFileName())
+
 			if count <= 1:
 				myItem.SetText(itemName)
 			else:
 				myItem.SetText("%dx %s" % (count, itemName))
+
 			myItem.SAFE_SetOverInEvent(self.OnShowItemTooltip, vnum)
 			myItem.SAFE_SetOverOutEvent(self.OnHideItemTooltip)
 			listBox.AppendItem(myItem)
@@ -324,7 +329,7 @@ class TargetBoard(ui.ThinBoard):
 			if item.GetItemType() == item.ITEM_TYPE_METIN:
 				self.stoneImg = myItem
 				self.stoneVnum = vnums
-				self.lastStoneVnum = self.STONE_LAST_VNUM + vnums[len(vnums) - 1] % 1000 / 100 * 100
+				self.lastStoneVnum = self.STONE_LAST_VNUM + vnums[-1] % 1000 / 100 * 100
 
 			return myItem.GetHeight()
 
@@ -537,6 +542,11 @@ class TargetBoard(ui.ThinBoard):
 		self.infoButton.showWnd.Refresh()
 
 	def OnPressedInfoButton(self):
+		vid = player.GetTargetVID()
+		if vid:
+			race = nonplayer.GetRaceNumByVID(vid)
+			if race in MONSTER_INFO_DATA:
+				del MONSTER_INFO_DATA[race]
 		net.SendTargetInfoLoad(player.GetTargetVID())
 		if self.infoButton.showWnd.IsShow():
 			self.infoButton.showWnd.Close()

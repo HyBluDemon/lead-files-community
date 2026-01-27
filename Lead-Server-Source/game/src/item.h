@@ -94,8 +94,6 @@ class CItem : public CEntity
 		void		SetExchanging(bool isOn = true);
 		bool		IsExchanging()		{ return m_bExchanging;	}
 
-		bool		IsTwohanded();
-
 		bool		IsPolymorphItem();
 
 		void		ModifyPoints(bool bAdd);	// 아이템의 효과를 캐릭터에 부여 한다. bAdd가 false이면 제거함

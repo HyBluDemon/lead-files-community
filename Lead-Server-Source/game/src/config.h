@@ -93,7 +93,7 @@ extern DWORD g_GoldDropTimeLimitValue;
 extern int gPlayerMaxLevel;
 
 // NEW CONFIGURATION VARIABLES
-extern bool g_bCreatePublicFiles;
+extern bool g_CreateDocumentationFiles ;
 extern BYTE g_PartyGapLevel;
 extern int g_GuildCreateFee;
 extern int g_DeathExpLossCap;

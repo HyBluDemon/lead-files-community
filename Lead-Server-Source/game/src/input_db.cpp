@@ -45,6 +45,7 @@ extern BYTE		g_bAuthServer;
 extern void gm_insert(const char * name, BYTE level);
 extern BYTE	gm_get_level(const char * name, const char * host, const char* account );
 extern void gm_host_insert(const char * host);
+extern void PUBLIC_CreateLists();
 
 #define MAPNAME_DEFAULT	"none"
 
@@ -813,41 +814,41 @@ void CInputDB::Boot(const char* data)
 	}
 
 	sys_log(0, "LoadLocaleFile: CommonDropItem: %s", szCommonDropItemFileName);
-	if (!ITEM_MANAGER::instance().ReadCommonDropItemFile(szCommonDropItemFileName))
+	if (auto [status, msg] = ITEM_MANAGER::instance().ReadCommonDropItemFile(szCommonDropItemFileName); !status)
 	{
-		sys_err("cannot load CommonDropItem: %s", szCommonDropItemFileName);
+		sys_err("cannot load CommonDropItem: %s, Error: %s", szCommonDropItemFileName, msg.c_str());
 		thecore_shutdown();
 		return;
 	}
 
 	sys_log(0, "LoadLocaleFile: ETCDropItem: %s", szETCDropItemFileName);
-	if (!ITEM_MANAGER::instance().ReadEtcDropItemFile(szETCDropItemFileName))
+	if (auto [status, msg] = ITEM_MANAGER::instance().ReadEtcDropItemFile(szETCDropItemFileName); !status)
 	{
-		sys_err("cannot load ETCDropItem: %s", szETCDropItemFileName);
+		sys_err("cannot load ETCDropItem: %s, Error: %s", szETCDropItemFileName, msg.c_str());
 		thecore_shutdown();
 		return;
 	}
 
 	sys_log(0, "LoadLocaleFile: DropItemGroup: %s", szDropItemGroupFileName);
-	if (!ITEM_MANAGER::instance().ReadDropItemGroup(szDropItemGroupFileName))
+	if (auto [status, msg] = ITEM_MANAGER::instance().ReadDropItemGroup(szDropItemGroupFileName); !status)
 	{
-		sys_err("cannot load DropItemGroup: %s", szDropItemGroupFileName);
+		sys_err("cannot load DropItemGroup: %s, Error: %s", szDropItemGroupFileName, msg.c_str());
 		thecore_shutdown();
 		return;
 	}
 
 	sys_log(0, "LoadLocaleFile: SpecialItemGroup: %s", szSpecialItemGroupFileName);
-	if (!ITEM_MANAGER::instance().ReadSpecialDropItemFile(szSpecialItemGroupFileName))
+	if (auto [status, msg] = ITEM_MANAGER::instance().ReadSpecialDropItemFile(szSpecialItemGroupFileName); !status)
 	{
-		sys_err("cannot load SpecialItemGroup: %s", szSpecialItemGroupFileName);
+		sys_err("cannot load SpecialItemGroup: %s, Error: %s", szSpecialItemGroupFileName, msg.c_str());
 		thecore_shutdown();
 		return;
 	}
 
 	sys_log(0, "LoadLocaleFile: MOBDropItemFile: %s", szMOBDropItemFileName);
-	if (!ITEM_MANAGER::instance().ReadMonsterDropItemGroup(szMOBDropItemFileName))
+	if (auto [status, msg] = ITEM_MANAGER::instance().ReadMonsterDropItemGroup(szMOBDropItemFileName); !status)
 	{
-		sys_err("cannot load MOBDropItemFile: %s", szMOBDropItemFileName);
+		sys_err("cannot load MOBDropItemFile: %s, Error: %s", szMOBDropItemFileName, msg.c_str());
 		thecore_shutdown();
 		return;
 	}
@@ -882,7 +883,8 @@ void CInputDB::Boot(const char* data)
 		CMobManager::instance().DumpRegenCount("mob_count");
 	}
 
-	extern void PUBLIC_CreateLists();
+	if (g_CreateDocumentationFiles )
+		PUBLIC_CreateLists();
 }
 
 EVENTINFO(quest_login_event_info)

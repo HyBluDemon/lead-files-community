@@ -1576,40 +1576,50 @@ class GameWindow(ui.ScriptWindow):
 		if not raceNum in uiTarget.MONSTER_INFO_DATA:
 			uiTarget.MONSTER_INFO_DATA.update({raceNum : {}})
 			uiTarget.MONSTER_INFO_DATA[raceNum].update({"items" : []})
+		
 		curList = uiTarget.MONSTER_INFO_DATA[raceNum]["items"]
 
-		isUpgradeable = False
-		isMetin = False
 		item.SelectItem(itemVnum)
-		if item.GetItemType() == item.ITEM_TYPE_WEAPON or item.GetItemType() == item.ITEM_TYPE_ARMOR:
-			isUpgradeable = True
-		elif item.GetItemType() == item.ITEM_TYPE_METIN:
-			isMetin = True
+		itemName = item.GetItemName()
+		itemType = item.GetItemType()
+		
+		isUpgradeable = (itemType == item.ITEM_TYPE_WEAPON or itemType == item.ITEM_TYPE_ARMOR)
+		isMetin = (itemType == item.ITEM_TYPE_METIN)
+
+		pos = itemName.find("+")
+		baseName = itemName[:pos].strip() if pos != -1 else itemName
 
 		for curItem in curList:
 			if isUpgradeable:
-				if curItem.has_key("vnum_list") and curItem["vnum_list"][0] / 10 * 10 == itemVnum / 10 * 10:
-					if not (itemVnum in curItem["vnum_list"]):
-						curItem["vnum_list"].append(itemVnum)
-					return
+				if curItem.has_key("vnum_list"):
+					vList = curItem["vnum_list"]
+					if (itemVnum >= min(vList) - 1 and itemVnum <= max(vList) + 1):
+						item.SelectItem(vList[0])
+						if item.GetItemName().find(baseName) != -1:
+							if not (itemVnum in vList):
+								vList.append(itemVnum)
+								vList.sort()
+							return
 			elif isMetin:
 				if curItem.has_key("vnum_list"):
-					baseVnum = curItem["vnum_list"][0]
-				if curItem.has_key("vnum_list") and (baseVnum - baseVnum%1000) == (itemVnum - itemVnum%1000):
-					if not (itemVnum in curItem["vnum_list"]):
-						curItem["vnum_list"].append(itemVnum)
-					return
+					vList = curItem["vnum_list"]
+					if (vList[0] / 100) == (itemVnum / 100):
+						if not (itemVnum in vList):
+							vList.append(itemVnum)
+							vList.sort()
+						return
 			else:
 				if curItem.has_key("vnum") and curItem["vnum"] == itemVnum and curItem["count"] == itemCount:
 					return
 
 		if isUpgradeable or isMetin:
-			curList.append({"vnum_list":[itemVnum], "count":itemCount})
+			curList.append({"vnum_list": [itemVnum], "count": itemCount})
 		else:
-			curList.append({"vnum":itemVnum, "count":itemCount})
+			curList.append({"vnum": itemVnum, "count": itemCount})
 
 	def BINARY_RefreshTargetMonsterDropInfo(self, raceNum):
-		self.targetBoard.RefreshMonsterInfoBoard()
+		if self.targetBoard:
+			self.targetBoard.RefreshMonsterInfoBoard()
 
 	# QUEST_CONFIRM
 	def BINARY_OnQuestConfirm(self, msg, timeout, pid):
