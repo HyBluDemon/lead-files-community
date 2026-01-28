@@ -384,13 +384,9 @@ class TargetBoard(ui.ThinBoard):
 			item.SelectItem(vnum)
 			if item.GetItemType() == item.ITEM_TYPE_METIN:
 				self.itemTooltip.isStone = True
-				self.itemTooltip.isBook = False
-				self.itemTooltip.isBook2 = False
 				self.itemTooltip.SetItemToolTip(self.lastStoneVnum)
 			else:
 				self.itemTooltip.isStone = False
-				self.itemTooltip.isBook = True
-				self.itemTooltip.isBook2 = True
 				self.itemTooltip.SetItemToolTip(vnum)
 
 		def OnHideItemTooltip(self):

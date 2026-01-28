@@ -592,6 +592,12 @@ int ITEM_MANAGER::RealNumber(DWORD vnum)
 	}
 }
 
+bool ITEM_MANAGER::IsItemMetin(const DWORD& vnum)
+{
+	const TItemTable* p = GetTable(vnum);
+	return (p && p->bType == ITEM_METIN);
+}
+
 bool ITEM_MANAGER::GetVnum(const char * c_pszName, DWORD & r_dwVnum)
 {
 	int len = strlen(c_pszName);
@@ -774,6 +780,9 @@ bool ITEM_MANAGER::CreateDropItemVector(LPCHARACTER pkChr, LPCHARACTER pkKiller,
  
 	std::sort(vec_item.begin(), vec_item.end());
 	vec_item.erase(std::unique(vec_item.begin(), vec_item.end()), vec_item.end());
+	std::stable_sort(vec_item.begin(), vec_item.end(), [](const std::pair<int, int>& f, const std::pair<int, int>& s) {
+		return ITEM_MANAGER::instance().IsItemMetin(f.first) > ITEM_MANAGER::instance().IsItemMetin(s.first);
+		});
 
 	return !vec_item.empty();
 }
