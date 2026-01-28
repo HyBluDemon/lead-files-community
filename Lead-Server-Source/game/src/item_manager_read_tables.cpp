@@ -265,7 +265,7 @@ std::pair<bool, std::string> ITEM_MANAGER::ReadDropItemGroup(const char* c_pszFi
 			tempDropItemGr[iMobVnum] = pkGroup;
 		}
 
-		for (int k = 1; k < 256; ++k)
+		for (int k = 1; k < MAX_GROUP_ITEM_NUM; ++k)
 		{
 			std::string key = std::to_string(k);
 			TTokenVector* pTok;
@@ -359,7 +359,7 @@ std::pair<bool, std::string> ITEM_MANAGER::ReadMonsterDropItemGroup(const char* 
 					auto& groupVec = tempMobItemGr[mobVnum];
 					CMobItemGroup* group = M2_NEW CMobItemGroup(mobVnum, iKillDrop, stName);
 
-					for (int k = 1; k < 256; ++k)
+					for (int k = 1; k < MAX_GROUP_ITEM_NUM; ++k)
 					{
 						std::string key = std::to_string(k);
 						TTokenVector* pTok;
@@ -389,7 +389,7 @@ std::pair<bool, std::string> ITEM_MANAGER::ReadMonsterDropItemGroup(const char* 
 						tempDropItemGr[mobVnum] = group;
 					}
 
-					for (int k = 1; k < 256; ++k)
+					for (int k = 1; k < MAX_GROUP_ITEM_NUM; ++k)
 					{
 						std::string key = std::to_string(k);
 						TTokenVector* pTok;
@@ -415,7 +415,7 @@ std::pair<bool, std::string> ITEM_MANAGER::ReadMonsterDropItemGroup(const char* 
 				else if (strType == "limit")
 				{
 					CLevelItemGroup* group = M2_NEW CLevelItemGroup(iLevelStart, iLevelEnd);
-					for (int k = 1; k < 256; ++k)
+					for (int k = 1; k < MAX_GROUP_ITEM_NUM; ++k)
 					{
 						std::string key = std::to_string(k);
 						TTokenVector* pTok;
@@ -487,7 +487,7 @@ std::pair<bool, std::string> ITEM_MANAGER::ReadSpecialDropItemFile(const char* c
 
 		if (stType == "attr") {
 			CSpecialAttrGroup* pkGroup = M2_NEW CSpecialAttrGroup(iVnum);
-			for (int k = 1; k < 256; ++k) {
+			for (int k = 1; k < MAX_GROUP_ITEM_NUM; ++k) {
 				TTokenVector* pTok;
 				if (loader.GetTokenVector(std::to_string(k), &pTok)) {
 					DWORD applyType = FN_get_apply_type(pTok->at(0).c_str());
@@ -505,7 +505,7 @@ std::pair<bool, std::string> ITEM_MANAGER::ReadSpecialDropItemFile(const char* c
 			else if (stType == "special") type = CSpecialItemGroup::SPECIAL;
 
 			CSpecialItemGroup* pkGroup = M2_NEW CSpecialItemGroup(iVnum, type);
-			for (int k = 1; k < 256; ++k) {
+			for (int k = 1; k < MAX_GROUP_ITEM_NUM; ++k) {
 				TTokenVector* pTok;
 				if (loader.GetTokenVector(std::to_string(k), &pTok)) {
 					auto ranges = ParseVnumConfig(pTok->at(0));
