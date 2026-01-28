@@ -339,19 +339,20 @@ PyObject* netConnectToAccountServer(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* netTargetInfoLoad(PyObject* poSelf, PyObject* poArgs)
 {
-	DWORD dwVID;
+	int iVID;
 
-	if (!PyArg_ParseTuple(poArgs, "i", &dwVID))
+	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
 	{
 		return Py_BuildException();
 	}
-	if (dwVID < 0)
+
+	if (iVID < 0)
 	{
 		return Py_BuildNone();
 	}
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
-	rns.SendTargetInfoLoadPacket(dwVID);
+	rns.SendTargetInfoLoadPacket(static_cast<DWORD>(iVID));
 
 	return Py_BuildNone();
 }

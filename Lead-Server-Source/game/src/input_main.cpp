@@ -62,16 +62,21 @@ void CInputMain::TargetInfoLoad(LPCHARACTER ch, const char* c_pData)
 
 	if ((m_pkChrTarget->IsMonster() || m_pkChrTarget->IsStone()) && ITEM_MANAGER::instance().CreateDropItemVector(m_pkChrTarget, ch, s_vec_item))
 	{
-		for (std::vector<std::pair<int, int> >::const_iterator iter = s_vec_item.begin(); iter != s_vec_item.end(); ++iter)
+		pInfo.dwVID = m_pkChrTarget->GetVID();
+		pInfo.race = m_pkChrTarget->GetRaceNum();
+
+		for (const auto& [vnum, count] : s_vec_item)
 		{
-			pInfo.dwVID = m_pkChrTarget->GetVID();
-			pInfo.race = m_pkChrTarget->GetRaceNum();
-			pInfo.dwVnum = iter->first;
-			pInfo.count = iter->second;
+			pInfo.dwVnum = vnum;
+			pInfo.count = count;
+
 			buf.write(&pInfo, sizeof(pInfo));
-			ch->GetDesc()->BufferedPacket(&pInfo, sizeof(TPacketGCTargetInfo));
 		}
-		ch->GetDesc()->Packet(buf.read_peek(), buf.size());
+
+		if (buf.size() > 0)
+		{
+			ch->GetDesc()->Packet(buf.read_peek(), buf.size());
+		}
 	}
 }
 

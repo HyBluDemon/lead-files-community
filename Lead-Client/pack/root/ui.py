@@ -152,9 +152,6 @@ class Window(object):
 		else:
 			wndMgr.SetParent(self.hWnd, 0)
 
-	def SetAttachParent(self, parent):
-		wndMgr.SetAttachParent(self.hWnd, parent.hWnd)
-
 	def SetParentProxy(self, parent):
 		self.parentWindow=proxy(parent)
 		wndMgr.SetParent(self.hWnd, parent.hWnd)
