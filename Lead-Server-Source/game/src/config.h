@@ -98,6 +98,7 @@ extern BYTE g_PartyGapLevel;
 extern int g_GuildCreateFee;
 extern int g_DeathExpLossCap;
 extern int g_SkillBookExp;
+extern ItemStackType g_ItemCountLimit;
 // NEW CONFIGURATION VARIABLES
 
 extern bool g_BlockCharCreation;

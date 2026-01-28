@@ -231,7 +231,7 @@ LPITEM ITEM_MANAGER::CreateItem(DWORD vnum, DWORD count, DWORD id, bool bTryMagi
 		;
 	else if (item->IsStackable())  // 합칠 수 있는 아이템의 경우
 	{
-		count = MINMAX(1, count, ITEM_MAX_COUNT);
+		count = MINMAX(1, count, g_ItemCountLimit);
 
 		if (bTryMagic && count <= 1 && IS_SET(item->GetFlag(), ITEM_FLAG_MAKECOUNT))
 			count = item->GetValue(1);
