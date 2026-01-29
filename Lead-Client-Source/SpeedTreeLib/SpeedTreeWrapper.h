@@ -34,6 +34,7 @@
 ///////////////////////////////////////////////////////////////////////  
 //	Include files
 
+#include "SpeedTreeConfig.h"
 #include "SpeedTreeMaterial.h"
 #include <speedtree/SpeedTreeRT.h>
 
@@ -99,7 +100,7 @@ public:
 	virtual	~CSpeedTreeWrapper();
 	
 	const float *				GetPosition();
-	static void					SetVertexShaders(LPDIRECT3DVERTEXDECLARATION9 dwBranchVertexShader, LPDIRECT3DVERTEXDECLARATION9 dwLeafVertexShader);
+	static void					SetVertexShaders(LPDIRECT3DVERTEXDECLARATION9 pBranchVertexShader, LPDIRECT3DVERTEXDECLARATION9 pLeafVertexShader, LPDIRECT3DVERTEXSHADER9 pVertexShader);
 
 	// geometry 
 	bool                        LoadTree(const char * pszSptFile, const BYTE * c_pbBlock = NULL, unsigned int uiBlockSize = 0, unsigned int nSeed = 1, float fSize = -1.0f, float fSizeVariance = -1.0f);
@@ -197,7 +198,8 @@ private:
 	CGraphicImageInstance			m_CompositeImageInstance;
 
 	static LPDIRECT3DVERTEXDECLARATION9 ms_dwBranchVertexShader;
-	static LPDIRECT3DVERTEXDECLARATION9 ms_dwLeafVertexShader;
+	static LPDIRECT3DVERTEXDECLARATION9 ms_pLeafVertexShaderDecl;
+	static LPDIRECT3DVERTEXSHADER9 ms_pLeafVertexShader;
 };
 
 #pragma warning(pop)

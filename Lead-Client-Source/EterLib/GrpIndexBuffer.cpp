@@ -20,8 +20,12 @@ bool CGraphicIndexBuffer::Lock(void** pretIndices) const
 {
 	assert(m_lpd3dIdxBuf!=NULL);
 
-	if (FAILED(m_lpd3dIdxBuf->Lock(0, 0, pretIndices, 0)))
+	HRESULT hr = m_lpd3dIdxBuf->Lock(0, 0, pretIndices, 0);
+	if (FAILED(hr))
+	{
+		TraceError("CGraphicIndexBuffer::Lock: hr=0x%08X flags=0 pool=%u", hr, D3DPOOL_DEFAULT);
 		return false;
+	}
 
 	return true;
 }
@@ -37,8 +41,12 @@ bool CGraphicIndexBuffer::Lock(void** pretIndices)
 {
 	assert(m_lpd3dIdxBuf!=NULL);
 
-	if (FAILED(m_lpd3dIdxBuf->Lock(0, 0, pretIndices, 0)))
+	HRESULT hr = m_lpd3dIdxBuf->Lock(0, 0, pretIndices, 0);
+	if (FAILED(hr))
+	{
+		TraceError("CGraphicIndexBuffer::Lock: hr=0x%08X flags=0 pool=%u", hr, D3DPOOL_DEFAULT);
 		return false;
+	}
 
 	return true;
 }
@@ -55,8 +63,12 @@ bool CGraphicIndexBuffer::Copy(int bufSize, const void* srcIndices)
 	assert(m_lpd3dIdxBuf!=NULL);
 
 	BYTE* dstIndices;
-	if (FAILED(m_lpd3dIdxBuf->Lock(0, 0, (void**)&dstIndices, 0)))
+	HRESULT hr = m_lpd3dIdxBuf->Lock(0, 0, (void**)&dstIndices, 0);
+	if (FAILED(hr))
+	{
+		TraceError("CGraphicIndexBuffer::Lock: hr=0x%08X flags=0 pool=%u", hr, D3DPOOL_DEFAULT);
 		return false;
+	}
 
 	memcpy(dstIndices, srcIndices, bufSize);
 
@@ -73,8 +85,12 @@ bool CGraphicIndexBuffer::Create(int faceCount, TFace* faces)
 		return false;
 
 	WORD* dstIndices;
-	if (FAILED(m_lpd3dIdxBuf->Lock(0, 0, (void**)&dstIndices, 0)))
+	HRESULT hr = m_lpd3dIdxBuf->Lock(0, 0, (void**)&dstIndices, 0);
+	if (FAILED(hr))
+	{
+		TraceError("CGraphicIndexBuffer::Lock: hr=0x%08X flags=0 pool=%u", hr, D3DPOOL_DEFAULT);
 		return false;
+	}
 
 	for (int i = 0; i<faceCount; ++i, dstIndices+=3)
 	{		
@@ -94,7 +110,7 @@ bool CGraphicIndexBuffer::CreateDeviceObjects()
 			m_dwBufferSize, 
 			D3DUSAGE_WRITEONLY, 
 			m_d3dFmt,
-			D3DPOOL_MANAGED, 
+			D3DPOOL_DEFAULT, 
 			&m_lpd3dIdxBuf,
 			NULL)
 			))

@@ -757,7 +757,7 @@ bool CMapOutdoor::__SoftwareTransformPatch_Create()
 					sizeof(SoftwareTransformPatch_SSplatVertex)*CTerrainPatch::TERRAIN_VERTEX_COUNT, 
 					D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY, 
 					D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_SPECULAR|D3DFVF_TEX2, 
-					D3DPOOL_SYSTEMMEM, 
+					D3DPOOL_DEFAULT, 
 					&m_kSTPD.m_pkVBSplat[uIndex], NULL
 				)
 			)) return false;
@@ -773,7 +773,7 @@ bool CMapOutdoor::__SoftwareTransformPatch_Create()
 					sizeof(SoftwareTransformPatch_STVertex)*CTerrainPatch::TERRAIN_VERTEX_COUNT, 
 					D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY, 
 					D3DFVF_XYZRHW, 
-					D3DPOOL_SYSTEMMEM, 
+					D3DPOOL_DEFAULT, 
 					&m_kSTPD.m_pkVBNone[uIndex], NULL
 				)
 			)) return false;

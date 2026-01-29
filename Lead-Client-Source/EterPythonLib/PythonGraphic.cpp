@@ -9,7 +9,7 @@ void CPythonGraphic::Destroy()
 {	
 }
 
-LPDIRECT3D9 CPythonGraphic::GetD3D()
+LPDIRECT3D9EX CPythonGraphic::GetD3D()
 {
 	return ms_lpd3d;
 }

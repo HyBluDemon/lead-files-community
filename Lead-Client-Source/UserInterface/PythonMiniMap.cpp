@@ -576,7 +576,7 @@ bool CPythonMiniMap::Create()
 	LPMINIMAPVERTEX		lpOrigMiniMapVertex;
 #pragma pack(pop)
 
-	if (!m_VertexBuffer.Create(36, D3DFVF_XYZ | D3DFVF_TEX1, D3DUSAGE_WRITEONLY, D3DPOOL_MANAGED) )
+	if (!m_VertexBuffer.Create(36, D3DFVF_XYZ | D3DFVF_TEX1, D3DUSAGE_DYNAMIC, D3DPOOL_DEFAULT) )
 	{
 		return false;
 	}

@@ -18,7 +18,7 @@ class CPythonGraphic : public CScreen, public CSingleton<CPythonGraphic>
 		void PushState();
 		void PopState();
 
-		LPDIRECT3D9 GetD3D();
+		LPDIRECT3D9EX GetD3D();
 
 		float GetOrthoDepth();
 		void SetInterfaceRenderState();

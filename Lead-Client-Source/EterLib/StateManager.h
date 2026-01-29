@@ -237,7 +237,7 @@ class CStateManagerState
 class CStateManager : public CSingleton<CStateManager>
 {
 	public:
-		CStateManager(LPDIRECT3DDEVICE9 lpDevice);
+		CStateManager(LPDIRECT3DDEVICE9EX lpDevice);
 		virtual ~CStateManager();
 
 		void	SetDefaultState();
@@ -345,7 +345,7 @@ class CStateManager : public CSingleton<CStateManager>
 		DWORD GetRenderState(D3DRENDERSTATETYPE Type);
 
 	private:
-		void SetDevice(LPDIRECT3DDEVICE9 lpDevice);
+		void SetDevice(LPDIRECT3DDEVICE9EX lpDevice);
 
 	private:
 		CStateManagerState	m_ChipState;
@@ -356,7 +356,7 @@ class CStateManager : public CSingleton<CStateManager>
 		bool				m_bScene;
 		DWORD				m_dwBestMinFilter;
 		DWORD				m_dwBestMagFilter;
-		LPDIRECT3DDEVICE9	m_lpD3DDev;
+		LPDIRECT3DDEVICE9EX	m_lpD3DDev;
 
 #ifdef _DEBUG
 		// Saving Flag
