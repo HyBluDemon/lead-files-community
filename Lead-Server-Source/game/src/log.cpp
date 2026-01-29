@@ -65,7 +65,7 @@ void LogManager::ItemLog(LPCHARACTER ch, LPITEM item, const char * c_pszText, co
 	ItemLog(ch->GetPlayerID(), ch->GetX(), ch->GetY(), item->GetID(),
 			NULL == c_pszText ? "" : c_pszText,
 		   	c_pszHint, ch->GetDesc() ? ch->GetDesc()->GetHostName() : "",
-		   	item->GetOriginalVnum());
+		   	item->GetVnum());
 }
 
 void LogManager::ItemLog(LPCHARACTER ch, int itemID, int itemVnum, const char * c_pszText, const char * c_pszHint)
@@ -269,7 +269,7 @@ void LogManager::DetailLoginLog(bool isLogin, LPCHARACTER ch)
 	if (true == isLogin)
 	{
 		Query("INSERT INTO loginlog2(type, is_gm, login_time, channel, account_id, pid, ip) "
-				"VALUES('INVALID', %s, NOW(), %d, %u, %u, inet_aton('%s'), '%s')",
+				"VALUES('INVALID', %s, NOW(), %d, %u, %u, inet_aton('%s'))",
 				ch->IsGM() == true ? "'Y'" : "'N'",
 				g_bChannel,
 				ch->GetDesc()->GetAccountTable().id,

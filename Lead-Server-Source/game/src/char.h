@@ -369,6 +369,12 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		//////////////////////////////////////////////////////////////////////////////////
 		// Basic Points
+	private:
+		DWORD			dwLastTargetInfoPulse;
+
+	public:
+		DWORD			GetLastTargetInfoPulse() const { return dwLastTargetInfoPulse; }
+		void			SetLastTargetInfoPulse(DWORD pulse) { dwLastTargetInfoPulse = pulse; }
 	public:
 		DWORD			GetPlayerID() const	{ return m_dwPlayerID; }
 
@@ -868,7 +874,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// END_OF_ADD_REFINE_BUILDING
 
 		bool			RefineItem(LPITEM pkItem, LPITEM pkTarget);
-		bool			DropItem(TItemPos Cell,  BYTE bCount=0);
+		bool			DropItem(TItemPos Cell,  ItemStackType bCount=0);
 		bool			GiveRecallItem(LPITEM item);
 		void			ProcessRecallItem(LPITEM item);
 
@@ -892,7 +898,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			GiveItemFromSpecialItemGroup(DWORD dwGroupNum, std::vector <DWORD> &dwItemVnums, 
 							std::vector <DWORD> &dwItemCounts, std::vector <LPITEM> &item_gets, int &count);
 
-		bool			MoveItem(TItemPos pos, TItemPos change_pos, BYTE num);
+		bool			MoveItem(TItemPos pos, TItemPos change_pos, ItemStackType count);
 		bool			PickupItem(DWORD vid);
 		bool			EquipItem(LPITEM item, int iCandidateCell = -1);
 		bool			UnequipItem(LPITEM item);
@@ -904,7 +910,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			CanUnequipNow(const LPITEM item, const TItemPos& srcCell = NPOS, const TItemPos& destCell = NPOS);
 
 		bool			SwapItem(BYTE bCell, BYTE bDestCell);
-		LPITEM			AutoGiveItem(DWORD dwItemVnum, BYTE bCount=1, int iRarePct = -1, bool bMsg = true);
+		LPITEM			AutoGiveItem(DWORD dwItemVnum, ItemStackType bCount=1, int iRarePct = -1, bool bMsg = true);
 		void			AutoGiveItem(LPITEM item, bool longOwnerShip = false);
 		
 		int				GetEmptyInventory(BYTE size) const;

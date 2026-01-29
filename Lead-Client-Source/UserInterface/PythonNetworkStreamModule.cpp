@@ -337,6 +337,26 @@ PyObject* netConnectToAccountServer(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
+PyObject* netTargetInfoLoad(PyObject* poSelf, PyObject* poArgs)
+{
+	int iVID;
+
+	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
+	{
+		return Py_BuildException();
+	}
+
+	if (iVID < 0)
+	{
+		return Py_BuildNone();
+	}
+
+	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
+	rns.SendTargetInfoLoadPacket(static_cast<DWORD>(iVID));
+
+	return Py_BuildNone();
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 PyObject* netSetLoginInfo(PyObject* poSelf, PyObject* poArgs)
@@ -730,7 +750,7 @@ PyObject* netSendItemMovePacket(PyObject* poSelf, PyObject* poArgs)
 {
 	TItemPos Cell;
 	TItemPos ChangeCell;
-	int num;
+	int count;
 
 	switch (PyTuple_Size(poArgs))
 	{
@@ -739,7 +759,7 @@ PyObject* netSendItemMovePacket(PyObject* poSelf, PyObject* poArgs)
 			return Py_BuildException();
 		if (!PyTuple_GetInteger(poArgs, 1, &ChangeCell.cell))
 			return Py_BuildException();
-		if (!PyTuple_GetInteger(poArgs, 2, &num))
+		if (!PyTuple_GetInteger(poArgs, 2, &count))
 			return Py_BuildException();
 		break;
 	case 5:
@@ -752,7 +772,7 @@ PyObject* netSendItemMovePacket(PyObject* poSelf, PyObject* poArgs)
 				return Py_BuildException();
 			if (!PyTuple_GetInteger(poArgs, 3, &ChangeCell.cell))
 				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 4, &num))
+			if (!PyTuple_GetInteger(poArgs, 4, &count))
 				return Py_BuildException();
 		}
 		break;
@@ -761,7 +781,7 @@ PyObject* netSendItemMovePacket(PyObject* poSelf, PyObject* poArgs)
 	}
 
 	CPythonNetworkStream& rkNetStream=CPythonNetworkStream::Instance();
-	rkNetStream.SendItemMovePacket(Cell, ChangeCell, (BYTE) num);
+	rkNetStream.SendItemMovePacket(Cell, ChangeCell, (ItemStackType) count);
 	return Py_BuildNone();
 }
 
@@ -819,12 +839,12 @@ PyObject* netSendShopEndPacket(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* netSendShopBuyPacket(PyObject* poSelf, PyObject* poArgs)
 {
-	int iCount;
-	if (!PyTuple_GetInteger(poArgs, 0, &iCount))
+	int iPos;
+	if (!PyTuple_GetInteger(poArgs, 0, &iPos))
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream=CPythonNetworkStream::Instance();
-	rkNetStream.SendShopBuyPacket(iCount);
+	rkNetStream.SendShopBuyPacket(iPos);
 	return Py_BuildNone();
 }
 
@@ -1673,6 +1693,8 @@ void initnet()
 		{ "ExitApplication",					netExitApplication,						METH_VARARGS },
 		{ "ConnectTCP",							netConnectTCP,							METH_VARARGS },
 		{ "ConnectToAccountServer",				netConnectToAccountServer,				METH_VARARGS },
+		
+		{ "SendTargetInfoLoad",					netTargetInfoLoad,						METH_VARARGS },
 
 		{ "SendLoginPacket",					netSendLoginPacket,						METH_VARARGS },
 		{ "SendSelectEmpirePacket",				netSendSelectEmpirePacket,				METH_VARARGS },

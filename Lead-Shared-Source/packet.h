@@ -46,6 +46,8 @@ enum
 	HEADER_CG_SHOOT				= 54,
 	HEADER_CG_MYSHOP				= 55,
 
+	HEADER_CG_TARGET_INFO_LOAD = 59,
+
 	HEADER_CG_ITEM_USE_TO_ITEM			= 60,
 	HEADER_CG_TARGET			 	= 61,
 
@@ -159,6 +161,8 @@ enum
 	HEADER_GC_PING				= 44,
 	HEADER_GC_SCRIPT				= 45,
 	HEADER_GC_QUEST_CONFIRM			= 46,
+
+	HEADER_GC_TARGET_INFO			= 58,
 
 	HEADER_GC_OWNERSHIP				= 62,
 	HEADER_GC_TARGET			 	= 63,
@@ -631,7 +635,7 @@ typedef struct command_item_drop2
 	BYTE 	header;
 	TItemPos 	Cell;
 	DWORD	gold;
-	BYTE	count;
+	ItemStackType	count;
 } TPacketCGItemDrop2;
 
 typedef struct command_item_move
@@ -639,7 +643,7 @@ typedef struct command_item_move
 	BYTE 	header;
 	TItemPos	Cell;
 	TItemPos	CellTo;
-	BYTE	count;
+	ItemStackType	count;
 } TPacketCGItemMove;
 
 typedef struct command_item_pickup
@@ -677,13 +681,13 @@ enum
 
 typedef struct command_shop_buy
 {
-	BYTE	count;
+	ItemStackType	count;
 } TPacketCGShopBuy;
 
 typedef struct command_shop_sell
 {
 	BYTE	pos;
-	BYTE	count;
+	ItemStackType	count;
 } TPacketCGShopSell;
 
 typedef struct command_shop
@@ -1053,7 +1057,7 @@ typedef struct packet_item_set
 	BYTE	header;
 	TItemPos Cell;
 	DWORD	vnum;
-	BYTE	count;
+	ItemStackType	count;
 	DWORD	flags;
 	DWORD	anti_flags;
 	bool	highlight;
@@ -1087,7 +1091,7 @@ typedef struct packet_item_update
 {
 	BYTE	header;
 	TItemPos Cell;
-	BYTE	count;
+	ItemStackType	count;
 	long	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 } TPacketGCItemUpdate;
@@ -1161,7 +1165,7 @@ typedef struct packet_shop_item
 {   
 	DWORD       vnum;
 	DWORD       price;
-	BYTE        count;
+	ItemStackType        count;
 	BYTE		display_pos;
 	long	alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
@@ -1374,6 +1378,21 @@ typedef struct packet_target
 	DWORD	dwVID;
 	BYTE	bHPPercent;
 } TPacketGCTarget;
+
+typedef struct packet_target_info
+{
+	BYTE	header;
+	DWORD	dwVID;
+	DWORD	race;
+	DWORD	dwVnum;
+	BYTE	count;
+} TPacketGCTargetInfo;
+
+typedef struct packet_target_info_load
+{
+	BYTE header;
+	DWORD dwVID;
+} TPacketCGTargetInfoLoad;
 
 typedef struct packet_warp
 {
@@ -2003,7 +2022,7 @@ typedef struct packet_channel
 typedef struct SEquipmentItemSet
 {
 	uint32_t vnum;
-	BYTE count;
+	ItemStackType count;
 	int32_t alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 } TEquipmentItemSet;

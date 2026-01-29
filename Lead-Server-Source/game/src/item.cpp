@@ -27,7 +27,7 @@ CItem::CItem(DWORD dwVnum)
 	m_bExchanging(false), m_pkDestroyEvent(NULL), m_pkUniqueExpireEvent(NULL), m_pkTimerBasedOnWearExpireEvent(NULL), m_pkRealTimeExpireEvent(NULL),
 	m_pkExpireEvent(NULL),
    	m_pkAccessorySocketExpireEvent(NULL), m_pkOwnershipEvent(NULL), m_dwOwnershipPID(0), m_bSkipSave(false), m_isLocked(false),
-	m_dwMaskVnum(0), m_dwSIGVnum (0)
+	m_dwSIGVnum (0)
 {
 	memset( &m_alSockets, 0, sizeof(m_alSockets) );
 	memset( &m_aAttr, 0, sizeof(m_aAttr) );
@@ -215,7 +215,7 @@ DWORD CItem::GetCount()
 	if (GetType() == ITEM_ELK) return MIN(m_dwCount, INT_MAX);
 	else
 	{
-		return MIN(m_dwCount, 200);
+		return MIN(m_dwCount, g_ItemCountLimit);
 	}
 }
 
@@ -227,7 +227,7 @@ bool CItem::SetCount(DWORD count)
 	}
 	else
 	{
-		m_dwCount = MIN(count, ITEM_MAX_COUNT);
+		m_dwCount = MIN(count, g_ItemCountLimit);
 	}
 
 	if (count == 0 && m_pOwner)
@@ -814,7 +814,7 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 	{
 		if (bWearCell < WEAR_MAX_NUM || bWearCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 		{
-			sys_err("EquipTo: invalid dragon soul cell (this: #%d %s wearflag: %d cell: %d)", GetOriginalVnum(), GetName(), GetSubType(), bWearCell - WEAR_MAX_NUM);
+			sys_err("EquipTo: invalid dragon soul cell (this: #%d %s wearflag: %d cell: %d)", GetVnum(), GetName(), GetSubType(), bWearCell - WEAR_MAX_NUM);
 			return false;
 		}
 	}
@@ -822,14 +822,14 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 	{
 		if (bWearCell >= WEAR_MAX_NUM)
 		{
-			sys_err("EquipTo: invalid wear cell (this: #%d %s wearflag: %d cell: %d)", GetOriginalVnum(), GetName(), GetWearFlag(), bWearCell);
+			sys_err("EquipTo: invalid wear cell (this: #%d %s wearflag: %d cell: %d)", GetVnum(), GetName(), GetWearFlag(), bWearCell);
 			return false;
 		}
 	}
 
 	if (ch->GetWear(bWearCell))
 	{
-		sys_err("EquipTo: item already exist (this: #%d %s cell: %d %s)", GetOriginalVnum(), GetName(), bWearCell, ch->GetWear(bWearCell)->GetName());
+		sys_err("EquipTo: item already exist (this: #%d %s cell: %d %s)", GetVnum(), GetName(), bWearCell, ch->GetWear(bWearCell)->GetName());
 		return false;
 	}
 
@@ -993,7 +993,7 @@ void CItem::SetSocket(int i, long v, bool bLog)
 	UpdatePacket();
 	Save();
 	if (bLog)
-		LogManager::instance().ItemLog(i, v, 0, GetID(), "SET_SOCKET", "", "", GetOriginalVnum());
+		LogManager::instance().ItemLog(i, v, 0, GetID(), "SET_SOCKET", "", "", GetVnum());
 }
 
 int CItem::GetGold()
@@ -1885,7 +1885,7 @@ void CItem::AttrLog()
 	{
 		if (m_alSockets[i])
 		{
-			LogManager::instance().ItemLog(i, m_alSockets[i], 0, GetID(), "INFO_SOCKET", "", pszIP ? pszIP : "", GetOriginalVnum());
+			LogManager::instance().ItemLog(i, m_alSockets[i], 0, GetID(), "INFO_SOCKET", "", pszIP ? pszIP : "", GetVnum());
 		}
 	}
 
@@ -1895,7 +1895,7 @@ void CItem::AttrLog()
 		int value	= m_aAttr[i].sValue;
 
 		if (type)
-			LogManager::instance().ItemLog(i, type, value, GetID(), "INFO_ATTR", "", pszIP ? pszIP : "", GetOriginalVnum());
+			LogManager::instance().ItemLog(i, type, value, GetID(), "INFO_ATTR", "", pszIP ? pszIP : "", GetVnum());
 	}
 }
 
