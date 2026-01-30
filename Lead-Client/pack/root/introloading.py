@@ -170,7 +170,6 @@ class LoadingWindow(ui.ScriptWindow):
 		self.__RegisterTitleName()
 		self.__RegisterColor()
 		self.__InitData()
-		self.__LoadMap()
 		self.__LoadSound()
 		self.__LoadEffect()
 		self.__LoadWarrior()
@@ -180,6 +179,7 @@ class LoadingWindow(ui.ScriptWindow):
 		self.__LoadSkill()
 		self.__LoadEnemy()
 		self.__LoadNPC()
+		self.__LoadRaceHeight()
 		self.__StartGame()
 
 	def LoadData(self, playerX, playerY):
@@ -194,7 +194,6 @@ class LoadingWindow(ui.ScriptWindow):
 
 		self.loadStepList=[
 			(0, ui.__mem_func__(self.__InitData)),
-			(10, ui.__mem_func__(self.__LoadMap)),
 			(30, ui.__mem_func__(self.__LoadSound)),
 			(40, ui.__mem_func__(self.__LoadEffect)),
 			(50, ui.__mem_func__(self.__LoadWarrior)),
@@ -208,12 +207,11 @@ class LoadingWindow(ui.ScriptWindow):
 			# GUILD_BUILDING
 			(98, ui.__mem_func__(self.__LoadGuildBuilding)),
 			# END_OF_GUILD_BUILDING
-
+			(99, ui.__mem_func__(self.__LoadRaceHeight)),
 			(100, ui.__mem_func__(self.__StartGame)),
 		]
 
 		self.__SetProgress(0)
-		#self.__SetNext(self.__LoadMap)
 
 	def OnUpdate(self):
 		if len(self.loadStepList)>0:
@@ -305,9 +303,6 @@ class LoadingWindow(ui.ScriptWindow):
 	def __RegisterEmotionIcon(self):
 		emotion.RegisterEmotionIcons()
 
-	def __LoadMap(self):
-		net.Warp(self.playerX, self.playerY)
-
 	def __LoadSound(self):
 		playerSettingModule.LoadGameData("SOUND")
 
@@ -339,6 +334,9 @@ class LoadingWindow(ui.ScriptWindow):
 	def __LoadGuildBuilding(self):
 		playerSettingModule.LoadGuildBuildingList(localeInfo.GUILD_BUILDING_LIST_TXT)
 	# END_OF_GUILD_BUILDING
+
+	def __LoadRaceHeight(self):
+		playerSettingModule.LoadGameData("RACE_HEIGHT")
 
 	def __StartGame(self):
 		background.SetViewDistanceSet(background.DISTANCE0, 25600)

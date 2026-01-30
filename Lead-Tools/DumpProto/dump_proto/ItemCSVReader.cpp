@@ -284,7 +284,7 @@ int get_Item_Flag_Value(string inputString)
 int get_Item_WearFlag_Value(string inputString) 
 {
 
-	string arWearrFlag[] = { "WEAR_BODY", "WEAR_HEAD", "WEAR_FOOTS", "WEAR_WRIST", "WEAR_WEAPON", "WEAR_NECK", "WEAR_EAR", "WEAR_SHIELD", "WEAR_UNIQUE",
+	string arWearrFlag[] = { "WEAR_BODY", "WEAR_HEAD", "WEAR_FOOTS", "WEAR_WRIST", "WEAR_WEAPON", "WEAR_NECK", "WEAR_EAR", "WEAR_UNIQUE", "WEAR_SHIELD",
 					"WEAR_ARROW", "WEAR_HAIR", "WEAR_ABILITY" };
 
 
@@ -519,7 +519,7 @@ int get_Mob_RaceFlag_Value(string inputString)
 		"ATT_ELEC","ATT_FIRE","ATT_ICE","ATT_WIND","ATT_EARTH","ATT_DARK"};
 
 	int retValue = 0;
-	string* arInputString = StringSplit(inputString, "|");				//프로토 정보 내용을 단어별로 쪼갠 배열.
+	string* arInputString = StringSplit(inputString, ",");				//프로토 정보 내용을 단어별로 쪼갠 배열.
 	for(int i =0;i<sizeof(arRaceFlag)/sizeof(arRaceFlag[0]);i++) {
 		string tempString = arRaceFlag[i];
 		for (int j=0; j<30 ; j++)		//최대 30개 단어까지. (하드코딩)
