@@ -6,8 +6,16 @@
 bool CGraphicImageTexture::Lock(int* pRetPitch, void** ppRetPixels, int level)
 {
 	D3DLOCKED_RECT lockedRect;
-	if (FAILED(m_lpd3dTexture->LockRect(level, &lockedRect, NULL, 0)))
+	HRESULT hr = m_lpd3dTexture->LockRect(level, &lockedRect, NULL, 0);
+	if (FAILED(hr))
+	{
+		D3DSURFACE_DESC desc;
+		if (SUCCEEDED(m_lpd3dTexture->GetLevelDesc(level, &desc)))
+			TraceError("CGraphicImageTexture::LockRect: hr=0x%08X pool=%u format=%u", hr, desc.Pool, desc.Format);
+		else
+			TraceError("CGraphicImageTexture::LockRect: hr=0x%08X", hr);
 		return false;
+	}
 
 	*pRetPitch = lockedRect.Pitch;
 	*ppRetPixels = (void*)lockedRect.pBits;	
@@ -44,7 +52,7 @@ bool CGraphicImageTexture::CreateDeviceObjects()
 
 	if (m_stFileName.empty())
 	{
-		if (FAILED(ms_lpd3dDevice->CreateTexture(m_width, m_height, 1, 0, m_d3dFmt, D3DPOOL_MANAGED, &m_lpd3dTexture, NULL)))
+		if (FAILED(ms_lpd3dDevice->CreateTexture(m_width, m_height, 1, D3DUSAGE_DYNAMIC, m_d3dFmt, D3DPOOL_DEFAULT, &m_lpd3dTexture, NULL)))
 			return false;
 	}
 	else
@@ -95,8 +103,9 @@ bool CGraphicImageTexture::CreateDDSTexture(CDXTCImage & image, const BYTE * /*c
 	int mipmapCount = image.m_dwMipMapCount == 0 ? 1 : image.m_dwMipMapCount;
 
 	D3DFORMAT format;
-	LPDIRECT3DTEXTURE9 lpd3dTexture;
-	D3DPOOL pool = ms_bSupportDXT ? D3DPOOL_MANAGED : D3DPOOL_SCRATCH;;
+	LPDIRECT3DTEXTURE9 lpd3dTexture = NULL;
+	LPDIRECT3DTEXTURE9 lpd3dStaging = NULL;
+	D3DPOOL pool = D3DPOOL_DEFAULT;
 
 	if(image.m_CompFormat == PF_DXT5)
 		format = D3DFMT_DXT5;	
@@ -122,26 +131,49 @@ bool CGraphicImageTexture::CreateDDSTexture(CDXTCImage & image, const BYTE * /*c
 	}
 
 	if (FAILED(D3DXCreateTexture(	ms_lpd3dDevice, image.m_nWidth, image.m_nHeight,
+										mipmapCount, 0, format, D3DPOOL_SYSTEMMEM, &lpd3dStaging)))
+	{
+		TraceError("CreateDDSTexture: Cannot creatre texture" );
+		return false;
+	}
+
+	if (FAILED(D3DXCreateTexture(	ms_lpd3dDevice, image.m_nWidth, image.m_nHeight,
 									mipmapCount, 0, format, pool, &lpd3dTexture)))
 	{
 		TraceError("CreateDDSTexture: Cannot creatre texture");
+		lpd3dStaging->Release();
 		return false;
 	}
 
 	for (DWORD i = 0; i < mipmapCount; ++i)
 	{
 		D3DLOCKED_RECT lockedRect;
-
-		if (FAILED(lpd3dTexture->LockRect(i, &lockedRect, NULL, 0)))
+		HRESULT hr = lpd3dStaging->LockRect(i, &lockedRect, NULL, 0);
+		if (FAILED(hr))
 		{
-			TraceError("CreateDDSTexture: Cannot lock texture");
+			D3DSURFACE_DESC desc;
+			if (SUCCEEDED(lpd3dStaging->GetLevelDesc(i, &desc)))
+				TraceError("CreateDDSTexture: LockRect failed hr=0x%08X pool=%u format=%u level=%u", hr, desc.Pool, desc.Format, i);
+			else
+				TraceError("CreateDDSTexture: LockRect failed hr=0x%08X level=%u", hr, i);
 		}
 		else
 		{
 			image.Copy(i+uMinMipMapIndex, (BYTE*)lockedRect.pBits, lockedRect.Pitch);
-			lpd3dTexture->UnlockRect(i);
+			lpd3dStaging->UnlockRect(i);
 		}
 	}
+
+	HRESULT hrUpdate = ms_lpd3dDevice->UpdateTexture(lpd3dStaging, lpd3dTexture);
+	if (FAILED(hrUpdate))
+	{
+		TraceError("CreateDDSTexture: UpdateTexture failed hr=0x%08X", hrUpdate);
+		lpd3dStaging->Release();
+		lpd3dTexture->Release();
+		return false;
+	}
+
+	lpd3dStaging->Release();
 
 	if(ms_bSupportDXT)
 	{
@@ -166,7 +198,7 @@ bool CGraphicImageTexture::CreateDDSTexture(CDXTCImage & image, const BYTE * /*c
 		}
 
 		if (FAILED(D3DXCreateTexture(	ms_lpd3dDevice, imgWidth, imgHeight, 
-										mipmapCount, 0, format, D3DPOOL_MANAGED, &m_lpd3dTexture)))
+									mipmapCount, 0, format, D3DPOOL_DEFAULT, &m_lpd3dTexture)))
 		{
 				TraceError("CreateDDSTexture: Cannot creatre texture");
 				return false;
@@ -219,12 +251,12 @@ bool CGraphicImageTexture::CreateFromMemoryFile(UINT bufSize, const void * c_pvB
 					ms_lpd3dDevice,
 					c_pvBuf,
 					bufSize,
-					D3DX_DEFAULT,
-					D3DX_DEFAULT,
+						D3DX_DEFAULT_NONPOW2,
+						D3DX_DEFAULT_NONPOW2,
 					D3DX_DEFAULT,
 					0,
 					d3dFmt,
-					D3DPOOL_MANAGED,
+						D3DPOOL_DEFAULT,
 					dwFilter,
 					dwFilter,
 					0xffff00ff,
@@ -271,7 +303,7 @@ bool CGraphicImageTexture::CreateFromMemoryFile(UINT bufSize, const void * c_pvB
 				imageInfo.MipLevels, 
 				0, 
 				format, 
-				D3DPOOL_MANAGED, 
+				D3DPOOL_DEFAULT,
 				&pkTexDst)))
 			{
 				m_lpd3dTexture=pkTexDst;

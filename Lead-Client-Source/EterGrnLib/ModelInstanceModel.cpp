@@ -234,7 +234,7 @@ void CGrannyModelInstance::__CreateDynamicVertexBuffer()
 									   D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_TEX1,
 									   //D3DUSAGE_DYNAMIC, D3DPOOL_SYSTEMMEM
 									   
-									   D3DUSAGE_WRITEONLY, D3DPOOL_MANAGED 
+									   D3DUSAGE_DYNAMIC, D3DPOOL_DEFAULT 
 		))
 			return;
 	}	

@@ -632,7 +632,7 @@ BOOL CScreen::IsLostDevice()
 	if (!ms_lpd3dDevice)
 		return TRUE;
 
-	IDirect3DDevice9 & rkD3DDev = *ms_lpd3dDevice;
+	IDirect3DDevice9Ex & rkD3DDev = *ms_lpd3dDevice;
 	HRESULT hrTestCooperativeLevel = rkD3DDev.TestCooperativeLevel();
 	if (FAILED(hrTestCooperativeLevel))
 		return TRUE;		
@@ -645,11 +645,9 @@ BOOL CScreen::RestoreDevice()
 	if (!ms_lpd3dDevice)
 		return FALSE;
 
-	UINT iD3DAdapterInfo = ms_iD3DAdapterInfo;
-	IDirect3D9 & rkD3D = *ms_lpd3d;
-	IDirect3DDevice9 & rkD3DDev = *ms_lpd3dDevice;
-	D3DPRESENT_PARAMETERS & rkD3DPP = ms_d3dPresentParameter;
-	D3D_CDisplayModeAutoDetector & rkD3DDetector = ms_kD3DDetector;
+	IDirect3D9Ex& rkD3D = *ms_lpd3d;
+	IDirect3DDevice9Ex& rkD3DDev = *ms_lpd3dDevice;
+	D3DPRESENT_PARAMETERS& rkD3DPP = ms_d3dPresentParameter;
 	
 	HRESULT hrTestCooperativeLevel = rkD3DDev.TestCooperativeLevel();
 	
@@ -662,17 +660,11 @@ BOOL CScreen::RestoreDevice()
 
 		if (D3DERR_DEVICENOTRESET == hrTestCooperativeLevel)
 		{
-			D3D_CAdapterInfo* pkD3DAdapterInfo = rkD3DDetector.GetD3DAdapterInfop(ms_iD3DAdapterInfo);
-
-			if (!pkD3DAdapterInfo)
+			D3DDISPLAYMODE d3dDisplayMode;
+			if (FAILED(rkD3D.GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3dDisplayMode)))
 				return FALSE;
 
-			D3DDISPLAYMODE & rkD3DDMDesktop = pkD3DAdapterInfo->GetDesktopD3DDisplayModer();
-
-			if (FAILED(rkD3D.GetAdapterDisplayMode(iD3DAdapterInfo, &rkD3DDMDesktop)))
-				return FALSE;
-					
-			rkD3DPP.BackBufferFormat = rkD3DDMDesktop.Format;	
+			rkD3DPP.BackBufferFormat = d3dDisplayMode.Format;
 			
 			HRESULT hrReset = rkD3DDev.Reset(&rkD3DPP);
 

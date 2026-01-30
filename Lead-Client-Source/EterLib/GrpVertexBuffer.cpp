@@ -31,8 +31,12 @@ bool CGraphicVertexBuffer::LockRange(unsigned count, void** pretVertices) const
 		return false;
 
 	DWORD dwLockSize=GetVertexStride() * count;
-	if (FAILED(m_lpd3dVB->Lock(0, dwLockSize, pretVertices, m_dwLockFlag)))
+	HRESULT hr = m_lpd3dVB->Lock(0, dwLockSize, pretVertices, m_dwLockFlag);
+	if (FAILED(hr))
+	{
+		TraceError("CGraphicVertexBuffer::LockRange: hr=0x%08X usage=%u lock=%u pool=%u", hr, m_dwUsage, m_dwLockFlag, m_d3dPool);
 		return false;
+	}
 
 	return true;
 }
@@ -43,8 +47,12 @@ bool CGraphicVertexBuffer::Lock(void ** pretVertices) const
 		return false;
 
 	DWORD dwLockSize=GetVertexStride()*GetVertexCount();
-	if (FAILED(m_lpd3dVB->Lock(0, dwLockSize, pretVertices, m_dwLockFlag)))
+	HRESULT hr = m_lpd3dVB->Lock(0, dwLockSize, pretVertices, m_dwLockFlag);
+	if (FAILED(hr))
+	{
+		TraceError("CGraphicVertexBuffer::Lock: hr=0x%08X usage=%u lock=%u pool=%u", hr, m_dwUsage, m_dwLockFlag, m_d3dPool);
 		return false;
+	}
 
 	return true;
 }
@@ -72,8 +80,12 @@ bool CGraphicVertexBuffer::LockDynamic(void** pretVertices)
 	if (!m_lpd3dVB)
 		return false;
 
-	if (FAILED(m_lpd3dVB->Lock(0, 0, pretVertices, 0)))
+	HRESULT hr = m_lpd3dVB->Lock(0, 0, pretVertices, 0);
+	if (FAILED(hr))
+	{
+		TraceError("CGraphicVertexBuffer::LockDynamic: hr=0x%08X usage=%u lock=0 pool=%u", hr, m_dwUsage, m_d3dPool);
 		return false;
+	}
 
 	return true;
 }
@@ -83,8 +95,12 @@ bool CGraphicVertexBuffer::Lock(void ** pretVertices)
 	if (!m_lpd3dVB)
 		return false;
 
-	if (FAILED(m_lpd3dVB->Lock(0, 0, pretVertices, m_dwLockFlag)))
+	HRESULT hr = m_lpd3dVB->Lock(0, 0, pretVertices, m_dwLockFlag);
+	if (FAILED(hr))
+	{
+		TraceError("CGraphicVertexBuffer::Lock: hr=0x%08X usage=%u lock=%u pool=%u", hr, m_dwUsage, m_dwLockFlag, m_d3dPool);
 		return false;
+	}
 
 	return true;
 }

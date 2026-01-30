@@ -54,7 +54,7 @@ void CStateManager::EndScene()
 	m_bScene=false;
 }
 
-CStateManager::CStateManager(LPDIRECT3DDEVICE9 lpDevice) : m_lpD3DDev(NULL)
+CStateManager::CStateManager(LPDIRECT3DDEVICE9EX lpDevice) : m_lpD3DDev(NULL)
 {
 	m_bScene = false;
 	m_dwBestMinFilter = D3DTEXF_LINEAR;
@@ -71,7 +71,7 @@ CStateManager::~CStateManager()
 	}
 }
 
-void CStateManager::SetDevice(LPDIRECT3DDEVICE9 lpDevice)
+void CStateManager::SetDevice(LPDIRECT3DDEVICE9EX lpDevice)
 {
 	StateManager_Assert(lpDevice);
 	lpDevice->AddRef();

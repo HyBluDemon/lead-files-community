@@ -195,6 +195,19 @@ static const char g_achLeafVertexProgram[] =
 {
 		"vs.1.1\n"											// identity shader version
 
+        "dcl_position v0\n"
+
+#ifdef WRAPPER_USE_STATIC_LIGHTING
+        "dcl_color v5\n"
+#else
+        "dcl_normal v3\n"
+#endif
+        "dcl_texcoord0 v7\n"
+#ifdef WRAPPER_USE_GPU_LEAF_PLACEMENT
+        "dcl_texcoord2 v9\n"
+#endif
+
+
 		"mov		oT0.xy,	v7\n"							// always pass texcoord0 through
 		
 	#ifdef WRAPPER_USE_GPU_WIND
@@ -244,27 +257,47 @@ static const char g_achLeafVertexProgram[] =
 ///////////////////////////////////////////////////////////////////////  
 //	LoadLeafShader
 
-static LPDIRECT3DVERTEXDECLARATION9 LoadLeafShader(LPDIRECT3DDEVICE9 pDx)
+static void LoadLeafShader(LPDIRECT3DDEVICE9 pDx, LPDIRECT3DVERTEXDECLARATION9& pVertexDecl, LPDIRECT3DVERTEXSHADER9& pVertexShader)
 {
-	// leaf shader declaration
-	D3DVERTEXELEMENT9 pLeafShaderDecl[] = {
-		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-		{ 0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
-		{ 0, 16, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
-		{ 0, 24, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 2 },
-		D3DDECL_END()
+    SAFE_RELEASE(pVertexDecl);
+    SAFE_RELEASE(pVertexShader);
+
+	const D3DVERTEXELEMENT9 leafVertexDecl[] = {
+			{ 0,  0, D3DDECLTYPE_FLOAT3,  D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION,     0 },
+#ifdef WRAPPER_USE_DYNAMIC_LIGHTING
+			{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL,        0 },
+			{ 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,      0 },
+	#if defined WRAPPER_USE_GPU_WIND || defined WRAPPER_USE_GPU_LEAF_PLACEMENT
+			{ 0, 32, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,      2 },
+	#endif
+#else
+			{ 0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,       0 },
+			{ 0, 16, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,      0 },
+	#if defined WRAPPER_USE_GPU_WIND || defined WRAPPER_USE_GPU_LEAF_PLACEMENT
+			{ 0, 24, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,      2 },
+	#endif
+#endif
+			D3DDECL_END()
 	};
 
-	// assemble shader
-	LPDIRECT3DVERTEXDECLARATION9 dwShader = NULL;
+    LPD3DXBUFFER pCode = nullptr, pError = nullptr;
+    if (D3DXAssembleShader(g_achLeafVertexProgram, sizeof(g_achLeafVertexProgram) - 1, nullptr, nullptr, 0, &pCode, &pError) == D3D_OK) {
+        if (pDx->CreateVertexShader((DWORD*)pCode->GetBufferPointer(), &pVertexShader) != D3D_OK) {
+            TraceError("Failed to create leaf vertex shader.");
+        }
+    }
+    else {
+        TraceError("Failed to assemble leaf vertex shader. The error reported is [ %s ].", pError->GetBufferPointer());
+    }
 
-	if (pDx->CreateVertexDeclaration(pLeafShaderDecl, &dwShader) != D3D_OK)
-	{
-		char szError[1024];
-		sprintf_s(szError, "Failed to create leaf vertex shader.");
-		MessageBox(NULL, szError, "Vertex Shader Error", MB_ICONSTOP);
+    if (FAILED(pDx->CreateVertexDeclaration(leafVertexDecl, &pVertexDecl))) {
+        TraceError("Failed to create leaf vertex declaration");
+    }
 
-	}
-
-	return dwShader;
+    SAFE_RELEASE(pCode);
+    SAFE_RELEASE(pError);
 }
+
+
+
+

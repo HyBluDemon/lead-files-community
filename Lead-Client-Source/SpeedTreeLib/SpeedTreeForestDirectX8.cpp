@@ -45,7 +45,7 @@
 ///////////////////////////////////////////////////////////////////////  
 //	CSpeedTreeForestDirectX8::CSpeedTreeForestDirectX8
 
-CSpeedTreeForestDirectX8::CSpeedTreeForestDirectX8()  : m_dwBranchVertexShader(0), m_dwLeafVertexShader(0)
+CSpeedTreeForestDirectX8::CSpeedTreeForestDirectX8()  : m_dwBranchVertexShader(0), m_pLeafVertexShaderDecl(0), m_pLeafVertexShader(0)
 {
 }
 
@@ -67,12 +67,12 @@ bool CSpeedTreeForestDirectX8::InitVertexShaders(void)
 	if (!m_dwBranchVertexShader)
 		m_dwBranchVertexShader = LoadBranchShader(m_pDx);
 
-	if (!m_dwLeafVertexShader)
-		m_dwLeafVertexShader = LoadLeafShader(m_pDx);
+	if (!m_pLeafVertexShaderDecl || !m_pLeafVertexShader)
+		LoadLeafShader(m_pDx, m_pLeafVertexShaderDecl, m_pLeafVertexShader);
 
-	if (m_dwBranchVertexShader && m_dwLeafVertexShader)
+	if (m_dwBranchVertexShader && m_pLeafVertexShaderDecl && m_pLeafVertexShader)
 	{
-		CSpeedTreeWrapper::SetVertexShaders(m_dwBranchVertexShader, m_dwLeafVertexShader);
+		CSpeedTreeWrapper::SetVertexShaders(m_dwBranchVertexShader, m_pLeafVertexShaderDecl, m_pLeafVertexShader);
 		return true;
 	}
 
@@ -98,8 +98,8 @@ bool CSpeedTreeForestDirectX8::SetRenderingDevice(LPDIRECT3DDEVICE9 lpDevice)
 		c_afLightDiffuse[0], c_afLightDiffuse[1], c_afLightDiffuse[2],		// diffuse
 		c_afLightAmbient[0], c_afLightAmbient[1], c_afLightAmbient[2],		// ambient
 		c_afLightSpecular[0], c_afLightSpecular[1], c_afLightSpecular[2],	// specular
-		c_afLightPosition[3],												// directional flag
-		1.0f, 0.0f, 0.0f													// attenuation (constant, linear, quadratic)
+		c_afLightPosition[3],								// directional flag
+		1.0f, 0.0f, 0.0f									// attenuation (constant, linear, quadratic)
 	};
 
 	CSpeedTreeRT::SetNumWindMatrices(c_nNumWindMatrices);
@@ -263,7 +263,8 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 	// render leaves
 	if (ulRenderBitVector & Forest_RenderLeaves)
 	{
-		STATEMANAGER.SetVertexDeclaration(m_dwLeafVertexShader);
+		STATEMANAGER.SetVertexDeclaration(m_pLeafVertexShaderDecl);
+		STATEMANAGER.SaveVertexShader(m_pLeafVertexShader);
 
 		if (STATEMANAGER.GetRenderState(D3DRS_FOGENABLE))
 		{
@@ -300,6 +301,7 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 			STATEMANAGER.SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 			STATEMANAGER.RestoreRenderState(D3DRS_ALPHAREF);
 		}
+		STATEMANAGER.RestoreVertexShader();
 	}
 
 	// render billboards
@@ -316,7 +318,7 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 				CSpeedTreeWrapper * pMainTree = (itor++)->second;
 				CSpeedTreeWrapper ** ppInstances = pMainTree->GetInstances(uiCount);
 
-				pMainTree->SetupBranchForTreeType();
+				pMainTree->SetupLeafForTreeType();
 
 				for (UINT i = 0; i < uiCount; ++i)
 					if (ppInstances[i]->isShow())
@@ -341,4 +343,16 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 	STATEMANAGER.RestoreRenderState(D3DRS_ALPHAFUNC);
 	STATEMANAGER.RestoreRenderState(D3DRS_CULLMODE);
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

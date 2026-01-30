@@ -247,8 +247,8 @@ class CGraphicBase
 
 		static HWND						ms_hWnd;
 		static HDC						ms_hDC;
-		static LPDIRECT3D9				ms_lpd3d;
-		static LPDIRECT3DDEVICE9		ms_lpd3dDevice;
+		static LPDIRECT3D9EX				ms_lpd3d;
+		static LPDIRECT3DDEVICE9EX		ms_lpd3dDevice;
 		static ID3DXMatrixStack*		ms_lpd3dMatStack;
 		static D3DVIEWPORT9				ms_Viewport;
 

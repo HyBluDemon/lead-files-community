@@ -36,7 +36,7 @@ void CPythonSystem::GetDisplaySettings()
 	memset(m_ResolutionList, 0, sizeof(TResolution) * RESOLUTION_MAX_NUM);
 	m_ResolutionCount = 0;
 
-	LPDIRECT3D9 lpD3D = CPythonGraphic::Instance().GetD3D();
+	LPDIRECT3D9EX lpD3D = CPythonGraphic::Instance().GetD3D();
 
 	D3DADAPTER_IDENTIFIER9 d3dAdapterIdentifier;
 	D3DDISPLAYMODE d3ddmDesktop;

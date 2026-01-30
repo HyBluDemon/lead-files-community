@@ -72,8 +72,8 @@ const float	c_afLightGlobalAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 #endif
 
 // leaf placement algorithm (enable ONE of the two below)
-//#define WRAPPER_USE_GPU_LEAF_PLACEMENT
-#define WRAPPER_USE_CPU_LEAF_PLACEMENT
+#define WRAPPER_USE_GPU_LEAF_PLACEMENT
+//#define WRAPPER_USE_CPU_LEAF_PLACEMENT
 
 #if defined WRAPPER_USE_GPU_LEAF_PLACEMENT && defined WRAPPER_USE_CPU_LEAF_PLACEMENT
 	#error Please define exactly one leaf placement algorithm
