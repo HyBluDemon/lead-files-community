@@ -671,17 +671,6 @@ enum
 	SHOP_SUBHEADER_CG_SELL
 };
 
-typedef struct command_shop_buy
-{
-	ItemStackType	count;
-} TPacketCGShopBuy;
-
-typedef struct command_shop_sell
-{
-	BYTE	pos;
-	ItemStackType	count;
-} TPacketCGShopSell;
-
 typedef struct command_shop
 {
 	BYTE	header;
@@ -1060,7 +1049,7 @@ typedef struct packet_item_set
 typedef struct packet_item_del
 {
 	BYTE	header;
-	BYTE	pos;
+	ItemCellType	pos;
 } TPacketGCItemDel;
 
 struct packet_item_use
@@ -1944,21 +1933,15 @@ typedef struct SPacketGCChangeSkillGroup
 typedef struct SPacketCGRefine
 {
 	BYTE	header;
-	BYTE	pos;
+	ItemCellType	pos;
 	BYTE	type;
 } TPacketCGRefine;
 
-typedef struct SPacketCGRequestRefineInfo
-{
-	BYTE	header;
-	BYTE	pos;
-} TPacketCGRequestRefineInfo;
-
-typedef struct SPacketGCRefineInformaion
+typedef struct SPacketGCRefineInformation
 {
 	BYTE	header;
 	BYTE	type;
-	BYTE	pos;
+	ItemCellType	pos;
 	DWORD	src_vnum;
 	DWORD	result_vnum;
 	BYTE	material_count;

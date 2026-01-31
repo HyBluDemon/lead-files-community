@@ -3750,7 +3750,7 @@ void CPythonNetworkStream::__TEST_SetSkillGroupFake(int iIndex)
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshCharacter", Py_BuildValue("()"));
 }
 
-bool CPythonNetworkStream::SendRefinePacket(BYTE byPos, BYTE byType)
+bool CPythonNetworkStream::SendRefinePacket(ItemCellType byPos, BYTE byType)
 {
 	TPacketCGRefine kRefinePacket;
 	kRefinePacket.header = HEADER_CG_REFINE;

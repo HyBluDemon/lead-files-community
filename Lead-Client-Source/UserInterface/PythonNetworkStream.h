@@ -159,8 +159,8 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 
 		// Shop
 		bool SendShopEndPacket();
-		bool SendShopBuyPacket(BYTE bPos);
-		bool SendShopSellPacket(BYTE bySlot, ItemStackType byCount);
+		bool SendShopBuyPacket(ItemCellType bPos);
+		bool SendShopSellPacket(ItemCellType bySlot, ItemStackType byCount);
 
 		// Exchange
 		bool SendExchangeStartPacket(DWORD vid);
@@ -247,7 +247,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendBuildPrivateShopPacket(const char * c_szName, const std::vector<TShopItemTable> & c_rSellingItemStock);
 
 		// Refine
-		bool SendRefinePacket(BYTE byPos, BYTE byType);
+		bool SendRefinePacket(ItemCellType byPos, BYTE byType);
 		bool SendSelectItemPacket(DWORD dwItemPos);
 
 		// CRC Report

@@ -2,6 +2,9 @@
 #define __INC_METIN_II_LENGTH_H__
 
 #define WORD_MAX 0xffff
+
+#include "service.h"
+
 enum EMisc
 {
 	// TODO: private code length is 7, refactor this later on
@@ -947,14 +950,14 @@ enum EMisc2
 typedef struct SItemPos
 {
 	BYTE window_type;
-	WORD cell;
+	ItemCellType cell;
     SItemPos ()
     {
         window_type = INVENTORY;
 		cell = WORD_MAX;
     }
 
-	SItemPos (BYTE _window_type, WORD _cell)
+	SItemPos (BYTE _window_type, ItemCellType _cell)
     {
         window_type = _window_type;
         cell = _cell;
