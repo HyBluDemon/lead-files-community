@@ -371,20 +371,14 @@ bool CItem::AddToCharacter(LPCHARACTER ch, TItemPos Cell)
 		}
 	}
 
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 	bool bWereMine = (GetLastOwnerPID() == ch->GetPlayerID()) || (GetWindow() == EQUIPMENT);
-#endif
 
 	if (ch->GetDesc())
 		m_dwLastOwnerPID = ch->GetPlayerID();
 
 	event_cancel(&m_pkDestroyEvent);
 
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 	ch->SetItem(TItemPos(window_type, pos), this, bWereMine);
-#else
-	ch->SetItem(TItemPos(window_type, pos), this);
-#endif
 	m_pOwner = ch;
 
 	Save();
@@ -902,9 +896,7 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 
 	m_pOwner->UpdatePacket();
 
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 	SetLastOwnerPID(m_pOwner->GetPlayerID());
-#endif
 	Save();
 
 	return (true);

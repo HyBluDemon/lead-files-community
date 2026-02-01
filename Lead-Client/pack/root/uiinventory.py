@@ -571,27 +571,25 @@ class InventoryWindow(ui.ScriptWindow):
 				else:
 					self.wndItem.DeactivateSlot(slotNumber)			
 					
-			if app.ENABLE_HIGHLIGHT_NEW_ITEM and not constInfo.IS_AUTO_POTION(itemVnum):
+			if not constInfo.IS_AUTO_POTION(itemVnum):
 				if not slotNumberGlobal in self.liHighlightedItems:
 					self.wndItem.DeactivateSlot(i)
 		
 		self.wndItem.RefreshSlot()
-		if app.ENABLE_HIGHLIGHT_NEW_ITEM:
-			self.__RefreshHighlights()
+		self.__RefreshHighlights()
 
 		if self.wndBelt:
 			self.wndBelt.RefreshSlot()
 
-	if app.ENABLE_HIGHLIGHT_NEW_ITEM:
-		def HighlightSlot(self, slot):
-			if not slot in self.liHighlightedItems:
-				self.liHighlightedItems.append(slot)
+	def HighlightSlot(self, slot):
+		if not slot in self.liHighlightedItems:
+			self.liHighlightedItems.append(slot)
 
-		def __RefreshHighlights(self):
-			for i in xrange(player.INVENTORY_PAGE_SIZE):
-				slotNumber = self.__InventoryLocalSlotPosToGlobalSlotPos(i)
-				if slotNumber in self.liHighlightedItems:
-					self.wndItem.ActivateSlot(i)
+	def __RefreshHighlights(self):
+		for i in xrange(player.INVENTORY_PAGE_SIZE):
+			slotNumber = self.__InventoryLocalSlotPosToGlobalSlotPos(i)
+			if slotNumber in self.liHighlightedItems:
+				self.wndItem.ActivateSlot(i)
 
 
 	def RefreshEquipSlotWindow(self):
@@ -941,7 +939,7 @@ class InventoryWindow(ui.ScriptWindow):
 		overSlotPosGlobal = self.__InventoryLocalSlotPosToGlobalSlotPos(overSlotPos)
 		self.wndItem.SetUsableItem(False)
 
-		if app.ENABLE_HIGHLIGHT_NEW_ITEM and overSlotPosGlobal in self.liHighlightedItems:
+		if overSlotPosGlobal in self.liHighlightedItems:
 			self.liHighlightedItems.remove(overSlotPosGlobal)
 			self.wndItem.DeactivateSlot(overSlotPos)
 

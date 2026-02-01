@@ -995,7 +995,7 @@ class Interface(object):
 			if app.ENABLE_DRAGON_SOUL_SYSTEM:
 				self.wndDragonSoul.HighlightSlot(inven_pos)
 			
-		elif app.ENABLE_HIGHLIGHT_NEW_ITEM and player.SLOT_TYPE_INVENTORY == inven_type:
+		elif player.SLOT_TYPE_INVENTORY == inven_type:
 			self.wndInventory.HighlightSlot(inven_pos)
 
 	def DragonSoulGiveQuilification(self):

@@ -513,14 +513,10 @@ void CSlotWindow::ActivateSlot(DWORD dwIndex, const D3DXCOLOR & color)
 		return;
 
 	pSlot->bActive = TRUE;
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 	pSlot->Color = color;
-#endif
 
 	if (!m_pSlotActiveEffect
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 		|| !m_pSlotActiveEffectSlot2 || !m_pSlotActiveEffectSlot3
-#endif
 	)
 		__CreateSlotEnableEffect();
 }
@@ -975,12 +971,10 @@ void CSlotWindow::OnUpdate()
 
 	if (m_pSlotActiveEffect)
 		m_pSlotActiveEffect->Update();
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 	if (m_pSlotActiveEffectSlot2)
 		m_pSlotActiveEffectSlot2->Update();
 	if (m_pSlotActiveEffectSlot3)
 		m_pSlotActiveEffectSlot3->Update();
-#endif
 }
 
 void CSlotWindow::OnRender()
@@ -1104,13 +1098,10 @@ void CSlotWindow::OnRender()
 			{
 				int ix = m_rect.left + rSlot.ixPosition;
 				int iy = m_rect.top + rSlot.iyPosition;
-				#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 				m_pSlotActiveEffect->SetDiffuseColor(rSlot.Color);
-				#endif
 				m_pSlotActiveEffect->SetPosition(ix, iy);
 				m_pSlotActiveEffect->Render();
 			}
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 			else if (m_pSlotActiveEffectSlot2 && rSlot.byyPlacedItemSize==2)
 			{
 				int ix = m_rect.left + rSlot.ixPosition;
@@ -1127,7 +1118,6 @@ void CSlotWindow::OnRender()
 				m_pSlotActiveEffectSlot3->SetPosition(ix, iy);
 				m_pSlotActiveEffectSlot3->Render();
 			}
-#endif
 		}
 	}
 
@@ -1340,7 +1330,6 @@ void CSlotWindow::__CreateSlotEnableEffect()
 	m_pSlotActiveEffect->SetRenderingMode(CGraphicExpandedImageInstance::RENDERING_MODE_SCREEN);
 	m_pSlotActiveEffect->Show();
 
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 	m_pSlotActiveEffectSlot2 = new CAniImageBox(NULL);
 	m_pSlotActiveEffectSlot2->AppendImage("d:/ymir work/ui/public/slotactiveeffect/slot2/00.sub");
 	m_pSlotActiveEffectSlot2->AppendImage("d:/ymir work/ui/public/slotactiveeffect/slot2/01.sub");
@@ -1374,7 +1363,6 @@ void CSlotWindow::__CreateSlotEnableEffect()
 	m_pSlotActiveEffectSlot3->AppendImage("d:/ymir work/ui/public/slotactiveeffect/slot3/12.sub");
 	m_pSlotActiveEffectSlot3->SetRenderingMode(CGraphicExpandedImageInstance::RENDERING_MODE_SCREEN);
 	m_pSlotActiveEffectSlot3->Show();
-#endif
 }
 
 void CSlotWindow::__CreateFinishCoolTimeEffect(TSlot * pSlot)
@@ -1427,7 +1415,6 @@ void CSlotWindow::__DestroySlotEnableEffect()
 		delete m_pSlotActiveEffect;
 		m_pSlotActiveEffect = NULL;
 	}
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 	if (m_pSlotActiveEffectSlot2)
 	{
 		delete m_pSlotActiveEffectSlot2;
@@ -1438,7 +1425,6 @@ void CSlotWindow::__DestroySlotEnableEffect()
 		delete m_pSlotActiveEffectSlot3;
 		m_pSlotActiveEffectSlot3 = NULL;
 	}
-#endif
 }
 
 void CSlotWindow::__DestroyFinishCoolTimeEffect(TSlot * pSlot)
@@ -1470,10 +1456,8 @@ void CSlotWindow::__Initialize()
 
 	m_pToggleSlotImage = NULL;
 	m_pSlotActiveEffect = NULL;
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 	m_pSlotActiveEffectSlot2 = NULL;
 	m_pSlotActiveEffectSlot3 = NULL;
-#endif
 	m_pBaseImageInstance = NULL;
 }
 

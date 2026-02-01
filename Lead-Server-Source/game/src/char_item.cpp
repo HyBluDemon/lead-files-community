@@ -262,11 +262,7 @@ LPITEM CHARACTER::GetItem(TItemPos Cell) const
 	return NULL;
 }
 
-void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
-	, bool bWereMine
-#endif
-)
+void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 {
 	ItemCellType wCell = Cell.cell;
 	BYTE window_type = Cell.window_type;
@@ -439,12 +435,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem
 			pack.vnum = pItem->GetVnum();
 			pack.flags = pItem->GetFlag();
 			pack.anti_flags	= pItem->GetAntiFlag();
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 			pack.highlight = !bWereMine || (Cell.window_type == DRAGON_SOUL_INVENTORY);
-#else
-			pack.highlight = (Cell.window_type == DRAGON_SOUL_INVENTORY);
-#endif
-
 
 			thecore_memcpy(pack.alSockets, pItem->GetSockets(), sizeof(pack.alSockets));
 			thecore_memcpy(pack.aAttr, pItem->GetAttributes(), sizeof(pack.aAttr));
@@ -5489,11 +5480,7 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, ItemStackType count)
 				DestCell.window_type, DestCell.cell, count);
 			
 			item->RemoveFromCharacter();
-#ifdef ENABLE_HIGHLIGHT_NEW_ITEM
 			SetItem(DestCell, item, true);
-#else
-			SetItem(DestCell, item);
-#endif
 
 			if (INVENTORY == Cell.window_type && INVENTORY == DestCell.window_type)
 				SyncQuickslot(QUICKSLOT_TYPE_ITEM, Cell.cell, DestCell.cell);
