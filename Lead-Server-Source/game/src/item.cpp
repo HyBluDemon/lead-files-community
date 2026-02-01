@@ -329,7 +329,7 @@ bool CItem::AddToCharacter(LPCHARACTER ch, TItemPos Cell)
 {
 	assert(GetSectree() == NULL);
 	assert(m_pOwner == NULL);
-	WORD pos = Cell.cell;
+	ItemCellType pos = Cell.cell;
 	BYTE window_type = Cell.window_type;
 	
 	if (INVENTORY == window_type)

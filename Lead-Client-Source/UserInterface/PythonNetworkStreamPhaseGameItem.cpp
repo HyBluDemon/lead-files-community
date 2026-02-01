@@ -374,7 +374,7 @@ bool CPythonNetworkStream::SendShopEndPacket()
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendShopBuyPacket(BYTE bPos)
+bool CPythonNetworkStream::SendShopBuyPacket(ItemCellType bPos)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -396,7 +396,7 @@ bool CPythonNetworkStream::SendShopBuyPacket(BYTE bPos)
 		return false;
 	}
 
-	if (!Send(sizeof(BYTE), &bPos))
+	if (!Send(sizeof(ItemCellType), &bPos))
 	{
 		Tracef("SendShopBuyPacket Error\n");
 		return false;
@@ -405,7 +405,7 @@ bool CPythonNetworkStream::SendShopBuyPacket(BYTE bPos)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendShopSellPacket(BYTE bySlot, ItemStackType byCount)
+bool CPythonNetworkStream::SendShopSellPacket(ItemCellType bySlot, ItemStackType byCount)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -419,7 +419,7 @@ bool CPythonNetworkStream::SendShopSellPacket(BYTE bySlot, ItemStackType byCount
 		Tracef("SendShopSellPacket Error\n");
 		return false;
 	}
-	if (!Send(sizeof(BYTE), &bySlot))
+	if (!Send(sizeof(ItemCellType), &bySlot))
 	{
 		Tracef("SendShopAddSellPacket Error\n");
 		return false;

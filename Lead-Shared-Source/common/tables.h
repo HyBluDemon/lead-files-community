@@ -309,7 +309,7 @@ typedef struct SPlayerItem
 {
 	DWORD	id;
 	BYTE	window;
-	WORD	pos;
+	ItemCellType	pos;
 	DWORD	count;
 
 	DWORD	vnum;
