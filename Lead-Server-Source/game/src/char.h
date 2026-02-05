@@ -1168,8 +1168,8 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		int					GetSkillMasterType(DWORD dwVnum) const;
 		int					GetSkillPower(DWORD dwVnum, BYTE bLevel = 0) const;
 
-		time_t				GetSkillNextReadTime(DWORD dwVnum) const;
-		void				SetSkillNextReadTime(DWORD dwVnum, time_t time);
+		uint32_t			GetSkillNextReadTime(DWORD dwVnum) const;
+		void				SetSkillNextReadTime(DWORD dwVnum, uint32_t time);
 		void				SkillLearnWaitMoreTimeMessage(DWORD dwVnum);
 
 		void				ComputePassiveSkill(DWORD dwVnum);

@@ -750,7 +750,7 @@ void CClientManager::QUERY_PLAYER_SAVE(CPeer * peer, DWORD dwHandle, TPlayerTabl
 	PutPlayerCache(pkTab);
 }
 
-typedef std::map<DWORD, time_t> time_by_id_map_t;
+typedef std::map<DWORD, uint32_t> time_by_id_map_t;
 static time_by_id_map_t s_createTimeByAccountID;
 
 /*
@@ -767,7 +767,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 
 	if (it != s_createTimeByAccountID.end())
 	{
-		time_t curtime = time(0);
+		uint32_t curtime = time(0);
 
 		if (curtime - it->second < 30)
 		{
@@ -1172,7 +1172,7 @@ extern int g_iLogoutSeconds;
 
 void CClientManager::UpdateLogoutPlayer()
 {
-	time_t now = time(0);
+	uint32_t now = time(0);
 
 	TLogoutPlayerMap::iterator it = m_map_logout.begin();
 

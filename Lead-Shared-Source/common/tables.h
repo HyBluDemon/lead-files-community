@@ -330,7 +330,7 @@ typedef struct SPlayerSkill
 {
 	BYTE	bMasterType;
 	BYTE	bLevel;
-	time_t	tNextRead;
+	uint32_t	tNextRead;
 } TPlayerSkill;
 
 struct	THorseInfo
@@ -983,14 +983,14 @@ typedef struct SPacketGiveGuildPriv
 	BYTE type;
 	int value;
 	DWORD guild_id;
-	time_t duration_sec;	///< 지속시간
+	uint32_t duration_sec;	///< 지속시간
 } TPacketGiveGuildPriv;
 typedef struct SPacketGiveEmpirePriv
 {
 	BYTE type;
 	int value;
 	BYTE empire;
-	time_t duration_sec;
+	uint32_t duration_sec;
 } TPacketGiveEmpirePriv;
 typedef struct SPacketGiveCharacterPriv
 {
@@ -1026,7 +1026,7 @@ typedef struct SPacketDGChangeGuildPriv
 	int value;
 	DWORD guild_id;
 	BYTE bLog;
-	time_t end_time_sec;	///< 지속시간
+	uint32_t end_time_sec;	///< 지속시간
 } TPacketDGChangeGuildPriv;
 
 typedef struct SPacketDGChangeEmpirePriv
@@ -1035,7 +1035,7 @@ typedef struct SPacketDGChangeEmpirePriv
 	int value;
 	BYTE empire;
 	BYTE bLog;
-	time_t end_time_sec;
+	uint32_t end_time_sec;
 } TPacketDGChangeEmpirePriv;
 
 typedef struct SPacketMoneyLog
@@ -1134,7 +1134,7 @@ typedef struct
 {
 	DWORD dwPID1;
 	DWORD dwPID2;
-	time_t tMarryTime;
+	uint32_t tMarryTime;
 	char szName1[CHARACTER_NAME_MAX_LEN + 1];
 	char szName2[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketMarriageAdd;

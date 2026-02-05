@@ -53,17 +53,7 @@
 #include "DragonSoul.h"
 #include <boost/bind.hpp>
 
-#ifndef __WIN32__
-#include <gtest/gtest.h>
-#endif
-
-#ifdef USE_STACKTRACE
-#include <execinfo.h>
-#endif
-
 #include "switchbot.h"
-
-extern void WriteVersion();
 
 // 게임과 연결되는 소켓
 volatile int	num_events_called = 0;
@@ -271,8 +261,6 @@ int main(int argc, char **argv)
 {
 	ilInit(); // DevIL Initialize
 
-	WriteVersion();
-	
 	SECTREE_MANAGER	sectree_manager;
 	CHARACTER_MANAGER	char_manager;
 	ITEM_MANAGER	item_manager;

@@ -11,108 +11,96 @@
 #include "ItemIDRangeManager.h"
 #include <signal.h>
 
-void SetPlayerDBName(const char* c_pszPlayerDBName);
-void SetTablePostfix(const char* c_pszTablePostfix);
-int Start();
+	void SetPlayerDBName(const char* c_pszPlayerDBName);
+	void SetTablePostfix(const char* c_pszTablePostfix);
+	int Start();
 
-std::string g_stTablePostfix;
-std::string g_stLocaleNameColumn = "name";
-std::string g_stLocale = "euckr";
-std::string g_stPlayerDBName = "";
+	std::string g_stTablePostfix;
+	std::string g_stLocaleNameColumn = "name";
+	std::string g_stLocale = "euckr";
+	std::string g_stPlayerDBName = "";
 
-BOOL g_test_server = false;
+	BOOL g_test_server = false;
 
-//단위 초
-int g_iPlayerCacheFlushSeconds = 60*7;
-int g_iItemCacheFlushSeconds = 60*5;
+	//단위 초
+	int g_iPlayerCacheFlushSeconds = 60*7;
+	int g_iItemCacheFlushSeconds = 60*5;
 
-//g_iLogoutSeconds 수치는 g_iPlayerCacheFlushSeconds 와 g_iItemCacheFlushSeconds 보다 길어야 한다.
-int g_iLogoutSeconds = 60*10;
+	//g_iLogoutSeconds 수치는 g_iPlayerCacheFlushSeconds 와 g_iItemCacheFlushSeconds 보다 길어야 한다.
+	int g_iLogoutSeconds = 60*10;
 
-int g_log = 1;
+	int g_log = 1;
 
 
-// MYSHOP_PRICE_LIST
-int g_iItemPriceListTableCacheFlushSeconds = 540;
-// END_OF_MYSHOP_PRICE_LIST
+	// MYSHOP_PRICE_LIST
+	int g_iItemPriceListTableCacheFlushSeconds = 540;
+	// END_OF_MYSHOP_PRICE_LIST
 
-#ifdef __FreeBSD__
-extern const char * _malloc_options;
-#endif
+	void emergency_sig(int sig)
+	{
+		if (sig == SIGSEGV)
+			sys_log(0, "SIGNAL: SIGSEGV");
+		else if (sig == SIGUSR1)
+			sys_log(0, "SIGNAL: SIGUSR1");
 
-extern void WriteVersion();
+		if (sig == SIGSEGV)
+			abort();
+	}
 
-void emergency_sig(int sig)
-{
-	if (sig == SIGSEGV)
-		sys_log(0, "SIGNAL: SIGSEGV");
-	else if (sig == SIGUSR1)
-		sys_log(0, "SIGNAL: SIGUSR1");
+	int main()
+	{
+		CConfig Config;
+		CNetPoller poller;
+		CDBManager DBManager; 
+		CClientManager ClientManager;
+		CGuildManager GuildManager;
+		CPrivManager PrivManager;
+		CMoneyLog MoneyLog;
+		ItemAwardManager ItemAwardManager;
+		marriage::CManager MarriageManager;
+		CItemIDRangeManager ItemIDRangeManager;
 
-	if (sig == SIGSEGV)
-		abort();
-}
+		if (!Start())
+			return 1;
 
-int main()
-{
-	WriteVersion();
+		GuildManager.Initialize();
+		MarriageManager.Initialize();
+		ItemIDRangeManager.Build();
+		sys_log(0, "Metin2DBCacheServer Start\n");
 
-#ifdef __FreeBSD__
-	_malloc_options = "A";
-#endif
+		CClientManager::instance().MainLoop();
 
-	CConfig Config;
-	CNetPoller poller;
-	CDBManager DBManager; 
-	CClientManager ClientManager;
-	CGuildManager GuildManager;
-	CPrivManager PrivManager;
-	CMoneyLog MoneyLog;
-	ItemAwardManager ItemAwardManager;
-	marriage::CManager MarriageManager;
-	CItemIDRangeManager ItemIDRangeManager;
+		signal_timer_disable();
 
-	if (!Start())
+		DBManager.Quit();
+		int iCount;
+
+		while (1)
+		{
+			iCount = 0;
+
+			iCount += CDBManager::instance().CountReturnQuery(SQL_PLAYER);
+			iCount += CDBManager::instance().CountAsyncQuery(SQL_PLAYER);
+
+			if (iCount == 0)
+				break;
+
+			usleep(1000);
+			sys_log(0, "WAITING_QUERY_COUNT %d", iCount);
+		}
+
 		return 1;
-
-	GuildManager.Initialize();
-	MarriageManager.Initialize();
-	ItemIDRangeManager.Build();
-	sys_log(0, "Metin2DBCacheServer Start\n");
-
-	CClientManager::instance().MainLoop();
-
-	signal_timer_disable();
-
-	DBManager.Quit();
-	int iCount;
-
-	while (1)
-	{
-		iCount = 0;
-
-		iCount += CDBManager::instance().CountReturnQuery(SQL_PLAYER);
-		iCount += CDBManager::instance().CountAsyncQuery(SQL_PLAYER);
-
-		if (iCount == 0)
-			break;
-
-		usleep(1000);
-		sys_log(0, "WAITING_QUERY_COUNT %d", iCount);
 	}
 
-	return 1;
-}
-
-void emptybeat(LPHEART heart, int pulse)
-{
-	if (!(pulse % heart->passes_per_sec))	// 1초에 한번
+	void emptybeat(LPHEART heart, int pulse)
 	{
+		if (!(pulse % heart->passes_per_sec))	// 1초에 한번
+		{
+		}
 	}
-}
 
-//
-// @version	05/06/13 Bang2ni - 아이템 가격정보 캐시 flush timeout 설정 추가.
+	//
+	// @version	05/06/13 Bang2ni - 아이템 가격정보 캐시 flush timeout 설정 추가.
 //
 int Start()
 {

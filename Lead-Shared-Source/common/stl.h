@@ -8,9 +8,6 @@
 #include <functional>
 #include <stack>
 #include <set>
-#ifdef __GNUC__
-#include <ext/functional>
-#endif
 
 #ifndef itertype
 #define itertype(v) typeof((v).begin())

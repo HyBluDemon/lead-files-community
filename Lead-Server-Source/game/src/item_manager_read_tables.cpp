@@ -383,8 +383,12 @@ std::pair<bool, std::string> ITEM_MANAGER::ReadMonsterDropItemGroup(const char* 
 				else if (strType == "drop")
 				{
 					CDropItemGroup* group = nullptr;
-					if (tempDropItemGr.contains(mobVnum)) group = tempDropItemGr[mobVnum];
-					else {
+					if (tempDropItemGr.find(mobVnum) != tempDropItemGr.end())
+					{
+					       	group = tempDropItemGr[mobVnum];
+					}
+					else 
+					{
 						group = M2_NEW CDropItemGroup(0, mobVnum, stName);
 						tempDropItemGr[mobVnum] = group;
 					}
@@ -435,7 +439,7 @@ std::pair<bool, std::string> ITEM_MANAGER::ReadMonsterDropItemGroup(const char* 
 						for (const auto& [iStart, iEnd] : itemRanges)
 							group->AddItem(iStart, iEnd, (DWORD)(fPct * 10000.0f), count);
 					}
-					if (tempLevelItemGr.contains(mobVnum)) M2_DELETE(tempLevelItemGr[mobVnum]);
+					if (tempLevelItemGr.find(mobVnum) != tempLevelItemGr.end()) M2_DELETE(tempLevelItemGr[mobVnum]);
 					tempLevelItemGr[mobVnum] = group;
 				}
 			}

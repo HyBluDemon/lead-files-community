@@ -1,145 +1,64 @@
-PLATFORM = $(shell file /bin/ls | cut -d' ' -f3 | cut -d'-' -f1)
-
-GCC_VERSION = $(shell $(CC) --version 2>&1 | grep "(GCC)" | cut -d' ' -f3  | cut -d'.' -f1)
-BSD_VERSION = $(shell uname -v 2>&1 | cut -d' ' -f2 | cut -d'.' -f1)
-SVN_VERSION = $(shell svnversion -n .)
-
-CC = g++
-
-INCDIR =
-LIBDIR =
+CXX = clang++
+CC = clang
 BINDIR = ..
-OBJDIR = OBJDIR
-$(shell if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi)
+OBJDIR = .obj
+TARGET = $(BINDIR)/game
 
-# Standard Setting
-LIBS = -pthread -lm -lmd
-# Removed -fno-rtti 
-CFLAGS = -g -Wall -O2 -m32 -pipe -fexceptions -D_THREAD_SAFE -DNDEBUG # -D_USE_SERVER_KEY_
+EXTERN_DIR = ../../../Lead-Extern
+SHARED_SRC = ../../../Lead-Shared-Source
 
-ifeq ($(GCC_VERSION), 4)
-CFLAGS += -mtune=i686 -fstack-protector-all
-else
-CFLAGS += -mcpu=i686
-endif
+INCDIR = -I$(EXTERN_DIR)/include \
+         -I$(EXTERN_DIR)/include/libpng \
+         -I$(EXTERN_DIR)/include/libjpeg-turbo \
+         -I$(EXTERN_DIR)/include/boost \
+         -I$(SHARED_SRC) \
+         -I../../liblua/include \
+         -I../../libthecore/include \
+         -I../../libgame/include \
+         -I/usr/local/include
 
-# boost
-INCDIR += -I../../../Extern/include/boost
+LIBDIR = -L$(EXTERN_DIR)/lib \
+         -L../../libthecore/lib \
+         -L../../libpoly \
+         -L../../libsql \
+         -L../../libgame/lib \
+         -L../../liblua/lib \
+         -L/usr/local/lib
 
-# DevIL
-INCDIR += -I../../libdevil
-LIBDIR += -L../../libdevil
-LIBS += -lIL -lpng -ltiff -lmng -llcms -ljpeg
+#CFLAGS = -m32 -g -Wall -O2 -pipe -fexceptions -fno-stack-protector -pthread -D_THREAD_SAFE -DNDEBUG
+CFLAGS = -m32 -march=i686 -msse2 -g -O1 -pipe -frtti -fexceptions -pthread -D_THREAD_SAFE -fno-stack-protector -fno-strict-aliasing
 
-# MySQL
-ifeq ($(BSD_VERSION), 7)
-INCDIR += -I../../libmysql/7.x-5.1.35
-LIBDIR += -L../../libmysql/7.x-5.1.35
-else
-INCDIR += -I../../libmysql/5.x-5.1.35
-LIBDIR += -L../../libmysql/5.x-5.1.35
-endif
+# RE-ORDERED LIBS: Higher level libs first, base libs last
+LIBS = $(EXTERN_DIR)/lib/libIL.a \
+       $(EXTERN_DIR)/lib/libpng.a \
+       $(EXTERN_DIR)/lib/libjpeg-turbo.a \
+       $(EXTERN_DIR)/lib/libcryptopp.a \
+       ../../liblua/lib/liblua.a \
+       ../../liblua/lib/liblualib.a \
+       ../../libsql/libsql.a \
+       ../../libgame/lib/libgame.a \
+       ../../libpoly/libpoly.a \
+       $(EXTERN_DIR)/lib/mysqlclient.a \
+       /usr/lib32/libssl.a /usr/lib32/libcrypto.a \
+       ../../libthecore/lib/libthecore.a \
+       -lz -lm -lmd -pthread
 
-LIBS += -lmysqlclient -lz
+CPP_SRCS = $(wildcard *.cpp)
+C_SRCS = $(wildcard *.c)
+OBJS = $(CPP_SRCS:%.cpp=$(OBJDIR)/%.o) $(C_SRCS:%.c=$(OBJDIR)/%.o)
 
-# Miscellaneous external libraries
-INCDIR += -I../../../Extern/include
-LIBDIR += -L../../../Extern/lib
-LIBS += -lcryptopp -lgtest
+default: $(TARGET)
 
-# openssl
-#INCDIR += -I/usr/include
-#LIBS += -lssl
-#LIBS += /usr/lib/libssl.a
-
-# Project Library
-INCDIR += -I../../liblua/include
-INCDIR += -I/usr/local/include
-INCDIR += -I../../libserverkey
-LIBDIR += -L../../libthecore/lib -L../../libpoly -L../../libsql -L../../libgame/lib -L../../liblua/lib -L../../libserverkey
-LIBDIR += -L/usr/local/lib
-LIBS += -lthecore -lpoly -llua -llualib -lsql -lgame -lserverkey
-USE_STACKTRACE = 0
-ifeq ($(USE_STACKTRACE), 1)
-LIBS += /usr/local/lib/libexecinfo.a
-endif
-
-TARGET  = $(BINDIR)/game_r$(SVN_VERSION)_$(PLATFORM)
-
-CFILE	= minilzo.c
-
-CPPFILE = BattleArena.cpp FSM.cpp MarkConvert.cpp MarkImage.cpp MarkManager.cpp OXEvent.cpp TrafficProfiler.cpp ani.cpp\
-		  char.cpp char_affect.cpp char_battle.cpp char_change_empire.cpp char_horse.cpp char_item.cpp char_manager.cpp\
-		  char_quickslot.cpp char_resist.cpp char_skill.cpp char_state.cpp PetSystem.cpp cmd.cpp cmd_emotion.cpp cmd_general.cpp\
-		  cmd_gm.cpp cmd_oxevent.cpp config.cpp constants.cpp crc32.cpp cube.cpp db.cpp desc.cpp\
-		  desc_client.cpp desc_manager.cpp desc_p2p.cpp dev_log.cpp dungeon.cpp empire_text_convert.cpp entity.cpp\
-		  entity_view.cpp event.cpp event_queue.cpp exchange.cpp file_loader.cpp fishing.cpp gm.cpp guild.cpp\
-		  guild_manager.cpp guild_war.cpp horse_rider.cpp horsename_manager.cpp input.cpp input_auth.cpp input_db.cpp\
-		  input_login.cpp input_main.cpp input_p2p.cpp ip_ban.cpp\
-		  item.cpp item_addon.cpp item_attribute.cpp item_manager.cpp item_manager_idrange.cpp locale.cpp\
-		  locale_service.cpp log.cpp login_data.cpp lzo_manager.cpp marriage.cpp\
-		  messenger_manager.cpp mining.cpp mob_manager.cpp motion.cpp p2p.cpp packet_info.cpp\
-		  party.cpp polymorph.cpp priv_manager.cpp pvp.cpp\
-		  questevent.cpp questlua.cpp questlua_affect.cpp questlua_arena.cpp questlua_ba.cpp questlua_building.cpp\
-		  questlua_dungeon.cpp questlua_game.cpp questlua_global.cpp\
-		  questlua_guild.cpp questlua_horse.cpp questlua_pet.cpp questlua_item.cpp questlua_marriage.cpp\
-		  questlua_npc.cpp questlua_oxevent.cpp questlua_party.cpp questlua_pc.cpp\
-		  questlua_quest.cpp questlua_target.cpp questmanager.cpp questnpc.cpp questpc.cpp\
-		  refine.cpp regen.cpp safebox.cpp sectree.cpp sectree_manager.cpp sequence.cpp shop.cpp\
-		  skill.cpp start_position.cpp target.cpp text_file_loader.cpp trigger.cpp utils.cpp vector.cpp war_map.cpp\
-		  wedding.cpp xmas_event.cpp version.cpp panama.cpp map_location.cpp\
-		  BlueDragon.cpp BlueDragon_Binder.cpp DragonLair.cpp questlua_dragonlair.cpp\
-		  skill_power.cpp affect.cpp\
-		  ClientPackageCryptInfo.cpp cipher.cpp\
-		  buff_on_attributes.cpp dragon_soul_table.cpp DragonSoul.cpp\
-		  group_text_parse_tree.cpp char_dragonsoul.cpp questlua_dragonsoul.cpp\
-		  shop_manager.cpp shopEx.cpp item_manager_read_tables.cpp public_table.cpp
-
-
-COBJS	= $(CFILE:%.c=$(OBJDIR)/%.o)
-CPPOBJS	= $(CPPFILE:%.cpp=$(OBJDIR)/%.o)
-
-MAINOBJ = $(OBJDIR)/main.o
-MAINCPP = main.cpp
-
-TESTOBJ = $(OBJDIR)/test.o
-TESTCPP = test.cpp
-TEST_TARGET = $(BINDIR)/test
-
-default: $(TARGET) $(TEST_TARGET)
-
-$(OBJDIR)/minilzo.o: minilzo.c
-	@$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
-	@echo compile $<
-
-$(OBJDIR)/version.o: version.cpp
-	@$(CC) $(CFLAGS) -D__USER__=\"$(USER)\" -D__HOSTNAME__=\"$(HOSTNAME)\" -D__PWD__=\"$(PWD)\" -D__SVN_VERSION__=\"$(SVN_VERSION)\" -c $< -o $@
-	@echo compile $<
+$(TARGET): $(OBJS)
+	$(CXX) $(CFLAGS) $(LIBDIR) $(OBJS) $(LIBS) -o $(TARGET)
 
 $(OBJDIR)/%.o: %.cpp
-	@echo compile $<
-	@$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
+	@mkdir -p $(OBJDIR)
+	$(CXX) $(CFLAGS) $(INCDIR) -c $< -o $@
 
-limit_time:
-	@echo update limit time
-	@python update_limit_time.py
-
-$(TARGET): $(CPPOBJS) $(COBJS) $(MAINOBJ)
-	@echo linking $(TARGET)....
-	@$(CC) $(CFLAGS) $(LIBDIR) $(COBJS) $(CPPOBJS) $(MAINOBJ) $(LIBS) -o $(TARGET)
-
-$(TEST_TARGET): $(TESTCPP) $(CPPOBJS) $(COBJS) $(TESTOBJ)
-	@echo linking $(TEST_TARGET)
-	@$(CC) $(CFLAGS) $(LIBDIR) $(COBJS) $(CPPOBJS) $(TESTOBJ) $(LIBS) -o ../test
+$(OBJDIR)/%.o: %.c
+	@mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
 
 clean:
-	@rm -f $(COBJS) $(CPPOBJS)
-	@rm -f $(BINDIR)/game_r* $(BINDIR)/conv
-
-tag:
-	ctags *.cpp *.h *.c
-
-dep:
-	makedepend -f Depend $(INCDIR) -I/usr/include/c++/3.3 -I/usr/include/c++/4.2 -p$(OBJDIR)/ $(CPPFILE) $(CFILE) $(MAINCPP) $(TESTCPP) 2> /dev/null > Depend
-
-sinclude Depend
+	rm -rf $(OBJDIR) $(TARGET)

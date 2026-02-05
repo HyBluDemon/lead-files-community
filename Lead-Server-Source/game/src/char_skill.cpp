@@ -43,7 +43,7 @@ static const DWORD s_adwSubSkillVnums[] =
 	SKILL_RESIST_PENETRATE
 };
 
-time_t CHARACTER::GetSkillNextReadTime(DWORD dwVnum) const
+uint32_t CHARACTER::GetSkillNextReadTime(DWORD dwVnum) const
 {
 	if (dwVnum >= SKILL_MAX_NUM)
 	{
@@ -54,7 +54,7 @@ time_t CHARACTER::GetSkillNextReadTime(DWORD dwVnum) const
 	return m_pSkillLevels ? m_pSkillLevels[dwVnum].tNextRead : 0;
 }
 
-void CHARACTER::SetSkillNextReadTime(DWORD dwVnum, time_t time)
+void CHARACTER::SetSkillNextReadTime(DWORD dwVnum, uint32_t time)
 {
 	if (m_pSkillLevels && dwVnum < SKILL_MAX_NUM)
 		m_pSkillLevels[dwVnum].tNextRead = time;

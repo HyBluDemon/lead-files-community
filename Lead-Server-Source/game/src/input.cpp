@@ -16,7 +16,7 @@
 #include "priv_manager.h"
 #include "dev_log.h"
 
-extern time_t get_global_time();
+extern uint32_t get_global_time();
 
 bool IsEmptyAdminPage()
 {

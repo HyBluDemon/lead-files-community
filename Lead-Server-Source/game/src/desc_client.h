@@ -35,8 +35,8 @@ class CLIENT_DESC : public DESC
 	protected:
 		int			m_iPhaseWhenSucceed;
 		bool		m_bRetryWhenClosed;
-		time_t		m_LastTryToConnectTime;
-		time_t		m_tLastChannelStatusUpdateTime;
+		uint32_t	m_LastTryToConnectTime;
+		uint32_t	m_tLastChannelStatusUpdateTime;
 
 		CInputDB 	m_inputDB;
 		CInputP2P 	m_inputP2P;

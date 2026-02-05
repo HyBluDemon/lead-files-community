@@ -8,7 +8,7 @@
 #include "locale_service.h"
 #include "db.h"
 
-extern time_t get_global_time();
+extern uint32_t get_global_time();
 
 bool FN_IS_VALID_LOGIN_STRING(const char *str)
 {

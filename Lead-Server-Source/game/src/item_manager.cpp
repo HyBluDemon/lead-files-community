@@ -769,7 +769,7 @@ bool ITEM_MANAGER::CreateDropItemVector(LPCHARACTER pkChr, LPCHARACTER pkKiller,
 
 	if (pkChr->GetMobDropItemVnum())
 	{
-		if (m_map_dwEtcItemDropProb.contains(pkChr->GetMobDropItemVnum()))
+		if (m_map_dwEtcItemDropProb.find(pkChr->GetMobDropItemVnum()) != m_map_dwEtcItemDropProb.end())
 			vec_item.emplace_back(pkChr->GetMobDropItemVnum(), 1);
 	}
 

@@ -24,7 +24,7 @@ CPrivManager::CPrivManager()
 	memset(m_aakPrivEmpireData, 0, sizeof(m_aakPrivEmpireData));
 }
 
-void CPrivManager::RequestGiveGuildPriv(DWORD guild_id, BYTE type, int value, time_t duration_sec)
+void CPrivManager::RequestGiveGuildPriv(DWORD guild_id, BYTE type, int value, uint32_t duration_sec)
 {
 	if (MAX_PRIV_NUM <= type)
 	{
@@ -44,7 +44,7 @@ void CPrivManager::RequestGiveGuildPriv(DWORD guild_id, BYTE type, int value, ti
 	db_clientdesc->DBPacket(HEADER_GD_REQUEST_GUILD_PRIV, 0, &p, sizeof(p));
 }
 
-void CPrivManager::RequestGiveEmpirePriv(BYTE empire, BYTE type, int value, time_t duration_sec)
+void CPrivManager::RequestGiveEmpirePriv(BYTE empire, BYTE type, int value, uint32_t duration_sec)
 {
 	if (MAX_PRIV_NUM <= type)
 	{
@@ -82,7 +82,7 @@ void CPrivManager::RequestGiveCharacterPriv(DWORD pid, BYTE type, int value)
 	db_clientdesc->DBPacket(HEADER_GD_REQUEST_CHARACTER_PRIV, 0, &p, sizeof(p));
 }
 
-void CPrivManager::GiveGuildPriv(DWORD guild_id, BYTE type, int value, BYTE bLog, time_t end_time_sec)
+void CPrivManager::GiveGuildPriv(DWORD guild_id, BYTE type, int value, BYTE bLog, uint32_t end_time_sec)
 {
 	if (MAX_PRIV_NUM <= type)
 	{
@@ -140,7 +140,7 @@ void CPrivManager::GiveCharacterPriv(DWORD pid, BYTE type, int value, BYTE bLog)
 		LogManager::instance().CharLog(pid, 0, type, value, "CHARACTER_PRIV", "", "");
 }
 
-void CPrivManager::GiveEmpirePriv(BYTE empire, BYTE type, int value, BYTE bLog, time_t end_time_sec)
+void CPrivManager::GiveEmpirePriv(BYTE empire, BYTE type, int value, BYTE bLog, uint32_t end_time_sec)
 {
 	if (MAX_PRIV_NUM <= type)
 	{

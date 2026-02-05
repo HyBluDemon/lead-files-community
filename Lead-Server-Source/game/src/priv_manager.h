@@ -12,12 +12,12 @@ class CPrivManager : public singleton<CPrivManager>
 	public:
 		CPrivManager();
 
-		void RequestGiveGuildPriv(DWORD guild_id, BYTE type, int value, time_t dur_time_sec);
-		void RequestGiveEmpirePriv(BYTE empire, BYTE type, int value, time_t dur_time_sec);
+		void RequestGiveGuildPriv(DWORD guild_id, BYTE type, int value, uint32_t dur_time_sec);
+		void RequestGiveEmpirePriv(BYTE empire, BYTE type, int value, uint32_t dur_time_sec);
 		void RequestGiveCharacterPriv(DWORD pid, BYTE type, int value);
 
-		void GiveGuildPriv(DWORD guild_id, BYTE type, int value, BYTE bLog, time_t end_time_sec);
-		void GiveEmpirePriv(BYTE empire, BYTE type, int value, BYTE bLog, time_t end_time_sec);
+		void GiveGuildPriv(DWORD guild_id, BYTE type, int value, BYTE bLog, uint32_t end_time_sec);
+		void GiveEmpirePriv(BYTE empire, BYTE type, int value, BYTE bLog, uint32_t end_time_sec);
 		void GiveCharacterPriv(DWORD pid, BYTE type, int value, BYTE bLog);
 
 		void RemoveGuildPriv(DWORD guild_id, BYTE type);
@@ -33,7 +33,7 @@ class CPrivManager : public singleton<CPrivManager>
 		struct SPrivEmpireData
 		{
 			int m_value;
-			time_t m_end_time_sec;
+			uint32_t m_end_time_sec;
 		};
 
 		SPrivEmpireData* GetPrivByEmpireEx(BYTE bEmpire, BYTE type);
@@ -42,7 +42,7 @@ class CPrivManager : public singleton<CPrivManager>
 		struct SPrivGuildData
 		{
 			int		value;		///< 보너스 수치
-			time_t	end_time_sec;	///< 지속 시간
+			uint32_t	end_time_sec;	///< 지속 시간
 		};
 
 		/// 길드 보너스 데이터를 얻어온다.

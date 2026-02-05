@@ -1,36 +1,20 @@
-CXX	= g++
-BIN = ./libpoly.a
+CXX      = clang++
+BIN      = ./libpoly.a
 
-GCC_VERSION = $(shell $(CC) --version 2>&1 | grep "(GCC)" | cut -d' ' -f3  | cut -d'.' -f1)
+#CFLAGS   = -m32 -Wall -O2 -pipe -fno-exceptions -fno-rtti
+CFLAGS = -m32 -march=i686 -msse2 -g -O1 -pipe -frtti -fexceptions -pthread -D_THREAD_SAFE -fno-stack-protector -fno-strict-aliasing
 
-ifeq ($(GCC_VERSION), 4)
-CFLAGS  = -Wall -O2 -pipe -mtune=i686 -fno-exceptions -fno-rtti
-else
-CFLAGS  = -Wall -O2 -pipe -mcpu=i686 -fno-exceptions -fno-rtti
-endif
+SRCS     = Base.cc Poly.cc SymTable.cc Symbol.cc
+OBJFILES = $(SRCS:.cc=.o)
 
-LIBS =
-
-OBJFILES = Base.o Poly.o SymTable.o Symbol.o
-
-default:
-	$(MAKE) $(BIN)
+default: $(BIN)
 
 $(BIN): $(OBJFILES)
-	ar cru $(BIN) $(OBJFILES) $(LIBS)
+	ar cru $(BIN) $(OBJFILES)
 	ranlib $(BIN)
-	chmod 700 $(BIN)
 
 clean:
-	rm -f *.o
-	rm -f $(BIN)
+	rm -f *.o $(BIN)
 
-dep:
-	touch Depend
-	$(CXX) $(CFLAGS) -MM *.cc > Depend
-
-$(OBJFILES):
-	$(CXX) $(CFLAGS) -c $<
-
-include Depend
-
+%.o: %.cc
+	$(CXX) $(CFLAGS) -c $< -o $@

@@ -1912,7 +1912,7 @@ typedef struct SPacketCGMyShop
 typedef struct SPacketGCTime
 {
 	BYTE	bHeader;
-	time_t	time;
+	uint32_t	time;
 } TPacketGCTime;
 
 enum
