@@ -32,9 +32,9 @@ class CEntity
 
 		int				GetViewAge() const	{ return m_iViewAge;	}
 
-		long			GetX() const		{ return m_pos.x; }
-		long			GetY() const		{ return m_pos.y; }
-		long			GetZ() const		{ return m_pos.z; }
+		int32_t			GetX() const		{ return m_pos.x; }
+		int32_t			GetY() const		{ return m_pos.y; }
+		int32_t			GetZ() const		{ return m_pos.z; }
 		const PIXEL_POSITION &	GetXYZ() const		{ return m_pos; }
 
 		void			SetXYZ(long x, long y, long z)		{ m_pos.x = x, m_pos.y = y, m_pos.z = z; }
@@ -50,8 +50,8 @@ class CEntity
 		void			BindDesc(LPDESC _d)     { m_lpDesc = _d; }
 		LPDESC			GetDesc() const			{ return m_lpDesc; }
 
-		void			SetMapIndex(long l)	{ m_lMapIndex = l; }
-		long			GetMapIndex() const	{ return m_lMapIndex; }
+		void			SetMapIndex(int32_t l)	{ m_lMapIndex = l; }
+		int32_t			GetMapIndex() const	{ return m_lMapIndex; }
 
 		void			SetObserverMode(bool bFlag);
 		bool			IsObserverMode() const	{ return m_bIsObserver; }

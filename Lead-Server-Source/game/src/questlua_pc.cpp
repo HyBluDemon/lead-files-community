@@ -395,7 +395,7 @@ namespace quest
 
 		std::vector <DWORD> dwVnums;
 		std::vector <DWORD> dwCounts;
-		std::vector <LPITEM> item_gets(NULL);
+		std::vector <LPITEM> item_gets;
 		int count = 0;
 
 		ch->GiveItemFromSpecialItemGroup(dwGroupVnum, dwVnums, dwCounts, item_gets, count);
@@ -1850,16 +1850,16 @@ namespace quest
 				DWORD y;
 			} ws[TOWN_NUM] = 
 			{
-				{"¿µ¾ÈÀ¾¼º",	4743,	9548},
-				{"ÀÓÁö°î",		3235,	9086},
-				{"ÀÚ¾çÇö",		3531,	8829},
-				{"Á¶¾ÈÀ¾¼º",	638,	1664},
-				{"½Â·æ°î",		1745,	1909},
-				{"º¹Á¤Çö",		1455,	2400},
-				{"Æò¹«À¾¼º",	9599,	2692},
-				{"¹æ»ê°î",		8036,	2984},
-				{"¹Ú¶óÇö",		8639,	2460},
-				{"¼­ÇÑ»ê",		4350,	2143},
+			    {"Yeongan",  4743,   9548}, // Shinsoo Village 1
+			    {"Imha",     3235,   9086}, // Shinsoo Village 2
+			    {"Wae-An",   3531,   8829}, // Shinsoo Village 3
+			    {"Joan",     638,    1664}, // Chunjo Village 1
+			    {"Bokjung",  1745,   1909}, // Chunjo Village 2
+			    {"Bak-Go",   1455,   2400}, // Chunjo Village 3
+			    {"Pyungmoo", 9599,   2692}, // Jinno Village 1
+			    {"Bakra",    8036,   2984}, // Jinno Village 2
+			    {"Jayang",   8639,   2460}, // Jinno Village 3
+			    {"Sohan",    4350,   2143}, // Mount Sohan (Ice Mountain)
 			};
 			int idx  = (int)lua_tonumber(L, 1);
 

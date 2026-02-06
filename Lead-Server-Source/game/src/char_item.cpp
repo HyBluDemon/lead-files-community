@@ -673,7 +673,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 
 					do
 					{
-						BYTE p = wCell + (DRAGON_SOUL_BOX_COLUMN_NUM * j);
+						WORD p = wCell + (DRAGON_SOUL_BOX_COLUMN_NUM * j);
 
 						if (p >= DRAGON_SOUL_INVENTORY_MAX_NUM)
 							return false;
@@ -699,7 +699,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 
 				do
 				{
-					BYTE p = wCell + (DRAGON_SOUL_BOX_COLUMN_NUM * j);
+					WORD p = wCell + (DRAGON_SOUL_BOX_COLUMN_NUM * j);
 
 					if (p >= DRAGON_SOUL_INVENTORY_MAX_NUM)
 						return false;
@@ -729,6 +729,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 			return true;
 		}
 	}
+	return true;
 }
 
 int CHARACTER::GetEmptyInventory(BYTE size) const
@@ -1975,7 +1976,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 					DWORD dwBoxVnum = item2->GetVnum();
 					std::vector <DWORD> dwVnums;
 					std::vector <DWORD> dwCounts;
-					std::vector <LPITEM> item_gets(NULL);
+					std::vector <LPITEM> item_gets;
 					int count = 0;
 
 					if (GiveItemFromSpecialItemGroup(dwBoxVnum, dwVnums, dwCounts, item_gets, count))
@@ -2039,7 +2040,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				DWORD dwBoxVnum = item->GetVnum();
 				std::vector <DWORD> dwVnums;
 				std::vector <DWORD> dwCounts;
-				std::vector <LPITEM> item_gets(NULL);
+				std::vector <LPITEM> item_gets;
 				int count = 0;
 
 				if( (dwBoxVnum > 51500 && dwBoxVnum < 52000) || (dwBoxVnum >= 50255 && dwBoxVnum <= 50260) )
@@ -2372,7 +2373,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										sprintf(buf, "Inc %ds by item{VN:%d VAL%d:%d}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
+										sprintf(buf, "Inc %ds by item{VN:%d VAL%d:%ld}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									}
 
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Charged for %d seconds."), ret);
@@ -2388,7 +2389,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										sprintf(buf, "No change by item{VN:%d VAL%d:%d}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
+										sprintf(buf, "No change by item{VN:%d VAL%d:%ld}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									}
 
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Charging is not possible."));
@@ -2415,7 +2416,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								if (ret)
 								{
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Charged for %d seconds."), ret);
-									sprintf(buf, "Increase %ds by item{VN:%d VAL%d:%d}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
+									sprintf(buf, "Increase %ds by item{VN:%d VAL%d:%ld}", ret, item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									LogManager::instance().ItemLog(this, item, "DS_CHARGING_SUCCESS", buf);
 									item->SetCount(item->GetCount() - 1);
 									return true;
@@ -2423,7 +2424,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								else
 								{
 									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Charging is not possible."));
-									sprintf(buf, "No change by item{VN:%d VAL%d:%d}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
+									sprintf(buf, "No change by item{VN:%d VAL%d:%ld}", item->GetVnum(), ITEM_VALUE_CHARGING_AMOUNT_IDX, item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
 									LogManager::instance().ItemLog(this, item, "DS_CHARGING_FAILED", buf);
 									return false;
 								}
@@ -3517,7 +3518,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									DWORD dwBoxVnum = item->GetVnum();
 									std::vector <DWORD> dwVnums;
 									std::vector <DWORD> dwCounts;
-									std::vector <LPITEM> item_gets(NULL);
+									std::vector <LPITEM> item_gets;
 									int count = 0;
 
 
@@ -3541,7 +3542,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									DWORD dwBoxVnum = item->GetVnum();
 									std::vector <DWORD> dwVnums;
 									std::vector <DWORD> dwCounts;
-									std::vector <LPITEM> item_gets(NULL);
+									std::vector <LPITEM> item_gets;
 									int count = 0;
 
 
@@ -3564,7 +3565,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									DWORD dwBoxVnum = 50011;
 									std::vector <DWORD> dwVnums;
 									std::vector <DWORD> dwCounts;
-									std::vector <LPITEM> item_gets(NULL);
+									std::vector <LPITEM> item_gets;
 									int count = 0;
 
 									if (GiveItemFromSpecialItemGroup(dwBoxVnum, dwVnums, dwCounts, item_gets, count))
@@ -7356,7 +7357,7 @@ bool CHARACTER::CanUnequipNow(const LPITEM item, const TItemPos& srcCell, const 
 {	
 
 	if (ITEM_BELT == item->GetType())
-		VERIFY_MSG(CBeltInventoryHelper::IsExistItemInBeltInventory(this), "벨트 인벤토리에 아이템이 존재하면 해제할 수 없습니다.");
+		VERIFY_MSG(CBeltInventoryHelper::IsExistItemInBeltInventory(this), LC_TEXT("You cannot unequip the belt while items are inside the beld inventory."));
 
 	// 영원히 해제할 수 없는 아이템
 	if (IS_SET(item->GetFlag(), ITEM_FLAG_IRREMOVABLE))
@@ -7371,7 +7372,7 @@ bool CHARACTER::CanUnequipNow(const LPITEM item, const TItemPos& srcCell, const 
 		else
 			pos = GetEmptyInventory(item->GetSize());
 
-		VERIFY_MSG( -1 == pos, "소지품에 빈 공간이 없습니다." );
+		VERIFY_MSG( -1 == pos, LC_TEXT("Your inventory is full.") );
 	}
 
 

@@ -26,7 +26,7 @@ LIBDIR = -L$(EXTERN_DIR)/lib \
          -L/usr/local/lib
 
 #CFLAGS = -m32 -g -Wall -O2 -pipe -fexceptions -fno-stack-protector -pthread -D_THREAD_SAFE -DNDEBUG
-CFLAGS = -m32 -march=i686 -msse2 -g -O1 -pipe -frtti -fexceptions -pthread -D_THREAD_SAFE -fno-stack-protector -fno-strict-aliasing
+CFLAGS = -m32 -march=i686 -msse2 -g -O1 -pipe -frtti -fexceptions -pthread -D_THREAD_SAFE -DBOOST_BIND_GLOBAL_PLACEHOLDERS -fno-stack-protector -fno-strict-aliasing
 
 # RE-ORDERED LIBS: Higher level libs first, base libs last
 LIBS = $(EXTERN_DIR)/lib/libIL.a \

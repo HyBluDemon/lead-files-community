@@ -686,7 +686,7 @@ void CHARACTER::__StateIdle_Monster()
 		{
 			if (Follow(pkChrProtege, number(150, 400)))
 			{
-				MonsterLog("[IDLE] 리더로부터 너무 멀리 떨어졌다! 복귀한다.");
+				MonsterLog("[IDLE] Leader is too far away! Returning.");
 				return;
 			}
 		}
@@ -797,6 +797,7 @@ void CHARACTER::StateMove()
 
 		// 전투 중이면서 뛰는 중이면
 		if (!IsWalking() && !IsRiding())
+		{
 			if ((get_dword_time() - GetLastAttackTime()) < 20000)
 			{
 				StartAffectEvent();
@@ -807,8 +808,9 @@ void CHARACTER::StateMove()
 						PointChange(POINT_STAMINA, -STAMINA_PER_STEP);
 				}
 				else
+				{
 					PointChange(POINT_STAMINA, -STAMINA_PER_STEP);
-
+				}
 				StartStaminaConsume();
 
 				if (GetStamina() <= 0)
@@ -823,6 +825,7 @@ void CHARACTER::StateMove()
 			{
 				StopStaminaConsume();
 			}
+		}
 	}
 	else
 	{
@@ -873,7 +876,7 @@ void CHARACTER::StateMove()
 	{
 		if (IsPC())
 		{
-			sys_log(1, "도착 %s %d %d", GetName(), x, y);
+			sys_log(1, "ARRIVED: %s %d %d", GetName(), x, y);
 			GotoState(m_stateIdle);
 			StopStaminaConsume();
 		}
@@ -882,7 +885,7 @@ void CHARACTER::StateMove()
 			if (GetVictim() && !IsCoward())
 			{
 				if (!IsState(m_stateBattle))
-					MonsterLog("[BATTLE] 근처에 왔으니 공격시작 %s", GetVictim()->GetName());
+					MonsterLog("[BATTLE] Target in range, starting attack: %s", GetVictim()->GetName());
 
 				GotoState(m_stateBattle);
 				m_dwStateDuration = 1;
@@ -890,7 +893,7 @@ void CHARACTER::StateMove()
 			else
 			{
 				if (!IsState(m_stateIdle))
-					MonsterLog("[IDLE] 대상이 없으니 쉬자");
+					MonsterLog("[IDLE] No target, resting.");
 
 				GotoState(m_stateIdle);
 
@@ -1010,7 +1013,7 @@ void CHARACTER::StateBattle()
 
 		if (bPct && pParty->CountMemberByVnum(GetSummonVnum()) < SUMMON_MONSTER_COUNT)
 		{
-			MonsterLog("부하 몬스터 소환!");
+			MonsterLog("Minion Monster Summoned!");
 			// 모자라는 녀석을 불러내 채웁시다.
 			int sx = GetX() - 300;
 			int sy = GetY() - 300;
@@ -1031,12 +1034,11 @@ void CHARACTER::StateBattle()
 
 	float fDist = DISTANCE_APPROX(GetX() - victim->GetX(), GetY() - victim->GetY());
 
-	if (fDist >= 4000.0f)   // 40미터 이상 멀어지면 포기
+	if (fDist >= 4000.0f)
 	{
-		MonsterLog("타겟이 멀어서 포기");
+		MonsterLog("Target too far, giving up.");
 		SetVictim(NULL);
 
-		// 보호할 것(돌, 파티장) 주변으로 간다.
 		if (pkChrProtege)
 			if (DISTANCE_APPROX(GetX() - pkChrProtege->GetX(), GetY() - pkChrProtege->GetY()) > 1000)
 				Follow(pkChrProtege, number(150, 400));

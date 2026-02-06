@@ -126,13 +126,13 @@ const char* __GetWarType(int n)
 	switch (n)
 	{
 		case 0 :
-			return "ÆĞ¿Õ";
+			return "Field";
 		case 1 :
-			return "¸ÍÀå";
+			return "Arena";
 		case 2 :
-			return "¼öÈ£";
+			return "Flag";
 		default :
-			return "¾ø´Â ¹øÈ£";
+			return "Unknown";
 	}
 }
 

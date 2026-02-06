@@ -621,8 +621,8 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList = true);
 		bool			IsSyncOwner(LPCHARACTER ch) const;
 
-		bool			WarpSet(long x, long y, long lRealMapIndex = 0);
-		void			SetWarpLocation(long lMapIndex, long x, long y);
+		bool			WarpSet(int32_t x, int32_t y, int32_t lRealMapIndex = 0);
+		void			SetWarpLocation(int32_t lMapIndex, int32_t x, int32_t y);
 		void			WarpEnd();
 		const PIXEL_POSITION & GetWarpPosition() const { return m_posWarp; }
 		bool			WarpToPID(DWORD dwPID);

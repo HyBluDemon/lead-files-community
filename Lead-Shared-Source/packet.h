@@ -473,7 +473,7 @@ typedef struct command_handshake
 	BYTE	bHeader;
 	DWORD	dwHandshake;
 	DWORD	dwTime;
-	long	lDelta;
+	int32_t	lDelta;
 } TPacketCGHandshake;
 
 typedef struct command_login
@@ -857,9 +857,7 @@ typedef struct packet_add_char
 	DWORD	dwVID;
 
 	float	angle;
-	long	x;
-	long	y;
-	long	z;
+	int32_t	x, y, z;
 
 	BYTE	bType;
 	WORD	wRaceNum;
@@ -1264,8 +1262,8 @@ typedef struct packet_move
 	BYTE		bArg;
 	BYTE		bRot;
 	DWORD		dwVID;
-	long		lX;
-	long		lY;
+	int32_t		lX;
+	int32_t		lY;
 	DWORD		dwTime;
 	DWORD		dwDuration;
 } TPacketGCMove;
