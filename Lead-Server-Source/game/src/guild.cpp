@@ -1722,7 +1722,7 @@ bool CGuild::ChargeSP(LPCHARACTER ch, int iSP)
 
 	SendDBSkillUpdate(iSP);
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Guild> %u¡¯s dragon power has been restored."), iSP);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<Guild> %d dragon power has been restored."), iSP);
 	}
 	return true;
 }

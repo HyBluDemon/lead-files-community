@@ -52,7 +52,7 @@ class CPeer : public CPeerBase
 	void	SetP2PPort(WORD wPort);
 	WORD	GetP2PPort() { return m_wP2PPort; }
 
-	void	SetMaps(long* pl);
+	void	SetMaps(int32_t* pl);
 	long *	GetMaps() { return &m_alMaps[0]; }
 
 	bool	SetItemIDRange(TItemIDRangeTable itemRange);

@@ -276,8 +276,8 @@ typedef struct SSimplePlayer
 	BYTE		bChangeName;
 	WORD		wHairPart;
 	BYTE		bDummy[4];
-	long		x, y;
-	long		lAddr;
+	int32_t		x, y;
+	int32_t		lAddr;
 	WORD		wPort;
 	BYTE		skill_group;
 } TSimplePlayer;
@@ -313,7 +313,7 @@ typedef struct SPlayerItem
 	DWORD	count;
 
 	DWORD	vnum;
-	long	alSockets[ITEM_SOCKET_MAX_NUM];	// 소켓번호
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];	// 소켓번호
 
 	TPlayerItemAttribute    aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 
@@ -363,8 +363,8 @@ typedef struct SPlayerTable
 	INT		x, y, z;
 	INT		lMapIndex;
 
-	long	lExitX, lExitY;
-	long	lExitMapIndex;
+	int32_t	lExitX, lExitY;
+	int32_t	lExitMapIndex;
 
 	short       hp;
 	short       sp;
@@ -389,7 +389,7 @@ typedef struct SPlayerTable
 	short	stamina;
 
 	BYTE	skill_group;
-	long	lAlignment;
+	int32_t	lAlignment;
 
 	short	stat_reset_count;
 
@@ -578,8 +578,8 @@ typedef struct SItemTable : public SEntityTable
 
 	TItemLimit	aLimits[ITEM_LIMIT_MAX_NUM];
 	TItemApply	aApplies[ITEM_APPLY_MAX_NUM];
-	long        alValues[ITEM_VALUES_MAX_NUM];
-	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	int32_t        alValues[ITEM_VALUES_MAX_NUM];
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
 	DWORD	dwRefinedVnum;
 	WORD	wRefineSet;
 	BYTE	bAlterToMagicItemPct;
@@ -709,7 +709,7 @@ typedef struct SPacketGDSetup
 	BYTE	bChannel;	// 채널
 	WORD	wListenPort;	// 클라이언트가 접속하는 포트 번호
 	WORD	wP2PPort;	// 서버끼리 연결 시키는 P2P 포트 번호
-	long	alMaps[32];
+	int32_t	alMaps[32];
 	DWORD	dwLoginCount;
 	BYTE	bAuthServer;
 } TPacketGDSetup;
@@ -721,7 +721,7 @@ typedef struct SPacketDGMapLocations
 
 typedef struct SMapLocation
 {
-	long	alMaps[32];
+	int32_t	alMaps[32];
 	char	szHost[MAX_HOST_LENGTH + 1];
 	WORD	wPort;
 } TMapLocation;

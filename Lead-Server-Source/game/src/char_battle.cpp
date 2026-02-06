@@ -738,17 +738,23 @@ void CHARACTER::Reward(bool bItemDrop)
 	//PROF_UNIT pu1("r1");
 	if (pkAttacker->IsPC())
 	{
-		if (GetLevel() - pkAttacker->GetLevel() >= -10)
+		if (GetLevel() - pkAttacker->GetLevel() >= -10) {
 			if (pkAttacker->GetRealAlignment() < 0)
 			{
 				if (pkAttacker->IsEquipUniqueItem(UNIQUE_ITEM_FASTER_ALIGNMENT_UP_BY_KILL))
-					pkAttacker->UpdateAlignment(14);
+				{
+						pkAttacker->UpdateAlignment(14);
+				} 
 				else
+				{
 					pkAttacker->UpdateAlignment(7);
-			}
+				}
+				}
 			else
+			{
 				pkAttacker->UpdateAlignment(2);
-
+			}
+		}
 		pkAttacker->SetQuestNPCID(GetVID());
 		quest::CQuestManager::instance().Kill(pkAttacker->GetPlayerID(), GetRaceNum());
 		CHARACTER_MANAGER::instance().KillLog(GetRaceNum());
@@ -1368,322 +1374,455 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	// BOSS_KILL_LOG
 	if (GetMobRank() >= MOB_RANK_BOSS && pkKiller && pkKiller->IsPC())
 	{
-		char buf[51];
-		snprintf(buf, sizeof(buf), "%d %ld", g_bChannel, pkKiller->GetMapIndex());
-		if (IsStone())
-			LogManager::instance().CharLog(pkKiller, GetRaceNum(), "STONE_KILL", buf);
-		else
-			LogManager::instance().CharLog(pkKiller, GetRaceNum(), "BOSS_KILL", buf);
-	}
-	// END_OF_BOSS_KILL_LOG
+			char buf[51];
+			snprintf(buf, sizeof(buf), "%d %d", g_bChannel, pkKiller->GetMapIndex());
+			if (IsStone())
+				LogManager::instance().CharLog(pkKiller, GetRaceNum(), "STONE_KILL", buf);
+			else
+				LogManager::instance().CharLog(pkKiller, GetRaceNum(), "BOSS_KILL", buf);
+		}
+		// END_OF_BOSS_KILL_LOG
 
-	TPacketGCDead pack;
-	pack.header	= HEADER_GC_DEAD;
-	pack.vid	= m_vid;
-	PacketAround(&pack, sizeof(pack));
+		TPacketGCDead pack;
+		pack.header	= HEADER_GC_DEAD;
+		pack.vid	= m_vid;
+		PacketAround(&pack, sizeof(pack));
 
-	REMOVE_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_STUN);
+		REMOVE_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_STUN);
 
-	// 플레이어 캐릭터이면
-	if (GetDesc() != NULL) {
+		// 플레이어 캐릭터이면
+		if (GetDesc() != NULL) {
+			//
+			// 클라이언트에 에펙트 패킷을 다시 보낸다.
+			//
+			itertype(m_list_pkAffect) it = m_list_pkAffect.begin();
+
+			while (it != m_list_pkAffect.end())
+				SendAffectAddPacket(GetDesc(), *it++);
+		}
+
 		//
-		// 클라이언트에 에펙트 패킷을 다시 보낸다.
+		// Dead 이벤트 생성,
 		//
-		itertype(m_list_pkAffect) it = m_list_pkAffect.begin();
-
-		while (it != m_list_pkAffect.end())
-			SendAffectAddPacket(GetDesc(), *it++);
-	}
-
-	//
-	// Dead 이벤트 생성,
-	//
-	// Dead 이벤트에서는 몬스터의 경우 몇초 후에 Destroy 되도록 해주며,
-	// PC의 경우 3분 있다가 마을에서 나오도록 해 준다. 3분 내에는 유저로부터
-	// 마을에서 시작할 건지, 여기서 시작할 건지 결정을 받는다.
-	if (isDuel == false)
-	{
-		if (m_pkDeadEvent)
+		// Dead 이벤트에서는 몬스터의 경우 몇초 후에 Destroy 되도록 해주며,
+		// PC의 경우 3분 있다가 마을에서 나오도록 해 준다. 3분 내에는 유저로부터
+		// 마을에서 시작할 건지, 여기서 시작할 건지 결정을 받는다.
+		if (isDuel == false)
 		{
-			sys_log(1, "DEAD_EVENT_CANCEL: %s %p %p", GetName(), this, get_pointer(m_pkDeadEvent));
-			event_cancel(&m_pkDeadEvent);
-		}
-
-		if (IsStone())
-			ClearStone();
-
-		if (GetDungeon())
-		{
-			GetDungeon()->DeadCharacter(this);
-		}
-
-		SCharDeadEventInfo* pEventInfo = AllocEventInfo<SCharDeadEventInfo>();
-
-		if (IsPC())
-		{
-			pEventInfo->isPC = true;
-			pEventInfo->dwID = this->GetPlayerID();
-
-			m_pkDeadEvent = event_create(dead_event, pEventInfo, PASSES_PER_SEC(180));
-		}
-		else
-		{
-			pEventInfo->isPC = false;
-			pEventInfo->dwID = this->GetVID();
-
-			if (IsRevive() == false && HasReviverInParty() == true)
+			if (m_pkDeadEvent)
 			{
-				m_pkDeadEvent = event_create(dead_event, pEventInfo, bImmediateDead ? 1 : PASSES_PER_SEC(3));
+				sys_log(1, "DEAD_EVENT_CANCEL: %s %p %p", GetName(), this, get_pointer(m_pkDeadEvent));
+				event_cancel(&m_pkDeadEvent);
+			}
+
+			if (IsStone())
+				ClearStone();
+
+			if (GetDungeon())
+			{
+				GetDungeon()->DeadCharacter(this);
+			}
+
+			SCharDeadEventInfo* pEventInfo = AllocEventInfo<SCharDeadEventInfo>();
+
+			if (IsPC())
+			{
+				pEventInfo->isPC = true;
+				pEventInfo->dwID = this->GetPlayerID();
+
+				m_pkDeadEvent = event_create(dead_event, pEventInfo, PASSES_PER_SEC(180));
 			}
 			else
 			{
-				m_pkDeadEvent = event_create(dead_event, pEventInfo, bImmediateDead ? 1 : PASSES_PER_SEC(10));
-			}
-		}
+				pEventInfo->isPC = false;
+				pEventInfo->dwID = this->GetVID();
 
-		sys_log(1, "DEAD_EVENT_CREATE: %s %p %p", GetName(), this, get_pointer(m_pkDeadEvent));
-	}
-
-	if (m_pkExchange != NULL)
-	{
-		m_pkExchange->Cancel();
-	}
-
-	if (IsCubeOpen() == true)
-	{
-		Cube_close(this);
-	}
-	
-	CShopManager::instance().StopShopping(this);
-	CloseMyShop();
-	CloseSafebox();
-
-	if (true == IsMonster() && 2493 == GetMobTable().dwVnum)
-	{
-		if (NULL != pkKiller && NULL != pkKiller->GetGuild())
-		{
-			CDragonLairManager::instance().OnDragonDead( this, pkKiller->GetGuild()->GetID() );
-		}
-		else
-		{
-			sys_err("DragonLair: Dragon killed by nobody");
-		}
-	}
-}
-
-struct FuncSetLastAttacked
-{
-	FuncSetLastAttacked(DWORD dwTime) : m_dwTime(dwTime)
-	{
-	}
-
-	void operator () (LPCHARACTER ch)
-	{
-		ch->SetLastAttacked(m_dwTime);
-	}
-
-	DWORD m_dwTime;
-};
-
-void CHARACTER::SetLastAttacked(DWORD dwTime)
-{
-	assert(m_pkMobInst != NULL);
-
-	m_pkMobInst->m_dwLastAttackedTime = dwTime;
-	m_pkMobInst->m_posLastAttacked = GetXYZ();
-}
-
-void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageFlag)
-{
-	if (IsPC() == true || (pAttacker->IsPC() == true && pAttacker->GetTarget() == this))
-	{
-		TPacketGCDamageInfo damageInfo;
-		memset(&damageInfo, 0, sizeof(TPacketGCDamageInfo));
-
-		damageInfo.header = HEADER_GC_DAMAGE_INFO;
-		damageInfo.dwVID = (DWORD)GetVID();
-		damageInfo.flag = DamageFlag;
-		damageInfo.damage = Damage;
-
-		if (GetDesc() != NULL)
-		{
-			GetDesc()->Packet(&damageInfo, sizeof(TPacketGCDamageInfo));
-		}
-
-		if (pAttacker->GetDesc() != NULL)
-		{
-			pAttacker->GetDesc()->Packet(&damageInfo, sizeof(TPacketGCDamageInfo));
-		}
-		/*
-		   if (GetArenaObserverMode() == false && GetArena() != NULL)
-		   {
-		   GetArena()->SendPacketToObserver(&damageInfo, sizeof(TPacketGCDamageInfo));
-		   }
-		 */		
-	}
-}
-
-//
-// CHARACTER::Damage 메소드는 this가 데미지를 입게 한다.
-//
-// Arguments
-//    pAttacker		: 공격자
-//    dam		: 데미지
-//    EDamageType	: 어떤 형식의 공격인가?
-//    
-// Return value
-//    true		: dead
-//    false		: not dead yet
-// 
-bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // returns true if dead
-{
-	if (DAMAGE_TYPE_MAGIC == type)
-	{
-		dam = (int)((float)dam * (100 + (pAttacker->GetPoint(POINT_MAGIC_ATT_BONUS_PER) + pAttacker->GetPoint(POINT_MELEE_MAGIC_ATT_BONUS_PER))) / 100.f + 0.5f);
-	}
-	if (GetRaceNum() == 5001)
-	{
-		bool bDropMoney = false;
-		int iPercent = (GetHP() * 100) / GetMaxHP();
-
-		if (iPercent <= 10 && GetMaxSP() < 5)
-		{
-			SetMaxSP(5);
-			bDropMoney = true;
-		}
-		else if (iPercent <= 20 && GetMaxSP() < 4)
-		{
-			SetMaxSP(4);
-			bDropMoney = true;
-		}
-		else if (iPercent <= 40 && GetMaxSP() < 3)
-		{
-			SetMaxSP(3);
-			bDropMoney = true;
-		}
-		else if (iPercent <= 60 && GetMaxSP() < 2)
-		{
-			SetMaxSP(2);
-			bDropMoney = true;
-		}
-		else if (iPercent <= 80 && GetMaxSP() < 1)
-		{
-			SetMaxSP(1);
-			bDropMoney = true;
-		}
-
-		if (bDropMoney)
-		{
-			DWORD dwGold = 1000;
-			int iSplitCount = number(10, 13);
-
-			sys_log(0, "WAEGU DropGoldOnHit %d times", GetMaxSP());
-
-			for (int i = 1; i <= iSplitCount; ++i)
-			{
-				PIXEL_POSITION pos;
-				LPITEM item;
-
-				if ((item = ITEM_MANAGER::instance().CreateItem(1, dwGold / iSplitCount)))
+				if (IsRevive() == false && HasReviverInParty() == true)
 				{
-					if (i != 0)
-					{
-						pos.x = (number(-14, 14) + number(-14, 14)) * 20;
-						pos.y = (number(-14, 14) + number(-14, 14)) * 20;
-
-						pos.x += GetX();
-						pos.y += GetY();
-					}
-
-					item->AddToGround(GetMapIndex(), pos);
-					item->StartDestroyEvent();
+					m_pkDeadEvent = event_create(dead_event, pEventInfo, bImmediateDead ? 1 : PASSES_PER_SEC(3));
+				}
+				else
+				{
+					m_pkDeadEvent = event_create(dead_event, pEventInfo, bImmediateDead ? 1 : PASSES_PER_SEC(10));
 				}
 			}
-		}
-	}
 
-	// 평타가 아닐 때는 공포 처리
-	if (type != DAMAGE_TYPE_NORMAL && type != DAMAGE_TYPE_NORMAL_RANGE)
-	{
-		if (IsAffectFlag(AFF_TERROR))
+			sys_log(1, "DEAD_EVENT_CREATE: %s %p %p", GetName(), this, get_pointer(m_pkDeadEvent));
+		}
+
+		if (m_pkExchange != NULL)
 		{
-			int pct = GetSkillPower(SKILL_TERROR) / 400;
+			m_pkExchange->Cancel();
+		}
 
-			if (number(1, 100) <= pct)
-				return false;
+		if (IsCubeOpen() == true)
+		{
+			Cube_close(this);
+		}
+		
+		CShopManager::instance().StopShopping(this);
+		CloseMyShop();
+		CloseSafebox();
+
+		if (true == IsMonster() && 2493 == GetMobTable().dwVnum)
+		{
+			if (NULL != pkKiller && NULL != pkKiller->GetGuild())
+			{
+				CDragonLairManager::instance().OnDragonDead( this, pkKiller->GetGuild()->GetID() );
+			}
+			else
+			{
+				sys_err("DragonLair: Dragon killed by nobody");
+			}
 		}
 	}
 
-	int iCurHP = GetHP();
-	int iCurSP = GetSP();
-
-	bool IsCritical = false;
-	bool IsPenetrate = false;
-	bool IsDeathBlow = false;
-
-	enum DamageFlag
+	struct FuncSetLastAttacked
 	{
-		DAMAGE_NORMAL	= (1 << 0),
-		DAMAGE_POISON	= (1 << 1),
-		DAMAGE_DODGE	= (1 << 2),
-		DAMAGE_BLOCK	= (1 << 3),
-		DAMAGE_PENETRATE= (1 << 4),
-		DAMAGE_CRITICAL = (1 << 5),
+		FuncSetLastAttacked(DWORD dwTime) : m_dwTime(dwTime)
+		{
+		}
+
+		void operator () (LPCHARACTER ch)
+		{
+			ch->SetLastAttacked(m_dwTime);
+		}
+
+		DWORD m_dwTime;
 	};
 
-	//PROF_UNIT puAttr("Attr");
-
-	//
-	// 마법형 스킬과, 레인지형 스킬은(궁자객) 크리티컬과, 관통공격 계산을 한다.
-	// 원래는 하지 않아야 하는데 Nerf(다운밸런스)패치를 할 수 없어서 크리티컬과
-	// 관통공격의 원래 값을 쓰지 않고, /2 이상하여 적용한다.
-	// 
-	// 무사 이야기가 많아서 밀리 스킬도 추가
-	//
-	// 20091109 : 무사가 결과적으로 엄청나게 강해진 것으로 결론남, 독일 기준 무사 비율 70% 육박
-	//
-	if (type == DAMAGE_TYPE_MELEE || type == DAMAGE_TYPE_RANGE || type == DAMAGE_TYPE_MAGIC)
+	void CHARACTER::SetLastAttacked(DWORD dwTime)
 	{
-		if (pAttacker)
+		assert(m_pkMobInst != NULL);
+
+		m_pkMobInst->m_dwLastAttackedTime = dwTime;
+		m_pkMobInst->m_posLastAttacked = GetXYZ();
+	}
+
+	void CHARACTER::SendDamagePacket(LPCHARACTER pAttacker, int Damage, BYTE DamageFlag)
+	{
+		if (IsPC() == true || (pAttacker->IsPC() == true && pAttacker->GetTarget() == this))
 		{
-			// 크리티컬
-			int iCriticalPct = pAttacker->GetPoint(POINT_CRITICAL_PCT);
+			TPacketGCDamageInfo damageInfo;
+			memset(&damageInfo, 0, sizeof(TPacketGCDamageInfo));
 
-			if (!IsPC())
-				iCriticalPct += pAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_CRITICAL_BONUS);
+			damageInfo.header = HEADER_GC_DAMAGE_INFO;
+			damageInfo.dwVID = (DWORD)GetVID();
+			damageInfo.flag = DamageFlag;
+			damageInfo.damage = Damage;
 
-			if (iCriticalPct)
+			if (GetDesc() != NULL)
 			{
-				if (iCriticalPct >= 10) // 10보다 크면 5% + (4마다 1%씩 증가), 따라서 수치가 50이면 20%
-					iCriticalPct = 5 + (iCriticalPct - 10) / 4;
-				else // 10보다 작으면 단순히 반으로 깎음, 10 = 5%
-					iCriticalPct /= 2;
+				GetDesc()->Packet(&damageInfo, sizeof(TPacketGCDamageInfo));
+			}
 
-				//크리티컬 저항 값 적용.
-				iCriticalPct -= GetPoint(POINT_RESIST_CRITICAL);
+			if (pAttacker->GetDesc() != NULL)
+			{
+				pAttacker->GetDesc()->Packet(&damageInfo, sizeof(TPacketGCDamageInfo));
+			}
+			/*
+			   if (GetArenaObserverMode() == false && GetArena() != NULL)
+			   {
+			   GetArena()->SendPacketToObserver(&damageInfo, sizeof(TPacketGCDamageInfo));
+			   }
+			 */		
+		}
+	}
 
-				if (number(1, 100) <= iCriticalPct)
+	//
+	// CHARACTER::Damage 메소드는 this가 데미지를 입게 한다.
+	//
+	// Arguments
+	//    pAttacker		: 공격자
+	//    dam		: 데미지
+	//    EDamageType	: 어떤 형식의 공격인가?
+	//    
+	// Return value
+	//    true		: dead
+	//    false		: not dead yet
+	// 
+	bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // returns true if dead
+	{
+		if (DAMAGE_TYPE_MAGIC == type)
+		{
+			dam = (int)((float)dam * (100 + (pAttacker->GetPoint(POINT_MAGIC_ATT_BONUS_PER) + pAttacker->GetPoint(POINT_MELEE_MAGIC_ATT_BONUS_PER))) / 100.f + 0.5f);
+		}
+		if (GetRaceNum() == 5001)
+		{
+			bool bDropMoney = false;
+			int iPercent = (GetHP() * 100) / GetMaxHP();
+
+			if (iPercent <= 10 && GetMaxSP() < 5)
+			{
+				SetMaxSP(5);
+				bDropMoney = true;
+			}
+			else if (iPercent <= 20 && GetMaxSP() < 4)
+			{
+				SetMaxSP(4);
+				bDropMoney = true;
+			}
+			else if (iPercent <= 40 && GetMaxSP() < 3)
+			{
+				SetMaxSP(3);
+				bDropMoney = true;
+			}
+			else if (iPercent <= 60 && GetMaxSP() < 2)
+			{
+				SetMaxSP(2);
+				bDropMoney = true;
+			}
+			else if (iPercent <= 80 && GetMaxSP() < 1)
+			{
+				SetMaxSP(1);
+				bDropMoney = true;
+			}
+
+			if (bDropMoney)
+			{
+				DWORD dwGold = 1000;
+				int iSplitCount = number(10, 13);
+
+				sys_log(0, "WAEGU DropGoldOnHit %d times", GetMaxSP());
+
+				for (int i = 1; i <= iSplitCount; ++i)
 				{
-					IsCritical = true;
-					dam *= 2;
-					EffectPacket(SE_CRITICAL);
+					PIXEL_POSITION pos;
+					LPITEM item;
 
-					if (IsAffectFlag(AFF_MANASHIELD))
+					if ((item = ITEM_MANAGER::instance().CreateItem(1, dwGold / iSplitCount)))
 					{
-						RemoveAffect(AFF_MANASHIELD);
+						if (i != 0)
+						{
+							pos.x = (number(-14, 14) + number(-14, 14)) * 20;
+							pos.y = (number(-14, 14) + number(-14, 14)) * 20;
+
+							pos.x += GetX();
+							pos.y += GetY();
+						}
+
+						item->AddToGround(GetMapIndex(), pos);
+						item->StartDestroyEvent();
 					}
 				}
 			}
+		}
 
-			// 관통공격
-			int iPenetratePct = pAttacker->GetPoint(POINT_PENETRATE_PCT);
-
-			if (!IsPC())
-				iPenetratePct += pAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_PENETRATE_BONUS);
-
-
-			if (iPenetratePct)
+		// 평타가 아닐 때는 공포 처리
+		if (type != DAMAGE_TYPE_NORMAL && type != DAMAGE_TYPE_NORMAL_RANGE)
+		{
+			if (IsAffectFlag(AFF_TERROR))
 			{
+				int pct = GetSkillPower(SKILL_TERROR) / 400;
+
+				if (number(1, 100) <= pct)
+					return false;
+			}
+		}
+
+		int iCurHP = GetHP();
+		int iCurSP = GetSP();
+
+		bool IsCritical = false;
+		bool IsPenetrate = false;
+		bool IsDeathBlow = false;
+
+		enum DamageFlag
+		{
+			DAMAGE_NORMAL	= (1 << 0),
+			DAMAGE_POISON	= (1 << 1),
+			DAMAGE_DODGE	= (1 << 2),
+			DAMAGE_BLOCK	= (1 << 3),
+			DAMAGE_PENETRATE= (1 << 4),
+			DAMAGE_CRITICAL = (1 << 5),
+		};
+
+		//PROF_UNIT puAttr("Attr");
+
+		//
+		// 마법형 스킬과, 레인지형 스킬은(궁자객) 크리티컬과, 관통공격 계산을 한다.
+		// 원래는 하지 않아야 하는데 Nerf(다운밸런스)패치를 할 수 없어서 크리티컬과
+		// 관통공격의 원래 값을 쓰지 않고, /2 이상하여 적용한다.
+		// 
+		// 무사 이야기가 많아서 밀리 스킬도 추가
+		//
+		// 20091109 : 무사가 결과적으로 엄청나게 강해진 것으로 결론남, 독일 기준 무사 비율 70% 육박
+		//
+		if (type == DAMAGE_TYPE_MELEE || type == DAMAGE_TYPE_RANGE || type == DAMAGE_TYPE_MAGIC)
+		{
+			if (pAttacker)
+			{
+				// 크리티컬
+				int iCriticalPct = pAttacker->GetPoint(POINT_CRITICAL_PCT);
+
+				if (!IsPC())
+					iCriticalPct += pAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_CRITICAL_BONUS);
+
+				if (iCriticalPct)
+				{
+					if (iCriticalPct >= 10) // 10보다 크면 5% + (4마다 1%씩 증가), 따라서 수치가 50이면 20%
+						iCriticalPct = 5 + (iCriticalPct - 10) / 4;
+					else // 10보다 작으면 단순히 반으로 깎음, 10 = 5%
+						iCriticalPct /= 2;
+
+					//크리티컬 저항 값 적용.
+					iCriticalPct -= GetPoint(POINT_RESIST_CRITICAL);
+
+					if (number(1, 100) <= iCriticalPct)
+					{
+						IsCritical = true;
+						dam *= 2;
+						EffectPacket(SE_CRITICAL);
+
+						if (IsAffectFlag(AFF_MANASHIELD))
+						{
+							RemoveAffect(AFF_MANASHIELD);
+						}
+					}
+				}
+
+				// 관통공격
+				int iPenetratePct = pAttacker->GetPoint(POINT_PENETRATE_PCT);
+
+				if (!IsPC())
+					iPenetratePct += pAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_PENETRATE_BONUS);
+
+
+				if (iPenetratePct)
+				{
+					{
+						CSkillProto* pkSk = CSkillManager::instance().Get(SKILL_RESIST_PENETRATE);
+
+						if (NULL != pkSk)
+						{
+							pkSk->SetPointVar("k", 1.0f * GetSkillPower(SKILL_RESIST_PENETRATE) / 100.0f);
+
+							iPenetratePct -= static_cast<int>(pkSk->kPointPoly.Eval());
+						}
+					}
+
+					if (iPenetratePct >= 10)
+					{
+						// 10보다 크면 5% + (4마다 1%씩 증가), 따라서 수치가 50이면 20%
+						iPenetratePct = 5 + (iPenetratePct - 10) / 4;
+					}
+					else
+					{
+						// 10보다 작으면 단순히 반으로 깎음, 10 = 5%
+						iPenetratePct /= 2;
+					}
+
+					//관통타격 저항 값 적용.
+					iPenetratePct -= GetPoint(POINT_RESIST_PENETRATE);
+
+					if (number(1, 100) <= iPenetratePct)
+					{
+						IsPenetrate = true;
+
+						if (test_server)
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Additional Stabbing Weapon Damage %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
+
+						dam += GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100;
+
+						if (IsAffectFlag(AFF_MANASHIELD))
+						{
+							RemoveAffect(AFF_MANASHIELD);
+						}
+					}
+				}
+			}
+		}
+		// 
+		// 콤보 공격, 활 공격, 즉 평타 일 때만 속성값들을 계산을 한다.
+		//
+		else if (type == DAMAGE_TYPE_NORMAL || type == DAMAGE_TYPE_NORMAL_RANGE)
+		{
+			if (type == DAMAGE_TYPE_NORMAL)
+			{
+				// 근접 평타일 경우 막을 수 있음
+				if (GetPoint(POINT_BLOCK) && number(1, 100) <= GetPoint(POINT_BLOCK))
+				{
+					if (test_server)
+					{
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s block! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s block! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
+					}
+
+					SendDamagePacket(pAttacker, 0, DAMAGE_BLOCK);
+					return false;
+				}
+			}
+			else if (type == DAMAGE_TYPE_NORMAL_RANGE)
+			{
+				// 원거리 평타의 경우 피할 수 있음
+				if (GetPoint(POINT_DODGE) && number(1, 100) <= GetPoint(POINT_DODGE))
+				{
+					if (test_server)
+					{
+						pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s dodge! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s dodge! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
+					}
+
+					SendDamagePacket(pAttacker, 0, DAMAGE_DODGE);
+					return false;
+				}
+			}
+
+			if (IsAffectFlag(AFF_JEONGWIHON))
+				dam = (int) (dam * (100 + GetSkillPower(SKILL_JEONGWI) * 25 / 100) / 100);
+
+			if (IsAffectFlag(AFF_TERROR))
+				dam = (int) (dam * (95 - GetSkillPower(SKILL_TERROR) / 5) / 100);
+
+			if (IsAffectFlag(AFF_HOSIN))
+				dam = dam * (100 - GetPoint(POINT_RESIST_NORMAL_DAMAGE)) / 100;
+
+			//
+			// 공격자 속성 적용
+			//
+			if (pAttacker)
+			{
+				if (type == DAMAGE_TYPE_NORMAL)
+				{
+					// 반사
+					if (GetPoint(POINT_REFLECT_MELEE))
+					{
+						int reflectDamage = dam * GetPoint(POINT_REFLECT_MELEE) / 100;
+
+						// NOTE: 공격자가 IMMUNE_REFLECT 속성을 갖고있다면 반사를 안 하는 게 
+						// 아니라 1/3 데미지로 고정해서 들어가도록 기획에서 요청.
+						if (pAttacker->IsImmune(IMMUNE_REFLECT))
+							reflectDamage = int(reflectDamage / 3.0f + 0.5f);
+
+						pAttacker->Damage(this, reflectDamage, DAMAGE_TYPE_SPECIAL);
+					}
+				}
+
+				// 크리티컬
+				int iCriticalPct = pAttacker->GetPoint(POINT_CRITICAL_PCT);
+
+				if (!IsPC())
+					iCriticalPct += pAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_CRITICAL_BONUS);
+
+				if (iCriticalPct)
+				{
+					//크리티컬 저항 값 적용.
+					iCriticalPct -= GetPoint(POINT_RESIST_CRITICAL);
+
+					if (number(1, 100) <= iCriticalPct)
+					{
+						IsCritical = true;
+						dam *= 2;
+						EffectPacket(SE_CRITICAL);
+					}
+				}
+
+				// 관통공격
+				int iPenetratePct = pAttacker->GetPoint(POINT_PENETRATE_PCT);
+
+				if (!IsPC())
+					iPenetratePct += pAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_PENETRATE_BONUS);
+
 				{
 					CSkillProto* pkSk = CSkillManager::instance().Get(SKILL_RESIST_PENETRATE);
 
@@ -1695,455 +1834,332 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 					}
 				}
 
-				if (iPenetratePct >= 10)
+
+				if (iPenetratePct)
 				{
-					// 10보다 크면 5% + (4마다 1%씩 증가), 따라서 수치가 50이면 20%
-					iPenetratePct = 5 + (iPenetratePct - 10) / 4;
-				}
-				else
-				{
-					// 10보다 작으면 단순히 반으로 깎음, 10 = 5%
-					iPenetratePct /= 2;
-				}
+					
+					//관통타격 저항 값 적용.
+					iPenetratePct -= GetPoint(POINT_RESIST_PENETRATE);
 
-				//관통타격 저항 값 적용.
-				iPenetratePct -= GetPoint(POINT_RESIST_PENETRATE);
-
-				if (number(1, 100) <= iPenetratePct)
-				{
-					IsPenetrate = true;
-
-					if (test_server)
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Additional Stabbing Weapon Damage %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
-
-					dam += GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100;
-
-					if (IsAffectFlag(AFF_MANASHIELD))
+					if (number(1, 100) <= iPenetratePct)
 					{
-						RemoveAffect(AFF_MANASHIELD);
+						IsPenetrate = true;
+
+						if (test_server)
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Additional Stabbing Weapon Damage %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
+						dam += GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100;
 					}
 				}
-			}
-		}
-	}
-	// 
-	// 콤보 공격, 활 공격, 즉 평타 일 때만 속성값들을 계산을 한다.
-	//
-	else if (type == DAMAGE_TYPE_NORMAL || type == DAMAGE_TYPE_NORMAL_RANGE)
-	{
-		if (type == DAMAGE_TYPE_NORMAL)
-		{
-			// 근접 평타일 경우 막을 수 있음
-			if (GetPoint(POINT_BLOCK) && number(1, 100) <= GetPoint(POINT_BLOCK))
-			{
-				if (test_server)
+
+				// HP 스틸
+				if (pAttacker->GetPoint(POINT_STEAL_HP))
 				{
-					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s block! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s block! (%d%%)"), GetName(), GetPoint(POINT_BLOCK));
-				}
+					int pct = 1;
 
-				SendDamagePacket(pAttacker, 0, DAMAGE_BLOCK);
-				return false;
-			}
-		}
-		else if (type == DAMAGE_TYPE_NORMAL_RANGE)
-		{
-			// 원거리 평타의 경우 피할 수 있음
-			if (GetPoint(POINT_DODGE) && number(1, 100) <= GetPoint(POINT_DODGE))
-			{
-				if (test_server)
-				{
-					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s dodge! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
-					ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s dodge! (%d%%)"), GetName(), GetPoint(POINT_DODGE));
-				}
-
-				SendDamagePacket(pAttacker, 0, DAMAGE_DODGE);
-				return false;
-			}
-		}
-
-		if (IsAffectFlag(AFF_JEONGWIHON))
-			dam = (int) (dam * (100 + GetSkillPower(SKILL_JEONGWI) * 25 / 100) / 100);
-
-		if (IsAffectFlag(AFF_TERROR))
-			dam = (int) (dam * (95 - GetSkillPower(SKILL_TERROR) / 5) / 100);
-
-		if (IsAffectFlag(AFF_HOSIN))
-			dam = dam * (100 - GetPoint(POINT_RESIST_NORMAL_DAMAGE)) / 100;
-
-		//
-		// 공격자 속성 적용
-		//
-		if (pAttacker)
-		{
-			if (type == DAMAGE_TYPE_NORMAL)
-			{
-				// 반사
-				if (GetPoint(POINT_REFLECT_MELEE))
-				{
-					int reflectDamage = dam * GetPoint(POINT_REFLECT_MELEE) / 100;
-
-					// NOTE: 공격자가 IMMUNE_REFLECT 속성을 갖고있다면 반사를 안 하는 게 
-					// 아니라 1/3 데미지로 고정해서 들어가도록 기획에서 요청.
-					if (pAttacker->IsImmune(IMMUNE_REFLECT))
-						reflectDamage = int(reflectDamage / 3.0f + 0.5f);
-
-					pAttacker->Damage(this, reflectDamage, DAMAGE_TYPE_SPECIAL);
-				}
-			}
-
-			// 크리티컬
-			int iCriticalPct = pAttacker->GetPoint(POINT_CRITICAL_PCT);
-
-			if (!IsPC())
-				iCriticalPct += pAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_CRITICAL_BONUS);
-
-			if (iCriticalPct)
-			{
-				//크리티컬 저항 값 적용.
-				iCriticalPct -= GetPoint(POINT_RESIST_CRITICAL);
-
-				if (number(1, 100) <= iCriticalPct)
-				{
-					IsCritical = true;
-					dam *= 2;
-					EffectPacket(SE_CRITICAL);
-				}
-			}
-
-			// 관통공격
-			int iPenetratePct = pAttacker->GetPoint(POINT_PENETRATE_PCT);
-
-			if (!IsPC())
-				iPenetratePct += pAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_PENETRATE_BONUS);
-
-			{
-				CSkillProto* pkSk = CSkillManager::instance().Get(SKILL_RESIST_PENETRATE);
-
-				if (NULL != pkSk)
-				{
-					pkSk->SetPointVar("k", 1.0f * GetSkillPower(SKILL_RESIST_PENETRATE) / 100.0f);
-
-					iPenetratePct -= static_cast<int>(pkSk->kPointPoly.Eval());
-				}
-			}
-
-
-			if (iPenetratePct)
-			{
-				
-				//관통타격 저항 값 적용.
-				iPenetratePct -= GetPoint(POINT_RESIST_PENETRATE);
-
-				if (number(1, 100) <= iPenetratePct)
-				{
-					IsPenetrate = true;
-
-					if (test_server)
-						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Additional Stabbing Weapon Damage %d"), GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100);
-					dam += GetPoint(POINT_DEF_GRADE) * (100 + GetPoint(POINT_DEF_BONUS)) / 100;
-				}
-			}
-
-			// HP 스틸
-			if (pAttacker->GetPoint(POINT_STEAL_HP))
-			{
-				int pct = 1;
-
-				if (number(1, 10) <= pct)
-				{
-					int iHP = MIN(dam, MAX(0, iCurHP)) * pAttacker->GetPoint(POINT_STEAL_HP) / 100;
-
-					if (iHP > 0 && GetHP() >= iHP)
+					if (number(1, 10) <= pct)
 					{
-						CreateFly(FLY_HP_SMALL, pAttacker);
-						pAttacker->PointChange(POINT_HP, iHP);
-						PointChange(POINT_HP, -iHP);
+						int iHP = MIN(dam, MAX(0, iCurHP)) * pAttacker->GetPoint(POINT_STEAL_HP) / 100;
+
+						if (iHP > 0 && GetHP() >= iHP)
+						{
+							CreateFly(FLY_HP_SMALL, pAttacker);
+							pAttacker->PointChange(POINT_HP, iHP);
+							PointChange(POINT_HP, -iHP);
+						}
 					}
 				}
-			}
 
-			// SP 스틸
-			if (pAttacker->GetPoint(POINT_STEAL_SP))
-			{
-				int pct = 1;
-
-				if (number(1, 10) <= pct)
+				// SP 스틸
+				if (pAttacker->GetPoint(POINT_STEAL_SP))
 				{
-					int iCur;
+					int pct = 1;
 
-					if (IsPC())
-						iCur = iCurSP;
-					else
-						iCur = iCurHP;
-
-					int iSP = MIN(dam, MAX(0, iCur)) * pAttacker->GetPoint(POINT_STEAL_SP) / 100;
-
-					if (iSP > 0 && iCur >= iSP)
+					if (number(1, 10) <= pct)
 					{
-						CreateFly(FLY_SP_SMALL, pAttacker);
-						pAttacker->PointChange(POINT_SP, iSP);
+						int iCur;
 
 						if (IsPC())
-							PointChange(POINT_SP, -iSP);
+							iCur = iCurSP;
+						else
+							iCur = iCurHP;
+
+						int iSP = MIN(dam, MAX(0, iCur)) * pAttacker->GetPoint(POINT_STEAL_SP) / 100;
+
+						if (iSP > 0 && iCur >= iSP)
+						{
+							CreateFly(FLY_SP_SMALL, pAttacker);
+							pAttacker->PointChange(POINT_SP, iSP);
+
+							if (IsPC())
+								PointChange(POINT_SP, -iSP);
+						}
+					}
+				}
+
+				// 돈 스틸
+				if (pAttacker->GetPoint(POINT_STEAL_GOLD))
+				{
+					if (number(1, 100) <= pAttacker->GetPoint(POINT_STEAL_GOLD))
+					{
+						int iAmount = number(1, GetLevel());
+						pAttacker->PointChange(POINT_GOLD, iAmount);
+						DBManager::instance().SendMoneyLog(MONEY_LOG_MISC, 1, iAmount);
+					}
+				}
+
+				// 칠 때마다 HP회복
+				if (pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) && number(0, 4) > 0) // 80% 확률
+				{
+					int i = MIN(dam, iCurHP) * pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) / 100;
+
+					if (i)
+					{
+						CreateFly(FLY_HP_SMALL, pAttacker);
+						pAttacker->PointChange(POINT_HP, i);
+					}
+				}
+
+				// 칠 때마다 SP회복
+				if (pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) && number(0, 4) > 0) // 80% 확률
+				{
+					int i = MIN(dam, iCurHP) * pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) / 100;
+
+					if (i)
+					{
+						CreateFly(FLY_SP_SMALL, pAttacker);
+						pAttacker->PointChange(POINT_SP, i);
+					}
+				}
+
+				// 상대방의 마나를 없앤다.
+				if (pAttacker->GetPoint(POINT_MANA_BURN_PCT))
+				{
+					if (number(1, 100) <= pAttacker->GetPoint(POINT_MANA_BURN_PCT))
+						PointChange(POINT_SP, -50);
+				}
+			}
+		}
+
+		//
+		// 평타 또는 스킬로 인한 보너스 피해/방어 계산
+		// 
+		switch (type)
+		{
+			case DAMAGE_TYPE_NORMAL:
+			case DAMAGE_TYPE_NORMAL_RANGE:
+				if (pAttacker)
+					if (pAttacker->GetPoint(POINT_NORMAL_HIT_DAMAGE_BONUS))
+						dam = dam * (100 + pAttacker->GetPoint(POINT_NORMAL_HIT_DAMAGE_BONUS)) / 100;
+
+				dam = dam * (100 - MIN(99, GetPoint(POINT_NORMAL_HIT_DEFEND_BONUS))) / 100;
+				break;
+
+			case DAMAGE_TYPE_MELEE:
+			case DAMAGE_TYPE_RANGE:
+			case DAMAGE_TYPE_FIRE:
+			case DAMAGE_TYPE_ICE:
+			case DAMAGE_TYPE_ELEC:
+			case DAMAGE_TYPE_MAGIC:
+				if (pAttacker)
+					if (pAttacker->GetPoint(POINT_SKILL_DAMAGE_BONUS))
+						dam = dam * (100 + pAttacker->GetPoint(POINT_SKILL_DAMAGE_BONUS)) / 100;
+
+				dam = dam * (100 - MIN(99, GetPoint(POINT_SKILL_DEFEND_BONUS))) / 100;
+				break;
+
+			default:
+				break;
+		}
+
+		//
+		// 마나쉴드(흑신수호)
+		//
+		if (IsAffectFlag(AFF_MANASHIELD))
+		{
+			// POINT_MANASHIELD 는 작아질수록 좋다
+			int iDamageSPPart = dam / 3;
+			int iDamageToSP = iDamageSPPart * GetPoint(POINT_MANASHIELD) / 100;
+			int iSP = GetSP();
+
+			// SP가 있으면 무조건 데미지 절반 감소
+			if (iDamageToSP <= iSP)
+			{
+				PointChange(POINT_SP, -iDamageToSP);
+				dam -= iDamageSPPart;
+			}
+			else
+			{
+				// 정신력이 모자라서 피가 더 깍여야할떄
+				PointChange(POINT_SP, -GetSP());
+				dam -= iSP * 100 / MAX(GetPoint(POINT_MANASHIELD), 1);
+			}
+		}
+
+		//
+		// 전체 방어력 상승 (몰 아이템)
+		// 
+		if (GetPoint(POINT_MALL_DEFBONUS) > 0)
+		{
+			int dec_dam = MIN(200, dam * GetPoint(POINT_MALL_DEFBONUS) / 100);
+			dam -= dec_dam;
+		}
+
+		if (pAttacker)
+		{
+			//
+			// 전체 공격력 상승 (몰 아이템)
+			//
+			if (pAttacker->GetPoint(POINT_MALL_ATTBONUS) > 0)
+			{
+				int add_dam = MIN(300, dam * pAttacker->GetLimitPoint(POINT_MALL_ATTBONUS) / 100);
+				dam += add_dam;
+			}
+
+			//
+			// 제국으로 인한 보너스 (한국 올드 버전만 적용)
+			//
+			int iEmpire = GetEmpire();
+			long lMapIndex = GetMapIndex();
+			int iMapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(lMapIndex);
+
+			if (pAttacker->IsPC())
+			{
+				iEmpire = pAttacker->GetEmpire();
+				lMapIndex = pAttacker->GetMapIndex();
+				iMapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(lMapIndex);
+
+				if (iEmpire && iMapEmpire && iEmpire != iMapEmpire)
+				{
+					int percent = 9;
+
+					dam = dam * percent / 10;
+				}
+
+				if (!IsPC() && GetMonsterDrainSPPoint())
+				{
+					int iDrain = GetMonsterDrainSPPoint();
+
+					if (iDrain <= pAttacker->GetSP())
+						pAttacker->PointChange(POINT_SP, -iDrain);
+					else
+					{
+						int iSP = pAttacker->GetSP();
+						pAttacker->PointChange(POINT_SP, -iSP);
+					}
+				}
+
+			}
+			else if (pAttacker->IsGuardNPC())
+			{
+				SET_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_NO_REWARD);
+				Stun();
+				return true;
+			}
+		}
+		//puAttr.Pop();
+
+		if (!GetSectree() || GetSectree()->IsAttr(GetX(), GetY(), ATTR_BANPK))
+			return false;
+
+		if (!IsPC())
+		{
+			if (m_pkParty && m_pkParty->GetLeader())
+				m_pkParty->GetLeader()->SetLastAttacked(get_dword_time());
+			else
+				SetLastAttacked(get_dword_time());
+
+			// 몬스터 대사 : 맞을 때
+			MonsterChat(MONSTER_CHAT_ATTACKED);
+		}
+
+		if (IsStun())
+		{
+			Dead(pAttacker);
+			return true;
+		}
+
+		if (IsDead())
+			return true;
+
+		// 독 공격으로 죽지 않도록 함.
+		if (type == DAMAGE_TYPE_POISON)
+		{
+			if (GetHP() - dam <= 0)
+			{
+				dam = GetHP() - 1;
+			}
+		}
+
+		if (pAttacker && pAttacker->IsPC())
+		{
+			int iDmgPct = CHARACTER_MANAGER::instance().GetUserDamageRate(pAttacker);
+			dam = dam * iDmgPct / 100;
+		}
+
+		// STONE SKIN : 피해 반으로 감소
+		if (IsMonster() && IsStoneSkinner())
+		{
+			if (GetHPPct() < GetMobTable().bStoneSkinPoint)
+				dam /= 2;
+		}
+
+		//PROF_UNIT puRest1("Rest1");
+		if (pAttacker)
+		{
+			// DEATH BLOW : 확률 적으로 4배 피해 (!? 현재 이벤트나 공성전용 몬스터만 사용함)
+			if (pAttacker->IsMonster() && pAttacker->IsDeathBlower())
+			{
+				if (pAttacker->IsDeathBlow())
+				{
+					if (number(1, 4) == GetJob())
+					{
+						IsDeathBlow = true;
+						dam = dam * 4;
 					}
 				}
 			}
 
-			// 돈 스틸
-			if (pAttacker->GetPoint(POINT_STEAL_GOLD))
-			{
-				if (number(1, 100) <= pAttacker->GetPoint(POINT_STEAL_GOLD))
-				{
-					int iAmount = number(1, GetLevel());
-					pAttacker->PointChange(POINT_GOLD, iAmount);
-					DBManager::instance().SendMoneyLog(MONEY_LOG_MISC, 1, iAmount);
-				}
-			}
+			dam = BlueDragon_Damage(this, pAttacker, dam);
 
-			// 칠 때마다 HP회복
-			if (pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) && number(0, 4) > 0) // 80% 확률
-			{
-				int i = MIN(dam, iCurHP) * pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) / 100;
+			BYTE damageFlag = 0;
 
-				if (i)
-				{
-					CreateFly(FLY_HP_SMALL, pAttacker);
-					pAttacker->PointChange(POINT_HP, i);
-				}
-			}
+			if (type == DAMAGE_TYPE_POISON)
+				damageFlag = DAMAGE_POISON;
+			else
+				damageFlag = DAMAGE_NORMAL;
 
-			// 칠 때마다 SP회복
-			if (pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) && number(0, 4) > 0) // 80% 확률
-			{
-				int i = MIN(dam, iCurHP) * pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) / 100;
+			if (IsCritical == true)
+				damageFlag |= DAMAGE_CRITICAL;
 
-				if (i)
-				{
-					CreateFly(FLY_SP_SMALL, pAttacker);
-					pAttacker->PointChange(POINT_SP, i);
-				}
-			}
+			if (IsPenetrate == true)
+				damageFlag |= DAMAGE_PENETRATE;
 
-			// 상대방의 마나를 없앤다.
-			if (pAttacker->GetPoint(POINT_MANA_BURN_PCT))
-			{
-				if (number(1, 100) <= pAttacker->GetPoint(POINT_MANA_BURN_PCT))
-					PointChange(POINT_SP, -50);
-			}
-		}
-	}
 
-	//
-	// 평타 또는 스킬로 인한 보너스 피해/방어 계산
-	// 
-	switch (type)
-	{
-		case DAMAGE_TYPE_NORMAL:
-		case DAMAGE_TYPE_NORMAL_RANGE:
+			//최종 데미지 보정
+			float damMul = this->GetDamMul();
+			float tempDam = dam;
+			dam = tempDam * damMul + 0.5f;
+
+
 			if (pAttacker)
-				if (pAttacker->GetPoint(POINT_NORMAL_HIT_DAMAGE_BONUS))
-					dam = dam * (100 + pAttacker->GetPoint(POINT_NORMAL_HIT_DAMAGE_BONUS)) / 100;
+				SendDamagePacket(pAttacker, dam, damageFlag);
 
-			dam = dam * (100 - MIN(99, GetPoint(POINT_NORMAL_HIT_DEFEND_BONUS))) / 100;
-			break;
-
-		case DAMAGE_TYPE_MELEE:
-		case DAMAGE_TYPE_RANGE:
-		case DAMAGE_TYPE_FIRE:
-		case DAMAGE_TYPE_ICE:
-		case DAMAGE_TYPE_ELEC:
-		case DAMAGE_TYPE_MAGIC:
-			if (pAttacker)
-				if (pAttacker->GetPoint(POINT_SKILL_DAMAGE_BONUS))
-					dam = dam * (100 + pAttacker->GetPoint(POINT_SKILL_DAMAGE_BONUS)) / 100;
-
-			dam = dam * (100 - MIN(99, GetPoint(POINT_SKILL_DEFEND_BONUS))) / 100;
-			break;
-
-		default:
-			break;
-	}
-
-	//
-	// 마나쉴드(흑신수호)
-	//
-	if (IsAffectFlag(AFF_MANASHIELD))
-	{
-		// POINT_MANASHIELD 는 작아질수록 좋다
-		int iDamageSPPart = dam / 3;
-		int iDamageToSP = iDamageSPPart * GetPoint(POINT_MANASHIELD) / 100;
-		int iSP = GetSP();
-
-		// SP가 있으면 무조건 데미지 절반 감소
-		if (iDamageToSP <= iSP)
-		{
-			PointChange(POINT_SP, -iDamageToSP);
-			dam -= iDamageSPPart;
-		}
-		else
-		{
-			// 정신력이 모자라서 피가 더 깍여야할떄
-			PointChange(POINT_SP, -GetSP());
-			dam -= iSP * 100 / MAX(GetPoint(POINT_MANASHIELD), 1);
-		}
-	}
-
-	//
-	// 전체 방어력 상승 (몰 아이템)
-	// 
-	if (GetPoint(POINT_MALL_DEFBONUS) > 0)
-	{
-		int dec_dam = MIN(200, dam * GetPoint(POINT_MALL_DEFBONUS) / 100);
-		dam -= dec_dam;
-	}
-
-	if (pAttacker)
-	{
-		//
-		// 전체 공격력 상승 (몰 아이템)
-		//
-		if (pAttacker->GetPoint(POINT_MALL_ATTBONUS) > 0)
-		{
-			int add_dam = MIN(300, dam * pAttacker->GetLimitPoint(POINT_MALL_ATTBONUS) / 100);
-			dam += add_dam;
-		}
-
-		//
-		// 제국으로 인한 보너스 (한국 올드 버전만 적용)
-		//
-		int iEmpire = GetEmpire();
-		long lMapIndex = GetMapIndex();
-		int iMapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(lMapIndex);
-
-		if (pAttacker->IsPC())
-		{
-			iEmpire = pAttacker->GetEmpire();
-			lMapIndex = pAttacker->GetMapIndex();
-			iMapEmpire = SECTREE_MANAGER::instance().GetEmpireFromMapIndex(lMapIndex);
-
-			if (iEmpire && iMapEmpire && iEmpire != iMapEmpire)
+			if (test_server)
 			{
-				int percent = 9;
-
-				dam = dam * percent / 10;
-			}
-
-			if (!IsPC() && GetMonsterDrainSPPoint())
-			{
-				int iDrain = GetMonsterDrainSPPoint();
-
-				if (iDrain <= pAttacker->GetSP())
-					pAttacker->PointChange(POINT_SP, -iDrain);
-				else
+				if(pAttacker)
 				{
-					int iSP = pAttacker->GetSP();
-					pAttacker->PointChange(POINT_SP, -iSP);
+					pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("-> %s, DAM %d HP %d(%d%%) %s%s"),
+							GetName(), 
+							dam, 
+							GetHP(),
+							(GetHP() * 100) / GetMaxHP(),
+							IsCritical ? "crit " : "",
+							IsPenetrate ? "pene " : "",
+							IsDeathBlow ? "deathblow " : "");
 				}
-			}
 
-		}
-		else if (pAttacker->IsGuardNPC())
-		{
-			SET_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_NO_REWARD);
-			Stun();
-			return true;
-		}
-	}
-	//puAttr.Pop();
-
-	if (!GetSectree() || GetSectree()->IsAttr(GetX(), GetY(), ATTR_BANPK))
-		return false;
-
-	if (!IsPC())
-	{
-		if (m_pkParty && m_pkParty->GetLeader())
-			m_pkParty->GetLeader()->SetLastAttacked(get_dword_time());
-		else
-			SetLastAttacked(get_dword_time());
-
-		// 몬스터 대사 : 맞을 때
-		MonsterChat(MONSTER_CHAT_ATTACKED);
-	}
-
-	if (IsStun())
-	{
-		Dead(pAttacker);
-		return true;
-	}
-
-	if (IsDead())
-		return true;
-
-	// 독 공격으로 죽지 않도록 함.
-	if (type == DAMAGE_TYPE_POISON)
-	{
-		if (GetHP() - dam <= 0)
-		{
-			dam = GetHP() - 1;
-		}
-	}
-
-	if (pAttacker && pAttacker->IsPC())
-	{
-		int iDmgPct = CHARACTER_MANAGER::instance().GetUserDamageRate(pAttacker);
-		dam = dam * iDmgPct / 100;
-	}
-
-	// STONE SKIN : 피해 반으로 감소
-	if (IsMonster() && IsStoneSkinner())
-	{
-		if (GetHPPct() < GetMobTable().bStoneSkinPoint)
-			dam /= 2;
-	}
-
-	//PROF_UNIT puRest1("Rest1");
-	if (pAttacker)
-	{
-		// DEATH BLOW : 확률 적으로 4배 피해 (!? 현재 이벤트나 공성전용 몬스터만 사용함)
-		if (pAttacker->IsMonster() && pAttacker->IsDeathBlower())
-		{
-			if (pAttacker->IsDeathBlow())
-			{
-				if (number(1, 4) == GetJob())
-				{
-					IsDeathBlow = true;
-					dam = dam * 4;
-				}
-			}
-		}
-
-		dam = BlueDragon_Damage(this, pAttacker, dam);
-
-		BYTE damageFlag = 0;
-
-		if (type == DAMAGE_TYPE_POISON)
-			damageFlag = DAMAGE_POISON;
-		else
-			damageFlag = DAMAGE_NORMAL;
-
-		if (IsCritical == true)
-			damageFlag |= DAMAGE_CRITICAL;
-
-		if (IsPenetrate == true)
-			damageFlag |= DAMAGE_PENETRATE;
-
-
-		//최종 데미지 보정
-		float damMul = this->GetDamMul();
-		float tempDam = dam;
-		dam = tempDam * damMul + 0.5f;
-
-
-		if (pAttacker)
-			SendDamagePacket(pAttacker, dam, damageFlag);
-
-		if (test_server)
-		{
-			if(pAttacker)
-			{
-				pAttacker->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("-> %s, DAM %d HP %d(%d%%) %s%s"),
-						GetName(), 
+				ChatPacket(CHAT_TYPE_PARTY, LC_TEXT("<- %s, DAM %d HP %d(%d%%) %s%s"),
+						pAttacker ? pAttacker->GetName() : 0,
 						dam, 
 						GetHP(),
 						(GetHP() * 100) / GetMaxHP(),
@@ -2152,646 +2168,662 @@ bool CHARACTER::Damage(LPCHARACTER pAttacker, int dam, EDamageType type) // retu
 						IsDeathBlow ? "deathblow " : "");
 			}
 
-			ChatPacket(CHAT_TYPE_PARTY, LC_TEXT("<- %s, DAM %d HP %d(%d%%) %s%s"),
-					pAttacker ? pAttacker->GetName() : 0,
-					dam, 
-					GetHP(),
-					(GetHP() * 100) / GetMaxHP(),
-					IsCritical ? "crit " : "",
-					IsPenetrate ? "pene " : "",
-					IsDeathBlow ? "deathblow " : "");
-		}
-
-		if (m_bDetailLog)
-		{
-			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s[%d] attacks at: %d %d"), pAttacker->GetName(), (DWORD) pAttacker->GetVID(), pAttacker->GetX(), pAttacker->GetY());
-		}
-	}
-
-	//
-	// !!!!!!!!! 실제 HP를 줄이는 부분 !!!!!!!!!
-	//
-	if (!cannot_dead)
-	{
-		PointChange(POINT_HP, -dam, false);
-	}
-
-	//puRest1.Pop();
-
-	//PROF_UNIT puRest2("Rest2");
-	if (pAttacker && dam > 0 && IsNPC())
-	{
-		//PROF_UNIT puRest20("Rest20");
-		TDamageMap::iterator it = m_map_kDamage.find(pAttacker->GetVID());
-
-		if (it == m_map_kDamage.end())
-		{
-			m_map_kDamage.insert(TDamageMap::value_type(pAttacker->GetVID(), TBattleInfo(dam, 0)));
-			it = m_map_kDamage.find(pAttacker->GetVID());
-		}
-		else
-		{
-			it->second.iTotalDamage += dam;
-		}
-		//puRest20.Pop();
-
-		//PROF_UNIT puRest21("Rest21");
-		StartRecoveryEvent(); // 몬스터는 데미지를 입으면 회복을 시작한다.
-		//puRest21.Pop();
-
-		//PROF_UNIT puRest22("Rest22");
-		UpdateAggrPointEx(pAttacker, type, dam, it->second);
-		//puRest22.Pop();
-	}
-	//puRest2.Pop();
-
-	//PROF_UNIT puRest3("Rest3");
-	if (GetHP() <= 0)
-	{
-		Stun();
-
-		if (pAttacker && !pAttacker->IsNPC())
-			m_dwKillerPID = pAttacker->GetPlayerID();
-		else
-			m_dwKillerPID = 0;
-	}
-
-	return false;
-}
-
-void CHARACTER::DistributeHP(LPCHARACTER pkKiller)
-{
-	if (pkKiller->GetDungeon()) // 던젼내에선 만두가나오지않는다
-		return;
-}
-
-static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
-{
-	// 레벨차 경험치 가감비율
-	iExp = CALCULATE_VALUE_LVDELTA(to->GetLevel(), from->GetLevel(), iExp);
-
-	int iBaseExp = iExp;
-
-	// 점술, 회사 경험치 이벤트 적용
-	iExp = iExp * (100 + CPrivManager::instance().GetPriv(to, PRIV_EXP_PCT)) / 100;
-
-	// 게임내 기본 제공되는 경험치 보너스
-	{
-		// 노동절 메달
-		if (to->IsEquipUniqueItem(UNIQUE_ITEM_LARBOR_MEDAL))
-			iExp += iExp * 20 /100;
-
-		// 사귀타워 경험치 보너스
-		if (to->GetMapIndex() >= 660000 && to->GetMapIndex() < 670000) 
-			iExp += iExp * 20 / 100; // 1.2배 (20%)
-
-		// 아이템 경험치 두배 속성
-		if (to->GetPoint(POINT_EXP_DOUBLE_BONUS))
-			if (number(1, 100) <= to->GetPoint(POINT_EXP_DOUBLE_BONUS))
-				iExp += iExp * 30 / 100; // 1.3배 (30%)
-
-		// 경험의 반지 (2시간짜리)
-		if (to->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_EXP))
-			iExp += iExp * 50 / 100;
-
-		switch (to->GetMountVnum())
-		{
-			case 20110:
-			case 20111:
-			case 20112:
-			case 20113:
-				if (to->IsEquipUniqueItem(71115) || to->IsEquipUniqueItem(71117) || to->IsEquipUniqueItem(71119) ||
-						to->IsEquipUniqueItem(71121) )
-				{
-					iExp += iExp * 10 / 100;
-				}
-				break;
-
-			case 20114:
-			case 20120:
-			case 20121:
-			case 20122:
-			case 20123:
-			case 20124:
-			case 20125:
-				// 백사자 경험치 보너스
-				iExp += iExp * 30 / 100;
-				break;
-		}
-	}
-
-
-	if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)
-	{
-		iExp += (iExp * 50 / 100);
-	}
-
-	if (to->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_EXP) == true)
-	{
-		iExp += (iExp * 50 / 100);
-	}
-
-	iExp += (iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100);
-	iExp += (iExp * to->GetPoint(POINT_RAMADAN_CANDY_BONUS_EXP)/100);
-	iExp += (iExp * to->GetPoint(POINT_MALL_EXPBONUS)/100);
-	iExp += (iExp * to->GetPoint(POINT_EXP)/100);
-
-	if (test_server)
-	{
-		sys_log(0, "Bonus Exp : Ramadan Candy: %d MallExp: %d PointExp: %d", 
-				to->GetPoint(POINT_RAMADAN_CANDY_BONUS_EXP),
-				to->GetPoint(POINT_MALL_EXPBONUS),
-				to->GetPoint(POINT_EXP)
-			   );
-	}
-
-	// 기획측 조정값 2005.04.21 현재 85%
-	iExp = iExp * CHARACTER_MANAGER::instance().GetMobExpRate(to) / 100;
-
-	// 경험치 한번 획득량 제한
-	iExp = MIN(to->GetNextExp() / 10, iExp);
-
-	if (test_server)
-	{
-		if (quest::CQuestManager::instance().GetEventFlag("exp_bonus_log") && iBaseExp>0)
-			to->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("exp bonus %d%%"), (iExp-iBaseExp)*100/iBaseExp);
-	}
-
-	iExp = AdjustExpByLevel(to, iExp);
-
-	to->PointChange(POINT_EXP, iExp, true);
-	from->CreateFly(FLY_EXP, to);
-
-	{
-		LPCHARACTER you = to->GetMarryPartner();
-		// 부부가 서로 파티중이면 금슬이 오른다
-		if (you)
-		{
-			// 1억이 100%
-			DWORD dwUpdatePoint = 2000*iExp/to->GetLevel()/to->GetLevel()/3;
-
-			if (to->GetPremiumRemainSeconds(PREMIUM_MARRIAGE_FAST) > 0 || 
-					you->GetPremiumRemainSeconds(PREMIUM_MARRIAGE_FAST) > 0)
-				dwUpdatePoint = (DWORD)(dwUpdatePoint * 3);
-
-			marriage::TMarriage* pMarriage = marriage::CManager::instance().Get(to->GetPlayerID());
-
-			// DIVORCE_NULL_BUG_FIX
-			if (pMarriage && pMarriage->IsNear())
-				pMarriage->Update(dwUpdatePoint);
-			// END_OF_DIVORCE_NULL_BUG_FIX
-		}
-	}
-}
-
-namespace NPartyExpDistribute
-{
-	struct FPartyTotaler
-	{
-		int		total;
-		int		member_count;
-		int		x, y;
-
-		FPartyTotaler(LPCHARACTER center)
-			: total(0), member_count(0), x(center->GetX()), y(center->GetY())
-		{};
-
-		void operator () (LPCHARACTER ch)
-		{
-			if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
+			if (m_bDetailLog)
 			{
-				total += party_exp_distribute_table[ch->GetLevel()];
-
-				++member_count;
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s[%d] attacks at: %d %d"), pAttacker->GetName(), (DWORD) pAttacker->GetVID(), pAttacker->GetX(), pAttacker->GetY());
 			}
 		}
-	};
 
-	struct FPartyDistributor
-	{
-		int		total;
-		LPCHARACTER	c;
-		int		x, y;
-		DWORD		_iExp;
-		int		m_iMode;
-		int		m_iMemberCount;
-
-		FPartyDistributor(LPCHARACTER center, int member_count, int total, DWORD iExp, int iMode) 
-			: total(total), c(center), x(center->GetX()), y(center->GetY()), _iExp(iExp), m_iMode(iMode), m_iMemberCount(member_count)
-			{
-				if (m_iMemberCount == 0)
-					m_iMemberCount = 1;
-			};
-
-		void operator () (LPCHARACTER ch)
+		//
+		// !!!!!!!!! 실제 HP를 줄이는 부분 !!!!!!!!!
+		//
+		if (!cannot_dead)
 		{
-			if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
-			{
-				DWORD iExp2 = 0;
-
-				switch (m_iMode)
-				{
-					case PARTY_EXP_DISTRIBUTION_NON_PARITY:
-						iExp2 = (DWORD) (_iExp * (float) party_exp_distribute_table[ch->GetLevel()] / total);
-						break;
-
-					case PARTY_EXP_DISTRIBUTION_PARITY:
-						iExp2 = _iExp / m_iMemberCount;
-						break;
-
-					default:
-						sys_err("Unknown party exp distribution mode %d", m_iMode);
-						return;
-				}
-
-				GiveExp(c, ch, iExp2);
-			}
-		}
-	};
-}
-
-typedef struct SDamageInfo
-{
-	int iDam;
-	LPCHARACTER pAttacker;
-	LPPARTY pParty;
-
-	void Clear()
-	{
-		pAttacker = NULL;
-		pParty = NULL;
-	}
-
-	inline void Distribute(LPCHARACTER ch, int iExp)
-	{
-		if (pAttacker)
-			GiveExp(ch, pAttacker, iExp);
-		else if (pParty)
-		{
-			NPartyExpDistribute::FPartyTotaler f(ch);
-			pParty->ForEachOnlineMember(f);
-
-			if (pParty->IsPositionNearLeader(ch))
-				iExp = iExp * (100 + pParty->GetExpBonusPercent()) / 100;
-
-			if (test_server)
-			{
-				if (quest::CQuestManager::instance().GetEventFlag("exp_bonus_log") && pParty->GetExpBonusPercent())
-					pParty->ChatPacketToAllMember(CHAT_TYPE_INFO, "exp party bonus %d%%", pParty->GetExpBonusPercent());
-			}
-
-			// 경험치 몰아주기 (파티가 획득한 경험치를 5% 빼서 먼저 줌)
-			if (pParty->GetExpCentralizeCharacter())
-			{
-				LPCHARACTER tch = pParty->GetExpCentralizeCharacter();
-
-				if (DISTANCE_APPROX(ch->GetX() - tch->GetX(), ch->GetY() - tch->GetY()) <= PARTY_DEFAULT_RANGE)
-				{
-					int iExpCenteralize = (int) (iExp * 0.05f);
-					iExp -= iExpCenteralize;
-
-					GiveExp(ch, pParty->GetExpCentralizeCharacter(), iExpCenteralize);
-				}
-			}
-
-			NPartyExpDistribute::FPartyDistributor fDist(ch, f.member_count, f.total, iExp, pParty->GetExpDistributionMode());
-			pParty->ForEachOnlineMember(fDist);
-		}
-	}
-} TDamageInfo;
-
-LPCHARACTER CHARACTER::DistributeExp()
-{
-	int iExpToDistribute = GetExp();
-
-	if (iExpToDistribute <= 0)
-		return NULL;
-
-	int	iTotalDam = 0;
-	LPCHARACTER pkChrMostAttacked = NULL;
-	int iMostDam = 0;
-
-	typedef std::vector<TDamageInfo> TDamageInfoTable;
-	TDamageInfoTable damage_info_table;
-	std::map<LPPARTY, TDamageInfo> map_party_damage;
-
-	damage_info_table.reserve(m_map_kDamage.size());
-
-	TDamageMap::iterator it = m_map_kDamage.begin();
-
-	// 일단 주위에 없는 사람을 걸러 낸다. (50m)
-	while (it != m_map_kDamage.end())
-	{
-		const VID & c_VID = it->first;
-		int iDam = it->second.iTotalDamage;
-
-		++it;
-
-		LPCHARACTER pAttacker = CHARACTER_MANAGER::instance().Find(c_VID);
-
-		// NPC가 때리기도 하나? -.-;
-		if (!pAttacker || pAttacker->IsNPC() || DISTANCE_APPROX(GetX()-pAttacker->GetX(), GetY()-pAttacker->GetY())>5000)
-			continue;
-
-		iTotalDam += iDam;
-		if (!pkChrMostAttacked || iDam > iMostDam)
-		{
-			pkChrMostAttacked = pAttacker;
-			iMostDam = iDam;
+			PointChange(POINT_HP, -dam, false);
 		}
 
-		if (pAttacker->GetParty())
+		//puRest1.Pop();
+
+		//PROF_UNIT puRest2("Rest2");
+		if (pAttacker && dam > 0 && IsNPC())
 		{
-			std::map<LPPARTY, TDamageInfo>::iterator it = map_party_damage.find(pAttacker->GetParty());
-			if (it == map_party_damage.end())
+			//PROF_UNIT puRest20("Rest20");
+			TDamageMap::iterator it = m_map_kDamage.find(pAttacker->GetVID());
+
+			if (it == m_map_kDamage.end())
 			{
-				TDamageInfo di;
-				di.iDam = iDam;
-				di.pAttacker = NULL;
-				di.pParty = pAttacker->GetParty();
-				map_party_damage.insert(std::make_pair(di.pParty, di));
+				m_map_kDamage.insert(TDamageMap::value_type(pAttacker->GetVID(), TBattleInfo(dam, 0)));
+				it = m_map_kDamage.find(pAttacker->GetVID());
 			}
 			else
 			{
-				it->second.iDam += iDam;
+				it->second.iTotalDamage += dam;
 			}
+			//puRest20.Pop();
+
+			//PROF_UNIT puRest21("Rest21");
+			StartRecoveryEvent(); // 몬스터는 데미지를 입으면 회복을 시작한다.
+			//puRest21.Pop();
+
+			//PROF_UNIT puRest22("Rest22");
+			UpdateAggrPointEx(pAttacker, type, dam, it->second);
+			//puRest22.Pop();
 		}
-		else
+		//puRest2.Pop();
+
+		//PROF_UNIT puRest3("Rest3");
+		if (GetHP() <= 0)
 		{
-			TDamageInfo di;
+			Stun();
 
-			di.iDam = iDam;
-			di.pAttacker = pAttacker;
-			di.pParty = NULL;
-
-			//sys_log(0, "__ pq_damage %s %d", pAttacker->GetName(), iDam);
-			//pq_damage.push(di);
-			damage_info_table.push_back(di);
+			if (pAttacker && !pAttacker->IsNPC())
+				m_dwKillerPID = pAttacker->GetPlayerID();
+			else
+				m_dwKillerPID = 0;
 		}
+
+		return false;
 	}
 
-	for (std::map<LPPARTY, TDamageInfo>::iterator it = map_party_damage.begin(); it != map_party_damage.end(); ++it)
+	void CHARACTER::DistributeHP(LPCHARACTER pkKiller)
 	{
-		damage_info_table.push_back(it->second);
-		//sys_log(0, "__ pq_damage_party [%u] %d", it->second.pParty->GetLeaderPID(), it->second.iDam);
+		if (pkKiller->GetDungeon()) // 던젼내에선 만두가나오지않는다
+			return;
 	}
 
-	SetExp(0);
-	//m_map_kDamage.clear();
-
-	if (iTotalDam == 0)	// 데미지 준게 0이면 리턴
-		return NULL;
-
-	if (m_pkChrStone)	// 돌이 있을 경우 경험치의 반을 돌에게 넘긴다.
+	static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 	{
-		//sys_log(0, "__ Give half to Stone : %d", iExpToDistribute>>1);
-		int iExp = iExpToDistribute >> 1;
-		m_pkChrStone->SetExp(m_pkChrStone->GetExp() + iExp);
-		iExpToDistribute -= iExp;
-	}
+		// 레벨차 경험치 가감비율
+		iExp = CALCULATE_VALUE_LVDELTA(to->GetLevel(), from->GetLevel(), iExp);
 
-	sys_log(1, "%s total exp: %d, damage_info_table.size() == %d, TotalDam %d",
-			GetName(), iExpToDistribute, damage_info_table.size(), iTotalDam);
-	//sys_log(1, "%s total exp: %d, pq_damage.size() == %d, TotalDam %d",
-	//GetName(), iExpToDistribute, pq_damage.size(), iTotalDam);
+		int iBaseExp = iExp;
 
-	if (damage_info_table.empty())
-		return NULL;
+		// 점술, 회사 경험치 이벤트 적용
+		iExp = iExp * (100 + CPrivManager::instance().GetPriv(to, PRIV_EXP_PCT)) / 100;
 
-	// 제일 데미지를 많이 준 사람이 HP 회복을 한다.
-	DistributeHP(pkChrMostAttacked);	// 만두 시스템
-
-	{
-		// 제일 데미지를 많이 준 사람이나 파티가 총 경험치의 20% + 자기가 때린만큼의 경험치를 먹는다.
-		TDamageInfoTable::iterator di = damage_info_table.begin();
+		// 게임내 기본 제공되는 경험치 보너스
 		{
-			TDamageInfoTable::iterator it;
+			// 노동절 메달
+			if (to->IsEquipUniqueItem(UNIQUE_ITEM_LARBOR_MEDAL))
+				iExp += iExp * 20 /100;
 
-			for (it = damage_info_table.begin(); it != damage_info_table.end();++it)
+			// 사귀타워 경험치 보너스
+			if (to->GetMapIndex() >= 660000 && to->GetMapIndex() < 670000) 
+				iExp += iExp * 20 / 100; // 1.2배 (20%)
+
+			// 아이템 경험치 두배 속성
+			if (to->GetPoint(POINT_EXP_DOUBLE_BONUS))
+				if (number(1, 100) <= to->GetPoint(POINT_EXP_DOUBLE_BONUS))
+					iExp += iExp * 30 / 100; // 1.3배 (30%)
+
+			// 경험의 반지 (2시간짜리)
+			if (to->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_EXP))
+				iExp += iExp * 50 / 100;
+
+			switch (to->GetMountVnum())
 			{
-				if (it->iDam > di->iDam)
-					di = it;
+				case 20110:
+				case 20111:
+				case 20112:
+				case 20113:
+					if (to->IsEquipUniqueItem(71115) || to->IsEquipUniqueItem(71117) || to->IsEquipUniqueItem(71119) ||
+							to->IsEquipUniqueItem(71121) )
+					{
+						iExp += iExp * 10 / 100;
+					}
+					break;
+
+				case 20114:
+				case 20120:
+				case 20121:
+				case 20122:
+				case 20123:
+				case 20124:
+				case 20125:
+					// 백사자 경험치 보너스
+					iExp += iExp * 30 / 100;
+					break;
 			}
 		}
 
-		int	iExp = iExpToDistribute / 5;
-		iExpToDistribute -= iExp;
 
-		float fPercent = (float) di->iDam / iTotalDam;
-
-		if (fPercent > 1.0f)
+		if (to->GetPremiumRemainSeconds(PREMIUM_EXP) > 0)
 		{
-			sys_err("DistributeExp percent over 1.0 (fPercent %f name %s)", fPercent, di->pAttacker->GetName());
-			fPercent = 1.0f;
+			iExp += (iExp * 50 / 100);
 		}
 
-		iExp += (int) (iExpToDistribute * fPercent);
+		if (to->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_EXP) == true)
+		{
+			iExp += (iExp * 50 / 100);
+		}
 
-		//sys_log(0, "%s given exp percent %.1f + 20 dam %d", GetName(), fPercent * 100.0f, di.iDam);
+		iExp += (iExp * to->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_EXP_BONUS) / 100);
+		iExp += (iExp * to->GetPoint(POINT_RAMADAN_CANDY_BONUS_EXP)/100);
+		iExp += (iExp * to->GetPoint(POINT_MALL_EXPBONUS)/100);
+		iExp += (iExp * to->GetPoint(POINT_EXP)/100);
 
-		di->Distribute(this, iExp);
+		if (test_server)
+		{
+			sys_log(0, "Bonus Exp : Ramadan Candy: %d MallExp: %d PointExp: %d", 
+					to->GetPoint(POINT_RAMADAN_CANDY_BONUS_EXP),
+					to->GetPoint(POINT_MALL_EXPBONUS),
+					to->GetPoint(POINT_EXP)
+				   );
+		}
 
-		// 100% 다 먹었으면 리턴한다.
-		if (fPercent == 1.0f)
-			return pkChrMostAttacked;
+		// 기획측 조정값 2005.04.21 현재 85%
+		iExp = iExp * CHARACTER_MANAGER::instance().GetMobExpRate(to) / 100;
 
-		di->Clear();
+		// 경험치 한번 획득량 제한
+		iExp = MIN(to->GetNextExp() / 10, iExp);
+
+		if (test_server)
+		{
+			if (quest::CQuestManager::instance().GetEventFlag("exp_bonus_log") && iBaseExp>0)
+				to->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("exp bonus %d%%"), (iExp-iBaseExp)*100/iBaseExp);
+		}
+
+		iExp = AdjustExpByLevel(to, iExp);
+
+		to->PointChange(POINT_EXP, iExp, true);
+		from->CreateFly(FLY_EXP, to);
+
+		{
+			LPCHARACTER you = to->GetMarryPartner();
+			// 부부가 서로 파티중이면 금슬이 오른다
+			if (you)
+			{
+				// 1억이 100%
+				DWORD dwUpdatePoint = 2000*iExp/to->GetLevel()/to->GetLevel()/3;
+
+				if (to->GetPremiumRemainSeconds(PREMIUM_MARRIAGE_FAST) > 0 || 
+						you->GetPremiumRemainSeconds(PREMIUM_MARRIAGE_FAST) > 0)
+					dwUpdatePoint = (DWORD)(dwUpdatePoint * 3);
+
+				marriage::TMarriage* pMarriage = marriage::CManager::instance().Get(to->GetPlayerID());
+
+				// DIVORCE_NULL_BUG_FIX
+				if (pMarriage && pMarriage->IsNear())
+					pMarriage->Update(dwUpdatePoint);
+				// END_OF_DIVORCE_NULL_BUG_FIX
+			}
+		}
 	}
 
+	namespace NPartyExpDistribute
 	{
-		// 남은 80%의 경험치를 분배한다.
-		TDamageInfoTable::iterator it;
-
-		for (it = damage_info_table.begin(); it != damage_info_table.end(); ++it)
+		struct FPartyTotaler
 		{
-			TDamageInfo & di = *it;
+			int		total;
+			int		member_count;
+			int		x, y;
 
-			float fPercent = (float) di.iDam / iTotalDam;
+			FPartyTotaler(LPCHARACTER center)
+				: total(0), member_count(0), x(center->GetX()), y(center->GetY())
+			{};
+
+			void operator () (LPCHARACTER ch)
+			{
+				if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
+				{
+					total += party_exp_distribute_table[ch->GetLevel()];
+
+					++member_count;
+				}
+			}
+		};
+
+		struct FPartyDistributor
+		{
+			int		total;
+			LPCHARACTER	c;
+			int		x, y;
+			DWORD		_iExp;
+			int		m_iMode;
+			int		m_iMemberCount;
+
+			FPartyDistributor(LPCHARACTER center, int member_count, int total, DWORD iExp, int iMode) 
+				: total(total), c(center), x(center->GetX()), y(center->GetY()), _iExp(iExp), m_iMode(iMode), m_iMemberCount(member_count)
+				{
+					if (m_iMemberCount == 0)
+						m_iMemberCount = 1;
+				};
+
+			void operator () (LPCHARACTER ch)
+			{
+				if (DISTANCE_APPROX(ch->GetX() - x, ch->GetY() - y) <= PARTY_DEFAULT_RANGE)
+				{
+					DWORD iExp2 = 0;
+
+					switch (m_iMode)
+					{
+						case PARTY_EXP_DISTRIBUTION_NON_PARITY:
+							iExp2 = (DWORD) (_iExp * (float) party_exp_distribute_table[ch->GetLevel()] / total);
+							break;
+
+						case PARTY_EXP_DISTRIBUTION_PARITY:
+							iExp2 = _iExp / m_iMemberCount;
+							break;
+
+						default:
+							sys_err("Unknown party exp distribution mode %d", m_iMode);
+							return;
+					}
+
+					GiveExp(c, ch, iExp2);
+				}
+			}
+		};
+	}
+
+	typedef struct SDamageInfo
+	{
+		int iDam;
+		LPCHARACTER pAttacker;
+		LPPARTY pParty;
+
+		void Clear()
+		{
+			pAttacker = NULL;
+			pParty = NULL;
+		}
+
+		inline void Distribute(LPCHARACTER ch, int iExp)
+		{
+			if (pAttacker)
+				GiveExp(ch, pAttacker, iExp);
+			else if (pParty)
+			{
+				NPartyExpDistribute::FPartyTotaler f(ch);
+				pParty->ForEachOnlineMember(f);
+
+				if (pParty->IsPositionNearLeader(ch))
+					iExp = iExp * (100 + pParty->GetExpBonusPercent()) / 100;
+
+				if (test_server)
+				{
+					if (quest::CQuestManager::instance().GetEventFlag("exp_bonus_log") && pParty->GetExpBonusPercent())
+						pParty->ChatPacketToAllMember(CHAT_TYPE_INFO, "exp party bonus %d%%", pParty->GetExpBonusPercent());
+				}
+
+				// 경험치 몰아주기 (파티가 획득한 경험치를 5% 빼서 먼저 줌)
+				if (pParty->GetExpCentralizeCharacter())
+				{
+					LPCHARACTER tch = pParty->GetExpCentralizeCharacter();
+
+					if (DISTANCE_APPROX(ch->GetX() - tch->GetX(), ch->GetY() - tch->GetY()) <= PARTY_DEFAULT_RANGE)
+					{
+						int iExpCenteralize = (int) (iExp * 0.05f);
+						iExp -= iExpCenteralize;
+
+						GiveExp(ch, pParty->GetExpCentralizeCharacter(), iExpCenteralize);
+					}
+				}
+
+				NPartyExpDistribute::FPartyDistributor fDist(ch, f.member_count, f.total, iExp, pParty->GetExpDistributionMode());
+				pParty->ForEachOnlineMember(fDist);
+			}
+		}
+	} TDamageInfo;
+
+	LPCHARACTER CHARACTER::DistributeExp()
+	{
+		int iExpToDistribute = GetExp();
+
+		if (iExpToDistribute <= 0)
+			return NULL;
+
+		int	iTotalDam = 0;
+		LPCHARACTER pkChrMostAttacked = NULL;
+		int iMostDam = 0;
+
+		typedef std::vector<TDamageInfo> TDamageInfoTable;
+		TDamageInfoTable damage_info_table;
+		std::map<LPPARTY, TDamageInfo> map_party_damage;
+
+		damage_info_table.reserve(m_map_kDamage.size());
+
+		TDamageMap::iterator it = m_map_kDamage.begin();
+
+		// 일단 주위에 없는 사람을 걸러 낸다. (50m)
+		while (it != m_map_kDamage.end())
+		{
+			const VID & c_VID = it->first;
+			int iDam = it->second.iTotalDamage;
+
+			++it;
+
+			LPCHARACTER pAttacker = CHARACTER_MANAGER::instance().Find(c_VID);
+
+			// NPC가 때리기도 하나? -.-;
+			if (!pAttacker || pAttacker->IsNPC() || DISTANCE_APPROX(GetX()-pAttacker->GetX(), GetY()-pAttacker->GetY())>5000)
+				continue;
+
+			iTotalDam += iDam;
+			if (!pkChrMostAttacked || iDam > iMostDam)
+			{
+				pkChrMostAttacked = pAttacker;
+				iMostDam = iDam;
+			}
+
+			if (pAttacker->GetParty())
+			{
+				std::map<LPPARTY, TDamageInfo>::iterator it = map_party_damage.find(pAttacker->GetParty());
+				if (it == map_party_damage.end())
+				{
+					TDamageInfo di;
+					di.iDam = iDam;
+					di.pAttacker = NULL;
+					di.pParty = pAttacker->GetParty();
+					map_party_damage.insert(std::make_pair(di.pParty, di));
+				}
+				else
+				{
+					it->second.iDam += iDam;
+				}
+			}
+			else
+			{
+				TDamageInfo di;
+
+				di.iDam = iDam;
+				di.pAttacker = pAttacker;
+				di.pParty = NULL;
+
+				//sys_log(0, "__ pq_damage %s %d", pAttacker->GetName(), iDam);
+				//pq_damage.push(di);
+				damage_info_table.push_back(di);
+			}
+		}
+
+		for (std::map<LPPARTY, TDamageInfo>::iterator it = map_party_damage.begin(); it != map_party_damage.end(); ++it)
+		{
+			damage_info_table.push_back(it->second);
+			//sys_log(0, "__ pq_damage_party [%u] %d", it->second.pParty->GetLeaderPID(), it->second.iDam);
+		}
+
+		SetExp(0);
+		//m_map_kDamage.clear();
+
+		if (iTotalDam == 0)	// 데미지 준게 0이면 리턴
+			return NULL;
+
+		if (m_pkChrStone)	// 돌이 있을 경우 경험치의 반을 돌에게 넘긴다.
+		{
+			//sys_log(0, "__ Give half to Stone : %d", iExpToDistribute>>1);
+			int iExp = iExpToDistribute >> 1;
+			m_pkChrStone->SetExp(m_pkChrStone->GetExp() + iExp);
+			iExpToDistribute -= iExp;
+		}
+
+		sys_log(1, "%s total exp: %d, damage_info_table.size() == %d, TotalDam %d",
+				GetName(), iExpToDistribute, damage_info_table.size(), iTotalDam);
+		//sys_log(1, "%s total exp: %d, pq_damage.size() == %d, TotalDam %d",
+		//GetName(), iExpToDistribute, pq_damage.size(), iTotalDam);
+
+		if (damage_info_table.empty())
+			return NULL;
+
+		// 제일 데미지를 많이 준 사람이 HP 회복을 한다.
+		DistributeHP(pkChrMostAttacked);	// 만두 시스템
+
+		{
+			// 제일 데미지를 많이 준 사람이나 파티가 총 경험치의 20% + 자기가 때린만큼의 경험치를 먹는다.
+			TDamageInfoTable::iterator di = damage_info_table.begin();
+			{
+				TDamageInfoTable::iterator it;
+
+				for (it = damage_info_table.begin(); it != damage_info_table.end();++it)
+				{
+					if (it->iDam > di->iDam)
+						di = it;
+				}
+			}
+
+			int	iExp = iExpToDistribute / 5;
+			iExpToDistribute -= iExp;
+
+			float fPercent = (float) di->iDam / iTotalDam;
 
 			if (fPercent > 1.0f)
 			{
-				sys_err("DistributeExp percent over 1.0 (fPercent %f name %s)", fPercent, di.pAttacker->GetName());
+				sys_err("DistributeExp percent over 1.0 (fPercent %f name %s)", fPercent, di->pAttacker->GetName());
 				fPercent = 1.0f;
 			}
 
-			//sys_log(0, "%s given exp percent %.1f dam %d", GetName(), fPercent * 100.0f, di.iDam);
-			di.Distribute(this, (int) (iExpToDistribute * fPercent));
+			iExp += (int) (iExpToDistribute * fPercent);
+
+			//sys_log(0, "%s given exp percent %.1f + 20 dam %d", GetName(), fPercent * 100.0f, di.iDam);
+
+			di->Distribute(this, iExp);
+
+			// 100% 다 먹었으면 리턴한다.
+			if (fPercent == 1.0f)
+				return pkChrMostAttacked;
+
+			di->Clear();
+		}
+
+		{
+			// 남은 80%의 경험치를 분배한다.
+			TDamageInfoTable::iterator it;
+
+			for (it = damage_info_table.begin(); it != damage_info_table.end(); ++it)
+			{
+				TDamageInfo & di = *it;
+
+				float fPercent = (float) di.iDam / iTotalDam;
+
+				if (fPercent > 1.0f)
+				{
+					sys_err("DistributeExp percent over 1.0 (fPercent %f name %s)", fPercent, di.pAttacker->GetName());
+					fPercent = 1.0f;
+				}
+
+				//sys_log(0, "%s given exp percent %.1f dam %d", GetName(), fPercent * 100.0f, di.iDam);
+				di.Distribute(this, (int) (iExpToDistribute * fPercent));
+			}
+		}
+
+		return pkChrMostAttacked;
+	}
+
+	// 화살 개수를 리턴해 줌
+	int CHARACTER::GetArrowAndBow(LPITEM * ppkBow, LPITEM * ppkArrow, int iArrowCount/* = 1 */)
+	{
+		LPITEM pkBow;
+
+		if (!(pkBow = GetWear(WEAR_WEAPON)) || pkBow->GetProto()->bSubType != WEAPON_BOW)
+		{
+			return 0;
+		}
+
+		LPITEM pkArrow;
+
+		if (!(pkArrow = GetWear(WEAR_ARROW)) || pkArrow->GetType() != ITEM_WEAPON ||
+				pkArrow->GetProto()->bSubType != WEAPON_ARROW)
+		{
+			return 0;
+		}
+
+		iArrowCount = MIN(iArrowCount, pkArrow->GetCount());
+
+		*ppkBow = pkBow;
+		*ppkArrow = pkArrow;
+
+		return iArrowCount;
+	}
+
+	void CHARACTER::UseArrow(LPITEM pkArrow, DWORD dwArrowCount)
+	{
+		int iCount = pkArrow->GetCount();
+		DWORD dwVnum = pkArrow->GetVnum();
+		iCount = iCount - MIN(iCount, dwArrowCount);
+		pkArrow->SetCount(iCount);
+
+		if (iCount == 0)
+		{
+			LPITEM pkNewArrow = FindSpecifyItem(dwVnum);
+
+			sys_log(0, "UseArrow : FindSpecifyItem %u %p", dwVnum, get_pointer(pkNewArrow));
+
+			if (pkNewArrow)
+				EquipItem(pkNewArrow);
 		}
 	}
 
-	return pkChrMostAttacked;
-}
-
-// 화살 개수를 리턴해 줌
-int CHARACTER::GetArrowAndBow(LPITEM * ppkBow, LPITEM * ppkArrow, int iArrowCount/* = 1 */)
-{
-	LPITEM pkBow;
-
-	if (!(pkBow = GetWear(WEAR_WEAPON)) || pkBow->GetProto()->bSubType != WEAPON_BOW)
+	class CFuncShoot
 	{
-		return 0;
-	}
+		public:
+			LPCHARACTER	m_me;
+			BYTE		m_bType;
+			bool		m_bSucceed;
 
-	LPITEM pkArrow;
-
-	if (!(pkArrow = GetWear(WEAR_ARROW)) || pkArrow->GetType() != ITEM_WEAPON ||
-			pkArrow->GetProto()->bSubType != WEAPON_ARROW)
-	{
-		return 0;
-	}
-
-	iArrowCount = MIN(iArrowCount, pkArrow->GetCount());
-
-	*ppkBow = pkBow;
-	*ppkArrow = pkArrow;
-
-	return iArrowCount;
-}
-
-void CHARACTER::UseArrow(LPITEM pkArrow, DWORD dwArrowCount)
-{
-	int iCount = pkArrow->GetCount();
-	DWORD dwVnum = pkArrow->GetVnum();
-	iCount = iCount - MIN(iCount, dwArrowCount);
-	pkArrow->SetCount(iCount);
-
-	if (iCount == 0)
-	{
-		LPITEM pkNewArrow = FindSpecifyItem(dwVnum);
-
-		sys_log(0, "UseArrow : FindSpecifyItem %u %p", dwVnum, get_pointer(pkNewArrow));
-
-		if (pkNewArrow)
-			EquipItem(pkNewArrow);
-	}
-}
-
-class CFuncShoot
-{
-	public:
-		LPCHARACTER	m_me;
-		BYTE		m_bType;
-		bool		m_bSucceed;
-
-		CFuncShoot(LPCHARACTER ch, BYTE bType) : m_me(ch), m_bType(bType), m_bSucceed(FALSE)
-		{
-		}
-
-		void operator () (DWORD dwTargetVID)
-		{
-			if (m_bType > 1)
+			CFuncShoot(LPCHARACTER ch, BYTE bType) : m_me(ch), m_bType(bType), m_bSucceed(FALSE)
 			{
-				if (g_bSkillDisable)
-					return;
-
-				m_me->m_SkillUseInfo[m_bType].SetMainTargetVID(dwTargetVID);
-				/*if (m_bType == SKILL_BIPABU || m_bType == SKILL_KWANKYEOK)
-				  m_me->m_SkillUseInfo[m_bType].ResetHitCount();*/
 			}
 
-			LPCHARACTER pkVictim = CHARACTER_MANAGER::instance().Find(dwTargetVID);
-
-			if (!pkVictim)
-				return;
-
-			// 공격 불가
-			if (!battle_is_attackable(m_me, pkVictim))
-				return;
-
-			if (m_me->IsNPC())
+			void operator () (DWORD dwTargetVID)
 			{
-				if (DISTANCE_APPROX(m_me->GetX() - pkVictim->GetX(), m_me->GetY() - pkVictim->GetY()) > 5000)
+				if (m_bType > 1)
+				{
+					if (g_bSkillDisable)
+						return;
+
+					m_me->m_SkillUseInfo[m_bType].SetMainTargetVID(dwTargetVID);
+					/*if (m_bType == SKILL_BIPABU || m_bType == SKILL_KWANKYEOK)
+					  m_me->m_SkillUseInfo[m_bType].ResetHitCount();*/
+				}
+
+				LPCHARACTER pkVictim = CHARACTER_MANAGER::instance().Find(dwTargetVID);
+
+				if (!pkVictim)
 					return;
-			}
 
-			LPITEM pkBow, pkArrow;
+				// 공격 불가
+				if (!battle_is_attackable(m_me, pkVictim))
+					return;
 
-			switch (m_bType)
-			{
-				case 0: // 일반활
-					{
-						int iDam = 0;
+				if (m_me->IsNPC())
+				{
+					if (DISTANCE_APPROX(m_me->GetX() - pkVictim->GetX(), m_me->GetY() - pkVictim->GetY()) > 5000)
+						return;
+				}
 
-						if (m_me->IsPC())
+				LPITEM pkBow, pkArrow;
+
+				switch (m_bType)
+				{
+					case 0: // 일반활
 						{
-							if (m_me->GetJob() != JOB_ASSASSIN)
-								return;
+							int iDam = 0;
 
-							if (0 == m_me->GetArrowAndBow(&pkBow, &pkArrow))
-								return;
+							if (m_me->IsPC())
+							{
+								if (m_me->GetJob() != JOB_ASSASSIN)
+									return;
 
-							if (m_me->GetSkillGroup() != 0)
-								if (!m_me->IsNPC() && m_me->GetSkillGroup() != 2)
-								{
-									if (m_me->GetSP() < 5)
-										return;
+								if (0 == m_me->GetArrowAndBow(&pkBow, &pkArrow))
+									return;
 
-									m_me->PointChange(POINT_SP, -5);
-								}
+								if (m_me->GetSkillGroup() != 0)
+									if (!m_me->IsNPC() && m_me->GetSkillGroup() != 2)
+									{
+										if (m_me->GetSP() < 5)
+											return;
 
-							iDam = CalcArrowDamage(m_me, pkVictim, pkBow, pkArrow);
-							m_me->UseArrow(pkArrow, 1);
+										m_me->PointChange(POINT_SP, -5);
+									}
 
-							// check speed hack
-							DWORD	dwCurrentTime	= get_dword_time();
-							if (IS_SPEED_HACK(m_me, pkVictim, dwCurrentTime))
-								iDam	= 0;
+								iDam = CalcArrowDamage(m_me, pkVictim, pkBow, pkArrow);
+								m_me->UseArrow(pkArrow, 1);
+
+								// check speed hack
+								DWORD	dwCurrentTime	= get_dword_time();
+								if (IS_SPEED_HACK(m_me, pkVictim, dwCurrentTime))
+									iDam	= 0;
+							}
+							else
+								iDam = CalcMeleeDamage(m_me, pkVictim);
+
+							NormalAttackAffect(m_me, pkVictim);
+
+							// 데미지 계산
+							iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST_BOW)) / 100;
+
+							//sys_log(0, "%s arrow %s dam %d", m_me->GetName(), pkVictim->GetName(), iDam);
+
+							m_me->OnMove(true);
+							pkVictim->OnMove();
+
+							if (pkVictim->CanBeginFight())
+								pkVictim->BeginFight(m_me);
+
+							pkVictim->Damage(m_me, iDam, DAMAGE_TYPE_NORMAL_RANGE);
+							// 타격치 계산부 끝
 						}
-						else
-							iDam = CalcMeleeDamage(m_me, pkVictim);
+						break;
 
-						NormalAttackAffect(m_me, pkVictim);
-
-						// 데미지 계산
-						iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST_BOW)) / 100;
-
-						//sys_log(0, "%s arrow %s dam %d", m_me->GetName(), pkVictim->GetName(), iDam);
-
-						m_me->OnMove(true);
-						pkVictim->OnMove();
-
-						if (pkVictim->CanBeginFight())
-							pkVictim->BeginFight(m_me);
-
-						pkVictim->Damage(m_me, iDam, DAMAGE_TYPE_NORMAL_RANGE);
-						// 타격치 계산부 끝
-					}
-					break;
-
-				case 1: // 일반 마법
-					{
-						int iDam;
-
-						if (m_me->IsPC())
-							return;
-
-						iDam = CalcMagicDamage(m_me, pkVictim);
-
-						NormalAttackAffect(m_me, pkVictim);
-
-						// 데미지 계산
-						iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST_MAGIC)) / 100;
-
-						//sys_log(0, "%s arrow %s dam %d", m_me->GetName(), pkVictim->GetName(), iDam);
-
-						m_me->OnMove(true);
-						pkVictim->OnMove();
-
-						if (pkVictim->CanBeginFight())
-							pkVictim->BeginFight(m_me); 
-
-						pkVictim->Damage(m_me, iDam, DAMAGE_TYPE_MAGIC);
-						// 타격치 계산부 끝
-					}
-					break;
-
-				case SKILL_YEONSA:	// 연사
-					{
-						//int iUseArrow = 2 + (m_me->GetSkillPower(SKILL_YEONSA) *6/100);
-						int iUseArrow = 1;
-
-						// 토탈만 계산하는경우
+					case 1: // 일반 마법
 						{
+							int iDam;
+
+							if (m_me->IsPC())
+								return;
+
+							iDam = CalcMagicDamage(m_me, pkVictim);
+
+							NormalAttackAffect(m_me, pkVictim);
+
+							// 데미지 계산
+							iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST_MAGIC)) / 100;
+
+							//sys_log(0, "%s arrow %s dam %d", m_me->GetName(), pkVictim->GetName(), iDam);
+
+							m_me->OnMove(true);
+							pkVictim->OnMove();
+
+							if (pkVictim->CanBeginFight())
+								pkVictim->BeginFight(m_me); 
+
+							pkVictim->Damage(m_me, iDam, DAMAGE_TYPE_MAGIC);
+							// 타격치 계산부 끝
+						}
+						break;
+
+					case SKILL_YEONSA:	// 연사
+						{
+							//int iUseArrow = 2 + (m_me->GetSkillPower(SKILL_YEONSA) *6/100);
+							int iUseArrow = 1;
+
+							// 토탈만 계산하는경우
+							{
+								if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
+								{
+									m_me->OnMove(true);
+									pkVictim->OnMove();
+
+									if (pkVictim->CanBeginFight())
+										pkVictim->BeginFight(m_me); 
+
+									m_me->ComputeSkill(m_bType, pkVictim);
+									m_me->UseArrow(pkArrow, iUseArrow);
+
+									if (pkVictim->IsDead())
+										break;
+
+								}
+								else
+									break;
+							}
+						}
+						break;
+
+
+					case SKILL_KWANKYEOK:
+						{
+							int iUseArrow = 1;
+
 							if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
 							{
 								m_me->OnMove(true);
@@ -2800,25 +2832,92 @@ class CFuncShoot
 								if (pkVictim->CanBeginFight())
 									pkVictim->BeginFight(m_me); 
 
+								sys_log(0, "%s kwankeyok %s", m_me->GetName(), pkVictim->GetName());
 								m_me->ComputeSkill(m_bType, pkVictim);
 								m_me->UseArrow(pkArrow, iUseArrow);
-
-								if (pkVictim->IsDead())
-									break;
-
 							}
-							else
-								break;
 						}
-					}
-					break;
+						break;
 
+					case SKILL_GIGUNG:
+						{
+							int iUseArrow = 1;
+							if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
+							{
+								m_me->OnMove(true);
+								pkVictim->OnMove();
 
-				case SKILL_KWANKYEOK:
-					{
-						int iUseArrow = 1;
+								if (pkVictim->CanBeginFight())
+									pkVictim->BeginFight(m_me);
 
-						if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
+								sys_log(0, "%s gigung %s", m_me->GetName(), pkVictim->GetName());
+								m_me->ComputeSkill(m_bType, pkVictim);
+								m_me->UseArrow(pkArrow, iUseArrow);
+							}
+						}
+
+						break;
+					case SKILL_HWAJO:
+						{
+							int iUseArrow = 1;
+							if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
+							{
+								m_me->OnMove(true);
+								pkVictim->OnMove();
+
+								if (pkVictim->CanBeginFight())
+									pkVictim->BeginFight(m_me);
+
+								sys_log(0, "%s hwajo %s", m_me->GetName(), pkVictim->GetName());
+								m_me->ComputeSkill(m_bType, pkVictim);
+								m_me->UseArrow(pkArrow, iUseArrow);
+							}
+						}
+
+						break;
+
+					case SKILL_HORSE_WILDATTACK_RANGE:
+						{
+							int iUseArrow = 1;
+							if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
+							{
+								m_me->OnMove(true);
+								pkVictim->OnMove();
+
+								if (pkVictim->CanBeginFight())
+									pkVictim->BeginFight(m_me);
+
+								sys_log(0, "%s horse_wildattack %s", m_me->GetName(), pkVictim->GetName());
+								m_me->ComputeSkill(m_bType, pkVictim);
+								m_me->UseArrow(pkArrow, iUseArrow);
+							}
+						}
+
+						break;
+
+					case SKILL_MARYUNG:
+						//case SKILL_GUMHWAN:
+					case SKILL_TUSOK:
+					case SKILL_BIPABU:
+					case SKILL_NOEJEON:
+					case SKILL_GEOMPUNG:
+					case SKILL_SANGONG:
+					case SKILL_MAHWAN:
+					case SKILL_PABEOB:
+						//case SKILL_CURSE:
+						{
+							m_me->OnMove(true);
+							pkVictim->OnMove();
+
+							if (pkVictim->CanBeginFight())
+								pkVictim->BeginFight(m_me);
+
+							sys_log(0, "%s - Skill %d -> %s", m_me->GetName(), m_bType, pkVictim->GetName());
+							m_me->ComputeSkill(m_bType, pkVictim);
+						}
+						break;
+
+					case SKILL_CHAIN:
 						{
 							m_me->OnMove(true);
 							pkVictim->OnMove();
@@ -2826,233 +2925,140 @@ class CFuncShoot
 							if (pkVictim->CanBeginFight())
 								pkVictim->BeginFight(m_me); 
 
-							sys_log(0, "%s kwankeyok %s", m_me->GetName(), pkVictim->GetName());
+							sys_log(0, "%s - Skill %d -> %s", m_me->GetName(), m_bType, pkVictim->GetName());
 							m_me->ComputeSkill(m_bType, pkVictim);
-							m_me->UseArrow(pkArrow, iUseArrow);
-						}
-					}
-					break;
 
-				case SKILL_GIGUNG:
-					{
-						int iUseArrow = 1;
-						if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
+							// TODO 여러명에게 슉 슉 슉 하기
+						}
+						break;
+
+					case SKILL_YONGBI:
 						{
 							m_me->OnMove(true);
-							pkVictim->OnMove();
-
-							if (pkVictim->CanBeginFight())
-								pkVictim->BeginFight(m_me);
-
-							sys_log(0, "%s gigung %s", m_me->GetName(), pkVictim->GetName());
-							m_me->ComputeSkill(m_bType, pkVictim);
-							m_me->UseArrow(pkArrow, iUseArrow);
 						}
-					}
+						break;
 
-					break;
-				case SKILL_HWAJO:
-					{
-						int iUseArrow = 1;
-						if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
-						{
-							m_me->OnMove(true);
-							pkVictim->OnMove();
+						/*case SKILL_BUDONG:
+						  {
+						  m_me->OnMove(true);
+						  pkVictim->OnMove();
 
-							if (pkVictim->CanBeginFight())
-								pkVictim->BeginFight(m_me);
+						  DWORD * pdw;
+						  DWORD dwEI = AllocEventInfo(sizeof(DWORD) * 2, &pdw);
+						  pdw[0] = m_me->GetVID();
+						  pdw[1] = pkVictim->GetVID();
 
-							sys_log(0, "%s hwajo %s", m_me->GetName(), pkVictim->GetName());
-							m_me->ComputeSkill(m_bType, pkVictim);
-							m_me->UseArrow(pkArrow, iUseArrow);
-						}
-					}
+						  event_create(budong_event_func, dwEI, PASSES_PER_SEC(1));
+						  }
+						  break;*/
 
-					break;
+					default:
+						sys_err("CFuncShoot: I don't know this type [%d] of range attack.", (int) m_bType);
+						break;
+				}
 
-				case SKILL_HORSE_WILDATTACK_RANGE:
-					{
-						int iUseArrow = 1;
-						if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
-						{
-							m_me->OnMove(true);
-							pkVictim->OnMove();
-
-							if (pkVictim->CanBeginFight())
-								pkVictim->BeginFight(m_me);
-
-							sys_log(0, "%s horse_wildattack %s", m_me->GetName(), pkVictim->GetName());
-							m_me->ComputeSkill(m_bType, pkVictim);
-							m_me->UseArrow(pkArrow, iUseArrow);
-						}
-					}
-
-					break;
-
-				case SKILL_MARYUNG:
-					//case SKILL_GUMHWAN:
-				case SKILL_TUSOK:
-				case SKILL_BIPABU:
-				case SKILL_NOEJEON:
-				case SKILL_GEOMPUNG:
-				case SKILL_SANGONG:
-				case SKILL_MAHWAN:
-				case SKILL_PABEOB:
-					//case SKILL_CURSE:
-					{
-						m_me->OnMove(true);
-						pkVictim->OnMove();
-
-						if (pkVictim->CanBeginFight())
-							pkVictim->BeginFight(m_me);
-
-						sys_log(0, "%s - Skill %d -> %s", m_me->GetName(), m_bType, pkVictim->GetName());
-						m_me->ComputeSkill(m_bType, pkVictim);
-					}
-					break;
-
-				case SKILL_CHAIN:
-					{
-						m_me->OnMove(true);
-						pkVictim->OnMove();
-
-						if (pkVictim->CanBeginFight())
-							pkVictim->BeginFight(m_me); 
-
-						sys_log(0, "%s - Skill %d -> %s", m_me->GetName(), m_bType, pkVictim->GetName());
-						m_me->ComputeSkill(m_bType, pkVictim);
-
-						// TODO 여러명에게 슉 슉 슉 하기
-					}
-					break;
-
-				case SKILL_YONGBI:
-					{
-						m_me->OnMove(true);
-					}
-					break;
-
-					/*case SKILL_BUDONG:
-					  {
-					  m_me->OnMove(true);
-					  pkVictim->OnMove();
-
-					  DWORD * pdw;
-					  DWORD dwEI = AllocEventInfo(sizeof(DWORD) * 2, &pdw);
-					  pdw[0] = m_me->GetVID();
-					  pdw[1] = pkVictim->GetVID();
-
-					  event_create(budong_event_func, dwEI, PASSES_PER_SEC(1));
-					  }
-					  break;*/
-
-				default:
-					sys_err("CFuncShoot: I don't know this type [%d] of range attack.", (int) m_bType);
-					break;
+				m_bSucceed = TRUE;
 			}
+	};
 
-			m_bSucceed = TRUE;
-		}
-};
-
-bool CHARACTER::Shoot(BYTE bType)
-{
-	sys_log(1, "Shoot %s type %u flyTargets.size %zu", GetName(), bType, m_vec_dwFlyTargets.size());
-
-	if (!CanMove())
+	bool CHARACTER::Shoot(BYTE bType)
 	{
-		return false;
-	}	
+		sys_log(1, "Shoot %s type %u flyTargets.size %zu", GetName(), bType, m_vec_dwFlyTargets.size());
 
-	CFuncShoot f(this, bType);
-
-	if (m_dwFlyTargetID != 0)
-	{
-		f(m_dwFlyTargetID);
-		m_dwFlyTargetID = 0;
-	}
-
-	f = std::for_each(m_vec_dwFlyTargets.begin(), m_vec_dwFlyTargets.end(), f);
-	m_vec_dwFlyTargets.clear();
-
-	return f.m_bSucceed;
-}
-
-void CHARACTER::FlyTarget(DWORD dwTargetVID, long x, long y, BYTE bHeader)
-{
-	LPCHARACTER pkVictim = CHARACTER_MANAGER::instance().Find(dwTargetVID);
-	TPacketGCFlyTargeting pack;
-
-	//pack.bHeader	= HEADER_GC_FLY_TARGETING;
-	pack.bHeader	= (bHeader == HEADER_CG_FLY_TARGETING) ? HEADER_GC_FLY_TARGETING : HEADER_GC_ADD_FLY_TARGETING;
-	pack.dwShooterVID	= GetVID();
-
-	if (pkVictim)
-	{
-		pack.dwTargetVID = pkVictim->GetVID();
-		pack.x = pkVictim->GetX();
-		pack.y = pkVictim->GetY();
-
-		if (bHeader == HEADER_CG_FLY_TARGETING)
-			m_dwFlyTargetID = dwTargetVID;
-		else
-			m_vec_dwFlyTargets.push_back(dwTargetVID);
-	}
-	else
-	{
-		pack.dwTargetVID = 0;
-		pack.x = x;
-		pack.y = y;
-	}
-
-	sys_log(1, "FlyTarget %s vid %d x %d y %d", GetName(), pack.dwTargetVID, pack.x, pack.y);
-	PacketAround(&pack, sizeof(pack), this);
-}
-
-LPCHARACTER CHARACTER::GetNearestVictim(LPCHARACTER pkChr)
-{
-	if (NULL == pkChr)
-		pkChr = this;
-
-	float fMinDist = 99999.0f;
-	LPCHARACTER pkVictim = NULL;
-
-	TDamageMap::iterator it = m_map_kDamage.begin();
-
-	// 일단 주위에 없는 사람을 걸러 낸다.
-	while (it != m_map_kDamage.end())
-	{
-		const VID & c_VID = it->first;
-		++it;
-
-		LPCHARACTER pAttacker = CHARACTER_MANAGER::instance().Find(c_VID);
-
-		if (!pAttacker)
-			continue;
-
-		if (pAttacker->IsAffectFlag(AFF_EUNHYUNG) || 
-				pAttacker->IsAffectFlag(AFF_INVISIBILITY) ||
-				pAttacker->IsAffectFlag(AFF_REVIVE_INVISIBLE))
-			continue;
-
-		float fDist = DISTANCE_APPROX(pAttacker->GetX() - pkChr->GetX(), pAttacker->GetY() - pkChr->GetY());
-
-		if (fDist < fMinDist)
+		if (!CanMove())
 		{
-			pkVictim = pAttacker;
-			fMinDist = fDist;
+			return false;
+		}	
+
+		CFuncShoot f(this, bType);
+
+		if (m_dwFlyTargetID != 0)
+		{
+			f(m_dwFlyTargetID);
+			m_dwFlyTargetID = 0;
 		}
+
+		f = std::for_each(m_vec_dwFlyTargets.begin(), m_vec_dwFlyTargets.end(), f);
+		m_vec_dwFlyTargets.clear();
+
+		return f.m_bSucceed;
 	}
 
-	return pkVictim;
-}
-
-void CHARACTER::SetVictim(LPCHARACTER pkVictim)
-{
-	if (!pkVictim)
+	void CHARACTER::FlyTarget(DWORD dwTargetVID, long x, long y, BYTE bHeader)
 	{
-		if (0 != (DWORD)m_kVIDVictim)
-			MonsterLog("공격 대상을 해제");
+		LPCHARACTER pkVictim = CHARACTER_MANAGER::instance().Find(dwTargetVID);
+		TPacketGCFlyTargeting pack;
+
+		//pack.bHeader	= HEADER_GC_FLY_TARGETING;
+		pack.bHeader	= (bHeader == HEADER_CG_FLY_TARGETING) ? HEADER_GC_FLY_TARGETING : HEADER_GC_ADD_FLY_TARGETING;
+		pack.dwShooterVID	= GetVID();
+
+		if (pkVictim)
+		{
+			pack.dwTargetVID = pkVictim->GetVID();
+			pack.x = pkVictim->GetX();
+			pack.y = pkVictim->GetY();
+
+			if (bHeader == HEADER_CG_FLY_TARGETING)
+				m_dwFlyTargetID = dwTargetVID;
+			else
+				m_vec_dwFlyTargets.push_back(dwTargetVID);
+		}
+		else
+		{
+			pack.dwTargetVID = 0;
+			pack.x = x;
+			pack.y = y;
+		}
+
+		sys_log(1, "FlyTarget %s vid %d x %d y %d", GetName(), pack.dwTargetVID, pack.x, pack.y);
+		PacketAround(&pack, sizeof(pack), this);
+	}
+
+	LPCHARACTER CHARACTER::GetNearestVictim(LPCHARACTER pkChr)
+	{
+		if (NULL == pkChr)
+			pkChr = this;
+
+		float fMinDist = 99999.0f;
+		LPCHARACTER pkVictim = NULL;
+
+		TDamageMap::iterator it = m_map_kDamage.begin();
+
+		// 일단 주위에 없는 사람을 걸러 낸다.
+		while (it != m_map_kDamage.end())
+		{
+			const VID & c_VID = it->first;
+			++it;
+
+			LPCHARACTER pAttacker = CHARACTER_MANAGER::instance().Find(c_VID);
+
+			if (!pAttacker)
+				continue;
+
+			if (pAttacker->IsAffectFlag(AFF_EUNHYUNG) || 
+					pAttacker->IsAffectFlag(AFF_INVISIBILITY) ||
+					pAttacker->IsAffectFlag(AFF_REVIVE_INVISIBLE))
+				continue;
+
+			float fDist = DISTANCE_APPROX(pAttacker->GetX() - pkChr->GetX(), pAttacker->GetY() - pkChr->GetY());
+
+			if (fDist < fMinDist)
+			{
+				pkVictim = pAttacker;
+				fMinDist = fDist;
+			}
+		}
+
+		return pkVictim;
+	}
+
+	void CHARACTER::SetVictim(LPCHARACTER pkVictim)
+	{
+		if (!pkVictim)
+		{
+			if (0 != (DWORD)m_kVIDVictim)
+			MonsterLog("Clear attack target");
 
 		m_kVIDVictim.Reset();
 		battle_end(this);
@@ -3060,7 +3066,7 @@ void CHARACTER::SetVictim(LPCHARACTER pkVictim)
 	else
 	{
 		if (m_kVIDVictim != pkVictim->GetVID())
-			MonsterLog("공격 대상을 설정: %s", pkVictim->GetName());
+			MonsterLog("Set attack target: %s", pkVictim->GetName());
 
 		m_kVIDVictim = pkVictim->GetVID();
 		m_dwLastVictimSetTime = get_dword_time();

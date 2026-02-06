@@ -1,7 +1,7 @@
 #ifdef __WIN32__
 #include <windows.h>
 #endif
-
+#include <unistd.h>
 #include "Poly.h"
 
 #include <cstdlib>

@@ -1,4 +1,3 @@
-// vim:ts=4 sw=4
 #include <map>
 #include "stdafx.h"
 #include "ClientManager.h"
@@ -163,79 +162,42 @@ class FCompareVnum
 
 bool CClientManager::InitializeMobTable()
 {
-	//================== 함수 설명 ==================//
-	//1. 요약 : 'mob_proto.txt', 'mob_proto_test.txt', 'mob_names.txt' 파일을 읽고,
-	//		(!)[mob_table] 테이블 오브젝트를 생성한다. (타입 : TMobTable)
-	//2. 순서
-	//	1) 'mob_names.txt' 파일을 읽어서 (a)[localMap](vnum:name) 맵을 만든다.
-	//	2) 'mob_proto_test.txt'파일과 (a)[localMap] 맵으로
-	//		(b)[test_map_mobTableByVnum](vnum:TMobTable) 맵을 생성한다.
-	//	3) 'mob_proto.txt' 파일과  (a)[localMap] 맵으로
-	//		(!)[mob_table] 테이블을 만든다.
-	//			<참고>
-	//			각 row 들 중, 
-	//			(b)[test_map_mobTableByVnum],(!)[mob_table] 모두에 있는 row는
-	//			(b)[test_map_mobTableByVnum]의 것을 사용한다.
-	//	4) (b)[test_map_mobTableByVnum]의 row중, (!)[mob_table]에 없는 것을 추가한다.
-	//3. 테스트
-	//	1)'mob_proto.txt' 정보가 mob_table에 잘 들어갔는지. -> 완료
-	//	2)'mob_names.txt' 정보가 mob_table에 잘 들어갔는지.
-	//	3)'mob_proto_test.txt' 에서 [겹치는] 정보가 mob_table 에 잘 들어갔는지.
-	//	4)'mob_proto_test.txt' 에서 [새로운] 정보가 mob_table 에 잘 들어갔는지.
-	//	5) (최종) 게임 클라이언트에서 제대로 작동 하는지.
-	//_______________________________________________//
-
-
-	//===============================================//
-	//	1) 'mob_names.txt' 파일을 읽어서 (a)[localMap] 맵을 만든다.
-	//<(a)localMap 맵 생성>
 	map<int,const char*> localMap;
 	bool isNameFile = true;
-	//<파일 읽기>
 	cCsvTable nameData;
 	if(!nameData.Load("mob_names.txt",'\t'))
 	{
-		fprintf(stderr, "mob_names.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "mob_names.txt read failed\n");
 		isNameFile = false;
 	} else {
-		nameData.Next();	//설명row 생략.
+		nameData.Next();
 		while(nameData.Next()) {
 			localMap[atoi(nameData.AsStringByIndex(0))] = nameData.AsStringByIndex(1);
 		}
 	}
-	//________________________________________________//
-
 	
-	//===============================================//
-	//	2) 'mob_proto_test.txt'파일과 (a)localMap 맵으로
-	//		(b)[test_map_mobTableByVnum](vnum:TMobTable) 맵을 생성한다.
-	//0. 
-	set<int> vnumSet;	//테스트용 파일 데이터중, 신규여부 확인에 사용.
-	//1. 파일 읽어오기
+	set<int> vnumSet;
 	bool isTestFile = true;
 	cCsvTable test_data;
 	if(!test_data.Load("mob_proto_test.txt",'\t'))
 	{
-		fprintf(stderr, "테스트 파일이 없습니다. 그대로 진행합니다.\n");
+		fprintf(stderr, "Test file is missing. Proceeding as is.\n");
 		isTestFile = false;
 	}
-	//2. (c)[test_map_mobTableByVnum](vnum:TMobTable) 맵 생성.
 	map<DWORD, TMobTable *> test_map_mobTableByVnum;
 	if (isTestFile) {
-		test_data.Next();	//설명 로우 넘어가기.
+		test_data.Next();
 
-		//ㄱ. 테스트 몬스터 테이블 생성.
 		TMobTable * test_mob_table = NULL;
 		int test_MobTableSize = test_data.m_File.GetRowCount()-1;
 		test_mob_table = new TMobTable[test_MobTableSize];
 		memset(test_mob_table, 0, sizeof(TMobTable) * test_MobTableSize);
 
-		//ㄴ. 테스트 몬스터 테이블에 값을 넣고, 맵에까지 넣기.
 		while(test_data.Next()) {
 
 			if (!Set_Proto_Mob_Table(test_mob_table, test_data, localMap))
 			{
-				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "Mob proto table setting failed.\n");
 			}
 
 			test_map_mobTableByVnum.insert(std::map<DWORD, TMobTable *>::value_type(test_mob_table->dwVnum, test_mob_table));
@@ -246,22 +208,12 @@ bool CClientManager::InitializeMobTable()
 
 	}
 
-	//	3) 'mob_proto.txt' 파일과  (a)[localMap] 맵으로
-	//		(!)[mob_table] 테이블을 만든다.
-	//			<참고>
-	//			각 row 들 중, 
-	//			(b)[test_map_mobTableByVnum],(!)[mob_table] 모두에 있는 row는
-	//			(b)[test_map_mobTableByVnum]의 것을 사용한다.
-
-	//1. 파일 읽기.
 	cCsvTable data;
 	if(!data.Load("mob_proto.txt",'\t')) {
-		fprintf(stderr, "mob_proto.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "mob_proto.txt read failed\n");
 		return false;
 	}
-	data.Next();					//설명 row 넘어가기
-	//2. (!)[mob_table] 생성하기
-	//2.1 새로 추가되는 갯수를 파악
+	data.Next();
 	int addNumber = 0;
 	while(data.Next()) {
 		int vnum = atoi(data.AsStringByIndex(0));
@@ -271,15 +223,13 @@ bool CClientManager::InitializeMobTable()
 			addNumber++;
 		}
 	}
-	//data를 다시 첫줄로 옮긴다.(다시 읽어온다;;)
 	data.Destroy();
 	if(!data.Load("mob_proto.txt",'\t'))
 	{
-		fprintf(stderr, "mob_proto.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "mob_proto.txt read failed\n");
 		return false;
 	}
-	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)
-	//2.2 크기에 맞게 mob_table 생성
+		data.Next();
 	if (!m_vec_mobTable.empty())
 	{
 		sys_log(0, "RELOAD: mob_proto");
@@ -288,18 +238,15 @@ bool CClientManager::InitializeMobTable()
 	m_vec_mobTable.resize(data.m_File.GetRowCount()-1 + addNumber);
 	memset(&m_vec_mobTable[0], 0, sizeof(TMobTable) * m_vec_mobTable.size());
 	TMobTable * mob_table = &m_vec_mobTable[0];
-	//2.3 데이터 채우기
 	while (data.Next())
 	{
 		int col = 0;
-		//(b)[test_map_mobTableByVnum]에 같은 row가 있는지 조사.
 		bool isSameRow = true;
 		std::map<DWORD, TMobTable *>::iterator it_map_mobTable;
 		it_map_mobTable = test_map_mobTableByVnum.find(atoi(data.AsStringByIndex(col)));
 		if(it_map_mobTable == test_map_mobTableByVnum.end()) {
 			isSameRow = false;
 		}
-		//같은 row 가 있으면 (b)에서 읽어온다.
 		if(isSameRow) {
 			TMobTable *tempTable = it_map_mobTable->second;
 
@@ -370,13 +317,12 @@ bool CClientManager::InitializeMobTable()
 
 			if (!Set_Proto_Mob_Table(mob_table, data, localMap))
 			{
-				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "Mob proto table setting failed.\n");			
 			}
 
 						
 		}
 
-		//셋에 vnum 추가
 		vnumSet.insert(mob_table->dwVnum);
 		
 
@@ -384,25 +330,19 @@ bool CClientManager::InitializeMobTable()
 		++mob_table;
 
 	}
-	//_____________________________________________________//
 
-
-	//	4) (b)[test_map_mobTableByVnum]의 row중, (!)[mob_table]에 없는 것을 추가한다.
-	//파일 다시 읽어오기.
 	test_data.Destroy();
 	isTestFile = true;
-	test_data;
 	if(!test_data.Load("mob_proto_test.txt",'\t'))
 	{
-		fprintf(stderr, "테스트 파일이 없습니다. 그대로 진행합니다.\n");
+		fprintf(stderr, "Test file is missing. Proceeding as is.\n");
 		isTestFile = false;
 	}
 	if(isTestFile) {
-		test_data.Next();	//설명 로우 넘어가기.
+		test_data.Next();
 
-		while (test_data.Next())	//테스트 데이터 각각을 훑어나가며,새로운 것을 추가한다.
+		while (test_data.Next())
 		{
-			//중복되는 부분이면 넘어간다.
 			set<int>::iterator itVnum;
 			itVnum=vnumSet.find(atoi(test_data.AsStringByIndex(0)));
 			if (itVnum != vnumSet.end()) {
@@ -411,7 +351,7 @@ bool CClientManager::InitializeMobTable()
 
 			if (!Set_Proto_Mob_Table(mob_table, test_data, localMap))
 			{
-				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "Mob proto table setting failed.\n");			
 			}
 
 			sys_log(0, "MOB #%-5d %-24s %-24s level: %-3u rank: %u empire: %d", mob_table->dwVnum, mob_table->szName, mob_table->szLocaleName, mob_table->bLevel, mob_table->bRank, mob_table->bEmpire);
@@ -439,8 +379,6 @@ bool CClientManager::InitializeShopTable()
 
 	std::unique_ptr<SQLMsg> pkMsg2(CDBManager::instance().DirectQuery(s_szQuery));
 
-	// shop의 vnum은 있는데 shop_item 이 없을경우... 실패로 처리되니 주의 요망.
-	// 고처야할부분
 	SQLResult * pRes2 = pkMsg2->Get();
 
 	if (!pRes2->uiNumRows)
@@ -479,7 +417,7 @@ bool CClientManager::InitializeShopTable()
 
 		str_to_number(shop_table->dwNPCVnum, data[col++]);
 
-		if (!data[col])	// 아이템이 하나도 없으면 NULL이 리턴 되므로..
+		if (!data[col])
 			continue;
 
 		TShopItemTable * pItem = &shop_table->items[shop_table->byItemCount];
@@ -563,39 +501,12 @@ bool CClientManager::InitializeQuestItemTable()
 
 bool CClientManager::InitializeItemTable()
 {
-	//================== 함수 설명 ==================//
-	//1. 요약 : 'item_proto.txt', 'item_proto_test.txt', 'item_names.txt' 파일을 읽고,
-	//		<item_table>(TItemTable), <m_map_itemTableByVnum> 오브젝트를 생성한다.
-	//2. 순서
-	//	1) 'item_names.txt' 파일을 읽어서 (a)[localMap](vnum:name) 맵을 만든다.
-	//	2) 'item_proto_text.txt'파일과 (a)[localMap] 맵으로
-	//		(b)[test_map_itemTableByVnum](vnum:TItemTable) 맵을 생성한다.
-	//	3) 'item_proto.txt' 파일과  (a)[localMap] 맵으로
-	//		(!)[item_table], <m_map_itemTableByVnum>을 만든다.
-	//			<참고>
-	//			각 row 들 중, 
-	//			(b)[test_map_itemTableByVnum],(!)[mob_table] 모두에 있는 row는
-	//			(b)[test_map_itemTableByVnum]의 것을 사용한다.
-	//	4) (b)[test_map_itemTableByVnum]의 row중, (!)[item_table]에 없는 것을 추가한다.
-	//3. 테스트
-	//	1)'item_proto.txt' 정보가 item_table에 잘 들어갔는지. -> 완료
-	//	2)'item_names.txt' 정보가 item_table에 잘 들어갔는지.
-	//	3)'item_proto_test.txt' 에서 [겹치는] 정보가 item_table 에 잘 들어갔는지.
-	//	4)'item_proto_test.txt' 에서 [새로운] 정보가 item_table 에 잘 들어갔는지.
-	//	5) (최종) 게임 클라이언트에서 제대로 작동 하는지.
-	//_______________________________________________//
-
-
-
-	//=================================================================================//
-	//	1) 'item_names.txt' 파일을 읽어서 (a)[localMap](vnum:name) 맵을 만든다.
-	//=================================================================================//
 	bool isNameFile = true;
 	map<int,const char*> localMap;
 	cCsvTable nameData;
 	if(!nameData.Load("item_names.txt",'\t'))
 	{
-		fprintf(stderr, "item_names.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "item_names.txt read failed\n");
 		isNameFile = false;
 	} else {
 		nameData.Next();
@@ -603,35 +514,27 @@ bool CClientManager::InitializeItemTable()
 			localMap[atoi(nameData.AsStringByIndex(0))] = nameData.AsStringByIndex(1);
 		}
 	}
-	//_________________________________________________________________//
-
-	//=================================================================//
-	//	2) 'item_proto_text.txt'파일과 (a)[localMap] 맵으로
-	//		(b)[test_map_itemTableByVnum](vnum:TItemTable) 맵을 생성한다.
-	//=================================================================//
+	
 	map<DWORD, TItemTable *> test_map_itemTableByVnum;
-	//1. 파일 읽어오기.
 	cCsvTable test_data;
 	if(!test_data.Load("item_proto_test.txt",'\t'))
 	{
-		fprintf(stderr, "item_proto_test.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "item_proto_test.txt read failed\n");
 		//return false;
 	} else {
-		test_data.Next();	//설명 로우 넘어가기.
+		test_data.Next();
 
-		//2. 테스트 아이템 테이블 생성.
 		TItemTable * test_item_table = NULL;
 		int test_itemTableSize = test_data.m_File.GetRowCount()-1;
 		test_item_table = new TItemTable[test_itemTableSize];
 		memset(test_item_table, 0, sizeof(TItemTable) * test_itemTableSize);
 
-		//3. 테스트 아이템 테이블에 값을 넣고, 맵에까지 넣기.
 		while(test_data.Next()) {
 
 
 			if (!Set_Proto_Item_Table(test_item_table, test_data, localMap))
 			{
-				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "Item proto table setting failed.\n");			
 			}
 
 			test_map_itemTableByVnum.insert(std::map<DWORD, TItemTable *>::value_type(test_item_table->dwVnum, test_item_table));
@@ -639,29 +542,16 @@ bool CClientManager::InitializeItemTable()
 
 		}
 	}
-	//______________________________________________________________________//
-
-
-	//========================================================================//
-	//	3) 'item_proto.txt' 파일과  (a)[localMap] 맵으로
-	//		(!)[item_table], <m_map_itemTableByVnum>을 만든다.
-	//			<참고>
-	//			각 row 들 중, 
-	//			(b)[test_map_itemTableByVnum],(!)[mob_table] 모두에 있는 row는
-	//			(b)[test_map_itemTableByVnum]의 것을 사용한다.
-	//========================================================================//
-
-	//vnum들을 저장할 셋. 새로운 테스트 아이템을 판별할때 사용된다.
+	
 	set<int> vnumSet;
 
-	//파일 읽어오기.
 	cCsvTable data;
 	if(!data.Load("item_proto.txt",'\t'))
 	{
-		fprintf(stderr, "item_proto.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "item_proto.txt read  failed\n");
 		return false;
 	}
-	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)
+	data.Next();
 
 	if (!m_vec_itemTable.empty())
 	{
@@ -670,8 +560,6 @@ bool CClientManager::InitializeItemTable()
 		m_map_itemTableByVnum.clear();
 	}
 
-	//===== 아이템 테이블 생성 =====//
-	//새로 추가되는 갯수를 파악한다.
 	int addNumber = 0;
 	while(data.Next()) {
 		int vnum = atoi(data.AsStringByIndex(0));
@@ -681,14 +569,13 @@ bool CClientManager::InitializeItemTable()
 			addNumber++;
 		}
 	}
-	//data를 다시 첫줄로 옮긴다.(다시 읽어온다;;)
 	data.Destroy();
 	if(!data.Load("item_proto.txt",'\t'))
 	{
-		fprintf(stderr, "item_proto.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "item_proto.txt read failed\n");
 		return false;
 	}
-	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)
+	data.Next(); 
 
 	m_vec_itemTable.resize(data.m_File.GetRowCount() - 1 + addNumber);
 	memset(&m_vec_itemTable[0], 0, sizeof(TItemTable) * m_vec_itemTable.size());
@@ -703,16 +590,15 @@ bool CClientManager::InitializeItemTable()
 		std::map<DWORD, TItemTable *>::iterator it_map_itemTable;
 		it_map_itemTable = test_map_itemTableByVnum.find(atoi(data.AsStringByIndex(col)));
 		if(it_map_itemTable == test_map_itemTableByVnum.end()) {
-			//각 칼럼 데이터 저장
 			
 			if (!Set_Proto_Item_Table(item_table, data, localMap))
 			{
-				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "Item proto table setting failed.\n");			
 			}
 
 
 			
-		} else {	//$$$$$$$$$$$$$$$$$$$$$$$ 테스트 아이템 정보가 있다!	
+		} else {
 			TItemTable *tempTable = it_map_itemTable->second;
 
 			item_table->dwVnum = tempTable->dwVnum;
@@ -766,22 +652,17 @@ bool CClientManager::InitializeItemTable()
 		m_map_itemTableByVnum.insert(std::map<DWORD, TItemTable *>::value_type(item_table->dwVnum, item_table));
 		++item_table;
 	}
-	//_______________________________________________________________________//
-
-	//========================================================================//
-	//	4) (b)[test_map_itemTableByVnum]의 row중, (!)[item_table]에 없는 것을 추가한다.
-	//========================================================================//
+	
 	test_data.Destroy();
 	if(!test_data.Load("item_proto_test.txt",'\t'))
 	{
-		fprintf(stderr, "item_proto_test.txt 파일을 읽어오지 못했습니다\n");
+		fprintf(stderr, "item_proto_test.txt read failed\n");
 		//return false;
 	} else {
-		test_data.Next();	//설명 로우 넘어가기.
+		test_data.Next();
 
-		while (test_data.Next())	//테스트 데이터 각각을 훑어나가며,새로운 것을 추가한다.
+		while (test_data.Next())
 		{
-			//중복되는 부분이면 넘어간다.
 			set<int>::iterator itVnum;
 			itVnum=vnumSet.find(atoi(test_data.AsStringByIndex(0)));
 			if (itVnum != vnumSet.end()) {
@@ -790,7 +671,7 @@ bool CClientManager::InitializeItemTable()
 			
 			if (!Set_Proto_Item_Table(item_table, test_data, localMap))
 			{
-				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "Item proto table setting failed.\n");			
 			}
 
 
@@ -1302,7 +1183,7 @@ bool CClientManager::InitializeObjectTable()
 	if (pRes->uiNumRows > 0)
 		while ((data = mysql_fetch_row(pRes->pSQLResult)))
 		{
-			TObject * k = new TObject;
+				TObject * k = new TObject;
 
 			memset(k, 0, sizeof(TObject));
 
@@ -1464,8 +1345,8 @@ bool CClientManager::MirrorItemTableIntoDB()
 				"%d, %d, %d, \"%s\", \"%s\", %d, %d, %d, %d, "
 				"%d, %d, %d, %d, "
 				"%d, %d, %d, %d, %d, "
-				"%d, %d, %d, %d, "
-				"%d, %d, %d, %d, %d, %d, "
+				"%d, %ld, %d, %ld, "
+				"%d, %ld, %d, %ld, %d, %ld, "
 				"%d, %d, %d, %d, %d, %d )",
 				GetTablePostfix(), g_stLocaleNameColumn.c_str(), 
 				t.dwVnum, t.bType, t.bSubType, t.szName, t.szLocaleName, t.dwGold, t.dwShopBuyPrice, t.bWeight, t.bSize,
@@ -1492,8 +1373,8 @@ bool CClientManager::MirrorItemTableIntoDB()
 				"%d, %d, %d, \"%s\", %d, %d, %d, %d, "
 				"%d, %d, %d, %d, "
 				"%d, %d, %d, %d, %d, "
-				"%d, %d, %d, %d, "
-				"%d, %d, %d, %d, %d, %d, "
+				"%d, %ld, %d, %ld, "
+				"%d, %ld, %d, %ld, %d, %ld, "
 				"%d, %d, %d, %d, %d, %d )",
 				GetTablePostfix(), 
 				t.dwVnum, t.bType, t.bSubType, t.szName, t.dwGold, t.dwShopBuyPrice, t.bWeight, t.bSize,
