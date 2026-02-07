@@ -4,6 +4,8 @@
     #include <sys/types.h>
     #include "/usr/include/signal.h"
     #include <unistd.h>
+#else
+    typedef int pid_t;
 #endif
 
 #include <cstdio>
@@ -66,9 +68,10 @@ void TELL_CHILD(pid_t pid) {
     kill(pid, SIGUSR1);
 #endif
 }
-
-void WAIT_CHILD(void) {
 #ifndef __WIN32__
+void WAIT_CHILD()
+{
+
     while (sigflag == 0)
         sigsuspend(&zeromask);
     sigflag = 0;
@@ -76,7 +79,6 @@ void WAIT_CHILD(void) {
         fprintf(stderr, "SIG_SETMASK error\n");
         exit(1);
     }
-#endif
 }
-
+#endif
 } // extern "C"

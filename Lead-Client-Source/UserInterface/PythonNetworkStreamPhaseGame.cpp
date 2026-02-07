@@ -687,7 +687,7 @@ void CPythonNetworkStream::__InitializeGamePhase()
 	m_pInstTarget = NULL;
 }
 
-void CPythonNetworkStream::Warp(LONG lGlobalX, LONG lGlobalY)
+void CPythonNetworkStream::Warp(int32_t lGlobalX, int32_t lGlobalY)
 {
 	CPythonBackground& rkBgMgr=CPythonBackground::Instance();
 	rkBgMgr.Destroy();
@@ -699,8 +699,8 @@ void CPythonNetworkStream::Warp(LONG lGlobalX, LONG lGlobalY)
 	// NOTE : Warp 했을때 CenterPosition의 Height가 0이기 때문에 카메라가 땅바닥에 박혀있게 됨
 	//        움직일때마다 Height가 갱신 되기 때문이므로 맵을 이동하면 Position을 강제로 한번
 	//        셋팅해준다 - [levites]
-	LONG lLocalX = lGlobalX;
-	LONG lLocalY = lGlobalY;
+	int32_t lLocalX = lGlobalX;
+	int32_t lLocalY = lGlobalY;
 	__GlobalPositionToLocalPosition(lLocalX, lLocalY);
 	float fHeight = CPythonBackground::Instance().GetHeight(float(lLocalX), float(lLocalY));
 
@@ -971,8 +971,8 @@ bool CPythonNetworkStream::SendCharacterStatePacket(const TPixelPosition& c_rkPP
 	kStatePacket.bFunc = eFunc;
 	kStatePacket.bArg = uArg;
 	kStatePacket.bRot = fDstRot/5.0f;
-	kStatePacket.lX = long(c_rkPPosDst.x);
-	kStatePacket.lY = long(c_rkPPosDst.y);
+	kStatePacket.lX = int32_t(c_rkPPosDst.x);
+	kStatePacket.lY = int32_t(c_rkPPosDst.y);
 	kStatePacket.dwTime = ELTimer_GetServerMSec();
 	
 	assert(kStatePacket.lX >= 0 && kStatePacket.lX < 204800);

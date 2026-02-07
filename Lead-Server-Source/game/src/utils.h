@@ -48,7 +48,7 @@ inline WORD MAKEWORD(BYTE a, BYTE b)
 #endif
 
 extern void set_global_time(time_t t);
-extern uint32_t get_global_time();
+extern time_t get_global_time();
 
 extern int	dice(int number, int size);
 extern size_t str_lower(const char * src, char * dest, size_t dest_size);

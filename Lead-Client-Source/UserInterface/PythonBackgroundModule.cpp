@@ -449,8 +449,8 @@ PyObject * backgroundGlobalPositionToLocalPosition(PyObject * poSelf, PyObject *
 	if (!PyTuple_GetInteger(poArgs, 1, &iY))
 		return Py_BadArgument();
 
-	LONG lX=iX;
-	LONG lY=iY;	
+	int32_t lX=iX;
+	int32_t lY=iY;
 	CPythonBackground& rkBG=CPythonBackground::Instance();
 	rkBG.GlobalPositionToLocalPosition(lX, lY);
 
