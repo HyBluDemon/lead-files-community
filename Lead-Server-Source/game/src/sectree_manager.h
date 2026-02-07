@@ -134,13 +134,13 @@ class SECTREE_MANAGER : public singleton<SECTREE_MANAGER>
 		LPSECTREE_MAP BuildSectreeFromSetting(TMapSetting & r_setting);
 		bool		LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_pszFileName, TMapSetting & r_setting);
 		void		LoadDungeon(int iIndex, const char * c_pszFileName);
-		bool		GetValidLocation(long lMapIndex, long x, long y, long & r_lValidMapIndex, PIXEL_POSITION & r_pos, BYTE empire = 0);
+		bool		GetValidLocation(int32_t lMapIndex, int32_t x, int32_t y, int32_t & r_lValidMapIndex, PIXEL_POSITION & r_pos, BYTE empire = 0);
 		bool		GetSpawnPosition(long x, long y, PIXEL_POSITION & r_pos);
 		bool		GetSpawnPositionByMapIndex(long lMapIndex, PIXEL_POSITION & r_pos);
 		bool		GetRecallPositionByEmpire(int iMapIndex, BYTE bEmpire, PIXEL_POSITION & r_pos);
 
 		const TMapRegion *	GetMapRegion(long lMapIndex);
-		int			GetMapIndex(long x, long y);
+		int			GetMapIndex(int32_t x, int32_t y);
 		const TMapRegion *	FindRegionByPartialName(const char* szMapName);
 
 		bool		GetMapBasePosition(long x, long y, PIXEL_POSITION & r_pos);

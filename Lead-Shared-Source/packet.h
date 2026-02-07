@@ -473,7 +473,7 @@ typedef struct command_handshake
 	BYTE	bHeader;
 	DWORD	dwHandshake;
 	DWORD	dwTime;
-	long	lDelta;
+	int32_t	lDelta;
 } TPacketCGHandshake;
 
 typedef struct command_login
@@ -573,16 +573,16 @@ typedef struct command_move
 	BYTE	bFunc;
 	BYTE	bArg;
 	BYTE	bRot;
-	long	lX;
-	long	lY;
+	int32_t	lX;
+	int32_t	lY;
 	DWORD	dwTime;
 } TPacketCGMove;
 
 typedef struct command_sync_position_element
 {
 	DWORD	dwVID;
-	long	lX;
-	long	lY;
+	int32_t	lX;
+	int32_t	lY;
 } TPacketCGSyncPositionElement;
 
 // 위치 동기화
@@ -857,9 +857,7 @@ typedef struct packet_add_char
 	DWORD	dwVID;
 
 	float	angle;
-	long	x;
-	long	y;
-	long	z;
+	int32_t	x, y, z;
 
 	BYTE	bType;
 	WORD	wRaceNum;
@@ -1084,7 +1082,7 @@ typedef struct packet_item_update
 typedef struct packet_item_ground_add
 {
 	BYTE	bHeader;
-	long 	x, y, z;
+	int32_t 	x, y, z;
 	DWORD	dwVID;
 	DWORD	dwVnum;
 } TPacketGCItemGroundAdd;
@@ -1264,8 +1262,8 @@ typedef struct packet_move
 	BYTE		bArg;
 	BYTE		bRot;
 	DWORD		dwVID;
-	long		lX;
-	long		lY;
+	int32_t		lX;
+	int32_t		lY;
 	DWORD		dwTime;
 	DWORD		dwDuration;
 } TPacketGCMove;
@@ -1282,8 +1280,8 @@ typedef struct packet_ownership
 typedef struct packet_sync_position_element
 {
 	DWORD	dwVID;
-	long	lX;
-	long	lY;
+	int32_t	lX;
+	int32_t	lY;
 } TPacketGCSyncPositionElement;
 
 // 위치 동기화
@@ -1305,7 +1303,7 @@ typedef struct command_fly_targeting
 {
 	BYTE		bHeader;
 	DWORD		dwTargetVID;
-	long		x, y;
+	int32_t		x, y;
 } TPacketCGAddFlyTargeting;
 
 typedef struct packet_fly_targeting
@@ -1313,7 +1311,7 @@ typedef struct packet_fly_targeting
 	BYTE		bHeader;
 	DWORD		dwShooterVID;
 	DWORD		dwTargetVID;
-	long		x, y;
+	int32_t		x, y;
 } TPacketGCAddFlyTargeting;
 
 typedef struct packet_shoot
@@ -1912,7 +1910,7 @@ typedef struct SPacketCGMyShop
 typedef struct SPacketGCTime
 {
 	BYTE	bHeader;
-	time_t	time;
+	uint32_t	time;
 } TPacketGCTime;
 
 enum

@@ -6,15 +6,15 @@ class CMapLocation : public singleton<CMapLocation>
 	public:
 		typedef struct SLocation
 		{
-			long        addr;
+			int32_t        addr;
 			WORD        port;
 		} TLocation;    
 
-		bool    Get(long x, long y, long & lMapIndex, long & lAddr, WORD & wPort);
-		bool	Get(int iIndex, long & lAddr, WORD & wPort);
-		void    Insert(long lIndex, const char * c_pszHost, WORD wPort);
+		bool    Get(int32_t x, int32_t y, int32_t & lMapIndex, int32_t & lAddr, WORD & wPort);
+		bool	Get(int iIndex, int32_t & lAddr, WORD & wPort);
+		void    Insert(int32_t lIndex, const char * c_pszHost, WORD wPort);
 
 	protected:
-		std::map<long, TLocation> m_map_address;
+		std::map<int32_t, TLocation> m_map_address;
 };      
 

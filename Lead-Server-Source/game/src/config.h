@@ -30,11 +30,11 @@ extern bool	g_bNoRegen;
 extern BYTE	g_bChannel;
 
 extern bool	map_allow_find(int index);
-extern void	map_allow_copy(long * pl, int size);
+extern void	map_allow_copy(int32_t * pl, int size);
 extern bool	no_wander;
 
 extern int	g_iUserLimit;
-extern time_t	g_global_time;
+extern uint32_t	g_global_time;
 
 const char *	get_table_postfix();
 

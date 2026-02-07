@@ -141,7 +141,6 @@
     <ClCompile Include="trigger.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="vector.cpp" />
-    <ClCompile Include="version.cpp" />
     <ClCompile Include="war_map.cpp" />
     <ClCompile Include="wedding.cpp" />
     <ClCompile Include="xmas_event.cpp" />

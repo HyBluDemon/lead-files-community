@@ -1,4 +1,4 @@
-// vim:ts=8 sw=4
+	// vim:ts=8 sw=4
 #ifndef __INC_CLIENTMANAGER_H__
 #define __INC_CLIENTMANAGER_H__
 
@@ -12,88 +12,88 @@
 #include "DBManager.h"
 #include "LoginData.h"
 
-class CPlayerTableCache;
-class CItemCache;
-class CItemPriceListTableCache;
+	class CPlayerTableCache;
+	class CItemCache;
+	class CItemPriceListTableCache;
 
-class CPacketInfo
-{
-    public:
-	void Add(int header);
-	void Reset();
-
-	std::map<int, int> m_map_info;
-};
-
-size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * pkTab);
-
-class CClientManager : public CNetBase, public singleton<CClientManager>
-{
-    public:
-	typedef std::list<CPeer *>			TPeerList;
-	typedef boost::unordered_map<DWORD, CPlayerTableCache *> TPlayerTableCacheMap;
-	typedef boost::unordered_map<DWORD, CItemCache *> TItemCacheMap;
-	typedef boost::unordered_set<CItemCache *, boost::hash<CItemCache*> > TItemCacheSet;
-	typedef boost::unordered_map<DWORD, TItemCacheSet *> TItemCacheSetPtrMap;
-	typedef boost::unordered_map<DWORD, CItemPriceListTableCache*> TItemPriceListCacheMap;
-	typedef boost::unordered_map<short, BYTE> TChannelStatusMap;
-
-	// MYSHOP_PRICE_LIST
-	/// 아이템 가격정보 리스트 요청 정보
-	/**
-	 * first: Peer handle
-	 * second: 요청한 플레이어의 ID
-	 */
-	typedef std::pair< DWORD, DWORD >		TItemPricelistReqInfo;
-	// END_OF_MYSHOP_PRICE_LIST
-
-	class ClientHandleInfo
+	class CPacketInfo
 	{
 	    public:
-		DWORD	dwHandle;
-		DWORD	account_id;
-		DWORD	player_id;
-		BYTE	account_index;
-		char	login[LOGIN_MAX_LEN + 1];
-		char	safebox_password[SAFEBOX_PASSWORD_MAX_LEN + 1];
-		char	ip[MAX_HOST_LENGTH + 1];
+		void Add(int header);
+		void Reset();
 
-		TAccountTable * pAccountTable;
-		TSafeboxTable * pSafebox;
-
-		ClientHandleInfo(DWORD argHandle, DWORD dwPID = 0)
-		{
-		    dwHandle = argHandle;
-		    pSafebox = NULL;
-		    pAccountTable = NULL;
-		    player_id = dwPID;
-		};
-		//독일선물기능용 생성자
-		ClientHandleInfo(DWORD argHandle, DWORD dwPID, DWORD accountId)
-		{
-		    dwHandle = argHandle;
-		    pSafebox = NULL;
-		    pAccountTable = NULL;
-		    player_id = dwPID;
-			account_id = accountId;
-		};
-
-		~ClientHandleInfo()
-		{
-		    if (pSafebox)
-			{
-				delete pSafebox;
-				pSafebox = NULL;
-			}
-		}
+		std::map<int, int> m_map_info;
 	};
 
-	public:
-	CClientManager();
-	~CClientManager();
+	size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * pkTab);
 
-	bool	Initialize();
-	time_t	GetCurrentTime();
+	class CClientManager : public CNetBase, public singleton<CClientManager>
+	{
+	    public:
+		typedef std::list<CPeer *>			TPeerList;
+		typedef boost::unordered_map<DWORD, CPlayerTableCache *> TPlayerTableCacheMap;
+		typedef boost::unordered_map<DWORD, CItemCache *> TItemCacheMap;
+		typedef boost::unordered_set<CItemCache *, boost::hash<CItemCache*> > TItemCacheSet;
+		typedef boost::unordered_map<DWORD, TItemCacheSet *> TItemCacheSetPtrMap;
+		typedef boost::unordered_map<DWORD, CItemPriceListTableCache*> TItemPriceListCacheMap;
+		typedef boost::unordered_map<short, BYTE> TChannelStatusMap;
+
+		// MYSHOP_PRICE_LIST
+		/// 아이템 가격정보 리스트 요청 정보
+		/**
+		 * first: Peer handle
+		 * second: 요청한 플레이어의 ID
+		 */
+		typedef std::pair< DWORD, DWORD >		TItemPricelistReqInfo;
+		// END_OF_MYSHOP_PRICE_LIST
+
+		class ClientHandleInfo
+		{
+		    public:
+			DWORD	dwHandle;
+			DWORD	account_id;
+			DWORD	player_id;
+			BYTE	account_index;
+			char	login[LOGIN_MAX_LEN + 1];
+			char	safebox_password[SAFEBOX_PASSWORD_MAX_LEN + 1];
+			char	ip[MAX_HOST_LENGTH + 1];
+
+			TAccountTable * pAccountTable;
+			TSafeboxTable * pSafebox;
+
+			ClientHandleInfo(DWORD argHandle, DWORD dwPID = 0)
+			{
+			    dwHandle = argHandle;
+			    pSafebox = NULL;
+			    pAccountTable = NULL;
+			    player_id = dwPID;
+			};
+			//독일선물기능용 생성자
+			ClientHandleInfo(DWORD argHandle, DWORD dwPID, DWORD accountId)
+			{
+			    dwHandle = argHandle;
+			    pSafebox = NULL;
+			    pAccountTable = NULL;
+			    player_id = dwPID;
+				account_id = accountId;
+			};
+
+			~ClientHandleInfo()
+			{
+			    if (pSafebox)
+				{
+					delete pSafebox;
+					pSafebox = NULL;
+				}
+			}
+		};
+
+		public:
+		CClientManager();
+		~CClientManager();
+
+		bool	Initialize();
+	uint32_t	GetCurrentTime();
 
 	void	MainLoop();
 	void	Quit();
@@ -222,7 +222,7 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	void		GuildWarBet(TPacketGDGuildWarBet * p);
 	void		GuildChangeMaster(TPacketChangeGuildMaster* p);
 
-	void		SetGuildWarEndTime(DWORD guild_id1, DWORD guild_id2, time_t tEndTime);
+	void		SetGuildWarEndTime(DWORD guild_id1, DWORD guild_id2, uint32_t tEndTime);
 
 	void		QUERY_BOOT(CPeer * peer, TPacketGDBoot * p);
 
@@ -477,7 +477,7 @@ class CClientManager : public CNetBase, public singleton<CClientManager>
 	struct TLogoutPlayer
 	{
 	    DWORD	pid;
-	    time_t	time;
+	    uint32_t	time;
 
 	    bool operator < (const TLogoutPlayer & r) 
 	    {

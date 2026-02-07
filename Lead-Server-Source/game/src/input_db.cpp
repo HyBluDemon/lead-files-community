@@ -59,7 +59,7 @@ bool GetServerLocation(TAccountTable & rTab, BYTE bEmpire)
 			continue;
 
 		bFound = true;
-		long lIndex = 0;
+		int32_t lIndex = 0;
 
 		if (!CMapLocation::instance().Get(rTab.players[i].x,
 					rTab.players[i].y,
@@ -184,7 +184,7 @@ void CInputDB::PlayerCreateSuccess(LPDESC d, const char * data)
 		return;
 	}
 
-	long lIndex = 0;
+	int32_t lIndex = 0;
 
 	if (!CMapLocation::instance().Get(pPacketDB->player.x,
 				pPacketDB->player.y,
@@ -277,7 +277,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 	if (!d)
 		return;
 
-	long lMapIndex = pTab->lMapIndex;
+	int32_t lMapIndex = pTab->lMapIndex;
 	PIXEL_POSITION pos;
 
 	if (lMapIndex == 0)
@@ -350,7 +350,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 		P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGLogin));
 
 		char buf[51];
-		snprintf(buf, sizeof(buf), "%s %d %d %ld %d", 
+		snprintf(buf, sizeof(buf), "%s %d %d %d %d", 
 				inet_ntoa(ch->GetDesc()->GetAddr().sin_addr), ch->GetGold(), g_bChannel, ch->GetMapIndex(), ch->GetAlignment());
 		LogManager::instance().CharLog(ch, 0, "LOGIN", buf);
 	}
@@ -358,7 +358,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 	d->SetPhase(PHASE_LOADING);
 	ch->MainCharacterPacket();
 
-	long lPublicMapIndex = lMapIndex >= 10000 ? lMapIndex / 10000 : lMapIndex;
+	int32_t lPublicMapIndex = lMapIndex >= 10000 ? lMapIndex / 10000 : lMapIndex;
 
 	//Send Supplementary Data Block if new map requires security packages in loading this map
 	const TMapRegion * rMapRgn = SECTREE_MANAGER::instance().GetMapRegion(lPublicMapIndex);

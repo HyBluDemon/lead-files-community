@@ -82,9 +82,9 @@ size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * p
 			"y = %d, "
 			"z = %d, "
 			"map_index = %d, "
-			"exit_x = %ld, "
-			"exit_y = %ld, "
-			"exit_map_index = %ld, "
+			"exit_x = %d, "
+			"exit_y = %d, "
+			"exit_map_index = %d, "
 			"hp = %d, "
 			"mp = %d, "
 			"stamina = %d, "
@@ -108,7 +108,7 @@ size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * p
 			"part_hair = %d, "
 			"last_play = NOW(), "
 			"skill_group = %d, "
-			"alignment = %ld, "
+			"alignment = %d, "
 			"horse_level = %d, "
 			"horse_riding = %d, "
 			"horse_hp = %d, "
@@ -424,7 +424,7 @@ void CClientManager::ItemAward(CPeer * peer,char* login)
 }
 char* CClientManager::GetCommand(char* str)
 {
-	char command[20] = "";
+	static char command[20] = "";
 	char* tok;
 
 	if( str[0] == '[' )
@@ -560,17 +560,18 @@ void CClientManager::RESULT_COMPOSITE_PLAYER(CPeer * peer, SQLMsg * pMsg, DWORD 
 			{
 				sys_log(0, "QID_QUEST %u", info->dwHandle);
 				RESULT_QUEST_LOAD(peer, pSQLResult, info->dwHandle, info->player_id);
-				//aid얻기
+				
 				ClientHandleInfo*  temp1 = info.get();
 				if (temp1 == NULL)
 					break;
 				
-				CLoginData* pLoginData1 = GetLoginDataByAID(temp1->account_id);	//				
-				//독일 선물 기능
-				if( pLoginData1->GetAccountRef().login == NULL)
-					break;
+				CLoginData* pLoginData1 = GetLoginDataByAID(temp1->account_id);		
 				if( pLoginData1 == NULL )
 					break;
+			
+				if( pLoginData1->GetAccountRef().login[0] == '\0')
+					break;
+
 				sys_log(0,"info of pLoginData1 before call ItemAwardfunction %d",pLoginData1);
 				ItemAward(peer,pLoginData1->GetAccountRef().login);
 			}
@@ -750,7 +751,7 @@ void CClientManager::QUERY_PLAYER_SAVE(CPeer * peer, DWORD dwHandle, TPlayerTabl
 	PutPlayerCache(pkTab);
 }
 
-typedef std::map<DWORD, time_t> time_by_id_map_t;
+typedef std::map<DWORD, uint32_t> time_by_id_map_t;
 static time_by_id_map_t s_createTimeByAccountID;
 
 /*
@@ -767,7 +768,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 
 	if (it != s_createTimeByAccountID.end())
 	{
-		time_t curtime = time(0);
+		uint32_t curtime = time(0);
 
 		if (curtime - it->second < 30)
 		{
@@ -1172,7 +1173,7 @@ extern int g_iLogoutSeconds;
 
 void CClientManager::UpdateLogoutPlayer()
 {
-	time_t now = time(0);
+	uint32_t now = time(0);
 
 	TLogoutPlayerMap::iterator it = m_map_logout.begin();
 

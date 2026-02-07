@@ -173,7 +173,7 @@ class DESC
 
 		std::string		m_stHost;
 		WORD			m_wPort;
-		time_t			m_LastTryToConnectTime;
+		uint32_t		m_LastTryToConnectTime;
 
 		LPBUFFER		m_lpInputBuffer;
 		int				m_iMinInputBufferLen;

@@ -1,43 +1,22 @@
-#CXX	= distcc i386-obrien-freebsd5-g++
-CXX	= g++
+CXX = clang++
+BIN = ./libsql.a
 
-PLATFORM = $(shell file /bin/ls | cut -d' ' -f3 | cut -d'-' -f1)
+EXTERN_DIR = ../../Lead-Extern
+INCDIR = -I$(EXTERN_DIR)/include -I../libthecore/include
+#CFLAGS = -m32 -Wall -O2 -pipe -D_THREAD_SAFE -fno-exceptions $(INCDIR)
+CFLAGS = -m32 -march=i686 -msse2 -g -O1 -pipe -frtti -fexceptions -pthread -D_THREAD_SAFE -fno-stack-protector -fno-strict-aliasing $(INCDIR)
 
-GCC_VERSION = $(shell $(CC) --version 2>&1 | grep "(GCC)" | cut -d' ' -f3  | cut -d'.' -f1)
-BSD_VERSION = $(shell uname -v 2>&1 | cut -d' ' -f2 | cut -d'.' -f1)
-SVN_VERSION = $(shell svnversion -n -c . | cut -d':' -f2)
+SRCS = $(wildcard *.cpp)
+OBJFILES = $(SRCS:.cpp=.o)
 
-BIN     = ./libsql.a
-
-ifeq ($(GCC_VERSION), 4)
-IFLAGS = -I../libmysql/7.x-5.1.35
-CFLAGS  = $(IFLAGS) -Wall -O2 -pipe -mtune=i686 -D_THREAD_SAFE -fno-exceptions 
-else
-IFLAGS = -I../libmysql/5.x-5.1.35
-CFLAGS  = $(IFLAGS) -Wall -O2 -pipe -mcpu=i686 -D_THREAD_SAFE -fno-exceptions 
-endif
-
-LIBS =
-
-OBJFILES = AsyncSQL.o Semaphore.o Tellwait.o Statement.o
-
-default:
-	$(MAKE) $(BIN)
+default: $(BIN)
 
 $(BIN): $(OBJFILES)
-	ar cru $(BIN) $(OBJFILES) $(LIBS)
+	ar cru $(BIN) $(OBJFILES)
 	ranlib $(BIN)
-	chmod 700 $(BIN)
 
 clean:
-	rm -f *.o
-	rm -f $(BIN)
+	rm -f *.o $(BIN)
 
-dep:
-	touch Depend
-	$(CXX) $(CFLAGS) -MM *.cpp > Depend
-
-$(OBJFILES):
-	$(CXX) $(CFLAGS) -c $<
-
-sinclude Depend
+%.o: %.cpp
+	$(CXX) $(CFLAGS) -c $< -o $@

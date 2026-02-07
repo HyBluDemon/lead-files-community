@@ -1,38 +1,22 @@
-CXX	= g++
+CXX = clang++
 BIN_DIR = ../lib
 BIN = $(BIN_DIR)/libgame.a
+SHARED_SRC = ../../../Lead-Shared-Source
 
-GCC_VERSION = $(shell $(CC) --version 2>&1 | grep "(GCC)" | cut -d' ' -f3  | cut -d'.' -f1)
+CFLAGS = -m32 -march=i686 -msse2 -g -O1 -pipe -frtti -fexceptions -pthread -D_THREAD_SAFE -fno-stack-protector -fno-strict-aliasing -I../include -I../../libthecore/include -I$(SHARED_SRC)
 
-ifeq ($(GCC_VERSION), 4)
-CFLAGS = -Wall -O2 -pipe -mtune=i686 -fno-exceptions -I../include
-else
-CFLAGS = -Wall -O2 -pipe -mcpu=i686 -fno-exceptions -I../include
-endif
+SRCS = $(wildcard *.cc)
+OBJFILES = $(SRCS:.cc=.o)
 
-LIBS =
-
-OBJFILES = grid.o attribute.o targa.o
-
-default:
-	$(MAKE) $(BIN)
+default: $(BIN)
 
 $(BIN): $(OBJFILES)
-	if [ ! -d $(BIN_DIR) ]; then mkdir $(BIN_DIR); fi
-	ar cru $(BIN) $(OBJFILES) $(LIBS)
+	mkdir -p $(BIN_DIR)
+	ar cru $(BIN) $(OBJFILES)
 	ranlib $(BIN)
-	chmod 700 $(BIN)
 
 clean:
-	rm -f *.o
-	rm -f $(BIN)
+	rm -f *.o $(BIN)
 
-dep:
-	touch Depend
-	$(CXX) $(CFLAGS) -MM *.cc > Depend
-
-$(OBJFILES):
-	$(CXX) $(CFLAGS) -c $<
-
-include Depend
-
+%.o: %.cc
+	$(CXX) $(CFLAGS) -x c++ -c $< -o $@

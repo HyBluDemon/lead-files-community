@@ -694,624 +694,623 @@ bool ITEM_MANAGER::GetDropPct(LPCHARACTER pkChr, LPCHARACTER pkKiller, OUT int& 
 	iRandRange = 4000000;
 	iRandRange = iRandRange * 100 / 
 		(100 + 
-		 CPrivManager::instance().GetPriv(pkKiller, PRIV_ITEM_DROP) + 
-		 pkKiller->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_ITEM)?100:0);
+		 (CPrivManager::instance().GetPriv(pkKiller, PRIV_ITEM_DROP) + 
+			 pkKiller->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_ITEM))?100:0);
 
-	return true;
-}
-
-bool ITEM_MANAGER::CreateDropItemVector(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<std::pair<int, int>>& vec_item)
-{
-	if (!pkChr || !pkKiller || pkChr->IsPolymorphed() || pkChr->IsPC())
-		return false;
-
-	vec_item.clear();
-
-	int iLevel = pkKiller->GetLevel();
-	BYTE bRank = pkChr->GetMobRank();
-
-	// Common Drop Items
-	if (bRank < MOB_RANK_MAX_NUM)
-	{
-		for (const auto& info : g_vec_pkCommonDropItem[bRank])
-		{
-			if (info.m_bJob > 0 && info.m_bJob != pkKiller->GetJob() + 1)
-				continue;
-
-			for (DWORD vnum = info.m_dwVnumStart; vnum <= info.m_dwVnumEnd; ++vnum)
-			{
-				vec_item.emplace_back(vnum, info.m_bCount);
-			}
-		}
+		return true;
 	}
 
-	// Drop Item Group
-	if (auto it = m_map_pkDropItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkDropItemGroup.end())
+	bool ITEM_MANAGER::CreateDropItemVector(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<std::pair<int, int>>& vec_item)
 	{
-		const auto& items = it->second->GetVector();
-		for (const auto& item : items)
-		{
-			for (DWORD vnum = item.dwVnumStart; vnum <= item.dwVnumEnd; ++vnum)
-			{
-				vec_item.emplace_back(vnum, item.iCount);
-			}
-		}
-	}
+		if (!pkChr || !pkKiller || pkChr->IsPolymorphed() || pkChr->IsPC())
+			return false;
 
-	// Mob Item Group
-	if (auto it = m_map_pkMobItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkMobItemGroup.end())
-	{
-		for (const auto* pGroup : it->second)
+		vec_item.clear();
+
+		int iLevel = pkKiller->GetLevel();
+		BYTE bRank = pkChr->GetMobRank();
+
+		// Common Drop Items
+		if (bRank < MOB_RANK_MAX_NUM)
 		{
-			if (pGroup && !pGroup->IsEmpty())
+			for (const auto& info : g_vec_pkCommonDropItem[bRank])
 			{
-				auto groupItems = pGroup->GetItemVector();
-				for (const auto& item : groupItems)
+				if (info.m_bJob > 0 && info.m_bJob != pkKiller->GetJob() + 1)
+					continue;
+
+				for (DWORD vnum = info.m_dwVnumStart; vnum <= info.m_dwVnumEnd; ++vnum)
 				{
-					for (DWORD vnum = item.dwItemVnumStart; vnum <= item.dwItemVnumEnd; ++vnum)
-						vec_item.emplace_back(vnum, item.iCount);
+					vec_item.emplace_back(vnum, info.m_bCount);
 				}
 			}
 		}
-	}
 
-	if (auto it = m_map_pkLevelItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkLevelItemGroup.end())
-	{
-		const auto& items = it->second->GetVector();
-		for (const auto& item : items)
+		// Drop Item Group
+		if (auto it = m_map_pkDropItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkDropItemGroup.end())
 		{
-			for (DWORD vnum = item.dwVNumStart; vnum <= item.dwVNumEnd; ++vnum)
+			const auto& items = it->second->GetVector();
+			for (const auto& item : items)
 			{
-				vec_item.emplace_back(vnum, item.iCount);
-			}
-		}
-	}
-
-	if (pkChr->GetMobDropItemVnum())
-	{
-		if (m_map_dwEtcItemDropProb.contains(pkChr->GetMobDropItemVnum()))
-			vec_item.emplace_back(pkChr->GetMobDropItemVnum(), 1);
-	}
-
-	if (pkChr->IsStone() && pkChr->GetDropMetinStoneVnum())
-	{
-		vec_item.emplace_back(pkChr->GetDropMetinStoneVnum(), 1);
-	}
- 
-	std::sort(vec_item.begin(), vec_item.end());
-	vec_item.erase(std::unique(vec_item.begin(), vec_item.end()), vec_item.end());
-	std::stable_sort(vec_item.begin(), vec_item.end(), [](const std::pair<int, int>& f, const std::pair<int, int>& s) {
-		return ITEM_MANAGER::instance().IsItemMetin(f.first) > ITEM_MANAGER::instance().IsItemMetin(s.first);
-		});
-
-	return !vec_item.empty();
-}
-
-bool ITEM_MANAGER::CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<LPITEM>& vec_item)
-{
-	if (!pkChr || !pkKiller) return false;
-
-	int iLevel = pkKiller->GetLevel();
-	int iDeltaPercent = 100, iRandRange = 4000000;
-
-	if (!GetDropPct(pkChr, pkKiller, iDeltaPercent, iRandRange))
-		return false;
-
-	BYTE bRank = pkChr->GetMobRank();
-
-	// Common Drop Items
-	if (bRank < MOB_RANK_MAX_NUM)
-	{
-		for (const auto& info : g_vec_pkCommonDropItem[bRank])
-		{
-			if (iLevel < info.m_iLevelStart || iLevel > info.m_iLevelEnd) continue;
-			if (info.m_bJob > 0 && info.m_bJob != pkKiller->GetJob() + 1) continue;
-
-			int iPercent = (info.m_iPercent * iDeltaPercent) / 100;
-			if (iPercent >= number(1, iRandRange))
-			{
-				DWORD dwVnum = number(info.m_dwVnumStart, info.m_dwVnumEnd);
-				if (LPITEM item = CreateItem(dwVnum, info.m_bCount, 0, true))
+				for (DWORD vnum = item.dwVnumStart; vnum <= item.dwVnumEnd; ++vnum)
 				{
-					if (item->GetType() == ITEM_POLYMORPH && dwVnum == pkChr->GetPolymorphItemVnum())
-						item->SetSocket(0, pkChr->GetRaceNum());
-
-					vec_item.push_back(item);
+					vec_item.emplace_back(vnum, item.iCount);
 				}
 			}
 		}
-	}
 
-	// Drop Item Group
-	if (auto it = m_map_pkDropItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkDropItemGroup.end())
-	{
-		for (const auto& info : it->second->GetVector())
+		// Mob Item Group
+		if (auto it = m_map_pkMobItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkMobItemGroup.end())
 		{
-			int iPercent = (info.dwPct * iDeltaPercent) / 100;
-			if (iPercent >= number(1, iRandRange))
+			for (const auto* pGroup : it->second)
 			{
-				DWORD dwVnum = number(info.dwVnumStart, info.dwVnumEnd);
-				if (LPITEM item = CreateItem(dwVnum, info.iCount, 0, true))
+				if (pGroup && !pGroup->IsEmpty())
 				{
-					if (item->GetType() == ITEM_POLYMORPH && item->GetVnum() == pkChr->GetPolymorphItemVnum())
-						item->SetSocket(0, pkChr->GetRaceNum());
-
-					vec_item.push_back(item);
+					auto groupItems = pGroup->GetItemVector();
+					for (const auto& item : groupItems)
+					{
+						for (DWORD vnum = item.dwItemVnumStart; vnum <= item.dwItemVnumEnd; ++vnum)
+							vec_item.emplace_back(vnum, item.iCount);
+					}
 				}
 			}
 		}
+
+		if (auto it = m_map_pkLevelItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkLevelItemGroup.end())
+		{
+			const auto& items = it->second->GetVector();
+			for (const auto& item : items)
+			{
+				for (DWORD vnum = item.dwVNumStart; vnum <= item.dwVNumEnd; ++vnum)
+				{
+					vec_item.emplace_back(vnum, item.iCount);
+				}
+			}
+		}
+
+		if (pkChr->GetMobDropItemVnum())
+		{
+			if (m_map_dwEtcItemDropProb.find(pkChr->GetMobDropItemVnum()) != m_map_dwEtcItemDropProb.end())
+				vec_item.emplace_back(pkChr->GetMobDropItemVnum(), 1);
+		}
+
+		if (pkChr->IsStone() && pkChr->GetDropMetinStoneVnum())
+		{
+			vec_item.emplace_back(pkChr->GetDropMetinStoneVnum(), 1);
+		}
+	 
+		std::sort(vec_item.begin(), vec_item.end());
+		vec_item.erase(std::unique(vec_item.begin(), vec_item.end()), vec_item.end());
+		std::stable_sort(vec_item.begin(), vec_item.end(), [](const std::pair<int, int>& f, const std::pair<int, int>& s) {
+			return ITEM_MANAGER::instance().IsItemMetin(f.first) > ITEM_MANAGER::instance().IsItemMetin(s.first);
+			});
+
+		return !vec_item.empty();
 	}
 
-	// Mob Item Group
-	if (auto it = m_map_pkMobItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkMobItemGroup.end())
+	bool ITEM_MANAGER::CreateDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<LPITEM>& vec_item)
 	{
-		for (auto* pGroup : it->second)
+		if (!pkChr || !pkKiller) return false;
+
+		int iLevel = pkKiller->GetLevel();
+		int iDeltaPercent = 100, iRandRange = 4000000;
+
+		if (!GetDropPct(pkChr, pkKiller, iDeltaPercent, iRandRange))
+			return false;
+
+		BYTE bRank = pkChr->GetMobRank();
+
+		// Common Drop Items
+		if (bRank < MOB_RANK_MAX_NUM)
 		{
-			if (pGroup && !pGroup->IsEmpty())
+			for (const auto& info : g_vec_pkCommonDropItem[bRank])
 			{
-				int iPercent = 10000 * iDeltaPercent / pGroup->GetKillPerDrop();
+				if (iLevel < info.m_iLevelStart || iLevel > info.m_iLevelEnd) continue;
+				if (info.m_bJob > 0 && info.m_bJob != pkKiller->GetJob() + 1) continue;
+
+				int iPercent = (info.m_iPercent * iDeltaPercent) / 100;
 				if (iPercent >= number(1, iRandRange))
 				{
-					const auto& info = pGroup->GetOne();
-					DWORD dwVnum = number(info.dwItemVnumStart, info.dwItemVnumEnd);
-					if (LPITEM item = CreateItem(dwVnum, info.iCount, 0, true, info.iRarePct))
+					DWORD dwVnum = number(info.m_dwVnumStart, info.m_dwVnumEnd);
+					if (LPITEM item = CreateItem(dwVnum, info.m_bCount, 0, true))
+					{
+						if (item->GetType() == ITEM_POLYMORPH && dwVnum == pkChr->GetPolymorphItemVnum())
+							item->SetSocket(0, pkChr->GetRaceNum());
+
 						vec_item.push_back(item);
+					}
 				}
 			}
 		}
-	}
 
-	// Level Item Group
-	if (auto it = m_map_pkLevelItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkLevelItemGroup.end())
-	{
-		if (it->second->GetLevelLimitStart() <= (DWORD)iLevel && it->second->GetLevelLimitEnd() >= (DWORD)iLevel)
+		// Drop Item Group
+		if (auto it = m_map_pkDropItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkDropItemGroup.end())
 		{
 			for (const auto& info : it->second->GetVector())
 			{
-				if (info.dwPct >= (DWORD)number(1, 1000000))
+				int iPercent = (info.dwPct * iDeltaPercent) / 100;
+				if (iPercent >= number(1, iRandRange))
 				{
-					DWORD dwVnum = number(info.dwVNumStart, info.dwVNumEnd);
+					DWORD dwVnum = number(info.dwVnumStart, info.dwVnumEnd);
 					if (LPITEM item = CreateItem(dwVnum, info.iCount, 0, true))
+					{
+						if (item->GetType() == ITEM_POLYMORPH && item->GetVnum() == pkChr->GetPolymorphItemVnum())
+							item->SetSocket(0, pkChr->GetRaceNum());
+
+						vec_item.push_back(item);
+					}
+				}
+			}
+		}
+
+		// Mob Item Group
+		if (auto it = m_map_pkMobItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkMobItemGroup.end())
+		{
+			for (auto* pGroup : it->second)
+			{
+				if (pGroup && !pGroup->IsEmpty())
+				{
+					int iPercent = 10000 * iDeltaPercent / pGroup->GetKillPerDrop();
+					if (iPercent >= number(1, iRandRange))
+					{
+						const auto& info = pGroup->GetOne();
+						DWORD dwVnum = number(info.dwItemVnumStart, info.dwItemVnumEnd);
+						if (LPITEM item = CreateItem(dwVnum, info.iCount, 0, true, info.iRarePct))
+							vec_item.push_back(item);
+					}
+				}
+			}
+		}
+
+		// Level Item Group
+		if (auto it = m_map_pkLevelItemGroup.find(pkChr->GetRaceNum()); it != m_map_pkLevelItemGroup.end())
+		{
+			if (it->second->GetLevelLimitStart() <= (DWORD)iLevel && it->second->GetLevelLimitEnd() >= (DWORD)iLevel)
+			{
+				for (const auto& info : it->second->GetVector())
+				{
+					if (info.dwPct >= (DWORD)number(1, 1000000))
+					{
+						DWORD dwVnum = number(info.dwVNumStart, info.dwVNumEnd);
+						if (LPITEM item = CreateItem(dwVnum, info.iCount, 0, true))
+							vec_item.push_back(item);
+					}
+				}
+			}
+		}
+
+		// ETC
+		if (DWORD vnum = pkChr->GetMobDropItemVnum(); vnum != 0)
+		{
+			if (auto it = m_map_dwEtcItemDropProb.find(vnum); it != m_map_dwEtcItemDropProb.end())
+			{
+				int iPercent = (it->second * iDeltaPercent) / 100;
+				if (iPercent >= number(1, iRandRange))
+				{
+					if (LPITEM item = CreateItem(vnum, 1, 0, true))
 						vec_item.push_back(item);
 				}
 			}
 		}
-	}
 
-	// ETC
-	if (DWORD vnum = pkChr->GetMobDropItemVnum(); vnum != 0)
-	{
-		if (auto it = m_map_dwEtcItemDropProb.find(vnum); it != m_map_dwEtcItemDropProb.end())
+		// Stone
+		if (pkChr->IsStone() && pkChr->GetDropMetinStoneVnum())
 		{
-			int iPercent = (it->second * iDeltaPercent) / 100;
+			int iPercent = (pkChr->GetDropMetinStonePct() * iDeltaPercent) * 400;
 			if (iPercent >= number(1, iRandRange))
 			{
-				if (LPITEM item = CreateItem(vnum, 1, 0, true))
+				if (LPITEM item = CreateItem(pkChr->GetDropMetinStoneVnum(), 1, 0, true))
 					vec_item.push_back(item);
+			}
+		}
+
+		if (pkKiller->IsHorseRiding() && GetDropPerKillPct(1000, 1000000, iDeltaPercent, "horse_skill_book_drop") >= number(1, iRandRange))
+		{
+			if (LPITEM item = CreateItem(ITEM_HORSE_SKILL_TRAIN_BOOK, 1, 0, true))
+				vec_item.push_back(item);
+		}
+
+		CreateQuestDropItem(pkChr, pkKiller, vec_item, iDeltaPercent, iRandRange);
+
+		for (const auto& item : vec_item)
+			DBManager::instance().SendMoneyLog(MONEY_LOG_DROP, item->GetVnum(), item->GetCount());
+
+		return !vec_item.empty();
+	}
+
+	// ADD_GRANDMASTER_SKILL
+	int GetThreeSkillLevelAdjust(int level)
+	{
+		if (level < 40)
+			return 32;
+		if (level < 45)
+			return 16;
+		if (level < 50)
+			return 8;
+		if (level < 55)
+			return 4;
+		if (level < 60)
+			return 2;
+		return 1;
+	}
+	// END_OF_ADD_GRANDMASTER_SKILL
+
+	// DROPEVENT_CHARSTONE
+	// drop_char_stone 1
+	// drop_char_stone.percent_lv01_10 5
+	// drop_char_stone.percent_lv11_30 10
+	// drop_char_stone.percent_lv31_MX 15
+	// drop_char_stone.level_range	   10
+	static struct DropEvent_CharStone
+	{
+		int percent_lv01_10;
+		int percent_lv11_30;
+		int percent_lv31_MX;
+		int level_range;
+		bool alive;
+
+		DropEvent_CharStone()
+		{
+			percent_lv01_10 =  100;
+			percent_lv11_30 =  200;
+			percent_lv31_MX =  300;
+			level_range = 10;
+			alive = false;
+		}
+	} gs_dropEvent_charStone;
+
+	static int __DropEvent_CharStone_GetDropPercent(int killer_level)
+	{
+		int killer_levelStep = (killer_level-1)/10;
+
+		switch (killer_levelStep)
+		{
+			case 0:
+				return gs_dropEvent_charStone.percent_lv01_10;
+
+			case 1:
+			case 2:
+				return gs_dropEvent_charStone.percent_lv11_30;
+		}
+
+		return gs_dropEvent_charStone.percent_lv31_MX;
+	}
+
+	static void __DropEvent_CharStone_DropItem(CHARACTER & killer, CHARACTER & victim, ITEM_MANAGER& itemMgr, std::vector<LPITEM>& vec_item)
+	{
+		if (!gs_dropEvent_charStone.alive)
+			return;
+
+		int killer_level = killer.GetLevel();
+		int dropPercent = __DropEvent_CharStone_GetDropPercent(killer_level);
+
+		int MaxRange = 10000;
+
+		if (number(1, MaxRange) <= dropPercent)
+		{
+			int log_level = (test_server || killer.GetGMLevel() >= GM_LOW_WIZARD) ? 0 : 1;
+			int victim_level = victim.GetLevel();
+			int level_diff = victim_level - killer_level;
+
+			if (level_diff >= +gs_dropEvent_charStone.level_range || level_diff <= -gs_dropEvent_charStone.level_range)
+			{
+				sys_log(log_level, 
+						"dropevent.drop_char_stone.level_range_over: killer(%s: lv%d), victim(%s: lv:%d), level_diff(%d)",
+						killer.GetName(), killer.GetLevel(), victim.GetName(), victim.GetLevel(), level_diff);	
+				return;
+			}
+
+			static const int Stones[] = { 30210, 30211, 30212, 30213, 30214, 30215, 30216, 30217, 30218, 30219, 30258, 30259, 30260, 30261, 30262, 30263 };
+			int item_vnum = Stones[number(0, _countof(Stones))];
+
+			LPITEM p_item = NULL;
+
+			if ((p_item = itemMgr.CreateItem(item_vnum, 1, 0, true)))
+			{
+				vec_item.push_back(p_item);
+
+				sys_log(log_level, 
+						"dropevent.drop_char_stone.item_drop: killer(%s: lv%d), victim(%s: lv:%d), item_name(%s)",
+						killer.GetName(), killer.GetLevel(), victim.GetName(), victim.GetLevel(), p_item->GetName());	
 			}
 		}
 	}
 
-	// Stone
-	if (pkChr->IsStone() && pkChr->GetDropMetinStoneVnum())
+	bool DropEvent_CharStone_SetValue(const std::string& name, int value)
 	{
-		int iPercent = (pkChr->GetDropMetinStonePct() * iDeltaPercent) * 400;
-		if (iPercent >= number(1, iRandRange))
+		if (name == "drop_char_stone")
 		{
-			if (LPITEM item = CreateItem(pkChr->GetDropMetinStoneVnum(), 1, 0, true))
-				vec_item.push_back(item);
+			gs_dropEvent_charStone.alive = value;
+
+			if (value)
+				sys_log(0, "dropevent.drop_char_stone = on");
+			else
+				sys_log(0, "dropevent.drop_char_stone = off");
+
 		}
+		else if (name == "drop_char_stone.percent_lv01_10")
+			gs_dropEvent_charStone.percent_lv01_10 = value;
+		else if (name == "drop_char_stone.percent_lv11_30")
+			gs_dropEvent_charStone.percent_lv11_30 = value;
+		else if (name == "drop_char_stone.percent_lv31_MX")
+			gs_dropEvent_charStone.percent_lv31_MX = value;
+		else if (name == "drop_char_stone.level_range")
+			gs_dropEvent_charStone.level_range = value;
+		else
+			return false;
+
+		sys_log(0, "dropevent.drop_char_stone: %d", gs_dropEvent_charStone.alive ? true : false);
+		sys_log(0, "dropevent.drop_char_stone.percent_lv01_10: %f", gs_dropEvent_charStone.percent_lv01_10/100.0f);
+		sys_log(0, "dropevent.drop_char_stone.percent_lv11_30: %f", gs_dropEvent_charStone.percent_lv11_30/100.0f);
+		sys_log(0, "dropevent.drop_char_stone.percent_lv31_MX: %f", gs_dropEvent_charStone.percent_lv31_MX/100.0f);
+		sys_log(0, "dropevent.drop_char_stone.level_range: %d", gs_dropEvent_charStone.level_range);
+
+		return true;
 	}
 
-	if (pkKiller->IsHorseRiding() && GetDropPerKillPct(1000, 1000000, iDeltaPercent, "horse_skill_book_drop") >= number(1, iRandRange))
+	// END_OF_DROPEVENT_CHARSTONE
+
+	// fixme
+	// 위의 것과 함께 quest로 뺄것 빼보자. 
+	// 이거 너무 더럽잖아...
+	// 뷁.. 하드코딩 싫다 ㅜㅠ
+	// 계량 아이템 보상 시작.
+	// by rtsummit 고치자 진짜
+	static struct DropEvent_RefineBox
 	{
-		if (LPITEM item = CreateItem(ITEM_HORSE_SKILL_TRAIN_BOOK, 1, 0, true))
-			vec_item.push_back(item);
-	}
+		int percent_low;
+		int low;
+		int percent_mid;
+		int mid;
+		int percent_high;
+		//int level_range;
+		bool alive;
 
-	CreateQuestDropItem(pkChr, pkKiller, vec_item, iDeltaPercent, iRandRange);
-
-	for (const auto& item : vec_item)
-		DBManager::instance().SendMoneyLog(MONEY_LOG_DROP, item->GetVnum(), item->GetCount());
-
-	return !vec_item.empty();
-}
-
-// ADD_GRANDMASTER_SKILL
-int GetThreeSkillLevelAdjust(int level)
-{
-	if (level < 40)
-		return 32;
-	if (level < 45)
-		return 16;
-	if (level < 50)
-		return 8;
-	if (level < 55)
-		return 4;
-	if (level < 60)
-		return 2;
-	return 1;
-}
-// END_OF_ADD_GRANDMASTER_SKILL
-
-// DROPEVENT_CHARSTONE
-// drop_char_stone 1
-// drop_char_stone.percent_lv01_10 5
-// drop_char_stone.percent_lv11_30 10
-// drop_char_stone.percent_lv31_MX 15
-// drop_char_stone.level_range	   10
-static struct DropEvent_CharStone
-{
-	int percent_lv01_10;
-	int percent_lv11_30;
-	int percent_lv31_MX;
-	int level_range;
-	bool alive;
-
-	DropEvent_CharStone()
-	{
-		percent_lv01_10 =  100;
-		percent_lv11_30 =  200;
-		percent_lv31_MX =  300;
-		level_range = 10;
-		alive = false;
-	}
-} gs_dropEvent_charStone;
-
-static int __DropEvent_CharStone_GetDropPercent(int killer_level)
-{
-	int killer_levelStep = (killer_level-1)/10;
-
-	switch (killer_levelStep)
-	{
-		case 0:
-			return gs_dropEvent_charStone.percent_lv01_10;
-
-		case 1:
-		case 2:
-			return gs_dropEvent_charStone.percent_lv11_30;
-	}
-
-	return gs_dropEvent_charStone.percent_lv31_MX;
-}
-
-static void __DropEvent_CharStone_DropItem(CHARACTER & killer, CHARACTER & victim, ITEM_MANAGER& itemMgr, std::vector<LPITEM>& vec_item)
-{
-	if (!gs_dropEvent_charStone.alive)
-		return;
-
-	int killer_level = killer.GetLevel();
-	int dropPercent = __DropEvent_CharStone_GetDropPercent(killer_level);
-
-	int MaxRange = 10000;
-
-	if (number(1, MaxRange) <= dropPercent)
-	{
-		int log_level = (test_server || killer.GetGMLevel() >= GM_LOW_WIZARD) ? 0 : 1;
-		int victim_level = victim.GetLevel();
-		int level_diff = victim_level - killer_level;
-
-		if (level_diff >= +gs_dropEvent_charStone.level_range || level_diff <= -gs_dropEvent_charStone.level_range)
+		DropEvent_RefineBox()
 		{
-			sys_log(log_level, 
-					"dropevent.drop_char_stone.level_range_over: killer(%s: lv%d), victim(%s: lv:%d), level_diff(%d)",
-					killer.GetName(), killer.GetLevel(), victim.GetName(), victim.GetLevel(), level_diff);	
+			percent_low =  100;
+			low = 20;
+			percent_mid =  100;
+			mid = 45;
+			percent_high =  100;
+			//level_range = 10;
+			alive = false;
+		}
+	} gs_dropEvent_refineBox;
+
+	static LPITEM __DropEvent_RefineBox_GetDropItem(CHARACTER & killer, CHARACTER & victim, ITEM_MANAGER& itemMgr)
+	{
+		static const int lowerBox[] = { 50197, 50198, 50199 };
+		static const int lowerBox_range = 3;
+		static const int midderBox[] = { 50203, 50204, 50205, 50206 };
+		static const int midderBox_range = 4;
+		static const int higherBox[] = { 50207, 50208, 50209, 50210, 50211 };
+		static const int higherBox_range = 5;
+
+		if (victim.GetMobRank() < MOB_RANK_KNIGHT)
+			return NULL;
+
+		int killer_level = killer.GetLevel();
+		//int level_diff = victim_level - killer_level;
+
+		//if (level_diff >= +gs_dropEvent_refineBox.level_range || level_diff <= -gs_dropEvent_refineBox.level_range)
+		//{
+		//	sys_log(log_level, 
+		//		"dropevent.drop_refine_box.level_range_over: killer(%s: lv%d), victim(%s: lv:%d), level_diff(%d)",
+		//		killer.GetName(), killer.GetLevel(), victim.GetName(), victim.GetLevel(), level_diff);	
+		//	return NULL;
+		//}
+
+		if (killer_level <= gs_dropEvent_refineBox.low)
+		{
+			if (number (1, gs_dropEvent_refineBox.percent_low) == 1)
+			{
+				return itemMgr.CreateItem(lowerBox [number (1,lowerBox_range) - 1], 1, 0, true);
+			}
+		}
+		else if (killer_level <= gs_dropEvent_refineBox.mid)
+		{
+			if (number (1, gs_dropEvent_refineBox.percent_mid) == 1)
+			{
+				return itemMgr.CreateItem(midderBox [number (1,midderBox_range) - 1], 1, 0, true);
+			}
+		}
+		else
+		{
+			if (number (1, gs_dropEvent_refineBox.percent_high) == 1)
+			{
+				return itemMgr.CreateItem(higherBox [number (1,higherBox_range) - 1], 1, 0, true);
+			}
+		}
+		return NULL;
+	}
+
+	static void __DropEvent_RefineBox_DropItem(CHARACTER & killer, CHARACTER & victim, ITEM_MANAGER& itemMgr, std::vector<LPITEM>& vec_item)
+	{
+		if (!gs_dropEvent_refineBox.alive)
 			return;
-		}
 
-		static const int Stones[] = { 30210, 30211, 30212, 30213, 30214, 30215, 30216, 30217, 30218, 30219, 30258, 30259, 30260, 30261, 30262, 30263 };
-		int item_vnum = Stones[number(0, _countof(Stones))];
+		int log_level = (test_server || killer.GetGMLevel() >= GM_LOW_WIZARD) ? 0 : 1;
 
-		LPITEM p_item = NULL;
+		LPITEM p_item = __DropEvent_RefineBox_GetDropItem(killer, victim, itemMgr);
 
-		if ((p_item = itemMgr.CreateItem(item_vnum, 1, 0, true)))
+		if (p_item)
 		{
 			vec_item.push_back(p_item);
 
 			sys_log(log_level, 
-					"dropevent.drop_char_stone.item_drop: killer(%s: lv%d), victim(%s: lv:%d), item_name(%s)",
-					killer.GetName(), killer.GetLevel(), victim.GetName(), victim.GetLevel(), p_item->GetName());	
+				"dropevent.drop_refine_box.item_drop: killer(%s: lv%d), victim(%s: lv:%d), item_name(%s)",
+				killer.GetName(), killer.GetLevel(), victim.GetName(), victim.GetLevel(), p_item->GetName());	
 		}
 	}
-}
 
-bool DropEvent_CharStone_SetValue(const std::string& name, int value)
-{
-	if (name == "drop_char_stone")
+	bool DropEvent_RefineBox_SetValue(const std::string& name, int value)
 	{
-		gs_dropEvent_charStone.alive = value;
+		if (name == "refine_box_drop")
+		{
+			gs_dropEvent_refineBox.alive = value;
 
-		if (value)
-			sys_log(0, "dropevent.drop_char_stone = on");
+			if (value)
+				sys_log(0, "refine_box_drop = on");
+			else
+				sys_log(0, "refine_box_drop = off");
+
+		}
+		else if (name == "refine_box_low")
+			gs_dropEvent_refineBox.percent_low = value < 100 ? 100 : value;
+		else if (name == "refine_box_mid")
+			gs_dropEvent_refineBox.percent_mid = value < 100 ? 100 : value;
+		else if (name == "refine_box_high")
+			gs_dropEvent_refineBox.percent_high = value < 100 ? 100 : value;
+		//else if (name == "refine_box_level_range")
+		//	gs_dropEvent_refineBox.level_range = value;
 		else
-			sys_log(0, "dropevent.drop_char_stone = off");
+			return false;
 
+		sys_log(0, "refine_box_drop: %d", gs_dropEvent_refineBox.alive ? true : false);
+		sys_log(0, "refine_box_low: %d", gs_dropEvent_refineBox.percent_low);
+		sys_log(0, "refine_box_mid: %d", gs_dropEvent_refineBox.percent_mid);
+		sys_log(0, "refine_box_high: %d", gs_dropEvent_refineBox.percent_high);
+		//sys_log(0, "refine_box_low_level_range: %d", gs_dropEvent_refineBox.level_range);
+
+		return true;
 	}
-	else if (name == "drop_char_stone.percent_lv01_10")
-		gs_dropEvent_charStone.percent_lv01_10 = value;
-	else if (name == "drop_char_stone.percent_lv11_30")
-		gs_dropEvent_charStone.percent_lv11_30 = value;
-	else if (name == "drop_char_stone.percent_lv31_MX")
-		gs_dropEvent_charStone.percent_lv31_MX = value;
-	else if (name == "drop_char_stone.level_range")
-		gs_dropEvent_charStone.level_range = value;
-	else
-		return false;
+	// 개량 아이템 보상 끝.
 
-	sys_log(0, "dropevent.drop_char_stone: %d", gs_dropEvent_charStone.alive ? true : false);
-	sys_log(0, "dropevent.drop_char_stone.percent_lv01_10: %f", gs_dropEvent_charStone.percent_lv01_10/100.0f);
-	sys_log(0, "dropevent.drop_char_stone.percent_lv11_30: %f", gs_dropEvent_charStone.percent_lv11_30/100.0f);
-	sys_log(0, "dropevent.drop_char_stone.percent_lv31_MX: %f", gs_dropEvent_charStone.percent_lv31_MX/100.0f);
-	sys_log(0, "dropevent.drop_char_stone.level_range: %d", gs_dropEvent_charStone.level_range);
 
-	return true;
-}
-
-// END_OF_DROPEVENT_CHARSTONE
-
-// fixme
-// 위의 것과 함께 quest로 뺄것 빼보자. 
-// 이거 너무 더럽잖아...
-// 뷁.. 하드코딩 싫다 ㅜㅠ
-// 계량 아이템 보상 시작.
-// by rtsummit 고치자 진짜
-static struct DropEvent_RefineBox
-{
-	int percent_low;
-	int low;
-	int percent_mid;
-	int mid;
-	int percent_high;
-	//int level_range;
-	bool alive;
-
-	DropEvent_RefineBox()
+	void ITEM_MANAGER::CreateQuestDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<LPITEM> & vec_item, int iDeltaPercent, int iRandRange)
 	{
-		percent_low =  100;
-		low = 20;
-		percent_mid =  100;
-		mid = 45;
-		percent_high =  100;
-		//level_range = 10;
-		alive = false;
-	}
-} gs_dropEvent_refineBox;
+		LPITEM item = NULL;
 
-static LPITEM __DropEvent_RefineBox_GetDropItem(CHARACTER & killer, CHARACTER & victim, ITEM_MANAGER& itemMgr)
-{
-	static const int lowerBox[] = { 50197, 50198, 50199 };
-	static const int lowerBox_range = 3;
-	static const int midderBox[] = { 50203, 50204, 50205, 50206 };
-	static const int midderBox_range = 4;
-	static const int higherBox[] = { 50207, 50208, 50209, 50210, 50211 };
-	static const int higherBox_range = 5;
+		if (!pkChr)
+			return;
 
-	if (victim.GetMobRank() < MOB_RANK_KNIGHT)
-		return NULL;
+		if (!pkKiller)
+			return;
 
-	int killer_level = killer.GetLevel();
-	//int level_diff = victim_level - killer_level;
+		sys_log(1, "CreateQuestDropItem victim(%s), killer(%s)", pkChr->GetName(), pkKiller->GetName() );
 
-	//if (level_diff >= +gs_dropEvent_refineBox.level_range || level_diff <= -gs_dropEvent_refineBox.level_range)
-	//{
-	//	sys_log(log_level, 
-	//		"dropevent.drop_refine_box.level_range_over: killer(%s: lv%d), victim(%s: lv:%d), level_diff(%d)",
-	//		killer.GetName(), killer.GetLevel(), victim.GetName(), victim.GetLevel(), level_diff);	
-	//	return NULL;
-	//}
+		// DROPEVENT_CHARSTONE
+		__DropEvent_CharStone_DropItem(*pkKiller, *pkChr, *this, vec_item);
+		// END_OF_DROPEVENT_CHARSTONE
+		__DropEvent_RefineBox_DropItem(*pkKiller, *pkChr, *this, vec_item);
 
-	if (killer_level <= gs_dropEvent_refineBox.low)
-	{
-		if (number (1, gs_dropEvent_refineBox.percent_low) == 1)
+		// 크리스마스 양말
+		if (quest::CQuestManager::instance().GetEventFlag("xmas_sock"))
 		{
-			return itemMgr.CreateItem(lowerBox [number (1,lowerBox_range) - 1], 1, 0, true);
-		}
-	}
-	else if (killer_level <= gs_dropEvent_refineBox.mid)
-	{
-		if (number (1, gs_dropEvent_refineBox.percent_mid) == 1)
-		{
-			return itemMgr.CreateItem(midderBox [number (1,midderBox_range) - 1], 1, 0, true);
-		}
-	}
-	else
-	{
-		if (number (1, gs_dropEvent_refineBox.percent_high) == 1)
-		{
-			return itemMgr.CreateItem(higherBox [number (1,higherBox_range) - 1], 1, 0, true);
-		}
-	}
-	return NULL;
-}
+			const DWORD SOCK_ITEM_VNUM = 50010;
 
-static void __DropEvent_RefineBox_DropItem(CHARACTER & killer, CHARACTER & victim, ITEM_MANAGER& itemMgr, std::vector<LPITEM>& vec_item)
-{
-	if (!gs_dropEvent_refineBox.alive)
-		return;
-
-	int log_level = (test_server || killer.GetGMLevel() >= GM_LOW_WIZARD) ? 0 : 1;
-
-	LPITEM p_item = __DropEvent_RefineBox_GetDropItem(killer, victim, itemMgr);
-
-	if (p_item)
-	{
-		vec_item.push_back(p_item);
-
-		sys_log(log_level, 
-			"dropevent.drop_refine_box.item_drop: killer(%s: lv%d), victim(%s: lv:%d), item_name(%s)",
-			killer.GetName(), killer.GetLevel(), victim.GetName(), victim.GetLevel(), p_item->GetName());	
-	}
-}
-
-bool DropEvent_RefineBox_SetValue(const std::string& name, int value)
-{
-	if (name == "refine_box_drop")
-	{
-		gs_dropEvent_refineBox.alive = value;
-
-		if (value)
-			sys_log(0, "refine_box_drop = on");
-		else
-			sys_log(0, "refine_box_drop = off");
-
-	}
-	else if (name == "refine_box_low")
-		gs_dropEvent_refineBox.percent_low = value < 100 ? 100 : value;
-	else if (name == "refine_box_mid")
-		gs_dropEvent_refineBox.percent_mid = value < 100 ? 100 : value;
-	else if (name == "refine_box_high")
-		gs_dropEvent_refineBox.percent_high = value < 100 ? 100 : value;
-	//else if (name == "refine_box_level_range")
-	//	gs_dropEvent_refineBox.level_range = value;
-	else
-		return false;
-
-	sys_log(0, "refine_box_drop: %d", gs_dropEvent_refineBox.alive ? true : false);
-	sys_log(0, "refine_box_low: %d", gs_dropEvent_refineBox.percent_low);
-	sys_log(0, "refine_box_mid: %d", gs_dropEvent_refineBox.percent_mid);
-	sys_log(0, "refine_box_high: %d", gs_dropEvent_refineBox.percent_high);
-	//sys_log(0, "refine_box_low_level_range: %d", gs_dropEvent_refineBox.level_range);
-
-	return true;
-}
-// 개량 아이템 보상 끝.
-
-
-void ITEM_MANAGER::CreateQuestDropItem(LPCHARACTER pkChr, LPCHARACTER pkKiller, std::vector<LPITEM> & vec_item, int iDeltaPercent, int iRandRange)
-{
-	LPITEM item = NULL;
-
-	if (!pkChr)
-		return;
-
-	if (!pkKiller)
-		return;
-
-	sys_log(1, "CreateQuestDropItem victim(%s), killer(%s)", pkChr->GetName(), pkKiller->GetName() );
-
-	// DROPEVENT_CHARSTONE
-	__DropEvent_CharStone_DropItem(*pkKiller, *pkChr, *this, vec_item);
-	// END_OF_DROPEVENT_CHARSTONE
-	__DropEvent_RefineBox_DropItem(*pkKiller, *pkChr, *this, vec_item);
-
-	// 크리스마스 양말
-	if (quest::CQuestManager::instance().GetEventFlag("xmas_sock"))
-	{
-		const DWORD SOCK_ITEM_VNUM = 50010;
-
-		int iDropPerKill[MOB_RANK_MAX_NUM] =
-		{
-			2000,
-			1000,
-			300,
-			50,
-			0,
-			0,
-		};
-
-		if ( iDropPerKill[pkChr->GetMobRank()] != 0 )
-		{
-			int iPercent = 40000 * iDeltaPercent / iDropPerKill[pkChr->GetMobRank()];
-
-			sys_log(0, "SOCK DROP %d %d", iPercent, iRandRange);
-			if (iPercent >= number(1, iRandRange))
+			int iDropPerKill[MOB_RANK_MAX_NUM] =
 			{
-				if ((item = CreateItem(SOCK_ITEM_VNUM, 1, 0, true)))
-					vec_item.push_back(item);
+				2000,
+				1000,
+				300,
+				50,
+				0,
+				0,
+			};
+
+			if ( iDropPerKill[pkChr->GetMobRank()] != 0 )
+			{
+				int iPercent = 40000 * iDeltaPercent / iDropPerKill[pkChr->GetMobRank()];
+
+				sys_log(0, "SOCK DROP %d %d", iPercent, iRandRange);
+				if (iPercent >= number(1, iRandRange))
+				{
+					if ((item = CreateItem(SOCK_ITEM_VNUM, 1, 0, true)))
+						vec_item.push_back(item);
+				}
 			}
 		}
-	}
 
-	// 월광 보합
-	if (quest::CQuestManager::instance().GetEventFlag("drop_moon"))
-	{
-		const DWORD ITEM_VNUM = 50011;
-
-		int iDropPerKill[MOB_RANK_MAX_NUM] =
+		// 월광 보합
+		if (quest::CQuestManager::instance().GetEventFlag("drop_moon"))
 		{
-			2000,
-			1000,
-			300,
-			50,
-			0,
-			0,
-		};
+			const DWORD ITEM_VNUM = 50011;
 
-		if (iDropPerKill[pkChr->GetMobRank()])
-		{
-			int iPercent = 40000 * iDeltaPercent / iDropPerKill[pkChr->GetMobRank()];
-
-			if (iPercent >= number(1, iRandRange))
+			int iDropPerKill[MOB_RANK_MAX_NUM] =
 			{
-				if ((item = CreateItem(ITEM_VNUM, 1, 0, true)))
-					vec_item.push_back(item);
+				2000,
+				1000,
+				300,
+				50,
+				0,
+				0,
+			};
+
+			if (iDropPerKill[pkChr->GetMobRank()])
+			{
+				int iPercent = 40000 * iDeltaPercent / iDropPerKill[pkChr->GetMobRank()];
+
+				if (iPercent >= number(1, iRandRange))
+				{
+					if ((item = CreateItem(ITEM_VNUM, 1, 0, true)))
+						vec_item.push_back(item);
+				}
 			}
 		}
-	}
 
-	if (pkKiller->GetLevel() >= 15 && abs(pkKiller->GetLevel() - pkChr->GetLevel()) <= 5)
-	{
-		int pct = quest::CQuestManager::instance().GetEventFlag("hc_drop");
-
-		if (pct > 0)
+		if (pkKiller->GetLevel() >= 15 && abs(pkKiller->GetLevel() - pkChr->GetLevel()) <= 5)
 		{
-			const DWORD ITEM_VNUM = 30178;
+			int pct = quest::CQuestManager::instance().GetEventFlag("hc_drop");
 
-			if (number(1,100) <= pct)
+			if (pct > 0)
 			{
-				if ((item = CreateItem(ITEM_VNUM, 1, 0, true)))
-					vec_item.push_back(item);
+				const DWORD ITEM_VNUM = 30178;
+
+				if (number(1,100) <= pct)
+				{
+					if ((item = CreateItem(ITEM_VNUM, 1, 0, true)))
+						vec_item.push_back(item);
+				}
 			}
 		}
-	}
 
-	if (GetDropPerKillPct(100, g_iUseLocale ? 2000 : 800, iDeltaPercent, "2006_drop") >= number(1, iRandRange))
-	{
-		sys_log(0, "육각보합 DROP EVENT ");
+		if (GetDropPerKillPct(100, g_iUseLocale ? 2000 : 800, iDeltaPercent, "2006_drop") >= number(1, iRandRange))
+		{
+			sys_log(0, "HEXAGONAL_BOX DROP EVENT ");
 
-		const static DWORD dwVnum = 50037;
+			const static DWORD dwVnum = 50037;
 
-		if ((item = CreateItem(dwVnum, 1, 0, true)))
-			vec_item.push_back(item);
+			if ((item = CreateItem(dwVnum, 1, 0, true)))
+				vec_item.push_back(item);
 
-	}
+		}
 
-	//육각보합+
-	if (GetDropPerKillPct(100, g_iUseLocale ? 2000 : 800, iDeltaPercent, "2007_drop") >= number(1, iRandRange))
-	{
-		sys_log(0, "육각보합 DROP EVENT ");
+		// Hexagonal Box Event
+		if (GetDropPerKillPct(100, g_iUseLocale ? 2000 : 800, iDeltaPercent, "2007_drop") >= number(1, iRandRange))
+		{
+			sys_log(0, "HEXAGONAL_BOX DROP EVENT ");
 
-		const static DWORD dwVnum = 50043;
+			const static DWORD dwVnum = 50043;
 
-		if ((item = CreateItem(dwVnum, 1, 0, true)))
-			vec_item.push_back(item);
-	}
+			if ((item = CreateItem(dwVnum, 1, 0, true)))
+				vec_item.push_back(item);
+		}
 
-	// 새해 폭죽 이벤트
-	if (GetDropPerKillPct(/* minimum */ 100, /* default */ 1000, iDeltaPercent, "newyear_fire") >= number(1, iRandRange))
-	{
-		// 중국은 폭죽, 한국 팽이
-		const DWORD ITEM_VNUM_FIRE = g_iUseLocale ? 50107 : 50108;
+		// New year Firework Event
+		if (GetDropPerKillPct(/* minimum */ 100, /* default */ 1000, iDeltaPercent, "newyear_fire") >= number(1, iRandRange))
+		{
+			const DWORD ITEM_VNUM_FIRE = 50107;
 
-		if ((item = CreateItem(ITEM_VNUM_FIRE, 1, 0, true)))
-			vec_item.push_back(item);
-	}
+			if ((item = CreateItem(ITEM_VNUM_FIRE, 1, 0, true)))
+				vec_item.push_back(item);
+		}
 
-	// 새해 대보름 원소 이벤트
-	if (GetDropPerKillPct(100, 500, iDeltaPercent, "newyear_moon") >= number(1, iRandRange))
-	{
-		sys_log(0, "EVENT NEWYEAR_MOON DROP");
+		// Lunar New Year Wonso Event
+		if (GetDropPerKillPct(100, 500, iDeltaPercent, "newyear_moon") >= number(1, iRandRange))
+		{
+			sys_log(0, "EVENT NEWYEAR_MOON DROP");
 
-		const static DWORD wonso_items[6] = { 50016, 50017, 50018, 50019, 50019, 50019, };
-		DWORD dwVnum = wonso_items[number(0,5)];
+			const static DWORD wonso_items[6] = { 50016, 50017, 50018, 50019, 50019, 50019, };
+			DWORD dwVnum = wonso_items[number(0,5)];
 
-		if ((item = CreateItem(dwVnum, 1, 0, true)))
-			vec_item.push_back(item);
-	}
+			if ((item = CreateItem(dwVnum, 1, 0, true)))
+				vec_item.push_back(item);
+		}
 
-	// 발렌타인 데이 이벤트. OGE의 요구에 따라 event 최소값을 1로 변경.(다른 이벤트는 일단 그대로 둠.)
-	if (GetDropPerKillPct(1, g_iUseLocale ? 2000 : 800, iDeltaPercent, "valentine_drop") >= number(1, iRandRange))
-	{
+		// Valentine's Day Event. Changed min value to 1 per OGE request. (Other events left as is for now.)
+		if (GetDropPerKillPct(1, g_iUseLocale ? 2000 : 800, iDeltaPercent, "valentine_drop") >= number(1, iRandRange))
+		{
 		sys_log(0, "EVENT VALENTINE_DROP");
 
 		const static DWORD valentine_items[2] = { 50024, 50025 };

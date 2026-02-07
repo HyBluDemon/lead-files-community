@@ -1087,14 +1087,14 @@ void CHARACTER::SetPosition(int pos)
 		{
 			case POS_FIGHTING:
 				if (!IsState(m_stateBattle))
-					MonsterLog("[BATTLE] 싸우는 상태");
+					MonsterLog("[BATTLE] Fighting State");
 
 				GotoState(m_stateBattle);
 				break;
 
 			default:
 				if (!IsState(m_stateIdle))
-					MonsterLog("[IDLE] 쉬는 상태");
+					MonsterLog("[IDLE] Resting State");
 
 				GotoState(m_stateIdle);
 				break;
@@ -1292,7 +1292,7 @@ void CHARACTER::Disconnect(const char * c_pszReason)
 	strlcpy(p.szName, GetName(), sizeof(p.szName));
 	P2P_MANAGER::instance().Send(&p, sizeof(TPacketGGLogout));
 	char buf[51];
-	snprintf(buf, sizeof(buf), "%s %d %d %ld %d", 
+	snprintf(buf, sizeof(buf), "%s %d %d %d %d", 
 		inet_ntoa(GetDesc()->GetAddr().sin_addr), GetGold(), g_bChannel, GetMapIndex(), GetAlignment());
 
 	LogManager::instance().CharLog(this, 0, "LOGOUT", buf);
@@ -2599,7 +2599,7 @@ bool CHARACTER::Sync(long x, long y)
 void CHARACTER::Stop()
 {
 	if (!IsState(m_stateIdle))
-		MonsterLog("[IDLE] 정지");
+		MonsterLog("[IDLE] Stopped");
 
 	GotoState(m_stateIdle);
 
@@ -2609,8 +2609,8 @@ void CHARACTER::Stop()
 
 bool CHARACTER::Goto(long x, long y)
 {
-	// TODO 거리체크 필요
-	// 같은 위치면 이동할 필요 없음 (자동 성공)
+    	// TODO: Distance check required
+    	// No need to move if already at the target position
 	if (GetX() == x && GetY() == y)
 		return false;
 
@@ -2634,7 +2634,7 @@ bool CHARACTER::Goto(long x, long y)
 	
 	if (!IsState(m_stateMove))
 	{
-		MonsterLog("[MOVE] %s", GetVictim() ? "대상추적" : "그냥이동");
+		MonsterLog("[MOVE] %s", GetVictim() ? "Chasing Target" : "Moving Normally");
 
 		if (GetVictim())
 		{
@@ -3960,7 +3960,7 @@ void CHARACTER::SetNextStatePulse(int iNextPulse)
 	m_dwNextStatePulse = iNextPulse;
 
 	if (iNextPulse < 10)
-		MonsterLog("다음상태로어서가자");
+		MonsterLog("Next state fast");
 }
 
 
@@ -5026,7 +5026,7 @@ void CHARACTER::CheckTarget()
 		SetTarget(NULL);
 }
 
-void CHARACTER::SetWarpLocation(long lMapIndex, long x, long y)
+void CHARACTER::SetWarpLocation(int32_t lMapIndex, int32_t x, int32_t y)
 {
 	m_posWarp.x = x * 100;
 	m_posWarp.y = y * 100;
@@ -5052,13 +5052,13 @@ void CHARACTER::ExitToSavedLocation()
 // 지금까진 privateMapIndex 가 현재 맵 인덱스와 같은지 체크 하는 것을 외부에서 하고,
 // 다르면 warpset을 불렀는데
 // 이를 warpset 안으로 넣자.
-bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
+bool CHARACTER::WarpSet(int32_t x, int32_t y, int32_t lPrivateMapIndex)
 {
 	if (!IsPC())
 		return false;
 
-	long lAddr;
-	long lMapIndex;
+	int32_t lAddr;
+	int32_t lMapIndex;
 	WORD wPort;
 
 	if (!CMapLocation::instance().Get(x, y, lMapIndex, lAddr, wPort))
@@ -5069,8 +5069,8 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 
 	//Send Supplementary Data Block if new map requires security packages in loading this map
 	{
-		long lCurAddr;
-		long lCurMapIndex = 0;
+		int32_t lCurAddr;
+		int32_t lCurMapIndex = 0;
 		WORD wCurPort;
 
 		CMapLocation::instance().Get(GetX(), GetY(), lCurMapIndex, lCurAddr, wCurPort);
@@ -5131,7 +5131,7 @@ bool CHARACTER::WarpSet(long x, long y, long lPrivateMapIndex)
 	GetDesc()->Packet(&p, sizeof(TPacketGCWarp));
 
 	char buf[256];
-	snprintf(buf, sizeof(buf), "%s MapIdx %ld DestMapIdx%ld DestX%ld DestY%ld Empire%d", GetName(), GetMapIndex(), lPrivateMapIndex, x, y, GetEmpire());
+	snprintf(buf, sizeof(buf), "%s MapIdx %d DestMapIdx%d DestX%d DestY%d Empire%d", GetName(), GetMapIndex(), lPrivateMapIndex, x, y, GetEmpire());
 	LogManager::instance().CharLog(this, 0, "WARP", buf);
 
 	return true;
@@ -5187,13 +5187,7 @@ bool CHARACTER::Return()
 		return false;
 
 	int x, y;
-	/*
-	   float fDist = DISTANCE_SQRT(m_pkMobData->m_posLastAttacked.x - GetX(), m_pkMobData->m_posLastAttacked.y - GetY());
-	   float fx, fy;
-	   GetDeltaByDegree(GetRotation(), fDist, &fx, &fy);
-	   x = GetX() + (int) fx;
-	   y = GetY() + (int) fy;
-	 */
+	
 	SetVictim(NULL);
 
 	x = m_pkMobInst->m_posLastAttacked.x;
@@ -5207,7 +5201,7 @@ bool CHARACTER::Return()
 	SendMovePacket(FUNC_WAIT, 0, 0, 0, 0);
 
 	if (test_server)
-		sys_log(0, "%s %p 포기하고 돌아가자! %d %d", GetName(), this, x, y);
+		sys_log(0, "%s %p Give up and return! %d %d", GetName(), this, x, y);
 
 	if (GetParty())
 		GetParty()->SendMessage(this, PM_RETURN, x, y);
@@ -5362,7 +5356,6 @@ bool CHARACTER::Follow(LPCHARACTER pkChr, float fMinDistance)
 	}
 
 	SendMovePacket(FUNC_WAIT, 0, 0, 0, 0);
-	//MonsterLog("쫓아가기; %s", pkChr->GetName());
 	return true;
 }
 
@@ -5674,9 +5667,9 @@ void CHARACTER::SetNowWalking(bool bWalkFlag)
 		if (IsNPC())
 		{
 			if (m_bNowWalking)
-				MonsterLog("걷는다");
+				MonsterLog("Walking");
 			else
-				MonsterLog("뛴다");
+				MonsterLog("Running");
 		}
 
 		//sys_log(0, "%s is now %s", GetName(), m_bNowWalking?"walking.":"running.");

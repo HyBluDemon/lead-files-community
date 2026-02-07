@@ -251,7 +251,7 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 		sizeof(WORD) + sizeof(WORD) + sizeof(building::TLand) * m_vec_kLandTable.size() +
 		sizeof(WORD) + sizeof(WORD) + sizeof(building::TObjectProto) * m_vec_kObjectProto.size() + 
 		sizeof(WORD) + sizeof(WORD) + sizeof(building::TObject) * m_map_pkObjectTable.size() +
-		sizeof(time_t) + 
+		sizeof(uint32_t) + 
 		sizeof(WORD) + sizeof(WORD) + sizeof(TItemIDRangeTable)*2 +
 		//ADMIN_MANAGER
 		sizeof(WORD) + sizeof(WORD) + 16 * vHost.size() +
@@ -278,16 +278,16 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 	sys_log(0, "sizeof(TObjectProto) = %d", sizeof(building::TObjectProto));
 	sys_log(0, "sizeof(TObject) = %d", sizeof(building::TObject));
 	//ADMIN_MANAGER
-	sys_log(0, "sizeof(tAdminInfo) = %d * %d ", sizeof(tAdminInfo) * vAdmin.size());
+	sys_log(0, "sizeof(tAdminInfo) = %u * %u ", sizeof(tAdminInfo), vAdmin.size());
 	//END_ADMIN_MANAGER
 
 	peer->EncodeWORD(sizeof(TMobTable));
 	peer->EncodeWORD(m_vec_mobTable.size());
-	peer->Encode(&m_vec_mobTable[0], sizeof(TMobTable) * m_vec_mobTable.size());
+	peer->Encode(m_vec_mobTable.data(), sizeof(TMobTable) * m_vec_mobTable.size());
 
 	peer->EncodeWORD(sizeof(TItemTable));
 	peer->EncodeWORD(m_vec_itemTable.size());
-	peer->Encode(&m_vec_itemTable[0], sizeof(TItemTable) * m_vec_itemTable.size());
+	peer->Encode(m_vec_itemTable.data(), sizeof(TItemTable) * m_vec_itemTable.size());
 
 	peer->EncodeWORD(sizeof(TShopTable));
 	peer->EncodeWORD(m_iShopTableSize);
@@ -295,7 +295,7 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 
 	peer->EncodeWORD(sizeof(TSkillTable));
 	peer->EncodeWORD(m_vec_skillTable.size());
-	peer->Encode(&m_vec_skillTable[0], sizeof(TSkillTable) * m_vec_skillTable.size());
+	peer->Encode(m_vec_skillTable.data(), sizeof(TSkillTable) * m_vec_skillTable.size());
 
 	peer->EncodeWORD(sizeof(TRefineTable));
 	peer->EncodeWORD(m_iRefineTableSize);
@@ -303,23 +303,23 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 
 	peer->EncodeWORD(sizeof(TItemAttrTable));
 	peer->EncodeWORD(m_vec_itemAttrTable.size());
-	peer->Encode(&m_vec_itemAttrTable[0], sizeof(TItemAttrTable) * m_vec_itemAttrTable.size());
+	peer->Encode(m_vec_itemAttrTable.data(), sizeof(TItemAttrTable) * m_vec_itemAttrTable.size());
 
 	peer->EncodeWORD(sizeof(TItemAttrTable));
 	peer->EncodeWORD(m_vec_itemRareTable.size());
-	peer->Encode(&m_vec_itemRareTable[0], sizeof(TItemAttrTable) * m_vec_itemRareTable.size());
+	peer->Encode(m_vec_itemRareTable.data(), sizeof(TItemAttrTable) * m_vec_itemRareTable.size());
 
 	peer->EncodeWORD(sizeof(TBanwordTable));
 	peer->EncodeWORD(m_vec_banwordTable.size());
-	peer->Encode(&m_vec_banwordTable[0], sizeof(TBanwordTable) * m_vec_banwordTable.size());
+	peer->Encode(m_vec_banwordTable.data(), sizeof(TBanwordTable) * m_vec_banwordTable.size());
 
 	peer->EncodeWORD(sizeof(building::TLand));
 	peer->EncodeWORD(m_vec_kLandTable.size());
-	peer->Encode(&m_vec_kLandTable[0], sizeof(building::TLand) * m_vec_kLandTable.size());
+	peer->Encode(m_vec_kLandTable.data(), sizeof(building::TLand) * m_vec_kLandTable.size());
 
 	peer->EncodeWORD(sizeof(building::TObjectProto));
 	peer->EncodeWORD(m_vec_kObjectProto.size());
-	peer->Encode(&m_vec_kObjectProto[0], sizeof(building::TObjectProto) * m_vec_kObjectProto.size());
+	peer->Encode(m_vec_kObjectProto.data(), sizeof(building::TObjectProto) * m_vec_kObjectProto.size());
 
 	peer->EncodeWORD(sizeof(building::TObject));
 	peer->EncodeWORD(m_map_pkObjectTable.size());
@@ -329,8 +329,8 @@ void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 	while (it != m_map_pkObjectTable.end())
 		peer->Encode((it++)->second, sizeof(building::TObject));
 
-	time_t now = time(0);
-	peer->Encode(&now, sizeof(time_t));
+	uint32_t now = time(0);
+	peer->Encode(&now, sizeof(uint32_t));
 
 	TItemIDRangeTable itemRange = CItemIDRangeManager::instance().GetRange();
 	TItemIDRangeTable itemRangeSpare = CItemIDRangeManager::instance().GetRange();
@@ -643,7 +643,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 
 							dwSkillVnum = m_vec_skillTable[dwSkillIdx].dwVnum;
 
-							if (!dwSkillVnum > 120)
+							if (!(dwSkillVnum > 120))
 								continue;
 
 							break;
@@ -1241,7 +1241,7 @@ void CClientManager::QUERY_ITEM_SAVE(CPeer * pkPeer, const char * c_pData)
 			"attrtype4, attrvalue4, "
 			"attrtype5, attrvalue5, "
 			"attrtype6, attrvalue6) "
-			"VALUES(%u, %u, %d, %d, %u, %u, %ld, %ld, %ld, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)",
+			"VALUES(%u, %u, %d, %d, %u, %u, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)",
 			GetTablePostfix(),
 			p->id,
 			p->owner,
@@ -2826,8 +2826,8 @@ void CClientManager::SendAllGuildSkillRechargePacket()
 
 void CClientManager::SendTime()
 {
-	time_t now = GetCurrentTime();
-	ForwardPacket(HEADER_DG_TIME, &now, sizeof(time_t));
+	uint32_t now = GetCurrentTime();
+	ForwardPacket(HEADER_DG_TIME, &now, sizeof(uint32_t));
 }
 
 void CClientManager::ForwardPacket(BYTE header, const void* data, int size, BYTE bChannel, CPeer* except)
@@ -2865,7 +2865,7 @@ void CClientManager::SendNotice(const char * c_pszFormat, ...)
 	ForwardPacket(HEADER_DG_NOTICE, szBuf, len + 1);
 }
 
-time_t CClientManager::GetCurrentTime()
+uint32_t CClientManager::GetCurrentTime()
 {
 	return time(0);
 }

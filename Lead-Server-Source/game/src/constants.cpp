@@ -791,19 +791,19 @@ const SStoneDropInfo aStoneDrop[STONE_INFO_MAX_NUM] =
 
 const char * c_apszEmpireNames[EMPIRE_MAX_NUM] =
 {
-	"전제국",
-	"신수국",
-	"천조국",
-	"진노국"
+	"None",
+	"Shinsoo",
+	"Chunjo",
+	"Jinno"
 };
 
 const char * c_apszPrivNames[MAX_PRIV_NUM] =
 {
 	"",
-	"아이템이 나올 확률",
-	"돈이 나올 확률",
-	"돈 대박이 나올 확률",
-	"경험치 배율",
+	"ITEM_DROP",
+	"GOLD_DROP",
+	"GOLD_10_MAG",
+	"EXP",
 };
 
 const int aiPolymorphPowerByLevel[SKILL_MAX_LEVEL + 1] =

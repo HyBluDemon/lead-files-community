@@ -1005,13 +1005,13 @@ bool CItem::CreateSocket(BYTE bSlot, BYTE bGold)
 	return true;
 }
 
-void CItem::SetSockets(const long * c_al)
+void CItem::SetSockets(const int32_t * c_al)
 {
 	thecore_memcpy(m_alSockets, c_al, sizeof(m_alSockets));
 	Save();
 }
 
-void CItem::SetSocket(int i, long v, bool bLog)
+void CItem::SetSocket(int i, int32_t v, bool bLog)
 {
 	assert(i < ITEM_SOCKET_MAX_NUM);
 	m_alSockets[i] = v;
@@ -1296,7 +1296,7 @@ EVENTFUNC(unique_expire_event)
 	}
 	else
 	{
-		time_t cur = get_global_time();
+		uint32_t cur = get_global_time();
 		
 		if (pkItem->GetSocket(ITEM_SOCKET_UNIQUE_REMAIN_TIME) <= cur)
 		{
@@ -1375,7 +1375,7 @@ EVENTFUNC(real_time_expire_event)
 	if (NULL == item)
 		return 0;
 
-	const time_t current = get_global_time();
+	const uint32_t current = get_global_time();
 
 	if (current > item->GetSocket(0))
 	{

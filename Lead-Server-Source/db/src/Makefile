@@ -1,73 +1,45 @@
-MAKE = gmake
-CC = g++
-
-INCDIR =
-LIBDIR =
+CXX = clang++
 BINDIR = ..
 OBJDIR = .obj
+TARGET = $(BINDIR)/db
 
-GCC_VERSION = $(shell $(CC) --version 2>&1 | grep "(GCC)" | cut -d' ' -f3  | cut -d'.' -f1)
-BSD_VERSION = $(shell uname -v 2>&1 | cut -d' ' -f2 | cut -d'.' -f1)
-P4_VERSION = $(shell svnversion -n .)
-$(shell if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi)
+EXTERN_DIR = ../../../Lead-Extern
+SHARED_SRC = ../../../Lead-Shared-Source
 
-TARGET = $(BINDIR)/db_r$(P4_VERSION)
+INCDIR = -I$(EXTERN_DIR)/include \
+         -I$(EXTERN_DIR)/include/libpng \
+         -I$(EXTERN_DIR)/include/libjpeg-turbo \
+         -I$(SHARED_SRC) \
+         -I../../libthecore/include \
+         -I../../libgame/include \
+         -I../../libsql \
+         -I../../libpoly \
+         -I../../boost
 
-CFLAGS = -g -Wall -O2 -pipe -fno-rtti -fno-exceptions -pthread -D_THREAD_SAFE
+LIBDIR = -L../../libthecore/lib -L../../libsql -L../../libpoly -L../../libgame/lib
 
-ifeq ($(GCC_VERSION), 4)
-CFLAGS += -mtune=i686
-else
-CFLAGS += -mcpu=i686
-endif
+#CFLAGS = -m32 -g -Wall -O2 -pipe -fno-rtti -fno-exceptions -pthread -D_THREAD_SAFE
+CFLAGS = -m32 -march=i686 -msse2 -g -O1 -pipe -frtti -fexceptions -pthread -D_THREAD_SAFE -fno-stack-protector -fno-strict-aliasing
 
-# boost
-INCDIR += -I../../boost
+LIBS = ../../libsql/libsql.a \
+       ../../libpoly/libpoly.a \
+       ../../libgame/lib/libgame.a \
+       $(EXTERN_DIR)/lib/mysqlclient.a \
+       /usr/lib32/libssl.a /usr/lib32/libcrypto.a \
+       ../../libthecore/lib/libthecore.a \
+       -lm -lz
 
-LIBDIR += -L../../libthecore/lib -L../../libsql -L../../libpoly -L../../libgame/lib
-
-ifeq ($(BSD_VERSION), 7)
-INCDIR += -I../../libmysql/7.x-5.1.35
-LIBDIR += -L../../libmysql/7.x-5.1.35
-else
-INCDIR += -I../../libmysql/5.x-5.1.35
-LIBDIR += -L../../libmysql/5.x-5.1.35
-endif
-
-LIBS = -lthecore -lmysqlclient -lsql -lpoly -lgame -lm -lz
-
-SRCS =	Config.cpp NetBase.cpp Peer.cpp PeerBase.cpp Main.cpp DBManager.cpp \
-		Cache.cpp LoginData.cpp ClientManager.cpp ClientManagerPlayer.cpp ClientManagerLogin.cpp \
-		ClientManagerBoot.cpp ClientManagerParty.cpp ClientManagerGuild.cpp GuildManager.cpp \
-		PrivManager.cpp MoneyLog.cpp ItemAwardManager.cpp ClientManagerEventFlag.cpp Marriage.cpp \
-		ItemIDRangeManager.cpp ClientManagerHorseName.cpp version.cpp \
-		ProtoReader.cpp CsvReader.cpp
-
+SRCS = $(filter-out version.cpp, $(wildcard *.cpp))
 OBJS = $(SRCS:%.cpp=$(OBJDIR)/%.o)
 
 default: $(TARGET)
 
 $(TARGET): $(OBJS)
-	@echo linking ...
-	@$(CC) $(CFLAGS) $(LIBDIR) $(OBJS) $(LIBS) -o $(TARGET)
-	@touch version.cpp
+	$(CXX) $(CFLAGS) $(LIBDIR) $(OBJS) $(LIBS) -o $(TARGET)
 
 $(OBJDIR)/%.o: %.cpp
-	@echo compile $<
-	@$(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
-
-$(OBJDIR)/version.o: version.cpp
-	@$(CC) $(CFLAGS) -D__USER__=\"$(USER)\" -D__HOSTNAME__=\"$(HOSTNAME)\" -D__PWD__=\"$(PWD)\" -D__P4_VERSION__=\"$(P4_VERSION)\" -c $< -o $@
-	@echo compile $<
-
-$(OBJDIR):
-	@mkdir $(OBJDIR)
+	@mkdir -p $(OBJDIR)
+	$(CXX) $(CFLAGS) $(INCDIR) -c $< -o $@
 
 clean:
-	@rm -f $(OBJS) $(BINDIR)/db_r*
-
-dep:
-	@touch Depend
-	makedepend -fDepend $(INCDIR) -I/usr/include/c++/3.3 -I/usr/include/c++/4.2 -p$(OBJDIR)/ $(SRCS) 2> /dev/null
-
-sinclude Depend
+	rm -rf $(OBJDIR) $(TARGET)

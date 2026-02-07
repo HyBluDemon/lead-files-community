@@ -7,6 +7,7 @@
 
 #ifndef __WIN32__
 #include <semaphore.h>
+#include <type_traits>
 #else
 #define isdigit iswdigit
 #define isspace iswspace
@@ -19,6 +20,7 @@
 #include "common/stl.h"
 #include "common/service.h"
 
+#ifdef __WIN32__
 // TODO: Remove workaround by using mysqlclient build from vcpkg
 //       This is just needed to make the compiler shut up for now.
 extern "C" {
@@ -27,5 +29,6 @@ extern "C" {
 		return iob[0];
 	}
 }
+#endif
 
 #endif

@@ -913,7 +913,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 		return true;
 }
 
-void CPythonApplication::SetGlobalCenterPosition(LONG x, LONG y)
+void CPythonApplication::SetGlobalCenterPosition(int32_t x, int32_t y)
 {
 	CPythonBackground& rkBG=CPythonBackground::Instance();
 	rkBG.GlobalPositionToLocalPosition(x, y);

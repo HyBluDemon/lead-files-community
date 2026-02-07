@@ -18,17 +18,19 @@
 #include <string>
 #include <vector>
 
-#ifdef __GNUC__
+#include <unordered_map>
+#include <unordered_set>
+#include <functional>
 #include <float.h>
-#include <tr1/unordered_map>
-#include <tr1/unordered_set>
-#define TR1_NS std::tr1
+
+#ifdef __GNUC__
+    #define TR1_NS std
 #else
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-#define TR1_NS boost
-#define isdigit iswdigit
-#define isspace iswspace
+    #include <boost/unordered_map.hpp>
+    #include <boost/unordered_set.hpp>
+    #define TR1_NS boost
+    #define isdigit iswdigit
+    #define isspace iswspace
 #endif
 
 #include "typedef.h"
@@ -47,11 +49,11 @@
 #define IN
 #define OUT
 
-// TODO: Remove workaround by using mysqlclient build from vcpkg
-//       This is just needed to make the compiler shut up for now.
+#ifndef __WIN32__
 extern "C" {
-	FILE* __cdecl __iob_func(void) {
-		static FILE* iob[3] = { stdin, stdout, stderr };
-		return iob[0];
-	}
-}
+    inline FILE* __iob_func(void) {
+        static FILE* iob[3] = { stdin, stdout, stderr };
+        return iob[0];
+    }
+} 
+#endif
