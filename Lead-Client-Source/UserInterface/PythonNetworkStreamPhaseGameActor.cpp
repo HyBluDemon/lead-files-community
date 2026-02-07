@@ -11,13 +11,13 @@
 
 
 
-void CPythonNetworkStream::__GlobalPositionToLocalPosition(LONG& rGlobalX, LONG& rGlobalY)
+void CPythonNetworkStream::__GlobalPositionToLocalPosition(int32_t& rGlobalX, int32_t& rGlobalY)
 {
 	CPythonBackground&rkBgMgr=CPythonBackground::Instance();
 	rkBgMgr.GlobalPositionToLocalPosition(rGlobalX, rGlobalY);
 }
 
-void CPythonNetworkStream::__LocalPositionToGlobalPosition(LONG& rLocalX, LONG& rLocalY)
+void CPythonNetworkStream::__LocalPositionToGlobalPosition(int32_t& rLocalX, int32_t& rLocalY)
 {
 	CPythonBackground&rkBgMgr=CPythonBackground::Instance();
 	rkBgMgr.LocalPositionToGlobalPosition(rLocalX, rLocalY);

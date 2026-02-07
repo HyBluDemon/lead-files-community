@@ -80,7 +80,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendSpecial(int nLen, void * pvBuf);
 
 		void StartGame();
-		void Warp(LONG lGlobalX, LONG lGlobalY);
+		void Warp(int32_t lGlobalX, int32_t lGlobalY);
 		
 		void NotifyHack(const char* c_szMsg);		
 		void SetWaitFlag();
@@ -544,8 +544,8 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		
 		void __InitializeGamePhase();
 		void __InitializeMarkAuth();
-		void __GlobalPositionToLocalPosition(LONG& rGlobalX, LONG& rGlobalY);
-		void __LocalPositionToGlobalPosition(LONG& rLocalX, LONG& rLocalY);
+		void __GlobalPositionToLocalPosition(int32_t& rGlobalX, int32_t& rGlobalY);
+		void __LocalPositionToGlobalPosition(int32_t& rLocalX, int32_t& rLocalY);
 
 		bool __IsPlayerAttacking();
 		bool __IsEquipItemInSlot(TItemPos Cell);

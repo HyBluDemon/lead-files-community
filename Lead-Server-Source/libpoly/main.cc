@@ -2,6 +2,9 @@
 #include <windows.h>
 #endif
 
+#ifndef __WIN32__
+#include <unistd.h>
+#endif
 #include "Poly.h"
 
 #include <cstdlib>

@@ -6,245 +6,245 @@
 #include "Config.h"
 #include <math.h>
 
-extern std::string g_stLocale;
+	extern std::string g_stLocale;
 
-const int GUILD_RANK_MAX_NUM = 20;
+	const int GUILD_RANK_MAX_NUM = 20;
 
-bool isEurope()
-{
-	do
+	bool isEurope()
 	{
-		if (g_stLocale.compare("germany") == 0) break;
-		if (g_stLocale.compare("france") == 0) break;
-		if (g_stLocale.compare("italy") == 0) break;
-		if (g_stLocale.compare("spain") == 0) break;
-		if (g_stLocale.compare("uk") == 0) break;
-		if (g_stLocale.compare("turkey") == 0) break;
-		if (g_stLocale.compare("poland") == 0) break;
-		if (g_stLocale.compare("portugal") == 0) break;
-		if (g_stLocale.compare("greek") == 0) break;
-
-		return false;
-	} while (false);
-
-	return true;
-}
-
-DWORD GetGuildWarWaitStartDuration()
-{
-	// const int GUILD_WAR_WAIT_START_DURATION = 60;
-	// const int GUILD_WAR_WAIT_START_DURATION = 5; 
-
-	if (isEurope() == true) return 60;
-	else return 5;
-}
-
-DWORD GetGuildWarReserveSeconds()
-{
-	// const int GUILD_WAR_RESERVE_SECONDS = 180;
-	// const int GUILD_WAR_RESERVE_SECONDS = 10;
-
-	if (isEurope() == true) return 180;
-	else return 10;
-}
-
-namespace 
-{
-	struct FSendPeerWar
-	{
-		FSendPeerWar(BYTE bType, BYTE bWar, DWORD GID1, DWORD GID2)
+		do
 		{
-			if (number(0, 1))
-				std::swap(GID1, GID2);
+			if (g_stLocale.compare("germany") == 0) break;
+			if (g_stLocale.compare("france") == 0) break;
+			if (g_stLocale.compare("italy") == 0) break;
+			if (g_stLocale.compare("spain") == 0) break;
+			if (g_stLocale.compare("uk") == 0) break;
+			if (g_stLocale.compare("turkey") == 0) break;
+			if (g_stLocale.compare("poland") == 0) break;
+			if (g_stLocale.compare("portugal") == 0) break;
+			if (g_stLocale.compare("greek") == 0) break;
 
-			memset(&p, 0, sizeof(TPacketGuildWar));
+			return false;
+		} while (false);
 
-			p.bWar = bWar;
-			p.bType = bType;
-			p.dwGuildFrom = GID1;
-			p.dwGuildTo = GID2;
-		}
-
-		void operator() (CPeer* peer)
-		{
-			if (peer->GetChannel() == 0)
-				return;
-
-			peer->EncodeHeader(HEADER_DG_GUILD_WAR, 0, sizeof(TPacketGuildWar));
-			peer->Encode(&p, sizeof(TPacketGuildWar));
-		}
-
-		TPacketGuildWar p;
-	};
-
-	struct FSendGuildWarScore
-	{
-		FSendGuildWarScore(DWORD guild_gain, DWORD dwOppGID, int iScore, int iBetScore)
-		{
-			pck.dwGuildGainPoint = guild_gain;
-			pck.dwGuildOpponent = dwOppGID;
-			pck.lScore = iScore;
-			pck.lBetScore = iBetScore;
-		}
-
-		void operator() (CPeer* peer)
-		{
-			if (peer->GetChannel() == 0)
-				return;
-
-			peer->EncodeHeader(HEADER_DG_GUILD_WAR_SCORE, 0, sizeof(pck));
-			peer->Encode(&pck, sizeof(pck));
-		}
-
-		TPacketGuildWarScore pck;
-	};
-}
-
-CGuildManager::CGuildManager()
-{
-}
-
-CGuildManager::~CGuildManager()
-{
-	while (!m_pqOnWar.empty())
-	{
-		if (!m_pqOnWar.top().second->bEnd)
-			delete m_pqOnWar.top().second;
-
-		m_pqOnWar.pop();
+		return true;
 	}
-}
 
-TGuild & CGuildManager::TouchGuild(DWORD GID)
-{
-	itertype(m_map_kGuild) it = m_map_kGuild.find(GID);
-
-	if (it != m_map_kGuild.end())
-		return it->second;
-
-	TGuild info;
-	m_map_kGuild.insert(std::map<DWORD, TGuild>::value_type(GID, info));
-	return m_map_kGuild[GID];
-}
-
-void CGuildManager::ParseResult(SQLResult * pRes)
-{
-	MYSQL_ROW row;
-
-	while ((row = mysql_fetch_row(pRes->pSQLResult)))
+	DWORD GetGuildWarWaitStartDuration()
 	{
-		DWORD GID = strtoul(row[0], NULL, 10);
+		// const int GUILD_WAR_WAIT_START_DURATION = 60;
+		// const int GUILD_WAR_WAIT_START_DURATION = 5; 
 
-		TGuild & r_info = TouchGuild(GID);
-
-		strlcpy(r_info.szName, row[1], sizeof(r_info.szName));
-		str_to_number(r_info.ladder_point, row[2]);
-		str_to_number(r_info.win, row[3]);
-		str_to_number(r_info.draw, row[4]);
-		str_to_number(r_info.loss, row[5]);
-		str_to_number(r_info.gold, row[6]);
-		str_to_number(r_info.level, row[7]);
-
-		sys_log(0, 
-				"GuildWar: %-24s ladder %-5d win %-3d draw %-3d loss %-3d", 
-				r_info.szName,
-				r_info.ladder_point,
-				r_info.win,
-				r_info.draw,
-				r_info.loss);
+		if (isEurope() == true) return 60;
+		else return 5;
 	}
-}
 
-void CGuildManager::Initialize()
-{
-	char szQuery[1024];
-	snprintf(szQuery, sizeof(szQuery), "SELECT id, name, ladder_point, win, draw, loss, gold, level FROM guild%s", GetTablePostfix());
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
-
-	if (pmsg->Get()->uiNumRows)
-		ParseResult(pmsg->Get());
-
-	char str[128 + 1];
-
-	if (!CConfig::instance().GetValue("POLY_POWER", str, sizeof(str)))
-		*str = '\0';
-
-	if (!polyPower.Analyze(str))
-		sys_err("cannot set power poly: %s", str);
-	else
-		sys_log(0, "POWER_POLY: %s", str);
-
-	if (!CConfig::instance().GetValue("POLY_HANDICAP", str, sizeof(str)))
-		*str = '\0';
-
-	if (!polyHandicap.Analyze(str))
-		sys_err("cannot set handicap poly: %s", str);
-	else
-		sys_log(0, "HANDICAP_POLY: %s", str);
-
-	QueryRanking();
-}
-
-void CGuildManager::Load(DWORD dwGuildID)
-{
-	char szQuery[1024];
-
-	snprintf(szQuery, sizeof(szQuery), "SELECT id, name, ladder_point, win, draw, loss, gold, level FROM guild%s WHERE id=%u", GetTablePostfix(), dwGuildID);
-	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
-
-	if (pmsg->Get()->uiNumRows)
-		ParseResult(pmsg->Get());
-}
-
-void CGuildManager::QueryRanking()
-{
-	char szQuery[256];
-	snprintf(szQuery, sizeof(szQuery), "SELECT id,name,ladder_point FROM guild%s ORDER BY ladder_point DESC LIMIT 20", GetTablePostfix());
-
-	CDBManager::instance().ReturnQuery(szQuery, QID_GUILD_RANKING, 0, 0);
-}
-
-int CGuildManager::GetRanking(DWORD dwGID)
-{
-	itertype(map_kLadderPointRankingByGID) it = map_kLadderPointRankingByGID.find(dwGID);
-
-	if (it == map_kLadderPointRankingByGID.end())
-		return GUILD_RANK_MAX_NUM;
-
-	return MINMAX(0, it->second, GUILD_RANK_MAX_NUM);
-}
-
-void CGuildManager::ResultRanking(MYSQL_RES * pRes)
-{
-	if (!pRes)
-		return;
-
-	int iLastLadderPoint = -1;
-	int iRank = 0;
-
-	map_kLadderPointRankingByGID.clear();
-
-	MYSQL_ROW row;
-
-	while ((row = mysql_fetch_row(pRes)))
+	DWORD GetGuildWarReserveSeconds()
 	{
-		DWORD	dwGID = 0; str_to_number(dwGID, row[0]);
-		int	iLadderPoint = 0; str_to_number(iLadderPoint, row[2]);
+		// const int GUILD_WAR_RESERVE_SECONDS = 180;
+		// const int GUILD_WAR_RESERVE_SECONDS = 10;
 
-		if (iLadderPoint != iLastLadderPoint)
-			++iRank;
-
-		sys_log(0, "GUILD_RANK: %-24s %2d %d", row[1], iRank, iLadderPoint);
-
-		map_kLadderPointRankingByGID.insert(std::make_pair(dwGID, iRank));
+		if (isEurope() == true) return 180;
+		else return 10;
 	}
-}
 
-void CGuildManager::Update()
-{
-	ProcessReserveWar(); // 抗距 傈里 贸府
+	namespace 
+	{
+		struct FSendPeerWar
+		{
+			FSendPeerWar(BYTE bType, BYTE bWar, DWORD GID1, DWORD GID2)
+			{
+				if (number(0, 1))
+					std::swap(GID1, GID2);
 
-	time_t now = CClientManager::instance().GetCurrentTime();
+				memset(&p, 0, sizeof(TPacketGuildWar));
+
+				p.bWar = bWar;
+				p.bType = bType;
+				p.dwGuildFrom = GID1;
+				p.dwGuildTo = GID2;
+			}
+
+			void operator() (CPeer* peer)
+			{
+				if (peer->GetChannel() == 0)
+					return;
+
+				peer->EncodeHeader(HEADER_DG_GUILD_WAR, 0, sizeof(TPacketGuildWar));
+				peer->Encode(&p, sizeof(TPacketGuildWar));
+			}
+
+			TPacketGuildWar p;
+		};
+
+		struct FSendGuildWarScore
+		{
+			FSendGuildWarScore(DWORD guild_gain, DWORD dwOppGID, int iScore, int iBetScore)
+			{
+				pck.dwGuildGainPoint = guild_gain;
+				pck.dwGuildOpponent = dwOppGID;
+				pck.lScore = iScore;
+				pck.lBetScore = iBetScore;
+			}
+
+			void operator() (CPeer* peer)
+			{
+				if (peer->GetChannel() == 0)
+					return;
+
+				peer->EncodeHeader(HEADER_DG_GUILD_WAR_SCORE, 0, sizeof(pck));
+				peer->Encode(&pck, sizeof(pck));
+			}
+
+			TPacketGuildWarScore pck;
+		};
+	}
+
+	CGuildManager::CGuildManager()
+	{
+	}
+
+	CGuildManager::~CGuildManager()
+	{
+		while (!m_pqOnWar.empty())
+		{
+			if (!m_pqOnWar.top().second->bEnd)
+				delete m_pqOnWar.top().second;
+
+			m_pqOnWar.pop();
+		}
+	}
+
+	TGuild & CGuildManager::TouchGuild(DWORD GID)
+	{
+		itertype(m_map_kGuild) it = m_map_kGuild.find(GID);
+
+		if (it != m_map_kGuild.end())
+			return it->second;
+
+		TGuild info;
+		m_map_kGuild.insert(std::map<DWORD, TGuild>::value_type(GID, info));
+		return m_map_kGuild[GID];
+	}
+
+	void CGuildManager::ParseResult(SQLResult * pRes)
+	{
+		MYSQL_ROW row;
+
+		while ((row = mysql_fetch_row(pRes->pSQLResult)))
+		{
+			DWORD GID = strtoul(row[0], NULL, 10);
+
+			TGuild & r_info = TouchGuild(GID);
+
+			strlcpy(r_info.szName, row[1], sizeof(r_info.szName));
+			str_to_number(r_info.ladder_point, row[2]);
+			str_to_number(r_info.win, row[3]);
+			str_to_number(r_info.draw, row[4]);
+			str_to_number(r_info.loss, row[5]);
+			str_to_number(r_info.gold, row[6]);
+			str_to_number(r_info.level, row[7]);
+
+			sys_log(0, 
+					"GuildWar: %-24s ladder %-5d win %-3d draw %-3d loss %-3d", 
+					r_info.szName,
+					r_info.ladder_point,
+					r_info.win,
+					r_info.draw,
+					r_info.loss);
+		}
+	}
+
+	void CGuildManager::Initialize()
+	{
+		char szQuery[1024];
+		snprintf(szQuery, sizeof(szQuery), "SELECT id, name, ladder_point, win, draw, loss, gold, level FROM guild%s", GetTablePostfix());
+		std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+
+		if (pmsg->Get()->uiNumRows)
+			ParseResult(pmsg->Get());
+
+		char str[128 + 1];
+
+		if (!CConfig::instance().GetValue("POLY_POWER", str, sizeof(str)))
+			*str = '\0';
+
+		if (!polyPower.Analyze(str))
+			sys_err("cannot set power poly: %s", str);
+		else
+			sys_log(0, "POWER_POLY: %s", str);
+
+		if (!CConfig::instance().GetValue("POLY_HANDICAP", str, sizeof(str)))
+			*str = '\0';
+
+		if (!polyHandicap.Analyze(str))
+			sys_err("cannot set handicap poly: %s", str);
+		else
+			sys_log(0, "HANDICAP_POLY: %s", str);
+
+		QueryRanking();
+	}
+
+	void CGuildManager::Load(DWORD dwGuildID)
+	{
+		char szQuery[1024];
+
+		snprintf(szQuery, sizeof(szQuery), "SELECT id, name, ladder_point, win, draw, loss, gold, level FROM guild%s WHERE id=%u", GetTablePostfix(), dwGuildID);
+		std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
+
+		if (pmsg->Get()->uiNumRows)
+			ParseResult(pmsg->Get());
+	}
+
+	void CGuildManager::QueryRanking()
+	{
+		char szQuery[256];
+		snprintf(szQuery, sizeof(szQuery), "SELECT id,name,ladder_point FROM guild%s ORDER BY ladder_point DESC LIMIT 20", GetTablePostfix());
+
+		CDBManager::instance().ReturnQuery(szQuery, QID_GUILD_RANKING, 0, 0);
+	}
+
+	int CGuildManager::GetRanking(DWORD dwGID)
+	{
+		itertype(map_kLadderPointRankingByGID) it = map_kLadderPointRankingByGID.find(dwGID);
+
+		if (it == map_kLadderPointRankingByGID.end())
+			return GUILD_RANK_MAX_NUM;
+
+		return MINMAX(0, it->second, GUILD_RANK_MAX_NUM);
+	}
+
+	void CGuildManager::ResultRanking(MYSQL_RES * pRes)
+	{
+		if (!pRes)
+			return;
+
+		int iLastLadderPoint = -1;
+		int iRank = 0;
+
+		map_kLadderPointRankingByGID.clear();
+
+		MYSQL_ROW row;
+
+		while ((row = mysql_fetch_row(pRes)))
+		{
+			DWORD	dwGID = 0; str_to_number(dwGID, row[0]);
+			int	iLadderPoint = 0; str_to_number(iLadderPoint, row[2]);
+
+			if (iLadderPoint != iLastLadderPoint)
+				++iRank;
+
+			sys_log(0, "GUILD_RANK: %-24s %2d %d", row[1], iRank, iLadderPoint);
+
+			map_kLadderPointRankingByGID.insert(std::make_pair(dwGID, iRank));
+		}
+	}
+
+	void CGuildManager::Update()
+	{
+		ProcessReserveWar(); // 抗距 傈里 贸府
+
+		uint32_t now = CClientManager::instance().GetCurrentTime();
 
 	if (!m_pqOnWar.empty())
 	{
@@ -1134,10 +1134,7 @@ void CGuildManager::ProcessReserveWar()
 				{
 					pk->SetLastNoticeMin(iMin);
 
-					if (!g_stLocale.compare("euckr"))
-						CClientManager::instance().SendNotice("%s 辨靛客 %s 辨靛狼 傈里捞 距 %d盒 饶 矫累 邓聪促!", r_1.szName, r_2.szName, iMin);
-					else if (!g_stLocale.compare("gb2312"))
-						CClientManager::instance().SendNotice("%s 帮会和 %s 帮会的帮会战争将在 %d分钟后开始!", r_1.szName, r_2.szName, iMin);
+					CClientManager::instance().SendNotice("War between %s and  %s will start in %d minutes!", r_1.szName, r_2.szName, iMin);
 				}
 			}
 		}

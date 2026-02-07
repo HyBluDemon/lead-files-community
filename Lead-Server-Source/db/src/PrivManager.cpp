@@ -24,7 +24,7 @@ CPrivManager::~CPrivManager()
 //
 void CPrivManager::Update()
 {
-	time_t now = CClientManager::instance().GetCurrentTime();
+	uint32_t now = CClientManager::instance().GetCurrentTime();
 
 	while (!m_pqPrivGuild.empty() && m_pqPrivGuild.top().first <= now)
 	{
@@ -96,7 +96,7 @@ void CPrivManager::AddCharPriv(DWORD pid, BYTE type, int value)
 	if (!value)
 		return;
 
-	time_t now = CClientManager::instance().GetCurrentTime();
+	uint32_t now = CClientManager::instance().GetCurrentTime();
 	TPrivCharData* p = new TPrivCharData(type, value, pid);
 
 	int iDuration = CHARACTER_BAD_PRIV_DURATION;
@@ -115,7 +115,7 @@ void CPrivManager::AddCharPriv(DWORD pid, BYTE type, int value)
 //
 // @version 05/06/07	Bang2ni - 이미 보너스가 적용 된 길드에 보너스 설정
 //
-void CPrivManager::AddGuildPriv(DWORD guild_id, BYTE type, int value, time_t duration_sec)
+void CPrivManager::AddGuildPriv(DWORD guild_id, BYTE type, int value, uint32_t duration_sec)
 {
 	if (MAX_PRIV_NUM <= type)
 	{
@@ -125,8 +125,8 @@ void CPrivManager::AddGuildPriv(DWORD guild_id, BYTE type, int value, time_t dur
 
 	typeof(m_aPrivGuild[type].begin()) it = m_aPrivGuild[type].find(guild_id);
 
-	time_t now = CClientManager::instance().GetCurrentTime();
-	time_t end = now + duration_sec;
+	uint32_t now = CClientManager::instance().GetCurrentTime();
+	uint32_t end = now + duration_sec;
 	TPrivGuildData * p = new TPrivGuildData(type, value, guild_id, end);
 	m_pqPrivGuild.push(std::make_pair(end, p));
 
@@ -144,7 +144,7 @@ void CPrivManager::AddGuildPriv(DWORD guild_id, BYTE type, int value, time_t dur
 	sys_log(0, "Guild Priv guild(%d) type(%d) value(%d) duration_sec(%d)", guild_id, type, value, duration_sec);
 }
 
-void CPrivManager::AddEmpirePriv(BYTE empire, BYTE type, int value, time_t duration_sec)
+void CPrivManager::AddEmpirePriv(BYTE empire, BYTE type, int value, uint32_t duration_sec)
 {
 	if (MAX_PRIV_NUM <= type)
 	{
@@ -155,8 +155,8 @@ void CPrivManager::AddEmpirePriv(BYTE empire, BYTE type, int value, time_t durat
 	if (duration_sec < 0)
 		duration_sec = 0;
 
-	time_t now = CClientManager::instance().GetCurrentTime();
-	time_t end = now+duration_sec;
+	uint32_t now = CClientManager::instance().GetCurrentTime();
+	uint32_t end = now+duration_sec;
 
 	// 이전 설정값 무효화
 	// priority_queue에 들어있는 pointer == m_aaPrivEmpire[type][empire]
@@ -181,7 +181,7 @@ void CPrivManager::AddEmpirePriv(BYTE empire, BYTE type, int value, time_t durat
  */
 struct FSendChangeGuildPriv
 {
-	FSendChangeGuildPriv(DWORD guild_id, BYTE type, int value, time_t end_time_sec)
+	FSendChangeGuildPriv(DWORD guild_id, BYTE type, int value, uint32_t end_time_sec)
 	{
 		p.guild_id = guild_id;
 		p.type = type;
@@ -204,7 +204,7 @@ struct FSendChangeGuildPriv
 
 struct FSendChangeEmpirePriv
 {
-	FSendChangeEmpirePriv(BYTE empire, BYTE type, int value, time_t end_time_sec)
+	FSendChangeEmpirePriv(BYTE empire, BYTE type, int value, uint32_t end_time_sec)
 	{
 		p.empire = empire;
 		p.type = type;
@@ -244,14 +244,14 @@ struct FSendChangeCharPriv
 };
 
 // ADD_GUILD_PRIV_TIME
-void CPrivManager::SendChangeGuildPriv(DWORD guild_id, BYTE type, int value, time_t end_time_sec)
+void CPrivManager::SendChangeGuildPriv(DWORD guild_id, BYTE type, int value, uint32_t end_time_sec)
 {
 	CClientManager::instance().for_each_peer(FSendChangeGuildPriv(guild_id, type, value, end_time_sec));
 }
 // END_OF_ADD_GUILD_PRIV_TIME
 
 // ADD_EMPIRE_PRIV_TIME
-void CPrivManager::SendChangeEmpirePriv(BYTE empire, BYTE type, int value, time_t end_time_sec)
+void CPrivManager::SendChangeEmpirePriv(BYTE empire, BYTE type, int value, uint32_t end_time_sec)
 {
 	CClientManager::instance().for_each_peer(FSendChangeEmpirePriv(empire, type, value, end_time_sec));
 }

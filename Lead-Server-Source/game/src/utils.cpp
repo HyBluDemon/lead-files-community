@@ -148,7 +148,7 @@ int CalculateDuration(int iSpd, int iDur)
 }
 double uniform_random(double a, double b)
 {
-	return thecore_random() / (RAND_MAX + 1.f) * (b - a) + a;
+	return (float)((double)thecore_random() / ((double)RAND_MAX + 1.0) * (b - a) + a);
 }
 
 float gauss_random(float avg, float sigma)
@@ -240,7 +240,7 @@ bool WildCaseCmp(const char *w, const char *s)
 		switch(*w)
 		{
 			case '*':
-				if (NULL == w[1])
+				if ('\0' == w[1])
 					return true;
 				{
 					for (size_t i = 0; i <= strlen(s); ++i)
@@ -252,7 +252,7 @@ bool WildCaseCmp(const char *w, const char *s)
 				return false;
 
 			case '?':
-				if (NULL == *s)
+				if ('\0' == *s)
 					return false;
 
 				++w;
@@ -266,7 +266,7 @@ bool WildCaseCmp(const char *w, const char *s)
 						return false;
 				}
 
-				if (NULL == *w)
+				if ('\0' == *w)
 					return true;
 
 				++w;

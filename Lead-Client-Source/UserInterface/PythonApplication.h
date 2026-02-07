@@ -181,7 +181,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		int GetWidth();
 		int GetHeight();
 
-		void SetGlobalCenterPosition(LONG x, LONG y);
+		void SetGlobalCenterPosition(int32_t x, int32_t y);
 		void SetCenterPosition(float fx, float fy, float fz);
 		void GetCenterPosition(TPixelPosition * pPixelPosition);
 		void SetCamera(float Distance, float Pitch, float Rotation, float fDestinationHeight);

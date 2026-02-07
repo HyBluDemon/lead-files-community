@@ -91,7 +91,7 @@ EVENTFUNC( DragonLair_Collapse_Event )
 	if (0 == pInfo->step)
 	{
 		char buf[512];
-		snprintf(buf, 512, LC_TEXT("Yonggari dies in %d seconds ¤Ð¤Ð"), pInfo->pLair->GetEstimatedTime());
+			snprintf(buf, 512, LC_TEXT("The Dragon's Lair will collapse in %d seconds!"), pInfo->pLair->GetEstimatedTime());
 		SendNoticeMap(buf, pInfo->InstanceMapIndex, true);
 
 		pInfo->step++;
@@ -146,7 +146,7 @@ DWORD CDragonLair::GetEstimatedTime() const
 
 void CDragonLair::OnDragonDead(LPCHARACTER pDragon)
 {
-	sys_log(0, "DragonLair: µµ¶ó°ïÀÌ Á×¾î½áÈ¿");
+	sys_log(0, "DragonLair: Dragon is dead");
 
 	LogManager::instance().DragonSlayLog(  GuildID_, pDragon->GetMobTable().dwVnum, StartTime_, get_global_time() );
 }

@@ -53,15 +53,9 @@
 #include "DragonSoul.h"
 #include <boost/bind.hpp>
 
-#ifdef USE_STACKTRACE
-#include <execinfo.h>
-#endif
-
 #include "switchbot.h"
 
-extern void WriteVersion();
-
-// °ÔÀÓ°ú ¿¬°áµÇ´Â ¼ÒÄÏ
+// ê²Œì„ê³¼ ì—°ê²°ë˜ëŠ” ì†Œì¼“
 volatile int	num_events_called = 0;
 int             max_bytes_written = 0;
 int             current_bytes_written = 0;
@@ -190,7 +184,7 @@ void heartbeat(LPHEART ht, int pulse)
 
 	t = get_dword_time();
 
-	// 1ÃÊ¸¶´Ù
+	// 1ì´ˆë§ˆë‹¤
 	if (!(pulse % ht->passes_per_sec))
 	{
 		if (!g_bAuthServer)
@@ -219,14 +213,14 @@ void heartbeat(LPHEART ht, int pulse)
 	}
 
 	//
-	// 25 PPS(Pulse per second) ¶ó°í °¡Á¤ÇÒ ¶§
+	// 25 PPS(Pulse per second) ë¼ê³  ê°€ì •í•  ë•Œ
 	//
 
-	// ¾à 1.16ÃÊ¸¶´Ù
+	// ì•½ 1.16ì´ˆë§ˆë‹¤
 	if (!(pulse % (passes_per_sec + 4)))
 		CHARACTER_MANAGER::instance().ProcessDelayedSave();
 
-	// ¾à 5.08ÃÊ¸¶´Ù
+	// ì•½ 5.08ì´ˆë§ˆë‹¤
 	if (!(pulse % (passes_per_sec * 5 + 2)))
 	{
 		ITEM_MANAGER::instance().Update();
@@ -267,8 +261,6 @@ int main(int argc, char **argv)
 {
 	ilInit(); // DevIL Initialize
 
-	WriteVersion();
-	
 	SECTREE_MANAGER	sectree_manager;
 	CHARACTER_MANAGER	char_manager;
 	ITEM_MANAGER	item_manager;
@@ -666,7 +658,7 @@ int io_loop(LPFDWATCH fdw)
 	LPDESC	d;
 	int		num_events, event_idx;
 
-	DESC_MANAGER::instance().DestroyClosed(); // PHASE_CLOSEÀÎ Á¢¼ÓµéÀ» ²÷¾îÁØ´Ù.
+	DESC_MANAGER::instance().DestroyClosed(); // PHASE_CLOSEì¸ ì ‘ì†ë“¤ì„ ëŠì–´ì¤€ë‹¤.
 	DESC_MANAGER::instance().TryConnect();
 
 	if ((num_events = fdwatch(fdw, 0)) < 0)

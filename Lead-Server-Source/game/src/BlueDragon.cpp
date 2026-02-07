@@ -18,7 +18,7 @@ extern int passes_per_sec;
 #include "packet.h"
 #include "motion.h"
 
-time_t UseBlueDragonSkill(LPCHARACTER pChar, unsigned int idx)
+uint32_t UseBlueDragonSkill(LPCHARACTER pChar, unsigned int idx)
 {
 	LPSECTREE_MAP pSecMap = SECTREE_MANAGER::instance().GetMap( pChar->GetMapIndex() );
 
@@ -89,7 +89,7 @@ int BlueDragon_StateBattle(LPCHARACTER pChar)
 
 	const int SkillCount = 3;
 	int SkillPriority[SkillCount];
-	static time_t timeSkillCanUseTime[SkillCount];
+	static uint32_t timeSkillCanUseTime[SkillCount];
 
 	if (pChar->GetHPPct() > 76)
 	{
@@ -110,7 +110,7 @@ int BlueDragon_StateBattle(LPCHARACTER pChar)
 		SkillPriority[2] = 1;
 	}
 
-	time_t timeNow = static_cast<time_t>(get_dword_time());
+	uint32_t timeNow = static_cast<uint32_t>(get_dword_time());
 
 	for (int i=0 ; i < SkillCount ; ++i)
 	{

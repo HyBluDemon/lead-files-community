@@ -29,7 +29,7 @@ class CLoginData
 	void		SetDeleted(bool bSet);
 	bool		IsDeleted();
 
-	time_t		GetLastPlayTime() { return m_lastPlayTime; }
+	uint32_t	GetLastPlayTime() { return m_lastPlayTime; }
 
 	void            SetPremium(int * paiPremiumTimes);
 	int             GetPremium(BYTE type);
@@ -47,7 +47,7 @@ class CLoginData
 	bool		m_bPlay;
 	bool		m_bDeleted;
 
-	time_t		m_lastPlayTime;
+	uint32_t	m_lastPlayTime;
 	int		m_aiPremiumTimes[PREMIUM_MAX_NUM];
 
 	DWORD		m_dwLastPlayerID;

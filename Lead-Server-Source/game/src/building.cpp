@@ -646,8 +646,11 @@ void CManager::Destroy()
 
 bool CManager::LoadObjectProto(const TObjectProto * pProto, int size) // from DB
 {
+	if (0 == size)
+		return true;
+
 	m_vec_kObjectProto.resize(size);
-	thecore_memcpy(&m_vec_kObjectProto[0], pProto, sizeof(TObjectProto) * size);
+	thecore_memcpy(m_vec_kObjectProto.data(), pProto, sizeof(TObjectProto) * size);
 
 	for (int i = 0; i < size; ++i)
 	{

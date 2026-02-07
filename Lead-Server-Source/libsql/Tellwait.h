@@ -1,16 +1,20 @@
-#ifndef __INC_METIN_II_TELLWAIT_H__
-#define __INC_METIN_II_TELLWAIT_H__
+#ifndef __INC_METIN_II_LIBSQL_TELLWAIT_H__
+#define __INC_METIN_II_LIBSQL_TELLWAIT_H__
 
-#ifndef __WIN32__
+#include <sys/types.h>
 
-extern void TELL_WAIT();
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-extern void WAIT_CHILD();
-extern void TELL_CHILD(pid_t pid);
+    void TELL_WAIT();
+    void TELL_PARENT(pid_t pid);
+    void WAIT_PARENT();
+    void TELL_CHILD(pid_t pid);
+    void WAIT_CHILD();
 
-extern void WAIT_PARENT();
-extern void TELL_PARENT(pid_t pid);
-
+#ifdef __cplusplus
+}
 #endif
 
 #endif

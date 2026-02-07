@@ -32,7 +32,7 @@
 #include "xdirent.h"
 #include "xgetopt.h"
 
-#define S_ISDIR(m)	(m & _S_IFDIR)
+#define S_ISDIR(m)      (m & _S_IFDIR)
 #define snprintf _snprintf
 
 #define __USE_SELECT__
@@ -57,15 +57,15 @@
 #define SIGUSR2     31  /* user defined signal 2 */
 
 inline void usleep(unsigned long usec) {
-	::Sleep(usec / 1000);
+        ::Sleep(usec / 1000);
 }
 inline unsigned sleep(unsigned sec) {
-	::Sleep(sec * 1000);
-	return 0;
+        ::Sleep(sec * 1000);
+        return 0;
 }
 inline double rint(double x)
 {
-	return ::floor(x+.5);
+        return ::floor(x+.5);
 }
 
 
@@ -78,13 +78,9 @@ inline double rint(double x)
 #endif
 #endif
 
-struct timespec
-{
-	time_t  tv_sec;         /* seconds */
-	long    tv_nsec;        /* and nanoseconds */
-};
-#define strtof(str, endptr) (float)strtod(str, endptr)
-
+#include <sys/types.h>
+#include <sys/time.h>
+#include <time.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
@@ -97,9 +93,7 @@ struct timespec
 #include <limits.h>
 #include <dirent.h>
 
-#include <sys/time.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -119,13 +113,13 @@ struct timespec
 #endif
 
 #ifndef false
-#define false	0
-#define true	(!false)
+#define false   0
+#define true    (!false)
 #endif
 
 #ifndef FALSE
-#define FALSE	false
-#define TRUE	(!FALSE)
+#define FALSE   false
+#define TRUE    (!FALSE)
 #endif
 
 #include "typedef.h"

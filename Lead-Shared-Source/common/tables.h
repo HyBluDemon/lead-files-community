@@ -276,8 +276,8 @@ typedef struct SSimplePlayer
 	BYTE		bChangeName;
 	WORD		wHairPart;
 	BYTE		bDummy[4];
-	long		x, y;
-	long		lAddr;
+	int32_t		x, y;
+	int32_t		lAddr;
 	WORD		wPort;
 	BYTE		skill_group;
 } TSimplePlayer;
@@ -313,7 +313,7 @@ typedef struct SPlayerItem
 	DWORD	count;
 
 	DWORD	vnum;
-	long	alSockets[ITEM_SOCKET_MAX_NUM];	// 소켓번호
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];	// 소켓번호
 
 	TPlayerItemAttribute    aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 
@@ -330,7 +330,7 @@ typedef struct SPlayerSkill
 {
 	BYTE	bMasterType;
 	BYTE	bLevel;
-	time_t	tNextRead;
+	uint32_t	tNextRead;
 } TPlayerSkill;
 
 struct	THorseInfo
@@ -363,8 +363,8 @@ typedef struct SPlayerTable
 	INT		x, y, z;
 	INT		lMapIndex;
 
-	long	lExitX, lExitY;
-	long	lExitMapIndex;
+	int32_t	lExitX, lExitY;
+	int32_t	lExitMapIndex;
 
 	short       hp;
 	short       sp;
@@ -389,7 +389,7 @@ typedef struct SPlayerTable
 	short	stamina;
 
 	BYTE	skill_group;
-	long	lAlignment;
+	int32_t	lAlignment;
 
 	short	stat_reset_count;
 
@@ -578,8 +578,8 @@ typedef struct SItemTable : public SEntityTable
 
 	TItemLimit	aLimits[ITEM_LIMIT_MAX_NUM];
 	TItemApply	aApplies[ITEM_APPLY_MAX_NUM];
-	long        alValues[ITEM_VALUES_MAX_NUM];
-	long	alSockets[ITEM_SOCKET_MAX_NUM];
+	int32_t        alValues[ITEM_VALUES_MAX_NUM];
+	int32_t	alSockets[ITEM_SOCKET_MAX_NUM];
 	DWORD	dwRefinedVnum;
 	WORD	wRefineSet;
 	BYTE	bAlterToMagicItemPct;
@@ -709,7 +709,7 @@ typedef struct SPacketGDSetup
 	BYTE	bChannel;	// 채널
 	WORD	wListenPort;	// 클라이언트가 접속하는 포트 번호
 	WORD	wP2PPort;	// 서버끼리 연결 시키는 P2P 포트 번호
-	long	alMaps[32];
+	int32_t	alMaps[32];
 	DWORD	dwLoginCount;
 	BYTE	bAuthServer;
 } TPacketGDSetup;
@@ -721,7 +721,7 @@ typedef struct SPacketDGMapLocations
 
 typedef struct SMapLocation
 {
-	long	alMaps[32];
+	int32_t	alMaps[32];
 	char	szHost[MAX_HOST_LENGTH + 1];
 	WORD	wPort;
 } TMapLocation;
@@ -983,14 +983,14 @@ typedef struct SPacketGiveGuildPriv
 	BYTE type;
 	int value;
 	DWORD guild_id;
-	time_t duration_sec;	///< 지속시간
+	uint32_t duration_sec;	///< 지속시간
 } TPacketGiveGuildPriv;
 typedef struct SPacketGiveEmpirePriv
 {
 	BYTE type;
 	int value;
 	BYTE empire;
-	time_t duration_sec;
+	uint32_t duration_sec;
 } TPacketGiveEmpirePriv;
 typedef struct SPacketGiveCharacterPriv
 {
@@ -1026,7 +1026,7 @@ typedef struct SPacketDGChangeGuildPriv
 	int value;
 	DWORD guild_id;
 	BYTE bLog;
-	time_t end_time_sec;	///< 지속시간
+	uint32_t end_time_sec;	///< 지속시간
 } TPacketDGChangeGuildPriv;
 
 typedef struct SPacketDGChangeEmpirePriv
@@ -1035,7 +1035,7 @@ typedef struct SPacketDGChangeEmpirePriv
 	int value;
 	BYTE empire;
 	BYTE bLog;
-	time_t end_time_sec;
+	uint32_t end_time_sec;
 } TPacketDGChangeEmpirePriv;
 
 typedef struct SPacketMoneyLog
@@ -1134,7 +1134,7 @@ typedef struct
 {
 	DWORD dwPID1;
 	DWORD dwPID2;
-	time_t tMarryTime;
+	uint32_t tMarryTime;
 	char szName1[CHARACTER_NAME_MAX_LEN + 1];
 	char szName2[CHARACTER_NAME_MAX_LEN + 1];
 } TPacketMarriageAdd;

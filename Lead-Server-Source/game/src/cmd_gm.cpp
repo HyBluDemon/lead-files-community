@@ -940,7 +940,7 @@ ACMD(do_state)
 	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s"), buf);
 
 	int len;
-	len = snprintf(buf, sizeof(buf), "Coordinate %ldx%ld (%ldx%ld)", 
+	len = snprintf(buf, sizeof(buf), "Coordinate %dx%d (%dx%d)", 
 			tch->GetX(), tch->GetY(), tch->GetX() / 100, tch->GetY() / 100);
 
 	if (len < 0 || len >= (int) sizeof(buf))
@@ -951,7 +951,7 @@ ACMD(do_state)
 	if (pSec)
 	{
 		TMapSetting& map_setting = SECTREE_MANAGER::instance().GetMap(tch->GetMapIndex())->m_setting;
-		snprintf(buf + len, sizeof(buf) - len, " MapIndex %ld Attribute %08X Local Position (%ld x %ld)", 
+		snprintf(buf + len, sizeof(buf) - len, " MapIndex %d Attribute %08X Local Position (%d x %d)", 
 			tch->GetMapIndex(), pSec->GetAttribute(tch->GetX(), tch->GetY()), (tch->GetX() - map_setting.iBaseX)/100, (tch->GetY() - map_setting.iBaseY)/100);
 	}
 
@@ -3688,7 +3688,7 @@ ACMD(do_set_stat)
 
 	two_arguments (argument, szName, sizeof (szName), szChangeAmount, sizeof(szChangeAmount));
 
-	if (*szName == NULL || *szChangeAmount == '\0')
+	if (*szName == '\0' || *szChangeAmount == '\0')
 	{
 		ch->ChatPacket (CHAT_TYPE_INFO, LC_TEXT("Invalid argument."));
 		return;

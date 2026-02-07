@@ -14,9 +14,9 @@ struct TPrivEmpireData
     BYTE empire;
 
 	// ADD_EMPIRE_PRIV_TIME
-    time_t end_time_sec;
+    uint32_t end_time_sec;
 
-    TPrivEmpireData(BYTE type, int value, BYTE empire, time_t end_time_sec)
+    TPrivEmpireData(BYTE type, int value, BYTE empire, uint32_t end_time_sec)
 	: type(type), value(value), bRemoved(false), empire(empire), end_time_sec(end_time_sec)
     {}
 	// END_OF_ADD_EMPIRE_PRIV_TIME
@@ -33,9 +33,9 @@ struct TPrivGuildData
     DWORD guild_id;
 
 	// ADD_GUILD_PRIV_TIME
-    time_t end_time_sec;	///< 지속시간
+    uint32_t end_time_sec;	///< 지속시간
 
-    TPrivGuildData(BYTE type, int value, DWORD guild_id, time_t _end_time_sec)
+    TPrivGuildData(BYTE type, int value, DWORD guild_id, uint32_t _end_time_sec)
 	: type(type), value(value), bRemoved(false), guild_id(guild_id), end_time_sec(_end_time_sec )
     {}
 	// END_OF_ADD_GUILD_PRIV_TIME
@@ -62,11 +62,11 @@ class CPrivManager : public singleton<CPrivManager>
 	virtual ~CPrivManager();
 
 	// ADD_GUILD_PRIV_TIME
-	void AddGuildPriv(DWORD guild_id, BYTE type, int value, time_t time_sec);
+	void AddGuildPriv(DWORD guild_id, BYTE type, int value, uint32_t time_sec);
 	// END_OF_ADD_GUILD_PRIV_TIME
 
 	// ADD_EMPIRE_PRIV_TIME	
-	void AddEmpirePriv(BYTE empire, BYTE type, int value, time_t time_sec);
+	void AddEmpirePriv(BYTE empire, BYTE type, int value, uint32_t time_sec);
 	// END_OF_ADD_EMPIRE_PRIV_TIME
 	
 	void AddCharPriv(DWORD pid, BYTE type, int value);
@@ -78,18 +78,18 @@ class CPrivManager : public singleton<CPrivManager>
     private:
 
 	// ADD_GUILD_PRIV_TIME
-	void SendChangeGuildPriv(DWORD guild_id, BYTE type, int value, time_t end_time_sec);
+	void SendChangeGuildPriv(DWORD guild_id, BYTE type, int value, uint32_t end_time_sec);
 	// END_OF_ADD_GUILD_PRIV_TIME
 
 	// ADD_EMPIRE_PRIV_TIME	
-	void SendChangeEmpirePriv(BYTE empire, BYTE type, int value, time_t end_time_sec);
+	void SendChangeEmpirePriv(BYTE empire, BYTE type, int value, uint32_t end_time_sec);
 	// END_OF_ADD_EMPIRE_PRIV_TIME
 
 	void SendChangeCharPriv(DWORD pid, BYTE type, int value);
 
-	typedef std::pair<time_t, TPrivCharData *> stPairChar;
-	typedef std::pair<time_t, TPrivGuildData*> stPairGuild;
-	typedef std::pair<time_t, TPrivEmpireData*> stPairEmpire;
+	typedef std::pair<uint32_t, TPrivCharData *> stPairChar;
+	typedef std::pair<uint32_t, TPrivGuildData*> stPairGuild;
+	typedef std::pair<uint32_t, TPrivEmpireData*> stPairEmpire;
 
 	std::priority_queue<stPairChar, std::vector<stPairChar>, std::greater<stPairChar> >
 	    m_pqPrivChar;
