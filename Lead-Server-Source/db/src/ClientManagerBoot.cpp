@@ -151,15 +151,14 @@ bool CClientManager::InitializeRefineTable()
 		str_to_number(prt->cost, data[col++]);
 		str_to_number(prt->prob, data[col++]);
 
+		prt->material_count = 0;
 		for (int i = 0; i < REFINE_MATERIAL_MAX_NUM; i++)
 		{
 			str_to_number(prt->materials[i].vnum, data[col++]);
 			str_to_number(prt->materials[i].count, data[col++]);
-			if (prt->materials[i].vnum == 0)
-			{
-				prt->material_count = i;
-				break;
-			}
+			
+			if (prt->materials[i].vnum)
+				prt->material_count++;
 		}
 
 		sys_log(0, "REFINE: id %ld cost %d prob %d mat1 %lu cnt1 %d", prt->id, prt->cost, prt->prob, prt->materials[0].vnum, prt->materials[0].count);
