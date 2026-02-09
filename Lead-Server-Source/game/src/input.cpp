@@ -18,29 +18,6 @@
 
 extern time_t get_global_time();
 
-bool IsEmptyAdminPage()
-{
-	return g_stAdminPageIP.empty();
-}
-
-bool IsAdminPage(const char * ip)
-{
-	for (size_t n = 0; n < g_stAdminPageIP.size(); ++n)
-	{
-		if (g_stAdminPageIP[n] == ip)
-			return 1; 
-	}	
-	return 0;
-}
-
-void ClearAdminPages()
-{
-	for (size_t n = 0; n < g_stAdminPageIP.size(); ++n)
-		g_stAdminPageIP[n].clear();
-
-	g_stAdminPageIP.clear();
-}
-
 CInputProcessor::CInputProcessor() : m_pPacketInfo(NULL), m_iBufferLeft(0)
 {
 	if (!m_pPacketInfo)
