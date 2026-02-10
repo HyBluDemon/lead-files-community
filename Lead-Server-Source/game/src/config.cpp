@@ -990,7 +990,7 @@ void config_init(const string& st_localeServiceName)
 	LocaleService_LoadEmpireTextConvertTables();
 	// END_OF_LOCALE_SERVICE
 
-	if (g_szPublicIP[0] == '\0')
+	if (g_szPublicIP[0] == '0')
 	{
 		if (!GetIPInfo())
 		{
