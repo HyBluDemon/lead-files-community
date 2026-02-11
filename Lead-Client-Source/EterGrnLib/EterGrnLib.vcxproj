@@ -16,9 +16,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
-    <ProjectName>eterGrnLib</ProjectName>
+    <ProjectName>EterGrnLib</ProjectName>
     <ProjectGuid>{E1FF7630-628F-4AD0-BF66-F14D86A04035}</ProjectGuid>
-    <RootNamespace>eterGrnLib</RootNamespace>
+    <RootNamespace>EterGrnLib</RootNamespace>
     <SccProjectName>SAK</SccProjectName>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>

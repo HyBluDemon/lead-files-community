@@ -16,9 +16,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
-    <ProjectName>gamelib</ProjectName>
+    <ProjectName>GameLib</ProjectName>
     <ProjectGuid>{1801F0ED-7DE6-4175-BF25-6FA98AAA350B}</ProjectGuid>
-    <RootNamespace>gamelib</RootNamespace>
+    <RootNamespace>GameLib</RootNamespace>
     <SccProjectName>SAK</SccProjectName>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>

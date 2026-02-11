@@ -16,9 +16,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
-    <ProjectName>eterPythonLib</ProjectName>
+    <ProjectName>EterPythonLib</ProjectName>
     <ProjectGuid>{24516A87-8544-46A9-A0C8-0A01269642D9}</ProjectGuid>
-    <RootNamespace>eterPythonLib</RootNamespace>
+    <RootNamespace>EterPythonLib</RootNamespace>
     <SccProjectName>SAK</SccProjectName>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>

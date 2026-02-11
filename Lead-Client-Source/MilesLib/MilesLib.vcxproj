@@ -16,9 +16,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
-    <ProjectName>mileslib</ProjectName>
+    <ProjectName>MilesLib</ProjectName>
     <ProjectGuid>{9189BA90-1997-4B47-A673-A54C7DF4A4F7}</ProjectGuid>
-    <RootNamespace>mileslib</RootNamespace>
+    <RootNamespace>MilesLib</RootNamespace>
     <SccProjectName>SAK</SccProjectName>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>

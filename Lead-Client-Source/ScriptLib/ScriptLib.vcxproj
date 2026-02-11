@@ -16,9 +16,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
-    <ProjectName>scriptLib</ProjectName>
+    <ProjectName>ScriptLib</ProjectName>
     <ProjectGuid>{E682CEA2-1D79-4DE9-A2CE-6AED27E4170E}</ProjectGuid>
-    <RootNamespace>scriptLib</RootNamespace>
+    <RootNamespace>ScriptLib</RootNamespace>
     <SccProjectName>SAK</SccProjectName>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
