@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonPlayerEventHandler.h"
 #include "PythonPlayer.h"
 #include "PythonCharacterManager.h"
@@ -140,7 +140,7 @@ void CPythonPlayerEventHandler::OnHit(UINT uSkill, CActorInstance& rkActorVictim
 	if (!rkActorVictim.IsPushing())
 		return;
 
-	// 거대 몬스터 밀림 제외
+	// Excluding giant monster jungle
 	extern bool IS_HUGE_RACE(unsigned int vnum);
 	if (IS_HUGE_RACE(rkActorVictim.GetRace()))
 		return;
@@ -165,7 +165,7 @@ void CPythonPlayerEventHandler::FlushVictimList()
 	if (m_kVctkVictim.empty())
 		return;
 
-	// #0000682: [M2EU] 대진각 스킬 사용시 튕김 
+	// #0000682: [M2EU] Bounce when using the great advance skill
 	unsigned int SYNC_POSITION_COUNT_LIMIT = 16;
 	unsigned int uiVictimCount = m_kVctkVictim.size();
 
@@ -229,7 +229,7 @@ void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnEx
 {
 	return;
 
-	Tracef("Shoot : 다른 target에 맞았습니다 : %d, %d\n", dwSkillIndex, dwVID);
+	Tracef("Shoot: Hit another target: %d, %d\n", dwSkillIndex, dwVID);
 
 	CPythonNetworkStream& rkStream=CPythonNetworkStream::Instance();
 	rkStream.SendAttackPacket(dwSkillIndex, dwVID);
@@ -243,7 +243,7 @@ void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnEx
 }
 void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnExplodingAtTarget(DWORD dwSkillIndex)
 {
-//	Tracef("Shoot : 원하는 target에 맞았습니다 : %d, %d\n", dwSkillIndex, m_pInstTarget->GetVirtualID());
+// Tracef("Shoot: Hit desired target: %d, %d\n", dwSkillIndex, m_pInstTarget->GetVirtualID());
 //	CPythonNetworkStream& rkStream=CPythonNetworkStream::Instance();
 //	rkStream.SendAttackPacket(dwSkillIndex, m_pInstTarget->GetVirtualID());
 }

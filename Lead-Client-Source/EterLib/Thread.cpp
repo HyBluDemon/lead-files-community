@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "Thread.h"
 
 CThread::CThread() : m_pArg(NULL), m_hThread(NULL), m_uThreadID(0)

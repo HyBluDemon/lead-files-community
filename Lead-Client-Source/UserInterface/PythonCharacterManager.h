@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "AbstractCharacterManager.h"
 #include "InstanceBase.h"

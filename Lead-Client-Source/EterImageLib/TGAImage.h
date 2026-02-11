@@ -1,4 +1,4 @@
-#ifndef __INC_ETERIMAGELIB_TGAIMAGE_H__
+﻿#ifndef __INC_ETERIMAGELIB_TGAIMAGE_H__
 #define __INC_ETERIMAGELIB_TGAIMAGE_H__
 
 #include "Image.h"

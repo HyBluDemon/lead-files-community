@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "BlockTexture.h"
 #include "GrpBase.h"
 #include "GrpDib.h"

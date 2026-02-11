@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 class CMapBase;
 #include "MapOutdoor.h"
@@ -27,13 +27,13 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		void					Initialize();
 		void					Destroy();
 
-		void					Create();		// AllocMap 호출 해서 m_pMap 을 만듬
+		void					Create();		// Create m_pMap by calling AllocMap
 
 		virtual void			Clear();
 		virtual CMapBase *		AllocMap();
 
 		//////////////////////////////////////////////////////////////////////////
-		// Map 관리 함수
+		// Map management function
 		//////////////////////////////////////////////////////////////////////////
 		bool					IsMapReady();
 
@@ -51,9 +51,9 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		//////////////////////////////////////////////////////////////////////////
 		// Environment
 		///
-		// NOTE : 다음 Environment로 서서히 블렌딩 시킨다
-		//        아직 세부 구현은 되어있지 않음. 이 함수들은 Protected로 넣고,
-		//        MapManager에 TimeControl 부분을 구현하도록 한다. - [levites]
+		// NOTE: Gradually blend into the next environment.
+		// Detailed implementation has not been implemented yet. Put these functions in Protected,
+		// Implement the TimeControl part in MapManager. - [levites]
 		void					SetEnvironmentDataPtr(const TEnvironmentData * c_pEnvironmentData);
 		void					ResetEnvironmentDataPtr(const TEnvironmentData * c_pEnvironmentData);
 		void					SetEnvironmentData(int nEnvDataIndex);

@@ -1,4 +1,4 @@
-#ifndef __INC_ETERPACKLIB_ETERPACK_H__
+癤�#ifndef __INC_ETERPACKLIB_ETERPACK_H__
 #define __INC_ETERPACKLIB_ETERPACK_H__
 
 #include <list>
@@ -135,7 +135,7 @@ class CEterPack
 		bool				EncryptIndexFile();
 		bool				DecryptIndexFile();
 
-		DWORD				DeleteUnreferencedData();	// 몇개가 삭제 되었는지 리턴 한다.
+		DWORD				DeleteUnreferencedData();	// Returns how many items have been deleted.
 
 		bool				GetNames(std::vector<std::string>* retNames);
 		
@@ -178,7 +178,7 @@ class CEterPack
 
 		boost::unordered_map<DWORD, DWORD> m_map_indexRefCount;
 		TDataPositionMap		m_DataPositionMap;
-		TFreeIndexList			m_FreeIndexList[FREE_INDEX_MAX_SIZE + 1];	// MAX 도 억세스 하므로 + 1 크기만큼 만든다.
+		TFreeIndexList			m_FreeIndexList[FREE_INDEX_MAX_SIZE + 1];	// Since MAX is also accessed, it is made as large as + 1.
 
 		std::string				m_stDataFileName;
 		std::string				m_stPathName;
@@ -194,8 +194,8 @@ class CEterPack
 
 	//private:
 	//	bool				m_bIsDataLoaded;
-	//	// 그냥 time_t를 쓰면, 32bit time_t를 사용하는 소스에서는, 
-	//	// CEterPack의 size를 실제 size - 4로 인식하기 때문에 문제가 발생할 수 있다.
+	// // If you just use time_t, in sources that use 32bit time_t,
+	// // Problems may occur because the size of CEterPack is recognized as the actual size - 4.
 	//	__time64_t			m_tLastAccessTime;
 	//public:
 	//	__time64_t			GetLastAccessTime() { return m_tLastAccessTime; }

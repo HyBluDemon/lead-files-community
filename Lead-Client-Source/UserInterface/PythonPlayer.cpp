@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonPlayerEventHandler.h"
 #include "PythonApplication.h"
 #include "PythonItem.h"
@@ -213,7 +213,7 @@ void CPythonPlayer::__Update_AutoAttack()
 	if (!pkInstMain)
 		return;
 
-	// 탄환격 쓰고 달려가는 도중에는 스킵
+	// Skip while running after using a bullet hit.
 	if (__IsUsingChargeSkill())
 		return;
 
@@ -983,7 +983,7 @@ float CPythonPlayer::GetSkillNextEfficientPercentage(DWORD dwSlotIndex)
 
 void CPythonPlayer::SetSkillLevel(DWORD dwSlotIndex, DWORD dwSkillLevel)
 {
-	assert(!"CPythonPlayer::SetSkillLevel - 사용하지 않는 함수");
+	assert(!"CPythonPlayer::SetSkillLevel - Deprecated function function function");
 	if (dwSlotIndex >= SKILL_MAX_NUM)
 		return;
 
@@ -1196,7 +1196,7 @@ void CPythonPlayer::SendClickItemPacket(DWORD dwIID)
 
 void CPythonPlayer::__SendClickActorPacket(CInstanceBase& rkInstVictim)
 {
-	// 말을 타고 광산을 캐는 것에 대한 예외 처리
+	// Exception handling for mining on horseback
 	CInstanceBase* pkInstMain=NEW_GetMainActorPtr();
 	if (pkInstMain)
 	if (pkInstMain->IsHoldingPickAxe())
@@ -1571,7 +1571,7 @@ void CPythonPlayer::NEW_ClearSkillData(bool bAll)
 
 	for (int j = 0; j < SKILL_MAX_NUM; ++j)
 	{
-		// 2004.09.30.myevan.스킬갱신시 스킬 포인트업[+] 버튼이 안나와 처리
+		// 2004.09.30.myevan. When renewing a skill, the skill point up [+] button does not appear.
 		m_playerStatus.aSkill[j].iGrade = 0;
 		m_playerStatus.aSkill[j].fcurEfficientPercentage=0.0f;
 		m_playerStatus.aSkill[j].fnextEfficientPercentage=0.05f;

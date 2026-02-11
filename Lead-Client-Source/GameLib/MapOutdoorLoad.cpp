@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "MapOutdoor.h"
 #include "AreaTerrain.h"
 #include "AreaLoaderThread.h"
@@ -15,7 +15,7 @@ bool CMapOutdoor::Load(float x, float y, float z)
 	{
 		static std::string s_strOldPathName="";
 
-		// 2004.08.09.myevan.Pack파일을 찾을때.. 폴더명만으로는 그냥 리턴되는 부분이 있다
+		// When searching for the 2004.08.09.myevan.Pack file... there are parts where the folder name alone is returned.
 		std::string c_rstrNewPathName=GetName()+"\\cache";
 		
 		s_strOldPathName=c_rstrNewPathName;
@@ -36,7 +36,7 @@ bool CMapOutdoor::Load(float x, float y, float z)
 
 	m_lOldReadX = -1;
 
-	// TODO: SetRenderingDevice에서 Environment로 부터 라이트 속성을 넘겨줘야 스태틱 라이트가 제대로 작동한다.
+	// TODO: In SetRenderingDevice, you must pass the light properties from the Environment for the static light to work properly.
 	CSpeedTreeForestDirectX8::Instance().SetRenderingDevice(ms_lpd3dDevice);
 
 	Update(x, y, z);
@@ -100,13 +100,13 @@ bool CMapOutdoor::isAreaLoaded(WORD wX, WORD wY)
 }
 
 
-// 현재 좌표를 기반으로 주위(ex. 3x3)에 있는 Terrain과 Area포인터를 
-// m_pTerrain과 m_pArea에 연결한다.
+// Terrain and Area pointers in the surrounding area (ex. 3x3) based on the current coordinates.
+// Connect to m_pTerrain and m_pArea.
 void CMapOutdoor::AssignTerrainPtr()
 {
-	// 월드에디터에서 화면을 죽죽죽 넘길 때 터레인을 저장해야 하기
-	// 때문에 이 virtual method를 호출 한다. 이 메소드는 CMapOutDoor에서는 아무 행동도
-	// 하지 않는다.
+	// You need to save the terrain when scrolling through the screen in the world editor.
+	// Therefore, this virtual method is called. This method does nothing in CMapOutDoor.
+	// don't do it
 	OnPreAssignTerrainPtr();
 
 	short sReferenceCoordMinX, sReferenceCoordMaxX, sReferenceCoordMinY, sReferenceCoordMaxY;
@@ -390,15 +390,15 @@ bool CMapOutdoor::LoadSetting(const char * c_szFileName)
 	
 	std::string stTextureSetFileName = strTextureSet;
 
-	// TextureSet 이 이미 붙어 있을 경우 안붙인다.
+	// If TextureSet is already attached, it is not attached.
 	if (0 != stTextureSetFileName.find_first_of("textureset", 0))
 		stTextureSetFileName = "textureset\\"+strTextureSet;
 
  	if (!m_TextureSet.Load(stTextureSetFileName.c_str(), m_fTerrainTexCoordBase))
 	{
 #ifdef WORLD_EDITOR
-		// TextureSet 이 적용되어 있지 않아도 진행
-		LogBox("TextureSet 이 적용되어있지 않은 맵 입니다.\n지형 텍스춰 작업에 주의하시기 바랍니다.");
+		// Proceeds even if TextureSet is not applied
+		LogBox("This is a map that does not have a TextureSet applied.\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures..\nPlease be careful when working with terrain textures.");
 #else
 		TraceError("MapOutdoor::LoadSetting(c_szFileName=%s) - LOAD TEXTURE SET(%s) ERROR", c_szFileName, stTextureSetFileName.c_str());
 		return false;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonNetworkStream.h"
 #include "PythonItem.h"
 #include "PythonShop.h"
@@ -13,7 +13,7 @@
 
 bool CPythonNetworkStream::SendSafeBoxMoneyPacket(BYTE byState, DWORD dwMoney)
 {
-	assert(!"CPythonNetworkStream::SendSafeBoxMoneyPacket - 사용하지 않는 함수");
+	assert(!"CPythonNetworkStream::SendSafeBoxMoneyPacket - Deprecated function function function");
 	return false;
 
 //	TPacketCGSafeboxMoney kSafeboxMoney;
@@ -718,8 +718,8 @@ bool CPythonNetworkStream::RecvSpecialEffect()
 		return false;
 
 	DWORD effect = -1;
-	bool bPlayPotionSound = false;	//포션을 먹을 경우는 포션 사운드를 출력하자.!!
-	bool bAttachEffect = true;		//캐리터에 붙는 어태치 이펙트와 일반 이펙트 구분.!!
+	bool bPlayPotionSound = false;	// When eating a potion, output the potion sound.!!
+	bool bAttachEffect = true;		// Distinguish between attach effects attached to the carrier and general effects.!!
 	switch (kSpecialEffect.type)
 	{
 		case SE_HPUP_RED:
@@ -769,11 +769,11 @@ bool CPythonNetworkStream::RecvSpecialEffect()
 			effect = CInstanceBase::EFFECT_FR_SUCCESS;
 			bAttachEffect = false ;
 			break;
-		case SE_LEVELUP_ON_14_FOR_GERMANY:	//레벨업 14일때 ( 독일전용 )
+		case SE_LEVELUP_ON_14_FOR_GERMANY:	// Level up at 14 (Germany only)
 			effect = CInstanceBase::EFFECT_LEVELUP_ON_14_FOR_GERMANY;
 			bAttachEffect = false ;
 			break;
-		case SE_LEVELUP_UNDER_15_FOR_GERMANY: //레벨업 15일때 ( 독일전용 )
+		case SE_LEVELUP_UNDER_15_FOR_GERMANY: // Level up at 15 (Germany only)
 			effect = CInstanceBase::EFFECT_LEVELUP_UNDER_15_FOR_GERMANY;
 			bAttachEffect = false ;
 			break;
@@ -807,7 +807,7 @@ bool CPythonNetworkStream::RecvSpecialEffect()
 
 		
 		default:
-			TraceError("%d 는 없는 스페셜 이펙트 번호입니다.TPacketGCSpecialEffect",kSpecialEffect.type);
+			TraceError("%d is the missing special effect number.TPacketGCSpecialEffectketGCSpecialEffectketGCSpecialEffectketGCSpecialEffectketGCSpecialEffect",kSpecialEffect.type);
 			break;
 	}
 

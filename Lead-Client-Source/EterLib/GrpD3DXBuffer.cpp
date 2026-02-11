@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GrpD3DXBuffer.h"
 #include "../eterBase/Stl.h"
 

@@ -1,4 +1,4 @@
-#ifndef __INC_YMIR_GAMELIB__
+ï»¿#ifndef __INC_YMIR_GAMELIB__
 #define __INC_YMIR_GAMELIB__
 
 #ifndef _CRT_SECURE_NO_WARNINGS
@@ -6,7 +6,7 @@
 #endif
 
 #pragma warning(disable:4710)	// not inlined
-#pragma warning(disable:4786)	// character 255 ³Ñ¾î°¡´Â°Å ²ô±â
+#pragma warning(disable:4786)	// Turn off anything that goes beyond character 255
 #pragma warning(disable:4244)	// type conversion possible lose of data
 
 #pragma warning(disable:4018)

@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_GUILDLIB_MARK_MANAGER_H__
+癤�#ifndef __INC_METIN_II_GUILDLIB_MARK_MANAGER_H__
 #define __INC_METIN_II_GUILDLIB_MARK_MANAGER_H__
 
 #include "MarkImage.h"
@@ -32,11 +32,11 @@ class CGuildMarkManager : public singleton<CGuildMarkManager>
 		//
 		void SetMarkPathPrefix(const char * prefix);
 
-		bool LoadMarkIndex(); // 마크 인덱스 불러오기 (서버에서만 사용)
-		bool SaveMarkIndex(); // 마크 인덱스 저장하기
+		bool LoadMarkIndex(); // Load mark index (only used on server)
+		bool SaveMarkIndex(); // Save mark index
 
-		void LoadMarkImages(); // 모든 마크 이미지를 불러오기
-		void SaveMarkImage(DWORD imgIdx); // 마크 이미지 저장
+		void LoadMarkImages(); // Load all mark images
+		void SaveMarkImage(DWORD imgIdx); // Save mark image
 
 		bool GetMarkImageFilename(DWORD imgIdx, std::string & path) const;
 		bool AddMarkIDByGuildID(DWORD guildID, DWORD markID);

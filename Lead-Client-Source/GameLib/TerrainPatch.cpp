@@ -1,4 +1,4 @@
-// TerrainPatch.cpp: implementation of the CTerrainPatch class.
+﻿// TerrainPatch.cpp: implementation of the CTerrainPatch class.
 //
 //////////////////////////////////////////////////////////////////////
 

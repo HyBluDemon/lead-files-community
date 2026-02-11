@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../eterLib/NetPacketHeaderMap.h"
 
 #include "PythonNetworkStream.h"
@@ -220,7 +220,7 @@ void CPythonNetworkStream::AbsoluteExitApplication()
 
 bool CPythonNetworkStream::__IsNotPing()
 {
-	// 원래는 핑이 안올때 체크이나 서버랑 정확히 맞추어야 한다.
+	// Basically, when there is no ping, you have to check or match it accurately with the server.
 	return false;
 }
 
@@ -232,7 +232,7 @@ DWORD CPythonNetworkStream::GetGuildID()
 UINT CPythonNetworkStream::UploadMark(const char * c_szImageFileName)
 {
 	// MARK_BUG_FIX
-	// 길드를 만든 직후는 길드 아이디가 0이다.
+	// Immediately after creating a guild, the guild ID is 0.
 	if (0 == m_dwGuildID)
 		return ERROR_MARK_UPLOAD_NEED_RECONNECT;
 
@@ -302,13 +302,13 @@ UINT CPythonNetworkStream::UploadSymbol(const char* c_szImageFileName)
 
 void CPythonNetworkStream::__DownloadMark()
 {
-	// 3분 안에는 다시 접속하지 않는다.
+	// Do not reconnect within 3 minutes.
 	DWORD curTime = ELTimer_GetMSec();
 
 	if (curTime < gs_nextDownloadMarkTime)
 		return;
 
-	gs_nextDownloadMarkTime = curTime + 60000 * 3; // 3분
+	gs_nextDownloadMarkTime = curTime + 60000 * 3; // 3 minutes
 
 	CGuildMarkDownloader& rkGuildMarkDownloader = CGuildMarkDownloader::Instance();
 	rkGuildMarkDownloader.Connect(m_kMarkAuth.m_kNetAddr, m_kMarkAuth.m_dwHandle, m_kMarkAuth.m_dwRandomKey);
@@ -574,19 +574,19 @@ bool CPythonNetworkStream::RecvPhasePacket()
 
 	switch (packet_phase.phase)
 	{
-		case PHASE_CLOSE:				// 끊기는 상태 (또는 끊기 전 상태)
+		case PHASE_CLOSE:				// Disconnected state (or pre-disconnected state)
 			ClosePhase();
 			break;
 
-		case PHASE_HANDSHAKE:			// 악수..;;
+		case PHASE_HANDSHAKE:			// handshake..;;
 			SetHandShakePhase();
 			break;
 
-		case PHASE_LOGIN:				// 로그인 중
+		case PHASE_LOGIN:				// Logging in
 			SetLoginPhase();
 			break;
 
-		case PHASE_SELECT:				// 캐릭터 선택 화면
+		case PHASE_SELECT:				// Character selection screen
 			SetSelectPhase();
 
 			BuildProcessCRC();
@@ -596,15 +596,15 @@ bool CPythonNetworkStream::RecvPhasePacket()
 			// END_OF_MARK_BUG_FIX
 			break;
 
-		case PHASE_LOADING:				// 선택 후 로딩 화면
+		case PHASE_LOADING:				// Loading screen after selection
 			SetLoadingPhase();
 			break;
 
-		case PHASE_GAME:				// 게임 화면
+		case PHASE_GAME:				// game screen
 			SetGamePhase();
 			break;
 
-		case PHASE_DEAD:				// 죽었을 때.. (게임 안에 있는 것일 수도..)
+		case PHASE_DEAD:				// When you die... (maybe in the game...)
 			break;
 	}
 
@@ -639,7 +639,7 @@ bool CPythonNetworkStream::RecvDefaultPacket(int header)
 	if (!header)
 		return true;
 
-	TraceError("처리되지 않은 패킷 헤더 %d, state %s\n", header, m_strPhase.c_str());
+	TraceError("Unprocessed packet header %d, state %s\n, state %s\n, state %s\n, state %s\n", header, m_strPhase.c_str());
 	ClearRecvBuffer();
 	return true;
 }

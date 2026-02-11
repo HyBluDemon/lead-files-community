@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 
 extern IPythonExceptionSender * g_pkExceptionSender;
 

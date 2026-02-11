@@ -1,10 +1,8 @@
-#pragma once
+癤�#pragma once
 
 #include "Packet.h"
 
-/*
- *	교환 창 관련
- */
+/* Exchange Window Related */
 class CPythonExchange : public CSingleton<CPythonExchange>
 {
 	public:
@@ -86,7 +84,7 @@ class CPythonExchange : public CSingleton<CPythonExchange>
 	protected:
 		bool				m_isTrading;
 
-		bool				m_elk_mode;   // 엘크를 클릭해서 교환했을때를 위한 변종임.
+		bool				m_elk_mode;   // This is a variant for when you click on an elk to exchange it.
 		TExchangeData		m_self;
 		TExchangeData		m_victim;
 };

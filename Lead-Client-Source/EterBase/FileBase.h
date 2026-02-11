@@ -1,4 +1,4 @@
-#ifndef __INC_ETERBASE_FILEBASE_H__
+﻿#ifndef __INC_ETERBASE_FILEBASE_H__
 #define __INC_ETERBASE_FILEBASE_H__
 
 #include <windows.h>

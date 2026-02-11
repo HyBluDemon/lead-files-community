@@ -1,2 +1,2 @@
-#define LOCALE_SERVICE_VIETNAM			// 베트남
-#define LOCALE_SERVICE_VIETNAM_MILD		// 심의 버전
+癤�#define LOCALE_SERVICE_VIETNAM			// vietnam
+#define LOCALE_SERVICE_VIETNAM_MILD		// deliberation version

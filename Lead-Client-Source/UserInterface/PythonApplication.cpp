@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterBase/Error.h"
 #include "../eterlib/Camera.h"
 #include "../eterlib/AttributeInstance.h"
@@ -218,7 +218,7 @@ void CPythonApplication::UpdateGame()
 
 	CGraphicTextInstance::Hyperlink_UpdateMousePos(ptMouse.x, ptMouse.y);
 
-	//!@# Alt+Tab 중 SetTransfor 에서 튕김 현상 해결을 위해 - [levites]
+	// !@# To solve the bouncing phenomenon in SetTransfor during Alt+Tab - [levites]
 	//if (m_isActivateWnd)
 	{
 		CScreen s;
@@ -244,8 +244,8 @@ void CPythonApplication::UpdateGame()
 	m_pyItem.Update(ptMouse);
 	m_pyPlayer.Update();
 
-	// NOTE : Update 동안 위치 값이 바뀌므로 다시 얻어 옵니다 - [levites]
-	//        이 부분 때문에 메인 케릭터의 Sound가 이전 위치에서 플레이 되는 현상이 있었음.
+	// NOTE: The position value changes during update, so get it again - [levites]
+	// Because of this, there was an issue where the main character's sound was played in the previous position.
 	m_pyPlayer.NEW_GetMainActorPosition(&kPPosMainActor);
 	SetCenterPosition(kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
 }
@@ -293,7 +293,7 @@ bool CPythonApplication::Process()
 	m_fGlobalElapsedTime = rkTimer.GetElapsedSecond();
 
 	UINT uiFrameTime = rkTimer.GetElapsedMilliecond();
-	s_uiNextFrameTime += uiFrameTime;	//17 - 1초당 60fps기준.
+	s_uiNextFrameTime += uiFrameTime;	// 17 - Based on 60fps per second.
 
 	DWORD updatestart = ELTimer_GetMSec();
 
@@ -329,7 +329,7 @@ bool CPythonApplication::Process()
 
 	OnUIUpdate();
 
-	//Update하는데 걸린시간.delta값
+	// Time taken to update.delta value
 	m_dwCurUpdateTime = ELTimer_GetMSec() - updatestart;
 
 	DWORD dwCurrentTime = ELTimer_GetMSec();
@@ -345,7 +345,7 @@ bool CPythonApplication::Process()
 		if ( dt >= 500 )
 		{
 			s_uiNextFrameTime += nAdjustTime; 
-			printf("FrameSkip 보정 %d\n",nAdjustTime);
+			printf("FrameSkip Correction %d\n",nAdjustTime);
 			CTimer::Instance().Adjust(nAdjustTime);
 		}
 
@@ -444,7 +444,7 @@ bool CPythonApplication::Process()
 
 				if (dwCurFaceCount > 5000)
 				{
-					// 프레임 완충 처리
+					// Frame buffering
 					if (dwRenderEndTime > m_dwBufSleepSkipTime)
 					{	
 						static float s_fBufRenderTime = 0.0f;
@@ -462,7 +462,7 @@ bool CPythonApplication::Process()
 							s_fBufRenderTime = (s_fBufRenderTime * (100.0f - fRatio) + fCurRenderTime * fRatio) / 100.0f;
 						}
 
-						// 한계치를 정한다
+						// Set a limit
 						if (s_fBufRenderTime > 100.0f)
 							s_fBufRenderTime = 100.0f;
 
@@ -482,8 +482,8 @@ bool CPythonApplication::Process()
 								dwBufRenderTime=8;
 						}
 
-						// 일정 프레임 속도에 맞추어주는쪽에 눈에 편하다
-						// 아래에서 한번 하면 됬�?
+						// It is easier on the eyes to adjust to a certain frame rate.
+						// Can you do it below?
 						//if (m_dwCurRenderTime<dwBufRenderTime)
 						//	Sleep(dwBufRenderTime-m_dwCurRenderTime);			
 
@@ -495,7 +495,7 @@ bool CPythonApplication::Process()
 
 					m_fFaceSpd=(m_dwFaceAccCount/m_dwFaceAccTime);
 
-					// 거리 자동 조절
+					// Distance automatic adjustment
 					if (-1 == m_iForceSightRange)
 					{
 						static float s_fAveRenderTime = 16.0f;
@@ -510,7 +510,7 @@ bool CPythonApplication::Process()
 						float fDistance=max(fNear+(fFar-fNear)*(dbAvePow)/dbMaxPow, fNear);
 						m_pyBackground.SetViewDistanceSet(0, fDistance);
 					}
-					// 거리 강제 설정시
+					// When setting forced distance
 					else
 					{
 						m_pyBackground.SetViewDistanceSet(0, float(m_iForceSightRange));
@@ -518,7 +518,7 @@ bool CPythonApplication::Process()
 				}
 				else
 				{
-					// 10000 폴리곤 보다 적을때는 가장 멀리 보이게 한다
+					// When there are less than 10000 polygons, it is displayed at the farthest distance.
 					m_pyBackground.SetViewDistanceSet(0, 25600.0f);
 				}
 
@@ -531,7 +531,7 @@ bool CPythonApplication::Process()
 
 	if (rest > 0 && !bCurrentLateUpdate )
 	{
-		s_uiLoad -= rest;	// 쉰 시간은 로드에서 뺀다..
+		s_uiLoad -= rest;	// Rest time is subtracted from the load.
 		Sleep(rest);
 	}	
 
@@ -774,9 +774,9 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 		CPythonIME::Instance().UseDefaultIME();
 	}
 
-	// 풀스크린 모드이고
-	// 디폴트 IME 를 사용하거나 유럽 버전이면
-	// 윈도우 풀스크린 모드를 사용한다
+	// It's full screen mode
+	// Use the default IME or the European version
+	// Use Windows full screen mode
 	if (!m_pySystem.IsWindowed() && (m_pySystem.IsUseDefaultIME() || LocaleService_IsEUROPE()))
 	{
 		m_isWindowed = false;
@@ -820,7 +820,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 			// Sound
 			if (!m_SoundManager.Create())
 			{
-				// NOTE : 중국측의 요청으로 생략
+				// NOTE: Omitted at the request of the Chinese side
 				//		LogBox(ApplicationStringTable_GetStringz(IDS_WARN_NO_SOUND_DEVICE));
 			}
 		}
@@ -896,14 +896,14 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 
 		CGraphicImageInstance::CreateSystem(32);
 
-		// 백업
+		// backup
 		STICKYKEYS sStickKeys;
 		memset(&sStickKeys, 0, sizeof(sStickKeys));
 		sStickKeys.cbSize = sizeof(sStickKeys);
 		SystemParametersInfo( SPI_GETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0 );
 		m_dwStickyKeysFlag = sStickKeys.dwFlags;
 
-		// 설정
+		// setting
 		sStickKeys.dwFlags &= ~(SKF_AVAILABLE|SKF_HOTKEYACTIVE);
 		SystemParametersInfo( SPI_SETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0 );
 
@@ -950,8 +950,8 @@ time_t CPythonApplication::GetServerTime()
 	return (ELTimer_GetMSec() - m_dwStartLocalTime) + m_tServerTime;
 }
 
-// 2005.03.28 - MALL 아이템에 들어있는 시간의 단위가 서버에서 time(0) 으로 만들어지는
-//              값이기 때문에 단위를 맞추기 위해 시간 관련 처리를 별도로 추가
+// 2005.03.28 - The unit of time contained in MALL items is created as time(0) on the server.
+// Since it is a value, time-related processing is added separately to match the unit.
 time_t CPythonApplication::GetServerTimeStamp()
 {
 	return (time(0) - m_tLocalStartTime) + m_tServerTime;
@@ -1068,7 +1068,7 @@ void CPythonApplication::Destroy()
 	m_SoundManager.Destroy();
 	m_grpDevice.Destroy();
 
-	// FIXME : 만들어져 있지 않음 - [levites]
+	// FIXME: Not made - [levites]
 	//CSpeedTreeForestDirectX8::Instance().Clear();
 
 	CAttributeInstance::DestroySystem();

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include <algorithm>
 #include "../eterBase/Timer.h"
 
@@ -97,18 +97,18 @@ struct LightComp
 	}
 };
 
-// NOTE : FlushLight후 렌더링
-//        그 후 반드시 RestoreLight를 해줘야만 한다.
+// NOTE: Rendering after FlushLight
+// After that, you must perform RestoreLight.
 void CLightManager::FlushLight()
 {
 	Update();
 
 	m_LightSortVector.clear();
 
-	// NOTE: Dynamic과 Static을 분리 시키고 CenterPosition이 바뀔때마다 Static만
-	//		 다시 Flush 하는 식으로 최적화 할 수 있다. - [levites]
+	// NOTE: Separate Dynamic and Static and use only Static whenever CenterPosition changes.
+	// It can be optimized by flushing again. - [levites]
 
-	// light들의 거리를 추출해 정렬한다.
+	// Extract the distance of lights and sort them.
 	TLightMap::iterator itor = m_LightMap.begin();
 
 	for (; itor != m_LightMap.end(); ++itor)
@@ -124,7 +124,7 @@ void CLightManager::FlushLight()
 	// quick sort lights
 	std::sort(m_LightSortVector.begin(), m_LightSortVector.end(), LightComp());
 
-	// NOTE - 거리로 정렬된 라이트를 Limit 갯수 만큼 제한해서 켜준다.
+	// NOTE - Lights sorted by distance are limited to the number of limits and turned on.
 	STATEMANAGER.SaveRenderState(D3DRS_LIGHTING, TRUE);
 
 	for (DWORD k = 0; k < min(m_dwLimitLightCount, m_LightSortVector.size()); ++k)

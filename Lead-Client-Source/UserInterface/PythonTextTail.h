@@ -1,10 +1,8 @@
-#pragma once
+癤�#pragma once
 
 #include "../eterBase/Singleton.h"
 
-/*
- *	따라다니는 텍스트 처리
- */
+/* Processing text that follows you around */
 class CPythonTextTail : public CSingleton<CPythonTextTail>
 {
 	public:
@@ -20,8 +18,8 @@ class CPythonTextTail : public CSingleton<CPythonTextTail>
 			CGraphicTextInstance*			pLevelTextInstance;
 
 
-			// Todo : 이건 전부 VID로 바꾸도록 한다.
-			//        도중 캐릭터가 없어질 경우 튕길 가능성이 있음
+			// Todo: Change all of this to VID.
+			// There is a possibility of crashing if the character disappears midway.
 			CGraphicObjectInstance *		pOwner;
 
 			DWORD							dwVirtualID;
@@ -29,7 +27,7 @@ class CPythonTextTail : public CSingleton<CPythonTextTail>
 			float							x, y, z;
 			float							fDistanceFromPlayer;
 			D3DXCOLOR						Color;
-			BOOL							bNameFlag;		// 이름도 함께 켤것인지의 플래그
+			BOOL							bNameFlag;		// Flag for whether to turn on the name as well
 
 			float							xStart, yStart;
 			float							xEnd, yEnd;

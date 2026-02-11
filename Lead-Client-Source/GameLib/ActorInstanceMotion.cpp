@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "ActorInstance.h"
 #include "RaceData.h"
 #include "FlyHandler.h"
@@ -65,11 +65,11 @@ void CActorInstance::ReservingMotionProcess()
 		case CRaceMotionData::NAME_STAND_UP_BACK:
 			if (IsFaint())
 			{
-				//Tracenf("일어서려고 했으나 기절중");
+				// Tracenf("tried to stand up but passed out");
 
 				SetEndStopMotion();
 
-				// 이후의 모션 전부 1초씩 딜레이
+				// All subsequent motions are delayed by 1 second.
 				TMotionDeque::iterator itor = m_MotionDeque.begin();
 				for (; itor != m_MotionDeque.end(); ++itor)
 				{
@@ -98,12 +98,12 @@ void CActorInstance::ReservingMotionProcess()
 		case CRaceMotionData::NAME_STAND_UP_BACK:
 			if (IsDead())
 			{
-				//Tracenf("일어서려고 했으나 사망");
-				// 예전 데이터로 복구
+				// Tracenf("tried to stand up but died");
+				// Recover to old data
 				m_kCurMotNode=kPrevMotionNode;
 				__ClearMotion(); 
 
-				// 이전 동작 마지막 상태 유지
+				// Retain previous action last state
 				SetEndStopMotion();
 				return;
 			}
@@ -129,7 +129,7 @@ void CActorInstance::ReservingMotionProcess()
 	if (0 == dwRealMotionKey)
 		return;
 
-	// FIX: 위에서 호출한 __SetMotion 함수 안에서 랜덤으로 다른 모션을 재생할 가능성도 있으므로 duration은 '현재 재생중인' 모션의 duration값을 사용해야 함.
+	// FIX: Since there is a possibility of playing another motion randomly within the __SetMotion function called above, the duration value of the 'currently playing' motion must be used.
 	//float fDurationTime=rReservingMotionNode.fDuration;
 	float fDurationTime = GetMotionDuration(dwRealMotionKey) / fSpeedRatio;
 	float fStartTime = rReservingMotionNode.fStartTime;
@@ -153,7 +153,7 @@ void CActorInstance::ReservingMotionProcess()
 
 void CActorInstance::CurrentMotionProcess()
 {
-	if (MOTION_TYPE_LOOP == m_kCurMotNode.iMotionType) // 임시다. 최종적인 목표는 Once도 절대로 넘어가선 안된다. - [levites]
+	if (MOTION_TYPE_LOOP == m_kCurMotNode.iMotionType) // It's temporary. The ultimate goal should never be surpassed even once. - [levites]
 		if (m_kCurMotNode.dwcurFrame >= m_kCurMotNode.dwFrameCount)
 			m_kCurMotNode.dwcurFrame = 0;
 
@@ -169,7 +169,7 @@ void CActorInstance::CurrentMotionProcess()
 
 	bool isLooping=false;
 
-	// 끝났다면 Playing Flag를 끈다
+	// When finished, turn off the Playing Flag.
 	if (m_pkCurRaceMotionData && m_pkCurRaceMotionData->IsLoopMotion())
 	{
 		if (m_kCurMotNode.iLoopCount > 1 || m_kCurMotNode.iLoopCount == -1)
@@ -332,7 +332,7 @@ void CActorInstance::SetLoopMotion(DWORD dwMotion, float fBlendTime, float fSpee
 	m_kCurMotNode.uSkill = 0;
 }
 
-// 리턴값 == SetMotion의 리턴값 == 실제로 애니메이션 데이터를 플레이 했느냐?
+// Return value == Return value of SetMotion == Did you actually play the animation data?
 bool CActorInstance::InterceptMotion(EMotionPushType iMotionType, WORD wMotion, float fBlendTime, UINT uSkill, float fSpeedRatio)
 {
 	if (!m_pkCurRaceData)
@@ -379,8 +379,8 @@ bool CActorInstance::InterceptMotion(EMotionPushType iMotionType, WORD wMotion, 
 
 	assert(NULL != m_pkCurRaceMotionData);
 
-	// FIX : 위에서 호출한 __SetMotion 함수 내에서 랜덤으로 다른 모션을 선택할 수도 있기 때문에 dwMotionKey값은 유효하지 않고
-	// 따라서 해당 키로 산출한 duration은 유효하지 않음. 당연히 현재 play중인 모션의 시간을 구해야 함.. -_-;; 
+	// FIX: Because a different motion may be selected randomly within the __SetMotion function called above, the dwMotionKey value is invalid and
+	// Therefore, the duration calculated with that key is invalid. Of course, you need to find the time of the motion currently playing.. -_-;;
 	// float fDuration=GetMotionDuration(dwMotionKey)/fSpeedRatio;
 	float fDuration = GetMotionDuration(dwRealMotionKey) / fSpeedRatio;
 
@@ -588,8 +588,8 @@ float CActorInstance::GetMotionDuration(DWORD dwMotionKey)
 
 MOTION_KEY CActorInstance::GetRandomMotionKey(MOTION_KEY dwMotionKey)
 {
-	// NOTE : 자주 호출 되는 부분은 아니지만 어느 정도의 최적화 여지가 있음 - [levites]
-	// FIXME : 처음에 선택된 모션이 없는 것에 대한 처리가 되어 있지 않다.
+	// NOTE: This is not a part that is called often, but there is room for some optimization - [levites]
+	// FIXME: There is no processing for the fact that there is no initially selected motion.
 	WORD wMode = GET_MOTION_MODE(dwMotionKey);
 	WORD wIndex = GET_MOTION_INDEX(dwMotionKey);
 
@@ -608,7 +608,7 @@ MOTION_KEY CActorInstance::GetRandomMotionKey(MOTION_KEY dwMotionKey)
 				dwMotionKey = MAKE_RANDOM_MOTION_KEY(wMode, wIndex, i);
 
 				// Temporary
-				// NOTE: 현재로선 여기서 해봤자 의미없다. 전체적으로 확인결과 아래는 씹히는 코드고 다른곳에서 해결해야 하므로 일단 주석처리함. 나중에 통채로 지우자..
+				// NOTE: There is currently no point in doing this here. Overall, the code below is confusing and needs to be resolved elsewhere, so I've commented it out. Let's erase it later...
 				// m_kCurMotNode.fEndTime = m_kCurMotNode.fStartTime + GetMotionDuration(dwMotionKey);
 				// Temporary
 
@@ -668,7 +668,7 @@ DWORD CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, DWORD dw
 		{
 			if (!m_isMain)
 			{
-				Logn(0, "주인공이 아니라면 이동중이라 데미지 동작을 취하지 않음");
+				Logn(0, "If you are not the main character, you are moving and do not take damage actions.ter, you are moving and do not take damage actions.ter, you are moving and do not take damage actions.ter, you are moving and do not take damage actions.ter, you are moving and do not take damage actions.ter, you are moving and do not take damage actions.ter, you are moving and do not take damage actions.");
 				return false;
 			}
 		}
@@ -689,7 +689,7 @@ DWORD CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, DWORD dw
 	}
 
 
-	// NOTE : 스킬 사용중 사라지는 문제를 위한 안전 장치 - [levites]
+	// NOTE: Safety device for the problem of skills disappearing while in use - [levites]
 	if (__IsHiding())
 	{
 		__ShowEvent();
@@ -719,7 +719,7 @@ DWORD CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, DWORD dw
 		m_pkHorse->__BindMotionData(dwChildMotKey);
 
 		if (c_rkSetMotData.iLoopCount)
-			m_pkHorse->m_kCurMotNode.iMotionType = MOTION_TYPE_ONCE; // 무조건 이전 모션 타입으로 설정되고 있었음
+			m_pkHorse->m_kCurMotNode.iMotionType = MOTION_TYPE_ONCE; // It was unconditionally set to the previous motion type.
 		else
 			m_pkHorse->m_kCurMotNode.iMotionType = MOTION_TYPE_LOOP;
 
@@ -741,7 +741,7 @@ DWORD CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, DWORD dw
 
 		if (__CanAttack())
 		{
-			// 여기서 공격 모션일 경우의 처리를 합니다 - [levites]
+			// Here we handle the case of attack motion - [levites]
 			__ShowWeaponTrace();
 
 			m_HitDataMap.clear();
@@ -752,12 +752,12 @@ DWORD CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, DWORD dw
 		{
 			if (!__CanNextComboAttack())
 			{
-				// 2004.11.19.myevan.동물 변신시 이부분에서 바로 리셋되어 다음동작 안나온다
-				m_dwcurComboIndex = 0; // 콤보 리셋 - [levites]
+				// 2004.11.19.myevan. When transforming into an animal, it is immediately reset at this point and the next movement does not appear.
+				m_dwcurComboIndex = 0; // Combo Reset - [levites]
 
-				// NOTE : ClearCombo() 를 수행해서는 안된다.
-				//        콤보 다음에 스킬을 이어서 사용할 경우 m_pkCurRaceMotionData까지 초기화 되어 버린다.
-				//Tracef("MotionData에 콤보 데이타가 들어 있지 않습니다.\n");
+				// NOTE: ClearCombo() should not be performed.
+				// If you use a skill after a combo, even m_pkCurRaceMotionData is initialized.
+				// Tracef("MotionData does not contain combo data.\n");
 			}
 		}
 	}

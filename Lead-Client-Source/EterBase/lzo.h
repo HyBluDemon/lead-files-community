@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_371GNFBQOCJ_LZO_H__
+癤�#ifndef __INC_METIN_II_371GNFBQOCJ_LZO_H__
 #define __INC_METIN_II_371GNFBQOCJ_LZO_H__
 
 #include <windows.h>
@@ -12,9 +12,9 @@ class CLZObject
 			typedef struct SHeader
 			{
 				DWORD	dwFourCC;
-				DWORD	dwEncryptSize;		// 암호화된 크기
-				DWORD	dwCompressedSize;	// 압축된 데이터 크기
-				DWORD	dwRealSize;		// 실제 데이터 크기
+				DWORD	dwEncryptSize;		// encrypted size
+				DWORD	dwCompressedSize;	// Compressed data size
+				DWORD	dwRealSize;		// actual data size
 			} THeader;
 		#pragma pack()
 		

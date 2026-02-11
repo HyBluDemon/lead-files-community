@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../eterBase/Utils.h"
 #include "AttributeInstance.h"
 #include "GrpMath.h"

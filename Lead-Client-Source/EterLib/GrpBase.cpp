@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterBase/Utils.h"
 #include "../eterBase/Timer.h"
 #include "GrpBase.h"
@@ -75,13 +75,13 @@ int						CGraphicBase::ms_iWavingPower;
 DWORD					CGraphicBase::ms_dwFlashingEndTime;
 D3DXCOLOR				CGraphicBase::ms_FlashingColor;
 
-// Terrain picking용 Ray... CCamera 이용하는 버전.. 기존의 Ray와 통합 필요...
+// Ray for terrain picking... Version using CCamera... Requires integration with existing Ray...
 CRay					CGraphicBase::ms_Ray;
 bool					CGraphicBase::ms_bSupportDXT = true;
 bool					CGraphicBase::ms_isLowTextureMemory = false;
 bool					CGraphicBase::ms_isHighTextureMemory = false;
 
-// 2004.11.18.myevan.DynamicVertexBuffer로 교체
+// 2004.11.18.myevan.Replaced with DynamicVertexBuffer
 /*
 std::vector<TIndex>		CGraphicBase::ms_lineIdxVector;
 std::vector<TIndex>		CGraphicBase::ms_lineTriIdxVector;

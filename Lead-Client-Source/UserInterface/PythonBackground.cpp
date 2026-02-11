@@ -1,4 +1,4 @@
-// PythonBackground.cpp: implementation of the CPythonBackground class.
+癤�// PythonBackground.cpp: implementation of the CPythonBackground class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -144,7 +144,7 @@ void CPythonBackground::SelectViewDistanceNum(int eNum)
 
 	TEnvironmentData * env = ((TEnvironmentData *) mc_pcurEnvironmentData);
 
-	// 게임 분위기를 바꿔놓을 수 있으므로 reserve로 되어있으면 고치지 않는다.
+	// It can change the game atmosphere, so if it is set to reserve, it will not be modified.
 	if (env->bReserve)
 	{
 		env->m_fFogNearDistance = m_ViewDistanceSet[m_eViewDistanceNum].m_fFogStart;

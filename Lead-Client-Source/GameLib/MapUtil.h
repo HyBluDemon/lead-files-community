@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 void Environment_Init(SEnvironmentData& envData);
 bool Environment_Load(SEnvironmentData& envData, const char* envFileName);

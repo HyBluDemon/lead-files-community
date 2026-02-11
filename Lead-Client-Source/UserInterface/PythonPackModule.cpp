@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterPack/EterPackManager.h"
 #include "../eterBase/tea.h"
 
@@ -55,9 +55,9 @@ PyObject * packGet(PyObject * poSelf, PyObject * poArgs)
 	if (!PyTuple_GetString(poArgs, 0, &strFileName))
 		return Py_BuildException();
 
-	// 파이썬에서 읽어드리는 패킹 파일은 python 파일과 txt 파일에 한정한다
+	// Packing files read in Python are limited to python files and txt files.
 	const char* pcExt = strrchr(strFileName, '.');
-	if (pcExt) // 확장자가 있고
+	if (pcExt) // There is an extension
 	{
 		if ((_stricmp(pcExt, ".py") == 0) ||
 			(_stricmp(pcExt, ".pyc") == 0) ||

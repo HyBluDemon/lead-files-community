@@ -1,4 +1,4 @@
-// EnvironmentMap.h: interface for the CEnvironmentMap class.
+﻿// EnvironmentMap.h: interface for the CEnvironmentMap class.
 //
 //////////////////////////////////////////////////////////////////////
 

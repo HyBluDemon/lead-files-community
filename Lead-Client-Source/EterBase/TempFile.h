@@ -1,4 +1,4 @@
-#ifndef __INC_ETERBASE_TEMPFILE_H__
+﻿#ifndef __INC_ETERBASE_TEMPFILE_H__
 #define __INC_ETERBASE_TEMPFILE_H__
 
 #include "FileBase.h"

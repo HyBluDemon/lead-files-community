@@ -1,4 +1,4 @@
-#ifndef __INC_MAPPEDFILE_H__
+﻿#ifndef __INC_MAPPEDFILE_H__
 #define __INC_MAPPEDFILE_H__
 
 #include "lzo.h"

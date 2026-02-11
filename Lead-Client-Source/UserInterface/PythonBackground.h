@@ -1,4 +1,4 @@
-// PythonBackground.h: interface for the CPythonBackground class.
+﻿// PythonBackground.h: interface for the CPythonBackground class.
 //
 //////////////////////////////////////////////////////////////////////
 

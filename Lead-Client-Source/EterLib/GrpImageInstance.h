@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GrpImage.h"
 #include "GrpIndexBuffer.h"

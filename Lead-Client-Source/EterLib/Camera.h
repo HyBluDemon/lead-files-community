@@ -1,4 +1,4 @@
-// Camera.h: interface for the CCamera class.
+ï»¿// Camera.h: interface for the CCamera class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -51,8 +51,8 @@ class CCamera
 		void SetResistance(float fResistance);
 
 	private:
-		const CCamera & operator = (const CCamera &) ; // Áö¿øÇÏÁö ¾ÊÀ½
-		CCamera (const CCamera & ) ; //Áö¿øÇÏÁö ¾ÊÀ½ 
+		const CCamera & operator = (const CCamera &) ; // Not supported
+		CCamera (const CCamera & ) ; // Not supported
 
 		// Camera Update
 		eCameraState	m_eCameraState;
@@ -85,14 +85,14 @@ class CCamera
 		D3DXMATRIX m_matInverseView;
 		D3DXMATRIX m_matBillboard; // Special matrix for billboarding effects
 
-		//Ãß°¡ºĞ
+		// Additional amount
 		float m_fPitch;
 		float m_fRoll;
 		float m_fDistance;
 
-		// Ä«¸Ş¶ó AI¸¦ À§ÇÑ Ray µé
+		// Rays for camera AI
 
-		// Ä«¸Ş¶ó¸¦ µÑ·¯½Ñ Ray
+		// Ray surrounding the camera
 		CRay	m_kCameraBottomToTerrainRay;
 		CRay	m_kCameraFrontToTerrainRay;
 		CRay	m_kCameraBackToTerrainRay;
@@ -124,14 +124,14 @@ class CCamera
 		bool			m_bDrag;
 
 //	protected:
-		// ¹°¸®
+		// physics
 		D3DXVECTOR3		m_v3AngularAcceleration;
 		D3DXVECTOR3		m_v3AngularVelocity;
 
 		float			m_fResistance;
 	public:
 		//////////////////////////////////////////////////////////////////////////
-		// ¹°¸®
+		// physics
 		//////////////////////////////////////////////////////////////////////////
 		void SetAngularAcceleration(D3DXVECTOR3 v3AngularAcceleration) { m_v3AngularAcceleration = v3AngularAcceleration; }
 		
@@ -185,7 +185,7 @@ class CCamera
 		float GetRoll() const { return m_fRoll; }
 		float GetDistance() const { return m_fDistance; }
 		
-		void Pitch(const float fPitchDelta);	//µ¹¾Æ°¡´Â °¢µµ¸¦ ³Ö´Â´Ù.
+		void Pitch(const float fPitchDelta);	// Enter the rotation angle.
 		void Roll(const float fRollDelta);
 		void SetDistance(const float fdistance);
 
@@ -193,35 +193,35 @@ class CCamera
 		// camera movement
 		//////////////////////////////////////////////////////////////////////////
 		
-		// ¸»±×´ë·Î ÀÌµ¿... Ä«¸Ş¶ó À§Ä¡¿Í Å¸°Ù À§Ä¡°¡ ¸ğµÎ ´Ş¶óÁø´Ù.
+		// Literally moving... Both the camera position and target position change.
 		void Move(const D3DXVECTOR3 & v3Displacement);
-		// ÁÜ.. Ä«¸Ş¶ó À§Ä¡¸¸ ÀÌµ¿.. Å¸°Ù À§Ä¡´Â °íÁ¤...
+		// Zoom... only moves the camera position... the target position is fixed...
 		void Zoom(float fRatio);
 
-		// ºä ¹æÇâÀ¸·Î ÀÌµ¿.. Å¸°ÙÀ§Ä¡°¡ ´Ş¶óÁö¹Ç·Î ÁÜ°ú´Â ´Ù¸£´Ù...
+		// Moving in the view direction... It is different from zooming because the target position changes...
 		void MoveAlongView(float fDistance);
-		// Ä«¸Ş¶ó ¿· ¹æÇâÀ¸·Î ÀÌµ¿..
+		// Move to the side of the camera...
 		void MoveAlongCross(float fDistance);
-		// Ä«¸Ş¶ó ¾÷º¤ÅÍ ¹æÇâÀ¸·Î ÀÌµ¿...
+		// Move in the direction of the camera up vector...
 		void MoveAlongUp(float fDistance);
 
-		// Ä«¸Ş¶ó ¿· ¹æÇâÀ¸·Î ÀÌµ¿... MoveAlongCross°ú µ¿ÀÏ..
+		// Move in the direction next to the camera... Same as MoveAlongCross.
 		void MoveLateral(float fDistance);
-		// ºä ¹æÇâÀÇ Z ¼ººĞÀ» ¹«½ÃÇÑ XYÆò¸é ¹æÇâÀ¸·Î ÀÌµ¿..
+		// Move in the XY plane direction ignoring the Z component of the view direction.
 		void MoveFront(float fDistance);
-		// Z¹æÇâ(¿¬Á÷ ¹æÇâ)À¸·Î ÀÌµ¿...
+		// Move in the Z direction (vertical direction)...
 		void MoveVertical(float fDistance);
 		
-	//	//Ä«¸Ş¶ó À§Ä¡´Â °íÁ¤½ÃÅ°°í ¸Ó¸®¸¸ µç´Ù. Å¸°ÙÀÌ ´Ş¶óÁö°ÚÁÒ?
-	//	//È¸Àü°¢À» ¶óµğ¾ÈÀÌ ¾Æ´Ñ "µµ(Degree)"·Î ³Ö´Â´Ù.
+	// //Fix the camera position and raise only the head. The target will be different, right?
+	// //Enter the rotation angle in â€œdegreesâ€ rather than radians.
 	//	void RotateUpper(float fDegree);
 		
-		// Å¸°Ù Áß½ÉÀ¸·Î µ·´Ù. EterlibÀÇ SetAroundCameraÀÇ ±â´É°ú À¯»ç...
-		// fPitchDegree´Â ¼öÆò(0µµ)·ÎºÎÅÍ ¾Æ·§ÂÊÀ¸·Î ²©¾îÁö´Â °¢µµ...
-		// fRollDegree´Â Å¸°Ù Áß½ÉÀ¸·Î ½Ã°è¹æÇâÀ¸·Î µµ´Â °¢µµ...
+		// It revolves around the target. Similar to the function of Eterlib's SetAroundCamera...
+		// fPitchDegree is the angle of bending downward from the horizontal (0 degrees)...
+		// fRollDegree is the angle of rotation clockwise around the target...
 		void RotateEyeAroundTarget(float fPitchDegree, float fRollDegree);
 
-		// µµ´Â Áß½ÉÁ¡À» µû·Î ÁöÁ¤ ±× Á¡À» Áß½ÉÀ¸·Î µ·´Ù. Å¸°Ù Á¡µµ ´Ş¶óÁö°ÚÁÒ?
+		// The degree designates a separate center point and revolves around that point. The target point will also change, right?
 		void RotateEyeAroundPoint(const D3DXVECTOR3 & v3Point, float fPitchDegree, float fRollDegree);
 
 	protected:

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "../eterlib/StateManager.h"
 #include "../eterlib/Camera.h"
 #include "../PRTerrainLib/StdAfx.h"
@@ -226,8 +226,8 @@ bool CMapOutdoor::Destroy()
 void CMapOutdoor::Clear()
 {
 	UnloadWaterTexture();
-	Destroy();		// «ÿ¡¶
-	Initialize();	// √ ±‚»≠
+	Destroy();		// clear
+	Initialize();	// reset
 }
 
 bool CMapOutdoor::SetTerrainCount(short sTerrainCountX, short sTerrainCountY)

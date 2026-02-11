@@ -1,4 +1,4 @@
-#ifndef __INC_ETERMARSHAL_H__
+﻿#ifndef __INC_ETERMARSHAL_H__
 #define __INC_ETERMARSHAL_H__
 
 extern PyObject * _PyMarshal_ReadObjectFromFile(FILE* fp);

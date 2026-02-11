@@ -1,9 +1,9 @@
-#pragma once
+癤�#pragma once
 
 // class CActorInstance
 
-//		Note : 캐릭터의 Lighting, Local Point Light, Weapon Trace 등의 효과와 콤보 데이타, 사운드 데이타,
-//             모션 데이타 들을 추상적, 총체적으로 관리하는 개별 매니저가 될 것이다.
+// Note: Effects such as character lighting, Local Point Light, Weapon Trace, combo data, sound data,
+// It will be an individual manager that manages motion data abstractly and comprehensively.
 
 #include "FlyTarget.h"
 #include "RaceData.h"
@@ -64,7 +64,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 				virtual void OnChangeShape() = 0;
 		};
 
-	// 2004.07.05.myevan.궁신탄영 맵에 끼이는 문제해결
+	// 2004.07.05.myevan. Solved the problem of getting stuck in the Gungsin Tanyeong map.
 	private:
 		static IBackground& GetBackground();
 
@@ -217,7 +217,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		CActorInstance();
 		virtual ~CActorInstance();
 
-		// 20041201.myevan.인스턴스베이스용 함수
+		// 20041201.myevan.Function for instance base
 		void INSTANCEBASE_Transform();
 		void INSTANCEBASE_Deform();
 
@@ -294,13 +294,13 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 
 		/////////////////////////////////////////////////////////////////////////////////////
 		// Motion Queueing System
-		void SetMotionMode(int iMotionMode); // FIXME : 모드의 시간차 적용이 가능하게끔 한다.
+		void SetMotionMode(int iMotionMode); // FIXME: Enables time difference application of the mode.
 		int GetMotionMode();
 		void SetLoopMotion(DWORD dwMotion, float fBlendTime = 0.1f, float fSpeedRatio=1.0f);
 		bool InterceptOnceMotion(DWORD dwMotion, float fBlendTime = 0.1f, UINT uSkill=0, float fSpeedRatio=1.0f);
 		bool InterceptLoopMotion(DWORD dwMotion, float fBlendTime = 0.1f);
-		bool PushOnceMotion(DWORD dwMotion, float fBlendTime = 0.1f, float fSpeedRatio=1.0f); // FIXME : 모드의 시간차 적용이 가능하게끔 한다.
-		bool PushLoopMotion(DWORD dwMotion, float fBlendTime = 0.1f, float fSpeedRatio=1.0f); // FIXME : 모드의 시간차 적용이 가능하게끔 한다.
+		bool PushOnceMotion(DWORD dwMotion, float fBlendTime = 0.1f, float fSpeedRatio=1.0f); // FIXME: Enables time difference application of the mode.
+		bool PushLoopMotion(DWORD dwMotion, float fBlendTime = 0.1f, float fSpeedRatio=1.0f); // FIXME: Enables time difference application of the mode.
 		void SetMotionLoopCount(int iCount);
 
 		bool IsPushing();
@@ -346,9 +346,9 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		/////////////////////////////////////////////////////////////////////////////////////
 		// Battle
 		// Input
-		// 하위로 옮길 가능성이 있는 코드들
-		// 네트웍 연동시 전투 관련은 플레이어를 제외하곤 단순히 Showing Type이기 때문에
-		// 조건 검사가 필요 없다.
+		// Code that can be moved to a lower level
+		// When connected to a network, the battle related is simply a Showing Type except for the player.
+		// There is no need for condition checking.
 		void		InputNormalAttackCommand(float fDirRot);	// Process input - Only used by player's character
 		bool		InputComboAttackCommand(float fDirRot);	// Process input - Only used by player's character
 
@@ -524,7 +524,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		void ClearFlyEventHandler();
 		void SetFlyEventHandler(IFlyEventHandler * pHandler);
 
-		// 2004. 07. 07. [levites] - 스킬 사용중 타겟이 바뀌는 문제 해결을 위한 코드
+		// 2004. 07. 07. [levites] - Code to solve the problem of the target changing while using a skill
 		bool CanChangeTarget();
 
 	protected:
@@ -567,7 +567,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		void		CurrentMotionProcess();
 		MOTION_KEY	GetRandomMotionKey(MOTION_KEY dwMotionKey);
 
-		float GetLastMotionTime(float fBlendTime); // NOTE : 자동으로 BlendTime만큼을 앞당긴 시간을 리턴
+		float GetLastMotionTime(float fBlendTime); // NOTE: Automatically returns the time advanced by the BlendTime
 		float GetMotionDuration(DWORD dwMotionKey);
 
 		bool InterceptMotion(EMotionPushType iMotionType, WORD wMotion, float fBlendTime = 0.1f, UINT uSkill=0, float fSpeedRatio=1.0f);
@@ -637,31 +637,31 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 
 	protected:
 		float		__GetAttackSpeed();
-		DWORD		__SetMotion(const SSetMotionData& c_rkSetMotData, DWORD dwRandMotKey=0); // 모션 데이터 설정
+		DWORD		__SetMotion(const SSetMotionData& c_rkSetMotData, DWORD dwRandMotKey=0); // Motion data settings
 		void		__ClearMotion();
 
-		bool		__BindMotionData(DWORD dwMotionKey);	// 모션 데이터를 바인딩
-		void		__ClearHittedActorInstanceMap();		// 때려진 액터 인스턴스 맵을 지운다
+		bool		__BindMotionData(DWORD dwMotionKey);	// Binding motion data
+		void		__ClearHittedActorInstanceMap();		// Clear the hit actor instance map
 
-		UINT		__GetMotionType();			// 모션 타입 얻기
+		UINT		__GetMotionType();			// Get motion type
 
-		bool		__IsNeedFlyTargetMotion();	// FlyTarget 이 필요한 모션인가?
-		bool		__HasMotionFlyEvent();		// 무언가를 쏘는가?
-		bool		__IsWaitMotion();			// 대기 모션 인가?
-		bool		__IsMoveMotion();			// 이동 모션 인가?
-		bool		__IsAttackMotion();			// 공격 모션 인가?
-		bool		__IsComboAttackMotion();	// 콤보 공격 모션 인가?
-		bool		__IsDamageMotion();			// 데미지 모션인가?
-		bool		__IsKnockDownMotion();		// 넉다운 모션인가?
-		bool		__IsDieMotion();			// 사망 모션 인가?
-		bool		__IsStandUpMotion();		// 일어서기 모션인가?
+		bool		__IsNeedFlyTargetMotion();	// Is FlyTarget a necessary motion?
+		bool		__HasMotionFlyEvent();		// Shooting something?
+		bool		__IsWaitMotion();			// Is it a standby motion?
+		bool		__IsMoveMotion();			// Is it a moving motion?
+		bool		__IsAttackMotion();			// Is this an attack motion?
+		bool		__IsComboAttackMotion();	// Is this a combo attack motion?
+		bool		__IsDamageMotion();			// Is it a damage motion?
+		bool		__IsKnockDownMotion();		// Is it a knockdown motion?
+		bool		__IsDieMotion();			// Is this a death motion?
+		bool		__IsStandUpMotion();		// Is it a standing up motion?
 		bool		__IsMountingHorse();
 
-		bool		__CanAttack();				// 공격 할수 있는가?
-		bool		__CanNextComboAttack();		// 다음 콤보 어택이 가능한가?
+		bool		__CanAttack();				// Can you attack?
+		bool		__CanNextComboAttack();		// Is the next combo attack possible?
 
-		bool		__IsComboAttacking();	// 콤보 공격중인가?
-		void		__CancelComboAttack();	// 콤보 공격 취소
+		bool		__IsComboAttacking();	// Are you doing a combo attack?
+		void		__CancelComboAttack();	// Combo attack cancellation
 
 		WORD		__GetCurrentMotionIndex();
 		DWORD		__GetCurrentMotionKey();
@@ -683,9 +683,9 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		D3DXVECTOR3	__GetFlyTargetPosition();
 
 	protected:
-		void		__DestroyWeaponTrace();	// 무기 잔상을 제거한다
-		void		__ShowWeaponTrace();	// 무기 잔상을 보인다
-		void		__HideWeaponTrace();	// 무기 잔상을 감춘다
+		void		__DestroyWeaponTrace();	// Removes weapon afterimages
+		void		__ShowWeaponTrace();	// Shows weapon afterimage
+		void		__HideWeaponTrace();	// Hides weapon afterimages
 
 	protected:
 		// collision data
@@ -705,7 +705,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		// For Collision Detection
 		TCollisionPointInstanceList		m_BodyPointInstanceList;
 		TCollisionPointInstanceList		m_DefendingPointInstanceList;
-		SSplashArea						m_kSplashArea; // TODO : 복수에 대한 고려를 해야한다 - [levites]
+		SSplashArea						m_kSplashArea; // TODO: You should consider revenge - [levites]
 		CAttributeInstance *			m_pAttributeInstance;
 		/////////////////////////////////////////////////////////////////////////////////////
 
@@ -736,7 +736,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		float						m_fInvisibleTime;
 		BOOL						m_isHiding;
 
-		// TODO : State로 통합 시킬 수 있는지 고려해 볼것
+		// TODO: Consider whether it can be integrated into State
 		BOOL						m_isResistFallen;
 		BOOL						m_isSleep;
 		BOOL						m_isFaint;
@@ -822,7 +822,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		void __InitializeRotationData();
 		void __InitializePositionData();
 
-	public: // InstanceBase 통합전 임시로 public
+	public: // Temporarily public before InstanceBase integration
 		IEventHandler* __GetEventHandlerPtr();
 		IEventHandler& __GetEventHandlerRef();
 

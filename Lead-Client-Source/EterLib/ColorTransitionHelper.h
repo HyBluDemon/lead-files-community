@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 class CColorTransitionHelper
 {
@@ -27,10 +27,10 @@ class CColorTransitionHelper
 		bool isTransitionStarted() { return m_bTransitionStarted; }
 
 	private:
- 		D3DCOLOR m_dwCurColor;		// 현재 색
+ 		D3DCOLOR m_dwCurColor;		// current color
 
-		DWORD m_dwStartTime;		// 바뀌기 시작하는 시간
-		DWORD m_dwDuration;			// 얼마 동안에 바뀌는가?
+		DWORD m_dwStartTime;		// time to change
+		DWORD m_dwDuration;			// How long does it change?
 
 		bool m_bTransitionStarted;
 

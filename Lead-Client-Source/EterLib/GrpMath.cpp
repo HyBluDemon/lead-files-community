@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GrpMath.h"
 
 float CrossProduct2D(float x1, float y1, float x2, float y2)

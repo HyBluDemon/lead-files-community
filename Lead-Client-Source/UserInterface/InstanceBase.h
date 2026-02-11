@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "../gamelib/RaceData.h"
 #include "../gamelib/ActorInstance.h"
@@ -73,8 +73,8 @@ class CInstanceBase
 			AFFECT_SLOW,
 			AFFECT_STUN,
 
-			AFFECT_DUNGEON_READY,			// 던전에서 준비 상태
-			AFFECT_SHOW_ALWAYS,				// AFFECT_DUNGEON_UNIQUE 에서 변경(클라이언트에서 컬링되지않음)
+			AFFECT_DUNGEON_READY,			// Readiness in the Dungeon
+			AFFECT_SHOW_ALWAYS,				// Change from AFFECT_DUNGEON_UNIQUE (not culled on client)
 
 			AFFECT_BUILDING_CONSTRUCTION_SMALL,
 			AFFECT_BUILDING_CONSTRUCTION_LARGE,
@@ -85,34 +85,34 @@ class CInstanceBase
 
 			AFFECT_FISH_MIND,				// 13
 
-			AFFECT_JEONGWI,					// 14 전귀혼
-			AFFECT_GEOMGYEONG,				// 15 검경
-			AFFECT_CHEONGEUN,				// 16 천근추
-			AFFECT_GYEONGGONG,				// 17 경공술
-			AFFECT_EUNHYEONG,				// 18 은형법
-			AFFECT_GWIGEOM,					// 19 귀검
-			AFFECT_GONGPO,					// 20 공포
-			AFFECT_JUMAGAP,					// 21 주마갑
-			AFFECT_HOSIN,					// 22 호신
-			AFFECT_BOHO,					// 23 보호
-			AFFECT_KWAESOK,					// 24 쾌속
-		    AFFECT_HEUKSIN,					// 25 흑신수호
-			AFFECT_MUYEONG,					// 26 무영진
-			AFFECT_REVIVE_INVISIBILITY,		// 27 부활 무적
-			AFFECT_FIRE,					// 28 지속 불
-			AFFECT_GICHEON,					// 29 기천 대공
-			AFFECT_JEUNGRYEOK,				// 30 증력술 
-			AFFECT_DASH,					// 31 대쉬
-			AFFECT_PABEOP,					// 32 파법술
-			AFFECT_FALLEN_CHEONGEUN,		// 33 다운 그레이드 천근추
-			AFFECT_POLYMORPH,				// 34 폴리모프
+			AFFECT_JEONGWI,					// 14 Ghost Soul
+			AFFECT_GEOMGYEONG,				// 15 Speculum
+			AFFECT_CHEONGEUN,				// 16 Cheongeunchu
+			AFFECT_GYEONGGONG,				// 17 Gyeonggongsul
+			AFFECT_EUNHYEONG,				// 18 Silver Criminal Law
+			AFFECT_GWIGEOM,					// 19 Ghost Sword
+			AFFECT_GONGPO,					// 20 fear
+			AFFECT_JUMAGAP,					// 21 Jumagap
+			AFFECT_HOSIN,					// 22 self-defense
+			AFFECT_BOHO,					// 23 protection
+			AFFECT_KWAESOK,					// 24 rapid
+		    AFFECT_HEUKSIN,					// 25 Black God Guardian
+			AFFECT_MUYEONG,					// 26 Muyoungjin
+			AFFECT_REVIVE_INVISIBILITY,		// 27 Resurrection Invincible
+			AFFECT_FIRE,					// 28 fire lasting
+			AFFECT_GICHEON,					// 29 Grand Duke Gicheon
+			AFFECT_JEUNGRYEOK,				// 30 Augmentation
+			AFFECT_DASH,					// 31 dash
+			AFFECT_PABEOP,					// 32 Pabeopjutsu
+			AFFECT_FALLEN_CHEONGEUN,		// 33 Downgrade Cheongeunchu
+			AFFECT_POLYMORPH,				// 34 polymorph
 			AFFECT_WAR_FLAG1,				// 35
 			AFFECT_WAR_FLAG2,				// 36
 			AFFECT_WAR_FLAG3,				// 37
 			AFFECT_CHINA_FIREWORK,			// 38
 			AFFECT_PREMIUM_SILVER,
 			AFFECT_PREMIUM_GOLD,
-			AFFECT_RAMADAN_RING,			// 41 초승달 반지 착용 Affect
+			AFFECT_RAMADAN_RING,			// 41 Affect of wearing a crescent moon ring
 
 			AFFECT_NUM = 64,
 
@@ -154,31 +154,31 @@ class CInstanceBase
 
 			NEW_AFFECT_BOW_DISTANCE,        // 225
 
-			NEW_AFFECT_EXP_BONUS         = 500, // 경험의 반지
-			NEW_AFFECT_ITEM_BONUS        = 501, // 도둑의 장갑
+			NEW_AFFECT_EXP_BONUS         = 500, // ring of experience
+			NEW_AFFECT_ITEM_BONUS        = 501, // Thief's Gloves
 			NEW_AFFECT_SAFEBOX           = 502, // PREMIUM_SAFEBOX,
 			NEW_AFFECT_AUTOLOOT          = 503, // PREMIUM_AUTOLOOT,
 			NEW_AFFECT_FISH_MIND         = 504, // PREMIUM_FISH_MIND,
-			NEW_AFFECT_MARRIAGE_FAST     = 505, // 원앙의 깃털 (금슬),
+			NEW_AFFECT_MARRIAGE_FAST     = 505, // Mandarin duck feather (geumseul),
 			NEW_AFFECT_GOLD_BONUS        = 506,
 
-		    NEW_AFFECT_MALL              = 510, // 몰 아이템 에펙트
-			NEW_AFFECT_NO_DEATH_PENALTY  = 511, // 용신의 가호 (경험치 패널티를 한번 막아준다)
-			NEW_AFFECT_SKILL_BOOK_BONUS  = 512, // 선인의 교훈 (책 수련 성공 확률이 50% 증가)
-			NEW_AFFECT_SKILL_BOOK_NO_DELAY  = 513, // 주안 술서 (책 수련 딜레이 없음)
+		    NEW_AFFECT_MALL              = 510, // Mall Item Effect
+			NEW_AFFECT_NO_DEATH_PENALTY  = 511, // Dragon God's Protection (Prevents experience penalty once)
+			NEW_AFFECT_SKILL_BOOK_BONUS  = 512, // Lessons of the Great (50% increase in success rate of book training)
+			NEW_AFFECT_SKILL_BOOK_NO_DELAY  = 513, // Juan Sorcerer (no book training delay)
 
-			NEW_AFFECT_EXP_BONUS_EURO_FREE = 516, // 경험의 반지 (유럽 버전 14 레벨 이하 기본 효과)
+			NEW_AFFECT_EXP_BONUS_EURO_FREE = 516, // Ring of Experience (European version base effect below level 14)
 			NEW_AFFECT_EXP_BONUS_EURO_FREE_UNDER_15 = 517,
 
-			NEW_AFFECT_AUTO_HP_RECOVERY		= 534,		// 자동물약 HP
-			NEW_AFFECT_AUTO_SP_RECOVERY		= 535,		// 자동물약 SP
+			NEW_AFFECT_AUTO_HP_RECOVERY		= 534,		// Auto Potion HP
+			NEW_AFFECT_AUTO_SP_RECOVERY		= 535,		// Auto Potion SP
 
 			NEW_AFFECT_DRAGON_SOUL_QUALIFIED = 540, 
 			NEW_AFFECT_DRAGON_SOUL_DECK1 = 541,
 			NEW_AFFECT_DRAGON_SOUL_DECK2 = 542,
 
 			NEW_AFFECT_RAMADAN_ABILITY = 300,
-			NEW_AFFECT_RAMADAN_RING    = 301,			// 라마단 이벤트용 특수아이템 초승달의 반지 착용 유무
+			NEW_AFFECT_RAMADAN_RING    = 301,			// Whether or not to wear a crescent moon ring, a special item for Ramadan events
 
 			NEW_AFFECT_NOG_POCKET_ABILITY = 302,
 
@@ -263,7 +263,7 @@ class CInstanceBase
 			TITLE_NONE				= 4,
 		};
 
-		enum	//아래 번호가 바뀌면 registerEffect 쪽도 바꾸어 줘야 한다.
+		enum	// If the number below changes, the registerEffect page must also be changed.
 		{
 			EFFECT_REFINED_NONE,
 
@@ -291,8 +291,8 @@ class CInstanceBase
 			EFFECT_BODYARMOR_REFINED8,
 			EFFECT_BODYARMOR_REFINED9,
 
-			EFFECT_BODYARMOR_SPECIAL,	// 갑옷 4-2-1
-			EFFECT_BODYARMOR_SPECIAL2,	// 갑옷 4-2-2
+			EFFECT_BODYARMOR_SPECIAL,	// Armor 4-2-1
+			EFFECT_BODYARMOR_SPECIAL2,	// Armor 4-2-2
 
 			EFFECT_REFINED_NUM,
 		};
@@ -305,7 +305,7 @@ class CInstanceBase
 			DAMAGE_BLOCK	= (1<<3),
 			DAMAGE_PENETRATE= (1<<4),
 			DAMAGE_CRITICAL = (1<<5),
-			// 반-_-사
+			// reflection
 		};
 
 		enum
@@ -359,17 +359,17 @@ class CInstanceBase
 			EFFECT_SUCCESS,
 			EFFECT_FAIL,
 			EFFECT_FR_SUCCESS,			
-			EFFECT_LEVELUP_ON_14_FOR_GERMANY,	//레벨업 14일때 ( 독일전용 )
-			EFFECT_LEVELUP_UNDER_15_FOR_GERMANY,//레벨업 15일때 ( 독일전용 )
+			EFFECT_LEVELUP_ON_14_FOR_GERMANY,	// Level up at 14 (Germany only)
+			EFFECT_LEVELUP_UNDER_15_FOR_GERMANY,// Level up at 15 (Germany only)
 			EFFECT_PERCENT_DAMAGE1,
 			EFFECT_PERCENT_DAMAGE2,
 			EFFECT_PERCENT_DAMAGE3,
 			EFFECT_AUTO_HPUP,
 			EFFECT_AUTO_SPUP,
-			EFFECT_RAMADAN_RING_EQUIP,			// 초승달 반지 착용 순간에 발동하는 이펙트
-			EFFECT_HALLOWEEN_CANDY_EQUIP,		// 할로윈 사탕 착용 순간에 발동하는 이펙트
-			EFFECT_HAPPINESS_RING_EQUIP,				// 행복의 반지 착용 순간에 발동하는 이펙트
-			EFFECT_LOVE_PENDANT_EQUIP,				// 행복의 반지 착용 순간에 발동하는 이펙트
+			EFFECT_RAMADAN_RING_EQUIP,			// An effect that activates the moment you wear the crescent moon ring.
+			EFFECT_HALLOWEEN_CANDY_EQUIP,		// Effect that activates the moment Halloween candy is worn
+			EFFECT_HAPPINESS_RING_EQUIP,				// Effect that activates the moment you wear the Ring of Happiness
+			EFFECT_LOVE_PENDANT_EQUIP,				// Effect that activates the moment you wear the Ring of Happiness
 			EFFECT_TEMP,
 			EFFECT_NUM,
 		};
@@ -434,7 +434,7 @@ class CInstanceBase
 		void MountHorse(UINT eRace);
 		void DismountHorse();		
 
-		// 스크립트용 테스트 함수. 나중에 없에자
+		// Test function for script. Let's get rid of it later
 		void SCRIPT_SetAffect(UINT eAffect, bool isVisible); 
 
 		float CalculateDistanceSq3d(const TPixelPosition& c_rkPPosDst);
@@ -604,7 +604,7 @@ class CInstanceBase
 		BOOL					CanAttackHorseLevel();
 
 #ifdef __MOVIE_MODE__
-		BOOL					IsMovieMode(); // 운영자용 완전히 안보이는거
+		BOOL					IsMovieMode(); // Completely invisible to the operator
 #endif
 		bool					NEW_CanMoveToDestPixelPosition(const TPixelPosition& c_rkPPosDst);
 
@@ -749,8 +749,8 @@ class CInstanceBase
 		//void					SetParts(const WORD * c_pParts);
 		void					Refresh(DWORD dwMotIndex, bool isLoop);
 
-		//void					AttachEffectByID(DWORD dwParentPartIndex, const char * c_pszBoneName, DWORD dwEffectID, int dwLife = CActorInstance::EFFECT_LIFE_INFINITE ); // 수명은 ms단위입니다.
-		//void					AttachEffectByName(DWORD dwParentPartIndex, const char * c_pszBoneName, const char * c_pszEffectName, int dwLife = CActorInstance::EFFECT_LIFE_INFINITE ); // 수명은 ms단위입니다.
+		// void AttachEffectByID(DWORD dwParentPartIndex, const char * c_pszBoneName, DWORD dwEffectID, int dwLife = CActorInstance::EFFECT_LIFE_INFINITE ); // Lifespan is in ms.
+		// void AttachEffectByName(DWORD dwParentPartIndex, const char * c_pszBoneName, const char * c_pszEffectName, int dwLife = CActorInstance::EFFECT_LIFE_INFINITE ); // Lifespan is in ms.
 
 		float					GetDistance(CInstanceBase * pkTargetInst);
 		float					GetDistance(const TPixelPosition & c_rPixelPosition);
@@ -763,7 +763,7 @@ class CInstanceBase
 		bool __Background_IsWaterPixelPosition(const TPixelPosition& c_rkPPos);
 		bool __Background_GetWaterHeight(const TPixelPosition& c_rkPPos, float* pfHeight);
 
-		// 2004.07.25.myevan.이펙트 안나오는 문제
+		// 2004.07.25.myevan.Problem with effect not appearing
 		/////////////////////////////////////////////////////////////
 		void __ClearAffectFlagContainer();
 		void __ClearAffects();
@@ -817,7 +817,7 @@ class CInstanceBase
 		void __DisableChangingTCPState();
 		BOOL __IsEnableTCPProcess(UINT eCurFunc);
 
-		// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
+		// 2004.07.17.levites.isShow changed to ViewFrustumCheck
 		bool __CanRender();
 		bool __IsInViewFrustum();
 

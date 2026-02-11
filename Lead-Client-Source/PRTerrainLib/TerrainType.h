@@ -1,4 +1,4 @@
-#ifndef __TERRAIn_TYPES__
+﻿#ifndef __TERRAIn_TYPES__
 #define __TERRAIn_TYPES__
 
 #include "../eterlib/GrpVertexBuffer.h"

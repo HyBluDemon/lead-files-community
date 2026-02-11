@@ -1,4 +1,4 @@
-// AreaLoaderThread.cpp: implementation of the CAreaLoaderThread class.
+癤�// AreaLoaderThread.cpp: implementation of the CAreaLoaderThread class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -111,7 +111,7 @@ void TEMP_CAreaLoaderThread::Shutdown()
 	}
 	while (!bRet);
 
-	WaitForSingleObject(m_hThread, 10000);	// 쓰레드가 종료 되기를 10초 기다림
+	WaitForSingleObject(m_hThread, 10000);	// Wait 10 seconds for the thread to terminate
 }
 
 UINT TEMP_CAreaLoaderThread::Execute(void * pvArg)

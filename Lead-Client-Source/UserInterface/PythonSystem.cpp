@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonSystem.h"
 #include "PythonApplication.h"
 
@@ -6,8 +6,8 @@
 
 void CPythonSystem::SetInterfaceHandler(PyObject * poHandler)
 {
-// NOTE : 레퍼런스 카운트는 바꾸지 않는다. 레퍼런스가 남아 있어 Python에서 완전히 지워지지 않기 때문.
-//        대신에 __del__때 Destroy를 호출해 Handler를 NULL로 셋팅한다. - [levites]
+// NOTE: The reference count does not change. This is because references remain and are not completely deleted from Python.
+// Instead, when __del__, Destroy is called and Handler is set to NULL. - [levites]
 //	if (m_poInterfaceHandler)
 //		Py_DECREF(m_poInterfaceHandler);
 
@@ -44,7 +44,7 @@ void CPythonSystem::GetDisplaySettings()
 	lpD3D->GetAdapterIdentifier(0, 0, &d3dAdapterIdentifier);
 	lpD3D->GetAdapterDisplayMode(0, &d3ddmDesktop);
 
-	// AI ¾iμªAI°¡ °¡Ao°i AO´A μ?½ºCA·¡AI ¸?μa°¹¼o¸| ³ª¿­CN´U..
+	// AI 쩐i關짧AI째징 째징Ao째i AO쨈A 關?쩍쨘CA쨌징AI 쨍?關a째쨔쩌o쨍| 쨀짧쩔짯CN쨈U..
 	DWORD dwNumAdapterModes = lpD3D->GetAdapterModeCount(0, d3ddmDesktop.Format);
 
 	for (UINT iMode = 0; iMode < dwNumAdapterModes; iMode++)
@@ -53,12 +53,12 @@ void CPythonSystem::GetDisplaySettings()
 		lpD3D->EnumAdapterModes(0, d3ddmDesktop.Format, iMode, &DisplayMode);
 		DWORD bpp = 0;
 
-		// 800 600 이상만 걸러낸다.
+		// Filters out only those above 800 and 600.
 		if (DisplayMode.Width < 800 || DisplayMode.Height < 600)
 			continue;
 
-		// 일단 16bbp 와 32bbp만 취급하자.
-		// 16bbp만 처리하게끔 했음 - [levites]
+		// First, let's only deal with 16bbp and 32bbp.
+		// Only 16bbp was processed - [levites]
 		if (DisplayMode.Format == D3DFMT_R5G6B5)
 			bpp = 16;
 		else if (DisplayMode.Format == D3DFMT_X8R8G8B8)
@@ -77,7 +77,7 @@ void CPythonSystem::GetDisplaySettings()
 
 			int check_fre = false;
 
-			// 프리퀀시만 다르므로 프리퀀시만 셋팅해준다.
+			// Since only the frequency is different, set only the frequency.
 			for (int j = 0; j < m_ResolutionList[i].frequency_count; ++j)
 			{
 				if (m_ResolutionList[i].frequency[j] == DisplayMode.RefreshRate)
@@ -96,7 +96,7 @@ void CPythonSystem::GetDisplaySettings()
 
 		if (!check_res)
 		{
-			// 새로운 거니까 추가해주자.
+			// It's new, so let's add it.
 			if (m_ResolutionCount < RESOLUTION_MAX_NUM)
 			{
 				m_ResolutionList[m_ResolutionCount].width			= DisplayMode.Width;
@@ -579,7 +579,7 @@ const CPythonSystem::TWindowStatus & CPythonSystem::GetWindowStatusReference(int
 	return m_WindowStatus[iIndex];
 }
 
-void CPythonSystem::ApplyConfig() // 이전 설정과 현재 설정을 비교해서 바뀐 설정을 적용 한다.
+void CPythonSystem::ApplyConfig() // Compare the previous settings with the current settings and apply the changed settings.
 {
 	if (m_OldConfig.gamma != m_Config.gamma)
 	{

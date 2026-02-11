@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+癤�#include "Stdafx.h"
 #include "CollisionData.h"
 #include "Pool.h"
 #include "GrpScreen.h"
@@ -230,7 +230,7 @@ bool CSphereCollisionInstance::OnMovementCollisionDynamicSphere(const CDynamicSp
 {
 	if (square_distance_between_linesegment_and_point(s.v3LastPosition,s.v3Position,m_attribute.v3Position) < (m_attribute.fRadius+s.fRadius)*(m_attribute.fRadius+s.fRadius))
 	{
-		// NOTE : 거리가 가까워 졌을때만.. - [levites]
+		// NOTE: Only when the distance gets closer... - [levites]
 		if (GetVector3Distance(s.v3Position, m_attribute.v3Position) <
 			GetVector3Distance(s.v3LastPosition, m_attribute.v3Position))
 			return true;
@@ -329,7 +329,7 @@ bool CPlaneCollisionInstance::OnMovementCollisionDynamicSphere(const CDynamicSph
 				if (D3DXVec3Dot(&v3QuadPosition2, &m_attribute.v3InsideVector[2]) > - s.fRadius/*0.0f*/)
 					if (D3DXVec3Dot(&v3QuadPosition2, &m_attribute.v3InsideVector[3]) > - s.fRadius/*0.0f*/)
 					{
-						// NOTE : 거리가 가까워 졌을때만.. - [levites]
+						// NOTE: Only when the distance gets closer... - [levites]
 						if (fabs(D3DXVec3Dot(&pos, &m_attribute.v3Normal)) <
 							fabs(D3DXVec3Dot(&lastPos, &m_attribute.v3Normal)))
 							return true;
@@ -483,14 +483,14 @@ bool CCylinderCollisionInstance::OnMovementCollisionDynamicSphere(const CDynamic
 {
 	if (CollideCylinderVSDynamicSphere(m_attribute, s))
 	{
-		// NOTE : 거리가 가까워 졌을때만.. - [levites]
+		// NOTE: Only when the distance gets closer... - [levites]
 		if (GetVector3Distance(s.v3Position, m_attribute.v3Position) <
 			GetVector3Distance(s.v3LastPosition, m_attribute.v3Position))
 			return true;
 	}
 
 	
-	// NOTE : 이동 거리가 클 경우 빈틈없이 (원 크기 단위로) 이동하면서 전부 체크 해 본다 - [levites]
+	// NOTE: If the moving distance is large, check everything while moving without any gaps (in circle size units) - [levites]
 	D3DXVECTOR3 v3Distance = s.v3Position - s.v3LastPosition;
 	float fDistance = D3DXVec3Length(&v3Distance);
 	if (s.fRadius<=0.0001f)

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "LODController.h"
 
 static float LODHEIGHT_ACTOR		=	500.0f;
@@ -282,8 +282,8 @@ void CGrannyLODController::AddModel(CGraphicThing * pThing, int iSrcModel, CGran
 	}
 	else
 	{
-		// FIXME : CModelInstance::m_pgrnWorldPose를 Update에서 사용하는데,
-		//         Deform을 하지 않으면 NULL 입니다. 구조가 조금 바뀌어야 할지도.. - [levites]
+		// FIXME: CModelInstance::m_pgrnWorldPose is used in Update.
+		// If deform is not done, it is NULL. The structure might need to change a bit... - [levites]
  		pModelInstance->DeformNoSkin(&ms_matIdentity);
 	}	
 
@@ -460,10 +460,10 @@ void CGrannyLODController::UpdateLODLevel(float fDistanceFromCenter, float fDist
 	assert(m_pCurrentModelInstance != NULL);
 
 	
-	if (fDistanceFromCenter > LOD_APPLY_MIN) // 중심 LOD 예외 취소
+	if (fDistanceFromCenter > LOD_APPLY_MIN) // Cancel Center LOD Exception
 	{	
-		// 카메라부터 멀어질 수록 fLODRate가 작아진다
-		// 3개 LOD가 있을때.. 가장 먼게 0, 가까울 수록 숫자가 커진다
+		// The farther away you are from the camera, the smaller fLODRate becomes.
+		// When there are 3 LODs... the farthest one is 0, the closer it is, the larger the number is.
 
 		// 100fps 50fps 33fps 25fps 20fps
 		// 10ms 20ms 30ms 40ms 50ms

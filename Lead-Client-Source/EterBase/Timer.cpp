@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "Timer.h"
 
 static LARGE_INTEGER gs_liTickCountPerSec;
@@ -27,7 +27,7 @@ BOOL ELTimer_Init()
 
 DWORD ELTimer_GetMSec()
 {
-	//assert(gs_dwBaseTime!=0 && "ELTimer_Init 를 먼저 실행하세요");
+	// assert(gs_dwBaseTime!=0 && "Run ELTimer_Init first");
 	//LARGE_INTEGER liTickCount;
 	//QueryPerformanceCounter(&liTickCount);
 	return timeGetTime() - gs_dwBaseTime; //(liTickCount.QuadPart*1000  / gs_liTickCountPerSec.QuadPart)-gs_dwBaseTime;		
@@ -36,7 +36,7 @@ DWORD ELTimer_GetMSec()
 VOID	ELTimer_SetServerMSec(DWORD dwServerTime)
 {
 	NANOBEGIN
-	if (0 != dwServerTime) // nanomite를 위한 더미 if
+	if (0 != dwServerTime) // dummy for nanomite if
 	{
 		gs_dwServerTime = dwServerTime;
 		gs_dwClientTime = CTimer::instance().GetCurrentMillisecond();
@@ -70,7 +70,7 @@ CTimer::CTimer()
 	ELTimer_Init();
 
 	NANOBEGIN
-	if (this) // nanomite를 위한 더미 if
+	if (this) // dummy for nanomite if
 	{
 		m_dwCurrentTime = 0;
 		m_bUseRealTime = true;

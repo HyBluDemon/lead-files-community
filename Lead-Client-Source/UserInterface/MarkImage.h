@@ -1,4 +1,4 @@
-#ifndef __INC_METIN_II_MARKIMAGE_H__
+癤�#ifndef __INC_METIN_II_MARKIMAGE_H__
 #define __INC_METIN_II_MARKIMAGE_H__
 
 #include <IL/il.h>
@@ -15,7 +15,7 @@ struct SGuildMark
 	};
 
 	///////////////////////////////////////////////////////////////////////////////
-	Pixel m_apxBuf[SIZE];	// 실제 이미지
+	Pixel m_apxBuf[SIZE];	// real image
 
 	///////////////////////////////////////////////////////////////////////////////
 	void Clear();
@@ -37,11 +37,11 @@ struct SGuildMarkBlock
 	};
 
 	///////////////////////////////////////////////////////////////////////////////
-	Pixel	m_apxBuf[SIZE];	// 실제 이미지
+	Pixel	m_apxBuf[SIZE];	// real image
 
-	BYTE 	m_abCompBuf[MAX_COMP_SIZE];	// 압축된 데이터
-	size_t	m_sizeCompBuf;	// 압축된 크기
-	DWORD	m_crc;			// 압축된 데이터의 CRC
+	BYTE 	m_abCompBuf[MAX_COMP_SIZE];	// compressed data
+	size_t	m_sizeCompBuf;	// compressed size
+	DWORD	m_crc;			// CRC of compressed data
 
 	///////////////////////////////////////////////////////////////////////////////
 	DWORD	GetCRC() const;
@@ -86,9 +86,9 @@ class CGuildMarkImage
 
 		bool SaveMark(DWORD posMark, BYTE * pbMarkImage);
 		bool DeleteMark(DWORD posMark);
-		bool SaveBlockFromCompressedData(DWORD posBlock, const BYTE * pbComp, DWORD dwCompSize); // 서버 -> 클라이언트
+		bool SaveBlockFromCompressedData(DWORD posBlock, const BYTE * pbComp, DWORD dwCompSize); // Server -> Client
 
-		DWORD GetEmptyPosition(); // 빈 마크 위치를 얻는다.
+		DWORD GetEmptyPosition(); // Get an empty mark position.
 
 		void GetBlockCRCList(DWORD * crcList);
 		void GetDiffBlocks(const DWORD * crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks);

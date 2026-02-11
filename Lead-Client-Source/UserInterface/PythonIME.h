@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../eterBase/Singleton.h"
 #include "../eterlib/IME.h"

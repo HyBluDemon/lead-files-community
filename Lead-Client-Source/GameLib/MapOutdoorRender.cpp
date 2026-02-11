@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "MapOutdoor.h"
 #include "TerrainPatch.h"
 #include "AreaTerrain.h"
@@ -42,10 +42,10 @@ void CMapOutdoor::RenderTerrain()
 	
 	__RenderTerrain_RecurseRenderQuadTree(m_pRootNode);
 	
-	// 거리순 정렬
+	// Sort by distance
 	std::sort(m_PatchVector.begin(),m_PatchVector.end());
 
-	// 그리기 위한 벡터 세팅
+	// Vector settings for drawing
 	if (CTerrainPatch::SOFTWARE_TRANSFORM_PATCH_ENABLE)
 		__RenderTerrain_RenderSoftwareTransformPatch();
 	else
@@ -133,13 +133,13 @@ void CMapOutdoor::ApplyLight(DWORD dwVersion, const D3DLIGHT9& c_rkLight)
 	STATEMANAGER.SetLight(0, &c_rkLight);
 }
 
-// 2004. 2. 17. myevan. 모든 부분을 보이게 초기화 한다
+// 2004. 2. 17. myevan. Initialize all parts to be visible
 void CMapOutdoor::InitializeVisibleParts()
 {
 	m_dwVisiblePartFlags=0xffffffff;
 }
 
-// 2004. 2. 17. myevan. 특정 부분을 보이게 하거나 감추는 함수
+// 2004. 2. 17. myevan. Function to show or hide a specific part
 void CMapOutdoor::SetVisiblePart(int ePart, bool isVisible)
 {
 	DWORD dwMask=(1<<ePart);
@@ -154,7 +154,7 @@ void CMapOutdoor::SetVisiblePart(int ePart, bool isVisible)
 	}
 }
 
-// 2004. 2. 17. myevan. 특정 부분이 보이는지 알아내는 함수
+// 2004. 2. 17. myevan. Function to find out if a specific part is visible
 bool CMapOutdoor::IsVisiblePart(int ePart)
 {
 	DWORD dwMask=(1<<ePart);
@@ -164,7 +164,7 @@ bool CMapOutdoor::IsVisiblePart(int ePart)
 	return false;
 }
 
-// Splat 개수 제한
+// Splat number limit
 void CMapOutdoor::SetSplatLimit(int iSplatNum)
 {
 	m_iSplatLimit = iSplatNum;
@@ -327,7 +327,7 @@ struct CMapOutdoor_LessThingInstancePtrRenderOrder
 {
 	bool operator() (CGraphicThingInstance* pkLeft, CGraphicThingInstance* pkRight)
 	{
-		//TODO : Camera위치기반으로 소팅
+		// TODO: Sorting based on camera location
 		CCamera * pCurrentCamera = CCameraManager::Instance().GetCurrentCamera();
 		const D3DXVECTOR3 & c_rv3CameraPos = pCurrentCamera->GetEye();
 		const D3DXVECTOR3 & c_v3LeftPos  = pkLeft->GetPosition();
@@ -363,7 +363,7 @@ void CMapOutdoor::RenderArea(bool bRenderAmbience)
 	m_dwRenderedGraphicThingInstanceNum = 0;
 	m_dwRenderedCRCWithNumberVector.clear();
 
-	// NOTE - 20041201.levites.던젼 그림자 추가
+	// NOTE - 20041201.levites.Dungeon shadow added
 	for (int j = 0; j < AROUND_AREA_NUM; ++j)
 	{
 		CArea * pArea;

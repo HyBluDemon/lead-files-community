@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonChat.h"
 
 #include "AbstractApplication.h"
@@ -474,7 +474,7 @@ void CPythonChat::AppendChat(int iType, const char * c_szChat)
 		TChatSet * pChatSet = &(itor->second);
 		//pChatLine->SetColor(itor->first, GetChatColor(iType));
 
-		// Edit Mode 를 억지로 끼워 맞추기 위해 추가
+		// Edit Mode added to force fit
 		if (BOARD_STATE_EDIT == pChatSet->m_iBoardState)
 		{
 			ArrangeShowingChat(itor->first);
@@ -512,12 +512,12 @@ DWORD CPythonChat::GetChatColor(int iType)
 void CPythonChat::IgnoreCharacter(const char * c_szName)
 {
 	TIgnoreCharacterSet::iterator itor = m_IgnoreCharacterSet.find(c_szName);
-	// NOTE : 이미 차단 중이라면..
+	// NOTE: If you are already blocking...
 	if (m_IgnoreCharacterSet.end() != itor)
 	{
 		m_IgnoreCharacterSet.erase(itor);
 	}
-	// NOTE : 차단이 되지 않은 캐릭터라면..
+	// NOTE: If the character is not blocked...
 	else
 	{
 		m_IgnoreCharacterSet.insert(c_szName);

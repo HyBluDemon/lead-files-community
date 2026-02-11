@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../eterLib/FuncObject.h"
 #include "../eterlib/NetStream.h"
@@ -155,7 +155,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendQuickSlotDelPacket(BYTE wpos);
 		bool SendQuickSlotMovePacket(BYTE wpos, BYTE change_pos);
 
-		// PointReset 개 임시
+		// PointReset temporary
 		bool SendPointResetPacket();
 
 		// Shop
@@ -254,7 +254,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		// CRC Report
 		bool __SendCRCReportPacket();
 
-		// 용홍석 강화
+		// Dragonstone Strengthening
 		bool SendDragonSoulRefinePacket(BYTE bRefineType, TItemPos* pos);
 
 		// Handshake
@@ -274,7 +274,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		void __TEST_SetSkillGroupFake(int iIndex);
 
 	//////////////////////////////////////////////////////////////////////////
-	// Phase 관련
+	// Phase related
 	//////////////////////////////////////////////////////////////////////////
 	public:
 		void SetOffLinePhase();
@@ -308,7 +308,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendTargetInfoLoadPacket(DWORD dwVID);
 
 	protected:
-		bool OnProcess();	// State들을 실제로 실행한다.
+		bool OnProcess();	// States are actually executed.
 		void OffLinePhase();
 		void HandShakePhase();
 		void LoginPhase();
@@ -504,10 +504,10 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		// Use Potion
 		bool RecvSpecialEffect();
 
-		// 서버에서 지정한 이팩트 발동 패킷.
+		// Effect trigger packet specified by the server.
 		bool RecvSpecificEffect();
 		
-		// 용혼석 관련
+		// Dragon Soul Stone related
 		bool RecvDragonSoulRefine();
 
 		// MiniMap Info
@@ -525,10 +525,10 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool RecvChannelPacket();
 
 	protected:
-		// 이모티콘
+		// emoticon
 		bool ParseEmoticon(const char * pChatMsg, DWORD * pdwEmoticon);
 
-		// 파이썬으로 보내는 콜들
+		// Calls sent to Python
 		void OnConnectFailure();
 		void OnScriptEventStart(int iSkin, int iIndex);
 		

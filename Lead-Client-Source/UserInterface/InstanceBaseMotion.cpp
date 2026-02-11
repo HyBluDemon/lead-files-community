@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "InstanceBase.h"
 #include "AbstractPlayer.h"
 #include "../gameLib/ActorInstance.h"

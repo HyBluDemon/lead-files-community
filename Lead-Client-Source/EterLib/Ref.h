@@ -1,4 +1,4 @@
-#ifndef __INC_REF_H__
+﻿#ifndef __INC_REF_H__
 #define __INC_REF_H__
 
 #include "ReferenceObject.h"

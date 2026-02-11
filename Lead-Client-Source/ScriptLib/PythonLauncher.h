@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <python/frameobject.h>
 
 #include "../eterBase/Singleton.h"

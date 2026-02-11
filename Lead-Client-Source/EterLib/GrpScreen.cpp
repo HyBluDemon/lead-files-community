@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "GrpScreen.h"
 #include "Camera.h"
 #include "StateManager.h"
@@ -53,7 +53,7 @@ void CScreen::RenderBox3d(float sx, float sy, float sz, float ex, float ey, floa
 		{ ex, ey, ez, ms_diffuseColor, 0.0f, 0.0f },	// 3
 
 		{ sx, ey, ez, ms_diffuseColor, 0.0f, 0.0f },	// 2
-		{ ex+1.0f, ey, ez, ms_diffuseColor, 0.0f, 0.0f }	// 3, (x°¡ 1Áõ°¡µÈ 3)
+		{ ex+1.0f, ey, ez, ms_diffuseColor, 0.0f, 0.0f }	// 3, (3 with x increased by 1)
 	};
 
 	// 2004.11.18.myevan.DrawIndexPrimitiveUP -> DynamicVertexBuffer
@@ -511,11 +511,11 @@ void CScreen::SetCursorPosition(int x, int y, int hres, int vres)
     ms_vtPickRayOrig.y = matViewInverse._42;
     ms_vtPickRayOrig.z = matViewInverse._43;
 	
-//	// 2003. 9. 9 µ¿Çö Ãß°¡
-//	// ÁöÇü pickingÀ» À§ÇÑ »¹Áþ... ¤Ñ¤Ñ; À§¿¡ °Í°ú ÅëÇÕ ÇÊ¿ä...
+// // Donghyun added on September 9, 2003
+// // Stupid thing for terrain picking... ã…¡ã…¡; Need to integrate with the above...
 	ms_Ray.SetStartPoint(ms_vtPickRayOrig);
 	ms_Ray.SetDirection(-ms_vtPickRayDir, 51200.0f);
-//	// 2003. 9. 9 µ¿Çö Ãß°¡
+// // Donghyun added on September 9, 2003
 }
 
 bool CScreen::GetCursorPosition(float* px, float* py, float* pz)

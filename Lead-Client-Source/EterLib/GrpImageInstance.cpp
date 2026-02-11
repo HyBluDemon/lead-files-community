@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "GrpImageInstance.h"
 #include "StateManager.h"
 
@@ -83,7 +83,7 @@ void CGraphicImageInstance::OnRender()
 	vertices[3].texCoord	= TTextureCoordinate(eu, ev);	
 	vertices[3].diffuse		= m_DiffuseColor;
 
-	// 2004.11.18.myevan.ctrl+alt+del 반복 사용시 튕기는 문제 
+	// 2004.11.18.myevan.Jumping issue when using ctrl+alt+del repeatedly
 	if (CGraphicBase::SetPDTStream(vertices, 4))
 	{
 		CGraphicBase::SetDefaultIndexBuffer(CGraphicBase::DEFAULT_IB_FILL_RECT);
@@ -207,7 +207,7 @@ void CGraphicImageInstance::Initialize()
 
 void CGraphicImageInstance::Destroy()
 {
-	m_roImage.SetPointer(NULL); // CRef 에서 레퍼런스 카운트가 떨어져야 함.
+	m_roImage.SetPointer(NULL); // The reference count must fall from CRef.
 	Initialize();
 }
 

@@ -1,4 +1,4 @@
-#ifndef __MILESLIB_CSOUNDINSTANCE_H__
+﻿#ifndef __MILESLIB_CSOUNDINSTANCE_H__
 #define __MILESLIB_CSOUNDINSTANCE_H__
 
 #include "SoundBase.h"

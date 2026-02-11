@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 
 #include <windows.h>
 #include <mmsystem.h>
@@ -254,7 +254,7 @@ bool CEterPack::Create(CEterFileDict& rkFileDict, const char * dbname, const cha
 	
 	m_bReadOnly = bReadOnly;
 
-	// bReadOnly 모드가 아니고 데이터 베이스가 열린다면 생성 실패
+	// Creation will fail if the database is not opened in bReadOnly mode.
 	if (!CreateIndexFile())
 		return false;
 
@@ -283,7 +283,7 @@ bool CEterPack::DecryptIV(DWORD dwPanamaKey)
 	if (m_stIV_Panama.length() != 32)
 		return false;
 
-	if (m_bDecrypedIV) // 이미 암호화가 풀렸으면 다시 처리 안함
+	if (m_bDecrypedIV) // If the encryption has already been released, it will not be processed again.
 		return true;
 
 	DWORD* ivs = (DWORD*)&m_stIV_Panama[0];
@@ -474,7 +474,7 @@ bool CEterPack::__BuildIndex(CEterFileDict& rkFileDict, bool bOverwrite)
 
 			m_DataPositionMap.insert(TDataPositionMap::value_type(index->filename_crc, index));
 
-			if (bOverwrite) // 서버 연동 패킹 파일은 나중에 들어오지만 최상위로 등록해야한다
+			if (bOverwrite) // The server-linked packing file will come later, but must be registered at the top level.
 				rkFileDict.UpdateItem(this, index);
 			else
 				rkFileDict.InsertItem(this, index);
@@ -492,7 +492,7 @@ bool CEterPack::__BuildIndex(CEterFileDict& rkFileDict, bool bOverwrite)
 //
 //void CEterPack::ClearDataMemoryMap()
 //{
-//	// m_file이 data file이다...
+// // m_file is a data file...
 //	m_file.Destroy();
 //	m_tLastAccessTime = 0;
 //	m_bIsDataLoaded = false;
@@ -516,8 +516,8 @@ bool CEterPack::Get(CMappedFile& out_file, const char * filename, LPCVOID * data
 	//	m_bIsDataLoaded = true;
 	//}
 	
-	// 기존에는 CEterPack에서 epk를 memory map에 올려놓고, 요청이 오면 그 부분을 링크해서 넘겨 줬었는데,
-	// 이제는 요청이 오면, 필요한 부분만 memory map에 올리고, 요청이 끝나면 해제하게 함.
+	// Previously, CEterPack placed the epk on the memory map, and when a request was made, the part was linked and handed over.
+	// Now, when a request comes, only the necessary parts are uploaded to the memory map and released when the request is completed.
 	out_file.Create(m_stDataFileName.c_str(), data, index->data_position, index->data_size);
 	
 	bool bIsSecurityCheckRequired = ( index->compressed_type == COMPRESSED_TYPE_SECURITY ||
@@ -988,15 +988,15 @@ bool CEterPack::Put(const char * filename, LPCVOID data, long len, BYTE packType
 	data_crc = GetCRC32((const char *) data, len);
 #endif
 
-	// 기존 데이터가 있으면..
+	// If you have existing data...
 	if (pIndex)
 	{
-		// 기존 data 크기가 넣을 데이터 크기를 수용할 수 있다면
+		// If the existing data size can accommodate the data size to be inserted
 		if (pIndex->real_data_size >= len)
 		{
 			++m_map_indexRefCount[pIndex->id];
 
-			// 길이가 틀리거나, checksum이 틀릴 때만 저장 한다.
+			// Save only when the length is wrong or the checksum is wrong.
 			if ( (pIndex->data_size != len) || 
 #ifdef CHECKSUM_CHECK_MD5
 				(memcmp( pIndex->MD5Digest, context.digest, 16 ) != 0) )
@@ -1028,13 +1028,13 @@ bool CEterPack::Put(const char * filename, LPCVOID data, long len, BYTE packType
 			return true;
 		}
 
-		// 기존 데이터 크기가 새로 들어갈 것 보다 적다면, 새로 인덱스를 할당해
-		// 넣어야 한다. 원래 있던 인덱스는 비워 둔다.
+		// If the existing data size is smaller than the new one, allocate a new index.
+		// You have to put it in. The original index is left empty.
 		PushFreeIndex(pIndex);
 		WriteIndex(fileIndex, pIndex);
 	}
 
-	// 새 데이터
+	// new data
 	pIndex = NewIndex(fileIndex, filename, len);
 	pIndex->data_size = len;
 
@@ -1083,7 +1083,7 @@ bool CEterPack::CreateIndexFile()
 		return false;
 
 	//
-	// 파일이 없으므로 새로 만든다.
+	// The file does not exist, so create a new one.
 	//
 	fp = fopen(m_indexFileName, "wb");
 	
@@ -1113,16 +1113,7 @@ void CEterPack::WriteIndex(CFileBase & file, TEterPackIndex * index)
 }
 
 /*
- *	Free Block 이란 데이터에서 지워진 부분을 말한다.
- *	Free Block 들은 각각 FREE_INDEX_BLOCK_SIZE (32768) 단위로 나누어져
- *	리스트로 관리된다.
- *
- *	예를 들어 128k 의 데이터는
- *	128 * 1024 / FREE_INDEX_BLOCK_SIZE = 4 이므로
- *	최종 적으로는 m_FreeIndexList[4] 에 들어간다.
- *
- *	FREE_INDEX_BLOCK_SIZE 의 최대 값은 FREE_INDEX_MAX_SIZE(512) 이다.
- *	따라서 16MB 이상의 데이터는 무조건 배열의 512 위치에 들어간다.
+ * Free Block refers to the erased portion of data. Free Blocks are divided into FREE_INDEX_BLOCK_SIZE (32768) units and managed as a list.  For example, 128k data is 128 * 1024 / FREE_INDEX_BLOCK_SIZE = 4, so it ultimately goes into m_FreeIndexList[4].  The maximum value of FREE_INDEX_BLOCK_SIZE is FREE_INDEX_MAX_SIZE(512). Therefore, data over 16MB is unconditionally placed at position 512 of the array.
  */
 int CEterPack::GetFreeBlockIndex(long size)
 {
@@ -1159,7 +1150,7 @@ TEterPackIndex* CEterPack::NewIndex(CFileBase& file, const char* filename, long 
 {
 	TEterPackIndex* index = NULL;
 	int block_size = size + (DATA_BLOCK_SIZE - (size % DATA_BLOCK_SIZE));
-//	if ((index = FindIndex(filename))) // 이미 인덱스가 존재하는지 확인
+// if ((index = FindIndex(filename))) // Check if the index already exists
 //		return index;
 
 	int blockidx = GetFreeBlockIndex(block_size);
@@ -1329,7 +1320,7 @@ const char * CEterPack::GetDBName()
 
 void CEterPack::__CreateFileNameKey_Panama(const char * filename, BYTE * key, unsigned int keySize)
 {
-	// 키 암호화
+	// key encryption
 	if (keySize != 32)
 		return;
 
@@ -1371,7 +1362,7 @@ void CEterPack::__CreateFileNameKey_Panama(const char * filename, BYTE * key, un
 					 ) // HashFilter
 				 ); // StringSource
 
-	// 만들어진 키의 첫번째 4바이트로 다음 16바이트 키 생성 알고리즘 선택
+	// Select the next 16-byte key generation algorithm based on the first 4 bytes of the created key.
 	unsigned int idx2 = *(unsigned int*) key;
 
 	switch (idx2 & 3)
@@ -1400,14 +1391,14 @@ void CEterPack::__CreateFileNameKey_Panama(const char * filename, BYTE * key, un
 						//) // HexEncoder
 					 ) // HashFilter
 				 ); // StringSource
-	// 키 생성 완료
+	// Key creation complete
 }
 
 bool CEterPack::__Encrypt_Panama(const char* filename, const BYTE* data, SIZE_T dataSize, CLZObject& zObj)
 {
 	if (32 != m_stIV_Panama.length())
 	{
-		// 해커가 이 메세지를 보면 힌트를 얻을까봐 디버그에서만 출력
+		// This message is output only in debug in case a hacker sees this message and gets a hint.
 #ifdef _DEBUG
 		TraceError("IV not set (filename: %s)", filename);
 #endif
@@ -1429,7 +1420,7 @@ bool CEterPack::__Encrypt_Panama(const char* filename, const BYTE* data, SIZE_T 
 	__CreateFileNameKey_Panama(filename, key, sizeof(key));
 	Encryptor.SetKeyWithIV(key, sizeof(key), (const BYTE*) m_stIV_Panama.c_str(), 32);
 
-	// MandatoryBlockSize에 나누어 떨어지게 만들고 최대 2048 바이트만
+	// Divide it into MandatoryBlockSize and only have a maximum of 2048 bytes.
 	DWORD cryptSize = dataSize - (dataSize % Encryptor.MandatoryBlockSize());
 	cryptSize = cryptSize > 2048 ? 2048 : cryptSize;
 
@@ -1464,7 +1455,7 @@ bool CEterPack::__Decrypt_Panama(const char* filename, const BYTE* data, SIZE_T 
 {
 	if (32 != m_stIV_Panama.length())
 	{
-		// 해커가 이 메세지를 보면 힌트를 얻을까봐 디버그에서만 출력
+		// This message is output only in debug in case a hacker sees this message and gets a hint.
 #ifdef _DEBUG
 		TraceError("IV not set (filename: %s)", filename);
 #endif
@@ -1478,7 +1469,7 @@ bool CEterPack::__Decrypt_Panama(const char* filename, const BYTE* data, SIZE_T 
 	__CreateFileNameKey_Panama(filename, key, sizeof(key));
 	Decryptor.SetKeyWithIV(key, sizeof(key), (const BYTE*) m_stIV_Panama.c_str(), 32);
 
-	// MandatoryBlockSize에 나누어 떨어지게 만들고 최대 2048 바이트만
+	// Divide it into MandatoryBlockSize and only have a maximum of 2048 bytes.
 	DWORD cryptSize = dataSize - (dataSize % Decryptor.MandatoryBlockSize());
 	cryptSize = cryptSize > 2048 ? 2048 : cryptSize;
 

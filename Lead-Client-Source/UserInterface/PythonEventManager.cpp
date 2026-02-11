@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonEventManager.h"
 #include "PythonNetworkStream.h"
 #include "PythonNonPlayer.h"
@@ -145,7 +145,7 @@ int CPythonEventManager::RegisterEventSetFromString(const std::string& strScript
 	if (!pEventSet)
 		return -1;
 
-	// SCRIPT_PARSING_FAILURE_CLEAR_BUG 스크립트 파싱 실패시 __ClearEventSetp 에서 에러 발생
+	// SCRIPT_PARSING_FAILURE_CLEAR_BUG An error occurs in __ClearEventSetp when script parsing fails.
 	pEventSet->pCurrentTextLine = NULL;
 	// END_OF_SCRIPT_PARSING_FAILURE_CLEAR_BUG
 	
@@ -159,7 +159,7 @@ int CPythonEventManager::RegisterEventSetFromString(const std::string& strScript
 	pEventSet->poEventHandler = NULL;
 	__InitEventSet(*pEventSet);
 
-	// NOTE : 만약 단순한 스크립트 이벤트 실행 커맨드라면 다시 만든다.
+	// NOTE: If it is a simple script event execution command, create it again.
 	script::TCmd ScriptCommand;
 	int pEventPosition;
 	int iEventType;
@@ -468,7 +468,7 @@ void CPythonEventManager::ProcessEventSet(TEventSet * pEventSet)
 
 		case EVENT_TYPE_WAIT:
 		{
-			//캐틱터 만들기 제국 설명등에서 설명 밑으로 쳐지는 버그 수정/EVENT_TYPE_WAIT 관련해서 테스트 필요.
+			// Fixed a bug where the empire description for creating a character was lowered to the bottom of the description/Need testing regarding EVENT_TYPE_WAIT.
 			pEventSet->iyLocal = 0;
 			pEventSet->isLock = true;
 			break;
@@ -584,8 +584,8 @@ void CPythonEventManager::ProcessEventSet(TEventSet * pEventSet)
 			int idx = atoi(GetArgument("idx", ScriptCommand.argList));
 			const char * name = GetArgument("name", ScriptCommand.argList);
 			
-			// 퀘스트 UI 리뉴얼이 되면 해결 되므로 일단 용혼석만 땜빵 by chrislee
-			if (!strcmp(name, "조각난 용혼석?....")) {
+			// This will be resolved when the quest UI is renewed, so just use the Dragon Soul Stone for now by chrislee
+			if (!strcmp(name, "Fragmented dragon soul stone?....ragon soul stone?....")) {
 				PyCallClassMemberFunc(m_poInterface, "BINARY_RecvQuest", Py_BuildValue("(isss)", idx, name, "highlight", ""));
 			}
 			else {
@@ -1146,7 +1146,7 @@ void CPythonEventManager::SetLeftTimeString(const char * c_szString)
 }
 
 CPythonEventManager::CPythonEventManager()
-	: m_poInterface(0), m_strLeftTimeString("남은 시간 : %d초")
+	: m_poInterface(0), m_strLeftTimeString("Time remaining: %d secondsing: %d secondsing: %d seconds")
 {
 	EventTypeMap["LETTER"]=EVENT_TYPE_LETTER;
 	EventTypeMap["COLOR"]=EVENT_TYPE_COLOR;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../eterBase/Stl.h"
 #include "../eterBase/FileLoader.h"
 #include "GrpSubImage.h"

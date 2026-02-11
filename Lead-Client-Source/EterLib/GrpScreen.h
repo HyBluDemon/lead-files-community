@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GrpCollisionObject.h"
 #include "../SphereLib/frustum.h"

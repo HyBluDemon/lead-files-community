@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../eterbase/Debug.h"
 #include "Thing.h"
 #include "ThingInstance.h"

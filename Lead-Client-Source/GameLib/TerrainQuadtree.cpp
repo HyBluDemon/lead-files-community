@@ -1,4 +1,4 @@
-// TerrainQuadtreeNode.cpp: implementation of the CTerrainQuadtreeNode class.
+﻿// TerrainQuadtreeNode.cpp: implementation of the CTerrainQuadtreeNode class.
 //
 //////////////////////////////////////////////////////////////////////
 

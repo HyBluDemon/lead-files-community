@@ -1,4 +1,4 @@
-#ifndef __INC_ETERPACKCURSOR_H__
+﻿#ifndef __INC_ETERPACKCURSOR_H__
 #define __INC_ETERPACKCURSOR_H__
 
 #include "EterPack.h"

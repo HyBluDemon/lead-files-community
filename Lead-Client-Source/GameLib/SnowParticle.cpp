@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "SnowParticle.h"
 
 const float c_fSnowDistance = 70000.0f;

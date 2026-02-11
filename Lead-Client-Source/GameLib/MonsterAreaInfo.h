@@ -1,4 +1,4 @@
-// MonsterAreaInfo.h: interface for the CMonsterAreaInfo class.
+ï»¿// MonsterAreaInfo.h: interface for the CMonsterAreaInfo class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -89,17 +89,17 @@ protected:
 protected:
 	EMonsterAreaInfoType	m_eMonsterAreaInfoType;
 
-	// Group Type Á¤º¸
+	// Group Type Information
 	DWORD			m_dwGroupID;
 	std::string		m_strGroupName;
 	std::string		m_strLeaderName;
 	DWORD			m_dwFollowerCount;
 
-	// Monster Type Á¤º¸
+	// Monster Type Information
 	DWORD			m_dwVID;
 	std::string		m_strMonsterName;
 
-	// °øÅë Á¤º¸
+	// Common information
 	DWORD			m_dwMonsterCount;
 	EMonsterDir		m_eMonsterDir;
 	D3DXVECTOR2		m_v2Monsterdirection;

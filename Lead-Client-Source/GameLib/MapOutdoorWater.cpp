@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterLib/StateManager.h"
 #include "../eterLib/ResourceManager.h"
 
@@ -69,14 +69,14 @@ void CMapOutdoor::RenderWater()
 	// RenderState
 	//////////////////////////////////////////////////////////////////////////
 
-	// 물 위 아래 애니시키기...
+	// Animating above and below the water...
 	static float s_fWaterHeightCurrent = 0;
 	static float s_fWaterHeightBegin = 0;
 	static float s_fWaterHeightEnd = 0;
 	static DWORD s_dwLastHeightChangeTime = CTimer::Instance().GetCurrentMillisecond();
 	static DWORD s_dwBlendtime = 300;
 
-	// 1.5초 마다 변경
+	// Changes every 1.5 seconds
 	if ((CTimer::Instance().GetCurrentMillisecond() - s_dwLastHeightChangeTime) > s_dwBlendtime)
 	{
 		s_dwBlendtime = random_range(1000, 3000);
@@ -116,7 +116,7 @@ void CMapOutdoor::RenderWater()
 			DrawWater(i->second);
 	}
 
-	// 렌더링 한 후에는 물 z 위치를 복구
+	// Recover the water z-position after rendering
 	m_matWorldForCommonUse._43 = 0.0f;
 
 	//////////////////////////////////////////////////////////////////////////

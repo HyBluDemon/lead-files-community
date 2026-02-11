@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "Input.h"
 
 LPDIRECTINPUT8			CInputDevice::ms_lpDI = NULL;
@@ -72,7 +72,7 @@ bool CInputKeyboard::InitializeKeyboard(HWND hWnd)
 	if (FAILED(hr = ms_lpKeyboard->SetDataFormat(&c_dfDIKeyboard)))
 		return false;
 
-// Alt + F4를 위해 비독점 모드로 - [levites]
+// In non-exclusive mode for Alt+F4 - [levites]
 //	DWORD dwCoopFlags = DISCL_FOREGROUND | DISCL_EXCLUSIVE;
 //	DWORD dwCoopFlags = DISCL_NONEXCLUSIVE | DISCL_BACKGROUND;
 	DWORD dwCoopFlags = DISCL_FOREGROUND | DISCL_NONEXCLUSIVE;
@@ -99,7 +99,7 @@ void CInputKeyboard::UpdateKeyboard()
 	{
 		hr = ms_lpKeyboard->Acquire();			
 		
-		// 현재 어플리케이션이 비활성화 되어 있어 입력을 받을 수 없다.
+		// The application is currently disabled and cannot receive input.
 		//if (hr == DIERR_OTHERAPPHASPRIO || hr == DIERR_NOTACQUIRED);
 		return;
 	}

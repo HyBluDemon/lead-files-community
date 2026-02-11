@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "StringCodec_Vietnamese.h"
 
-#pragma warning(disable: 4310) // char 짤림 경고 무시
+#pragma warning(disable: 4310) // Ignore char truncation warning
 
 static wchar_t cp1258_to_unicode[256] = {
 	0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 
@@ -138,22 +138,22 @@ int EL_String_Decode_Vietnamese(const char* multi, int multiLen, wchar_t* wide, 
 
 	if(multiLen > 0)
 	{
-		/* 첫글자는 무조건 변경 */ 
+		/* The first letter must be changed */ 
 		wchar_t prev = cp1258_to_unicode[(BYTE)multi[src++]];
 
 		while(src < multiLen)
 		{
 			wchar_t unicode = cp1258_to_unicode[(BYTE)multi[src]];
 
-			/* 다음 문자가 Tone 인가? */ 
+			/* Is the next character Tone? */ 
 			if(IsTone(unicode))
 			{
-				/* 앞의 문자와 합하자. */ 
+				/* Let's combine it with the previous character. */ 
 				prev = ComposeTone(prev, unicode);
 			}
 			else
 			{
-				/* 일반 문자가 왔다. 앞 문자를 변환 */ 
+				/* A general text message arrived. Convert the preceding character */ 
 				if(dest < wideLen)
 					wide[dest++] = prev;
 				prev = unicode;

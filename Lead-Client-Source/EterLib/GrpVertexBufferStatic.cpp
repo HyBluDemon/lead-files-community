@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "GrpVertexBufferStatic.h"
 
 bool CStaticVertexBuffer::Create(int vtxCount, DWORD fvf, bool /*isManaged*/)
 {
-	// ¹«Á¶°Ç MANAGED ¸ðµå
+	// Unconditionally MANAGED mode
 	return CGraphicVertexBuffer::Create(vtxCount, fvf, D3DUSAGE_WRITEONLY, D3DPOOL_DEFAULT);
 }
 

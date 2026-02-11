@@ -1,4 +1,4 @@
-// MonsterAreaInfo.cpp: implementation of the CMonsterAreaInfo class.
+癤�// MonsterAreaInfo.cpp: implementation of the CMonsterAreaInfo class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -126,12 +126,12 @@ void CMonsterAreaInfo::RemoveAllMonsters()
 
 	SetMonsterGroupID(0);
 	
-	m_strGroupName.assign("이름없음");
-	m_strLeaderName.assign("이름없음");
+	m_strGroupName.assign("No name");
+	m_strLeaderName.assign("No name");
 	SetMonsterGroupFollowerCount(0);
 	
 	SetMonsterVID(0);
-	m_strMonsterName.assign("이름없음");
+	m_strMonsterName.assign("No name");
 
 	SetMonsterCount(0);
 	SetMonsterDirection(DIR_NORTH);
