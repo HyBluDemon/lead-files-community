@@ -871,24 +871,96 @@ ACMD(do_purge)
 
 ACMD(do_item_purge)
 {
-	int         i;
-	LPITEM      item;
+	char arg1[256], arg2[256];
+	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
 
-	for (i = 0; i < INVENTORY_AND_EQUIP_SLOT_MAX; ++i)
+	LPITEM item;
+	int i;
+	int iInvStart = 0;
+	int iInvEnd = INVENTORY_MAX_NUM;
+
+	bool bInv = false, bEq = false, bDs = false;
+
+	if (!*arg1)
 	{
-		if ((item = ch->GetInventoryItem(i)))
-		{
-			ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
-			ch->SyncQuickslot(QUICKSLOT_TYPE_ITEM, i, 255);
-		}
-	}   
-	for (i = 0; i < DRAGON_SOUL_INVENTORY_MAX_NUM; ++i)
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /ip <all | inv [1-%d] | eq | ds>", INVENTORY_PAGE_COUNT);
+		return;
+	}
+	else if (!strcmp(arg1, "all"))
 	{
-		if ((item = ch->GetItem(TItemPos(DRAGON_SOUL_INVENTORY, i ))))
+		bInv = bEq = bDs = true;
+		ch->ChatPacket(CHAT_TYPE_INFO, "All inventories and equipment have been cleared.");
+	}
+	else if (!strcmp(arg1, "inv"))
+	{
+		bInv = true;
+		if (*arg2)
 		{
-			ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
+			int iPage = 0;
+			str_to_number(iPage, arg2);
+
+			if (iPage < 1 || iPage > INVENTORY_PAGE_COUNT)
+			{
+				ch->ChatPacket(CHAT_TYPE_INFO, "[System] Invalid page number. Available pages: 1-%d", INVENTORY_PAGE_COUNT);
+				return;
+			}
+
+			iInvStart = (iPage - 1) * INVENTORY_SLOT_PER_PAGE;
+			iInvEnd = iInvStart + INVENTORY_SLOT_PER_PAGE;
+			if (iInvEnd > INVENTORY_MAX_NUM) iInvEnd = INVENTORY_MAX_NUM;
+
+			ch->ChatPacket(CHAT_TYPE_INFO, "Inventory page %d has been cleared.", iPage);
 		}
-	}   
+		else
+		{
+			ch->ChatPacket(CHAT_TYPE_INFO, "All inventory pages have been cleared.");
+		}
+	}
+	else if (!strcmp(arg1, "eq"))
+	{
+		bEq = true;
+		ch->ChatPacket(CHAT_TYPE_INFO, "Equipment slots have been cleared.");
+	}
+	else if (!strcmp(arg1, "ds"))
+	{
+		bDs = true;
+		ch->ChatPacket(CHAT_TYPE_INFO, "Dragon Soul Alchemy inventory has been cleared.");
+	}
+	else
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, "Usage: /ip <all | inv [1-%d] | eq | ds>", INVENTORY_PAGE_COUNT);
+		return;
+	}
+
+	if (bInv)
+	{
+		for (i = iInvStart; i < iInvEnd; ++i)
+		{
+			if ((item = ch->GetInventoryItem(i)))
+			{
+				ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
+				ch->SyncQuickslot(QUICKSLOT_TYPE_ITEM, i, 255);
+			}
+		}
+	}
+
+	if (bEq)
+	{
+		for (i = INVENTORY_MAX_NUM; i < INVENTORY_AND_EQUIP_SLOT_MAX; ++i)
+		{
+			if ((item = ch->GetInventoryItem(i)))
+				ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
+		}
+	}
+
+	if (bDs)
+	{
+		for (i = 0; i < DRAGON_SOUL_INVENTORY_MAX_NUM; ++i)
+		{
+			if ((item = ch->GetItem(TItemPos(DRAGON_SOUL_INVENTORY, i))))
+				ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
+		}
+	}
 }
 
 ACMD(do_state)
