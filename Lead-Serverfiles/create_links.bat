@@ -7,4 +7,8 @@ for %%x in (db, auth, channel1/game1, channel1/game2, channel99) do (
 	@rmdir /q "%~dp0%%x\locale" >nul 2>&1
 	@del /Q "%~dp0%%x\locale" >nul 2>&1
 	@mklink /D "%~dp0%%x\locale" "%~dp0share\locale"
+
+	@rmdir /q "%~dp0%%x\conf" >nul 2>&1
+	@del /Q "%~dp0%%x\conf" >nul 2>&1
+	@mklink /D "%~dp0%%x\conf" "%~dp0conf"
 )
