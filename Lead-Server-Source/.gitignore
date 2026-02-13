@@ -1,20 +1,36 @@
 # Ignore generated objects
 .vs
+.idea
 UpgradeLog.htm
-/**/Debug/
-/**/Release/
-/**/*.idb
-/**/*.pdb
-/game/src/OBJDIR
+**/Debug/
+**/Release/
+**/logs/
+**/*.idb
+**/*.pdb
+**/*.tlog
+**/*.log
+**/*.aps
+**/*.user
+.obj/
+OBJDIR/
+
+# Dependency and backup files
+Depend
+*.bak
+
+# VS source control
+*.vspscc
+*.vssscc
+
+# Python artifacts
+*.pyc
+__pycache__/
 
 # Ignore build libs
-/libgame/**/*.lib
-/libthecore/**/*.lib
-/libpoly/**/*.lib
-/liblua/**/*.lib
-/libpoly/**/*.lib
-/libserverkey/**/*.lib
-/libsql/**/*.lib
+# We ignore all .lib files as they are build artifacts in this source tree
+*.lib
+*.exp
+*.ilk
 
 # Ignore build executables
 /db/db_d.*
@@ -24,4 +40,4 @@ UpgradeLog.htm
 # Ignore installed dependencies
 vcpkg_installed
 *.o
-*obj*
+*.obj

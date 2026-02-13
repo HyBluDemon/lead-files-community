@@ -14,41 +14,26 @@ liblua: .
 	$(MAKE) -C $@
 
 libsql: .
-	@touch $@/Depend
-	$(MAKE) -C $@ dep
 	$(MAKE) -C $@ clean
 	$(MAKE) -C $@
 
 libgame: .
-	@touch $@/src/Depend
-	$(MAKE) -C $@/src dep
 	$(MAKE) -C $@/src clean
 	$(MAKE) -C $@/src
 
 libpoly: .
-	@touch $@/Depend
-	$(MAKE) -C $@ dep
 	$(MAKE) -C $@ clean
 	$(MAKE) -C $@ 
 
 libthecore: .
-	@touch $@/src/Depend
-	$(MAKE) -C $@/src dep
 	$(MAKE) -C $@/src clean
 	$(MAKE) -C $@/src
 
 game: .
-	@touch $@/src/Depend
-	$(MAKE) -C $@/src dep
 	$(MAKE) -C $@/src clean
-	$(MAKE) -C $@/src limit_time
-#	$(MAKE) -C $@/src
 
 db: .
-	@touch $@/src/Depend
-	$(MAKE) -C $@/src dep
 	$(MAKE) -C $@/src clean
-#	$(MAKE) -C $@/src
 
 all: 
 	@echo "--------------------------------------"
@@ -58,36 +43,22 @@ all:
 	$(MAKE) -C liblua clean
 	$(MAKE) -C liblua
 
-	@touch libsql/Depend
-	$(MAKE) -C libsql dep
 	$(MAKE) -C libsql clean
 	$(MAKE) -C libsql
 
-	@touch libgame/src/Depend
-	$(MAKE) -C libgame/src dep
 	$(MAKE) -C libgame/src clean
 	$(MAKE) -C libgame/src
 
-	@touch libpoly/Depend
-	$(MAKE) -C libpoly dep
 	$(MAKE) -C libpoly clean
 	$(MAKE) -C libpoly 
 
-	@touch libthecore/src/Depend
-	$(MAKE) -C libthecore/src dep
 	$(MAKE) -C libthecore/src clean
 	$(MAKE) -C libthecore/src
 
-	@touch game/src/Depend
-	$(MAKE) -C game/src dep
 	$(MAKE) -C game/src clean
 	$(MAKE) -C game/src limit_time
-#	$(MAKE) -C game/src
 
-	@touch db/src/Depend
-	$(MAKE) -C db/src dep
 	$(MAKE) -C db/src clean
-#	$(MAKE) -C db/src
 
 	@echo "--------------------------------------"
 	@echo "Full Build End"
