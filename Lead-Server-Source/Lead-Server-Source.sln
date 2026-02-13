@@ -25,7 +25,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\src\game.vcxpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "db", "db\src\db.vcxproj", "{ADC2E26A-C39B-4817-A24C-A99827B74EB2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qc", "game\src\quest\qc.vcxproj", "{3783243F-5E36-4B96-9A13-7BFF00F15B34}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qc", "qc\qc.vcxproj", "{3783243F-5E36-4B96-9A13-7BFF00F15B34}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared", "..\Lead-Shared-Source\Lead-Shared-Source.vcxproj", "{76C68FB7-46A0-464F-B0D2-EEDB6E2A450B}"
 EndProject

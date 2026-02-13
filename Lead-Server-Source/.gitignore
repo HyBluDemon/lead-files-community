@@ -35,7 +35,7 @@ __pycache__/
 # Ignore build executables
 /db/db_d.*
 /game/game_d.*
-/game/src/quest/qc.exe
+/qc/qc.exe
 
 # Ignore installed dependencies
 vcpkg_installed

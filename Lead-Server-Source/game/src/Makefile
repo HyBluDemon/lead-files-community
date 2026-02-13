@@ -15,6 +15,7 @@ INCDIR = -I$(EXTERN_DIR)/include \
          -I../../liblua/include \
          -I../../libthecore/include \
          -I../../libgame/include \
+         -I$(EXTERN_DIR)/include/lzo-2.10/include \
          -I/usr/local/include
 
 LIBDIR = -L$(EXTERN_DIR)/lib \
@@ -33,6 +34,9 @@ LIBS = $(EXTERN_DIR)/lib/libIL.a \
        $(EXTERN_DIR)/lib/libpng.a \
        $(EXTERN_DIR)/lib/libjpeg-turbo.a \
        $(EXTERN_DIR)/lib/libcryptopp.a \
+       # TO-DO: Don't rely on lzo lib to be on the system
+       # Freebsd package system if fucked up and removes pretty everything very fast 
+       -L/usr/local/lib -llzo2 \
        ../../liblua/lib/liblua.a \
        ../../liblua/lib/liblualib.a \
        ../../libsql/libsql.a \
