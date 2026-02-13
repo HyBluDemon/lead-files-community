@@ -1,4 +1,4 @@
-#ifndef __INC_ETER2_ETERBASE_UTILS_H__
+癤�#ifndef __INC_ETER2_ETERBASE_UTILS_H__
 #define __INC_ETER2_ETERBASE_UTILS_H__
 
 #include <windows.h>
@@ -64,9 +64,9 @@ extern void			GetExceptionPathName(const char * sz_Name, std::string & OnlyFileN
 extern void			GetWorkingFolder(std::string & strFileName);
 extern void			StringLowers(char * pString);
 extern void			StringPath(std::string & rString);
-extern void			StringPath(char * pString);	// 모두 소문자로 만들고, \는 /로 바꾼다.
-extern void			StringPath(const char * c_szSrc, char * szDest);	// 모두 소문자로 만들고, \는 /로 바꾼다.
-extern void			StringPath(const char * c_szSrc, std::string & rString);	// 모두 소문자로 만들고, \는 /로 바꾼다.
+extern void			StringPath(char * pString);	// Make all letters lowercase and replace \ with /.
+extern void			StringPath(const char * c_szSrc, char * szDest);	// Make all letters lowercase and replace \ with /.
+extern void			StringPath(const char * c_szSrc, std::string & rString);	// Make all letters lowercase and replace \ with /.
 extern void			PrintAsciiData(const void* data, int bytes);
 bool				IsFile(const char* filename);
 bool				IsGlobalFileName(const char * c_szFileName);

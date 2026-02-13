@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../EffectLib/EffectManager.h"
 #include "PythonCharacterManager.h"
 

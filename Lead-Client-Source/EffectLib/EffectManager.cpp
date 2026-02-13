@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterBase/Random.h"
 #include "../eterlib/StateManager.h"
 #include "EffectManager.h"
@@ -48,7 +48,7 @@ bool CEffectManager::IsAliveEffect(DWORD dwInstanceIndex)
 void CEffectManager::Update()
 {
 
-	// 2004. 3. 1. myevan. 이펙트 모니터링 하는 코드
+	// 2004. 3. 1. myevan. Code for monitoring effects
 	/*
 	if (GetAsyncKeyState(VK_F9))
 	{
@@ -173,8 +173,8 @@ BOOL CEffectManager::RegisterEffect(const char * c_szFileName,bool isExistDelete
 
 	return TRUE;
 }
-// CEffectData 를 포인터형으로 리턴하게 하고..
-// CEffectData에서 CRC를 얻을수 있게 한다
+// Return CEffectData as a pointer type.
+// Enables obtaining CRC from CEffectData
 BOOL CEffectManager::RegisterEffect2(const char * c_szFileName, DWORD* pdwRetCRC, bool isNeedCache)
 {	
 	std::string strFileName;

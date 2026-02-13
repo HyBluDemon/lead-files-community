@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PhysicsObject.h"
 
 const float c_fFrameTime = 0.02f;
@@ -61,7 +61,7 @@ void CPhysicsObject::IncreaseExternalForce(const D3DXVECTOR3 & c_rvBasePosition,
 		m_v3Acceleration.y,
 		m_v3Acceleration.z);
 */
-	// NOTE : 최종 위치를 구해둔다. 근데 100보다 크다면? ;
+	// NOTE: Save the final location. But what if it is greater than 100? ;
 	const int LoopValue = 100;
 	D3DXVECTOR3 v3Movement(0.0f, 0.0f, 0.0f);
 
@@ -80,7 +80,7 @@ void CPhysicsObject::IncreaseExternalForce(const D3DXVECTOR3 & c_rvBasePosition,
 
 				//for (float fRatio = 0.0f; fRatio < 1.0f; fRatio += 0.1f)
 				//{
-				//	// 좀더 정밀하게 체크한다
+				// // Check more precisely
 				//	if (pWorld->isPhysicalCollision(c_rvBasePosition + v3Movement * fRatio))
 				//	{
 				//		v3Movement = D3DXVECTOR3 (0.0f, 0.0f, 0.0f);
@@ -142,11 +142,11 @@ float CPhysicsObject::GetYMovement()
 
 bool CPhysicsObject::isBlending()
 {
-	// NOTE : IncreaseExternalForce() 에 의해 밀리는 처리중인가?
+	// NOTE: Is the push being processed by IncreaseExternalForce()?
 	if (0.0f != D3DXVec3Length(&m_v3Velocity))
 		return true;
 
-	// NOTE : SetLastPosition() 에 의해 밀리는 처리중인가?
+	// NOTE: Is the pushback being processed by SetLastPosition()?
 	if (m_xPushingPosition.isPlaying() ||
 		m_yPushingPosition.isPlaying())
 		return true;

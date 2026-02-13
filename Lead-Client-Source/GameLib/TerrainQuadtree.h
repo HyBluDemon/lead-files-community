@@ -1,4 +1,4 @@
-// TerrainQuadtreeNode.h: interface for the CTerrainQuadtreeNode class.
+﻿// TerrainQuadtreeNode.h: interface for the CTerrainQuadtreeNode class.
 //
 //////////////////////////////////////////////////////////////////////
 

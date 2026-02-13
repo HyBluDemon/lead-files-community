@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "Arabic.h"
 #include <assert.h>
 
@@ -258,7 +258,7 @@ size_t Arabic_MakeShape(wchar_t* src, size_t srcLen, wchar_t* dst, size_t dstLen
 
 		if (Arabic_IsInMap(cur))
 		{
-			// 이전 글자 얻어내기
+			// Get previous letter
 			wchar_t prev = 0;			
 			{
 				size_t prevIndex = srcIndex;
@@ -282,7 +282,7 @@ size_t Arabic_MakeShape(wchar_t* src, size_t srcLen, wchar_t* dst, size_t dstLen
 				}
 			}
 
-			// 다음 글자 얻어내기
+			// get next letter
 			wchar_t next = 0;
 			{
 				size_t nextIndex = srcIndex;

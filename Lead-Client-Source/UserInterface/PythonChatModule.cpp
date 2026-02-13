@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "PythonChat.h"
 #include "PythonItem.h"
 #include "../gamelib/ItemManager.h"
@@ -436,7 +436,7 @@ PyObject * chatGetLinkFromHyperlink(PyObject * poSelf, PyObject * poArgs)
 			}
 
 			if (isAttr)
-				//"item:¹øÈ£:ÇÃ·¡±×:¼ÒÄÏ0:¼ÒÄÏ1:¼ÒÄÏ2"
+				//"item:é”…é¾‹:æ•²è´°å¼Š:å®¶å—0:å®¶å—1:å®¶å—2"
 				snprintf(buf, sizeof(buf), "|cffffc700|H%s|h[%s]|h|r", itemlink, pItemData->GetName());
 			else
 				snprintf(buf, sizeof(buf), "|cfff1e6c0|H%s|h[%s]|h|r", itemlink, pItemData->GetName());

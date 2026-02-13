@@ -1,4 +1,4 @@
-#include "stdafx.h"
+癤�#include "stdafx.h"
 #include "PythonExchange.h"
 
 void CPythonExchange::SetSelfName(const char *name)
@@ -239,9 +239,9 @@ CPythonExchange::CPythonExchange()
 	Clear();
 	m_isTrading = false;
 	m_elk_mode = false;
-		// Clear로 옴겨놓으면 안됨. 
-		// trade_start 페킷이 오면 Clear를 실행하는데
-		// m_elk_mode는 클리어 되선 안됨.;  
+		// Do not cover it with Clear.
+		// When the trade_start packet arrives, Clear is executed.
+		// m_elk_mode must not be cleared.;
 }
 CPythonExchange::~CPythonExchange()
 {

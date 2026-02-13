@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "EffectInstance.h"
 #include "ParticleSystemInstance.h"
 #include "SimpleLightInstance.h"
@@ -52,7 +52,7 @@ void CEffectInstance::UpdateSound()
 	{
 		CSoundManager& rkSndMgr=CSoundManager::Instance();
 		rkSndMgr.UpdateSoundInstance(m_matGlobal._41, m_matGlobal._42, m_matGlobal._43, m_dwFrame, m_pSoundInstanceVector);
-		// NOTE : 매트릭스에서 위치를 직접 얻어온다 - [levites]
+		// NOTE: The position is obtained directly from the matrix - [levites]
 	}
 	++m_dwFrame;
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../eterbase/Stl.h"
 #include "../eterlib/GrpObjectInstance.h"
@@ -34,7 +34,7 @@ class CGraphicThingInstance : public CGraphicObjectInstance
 
 		void		UpdateLODLevel();
 		void		UpdateTime();
-		void		DeformAll(); // ¸ðµç LOD µðÆû
+		void		DeformAll(); // Deform all LODs
 		
 		bool		LessRenderOrder(CGraphicThingInstance* pkThingInst);
 

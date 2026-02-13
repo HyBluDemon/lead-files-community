@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "InstanceBase.h"
 #include "PythonTextTail.h"
 #include "AbstractApplication.h"
@@ -135,7 +135,7 @@ void CInstanceBase::ProcessDamage()
 	else if (flag & DAMAGE_CRITICAL)
 	{
 		//rkEftMgr.CreateEffect(ms_adwCRCAffectEffect[EFFECT_DAMAGE_CRITICAL],v3Pos,v3Rot);
-		//return; 숫자도 표시.
+		// return; Numbers are also displayed.
 	}
 
 	std::string strDamageType;
@@ -162,7 +162,7 @@ void CInstanceBase::ProcessDamage()
 		{
 			strDamageType = "nontarget_";
 			rdwCRCEft = EFFECT_DAMAGE_NOT_TARGET;
-			return;//현재 적용 안됨.
+			return;// Currently not applicable.
 		}
 		else
 		{
@@ -178,7 +178,7 @@ void CInstanceBase::ProcessDamage()
 	{
 		if(index > 7)
 		{
-			TraceError("ProcessDamage무한루프 가능성");
+			TraceError("ProcessDamagePossibility of infinite loopity of infinite loop");
 			break;
 		}
 		num = damage%10;
@@ -258,7 +258,7 @@ CInstanceBase::SEffectContainer::Dict& CInstanceBase::__EffectContainer_GetDict(
 	return m_kEffectContainer.m_kDct_dwEftID;
 }
 
-// Return value 를 boolean 에서 ID 로 바꿉니다
+// Change return value from boolean to ID
 DWORD CInstanceBase::__EffectContainer_AttachEffect(DWORD dwEftKey)
 {
 	SEffectContainer::Dict& rkDctEftID=__EffectContainer_GetDict();
@@ -483,7 +483,7 @@ bool CInstanceBase::__FindPVPReadyKey(DWORD dwVIDSrc, DWORD dwVIDDst)
 
 	return true;
 }
-//길드전시 상대 길드인지 확인할때.
+// When checking whether it is the opposing guild during a guild exhibition.
 bool CInstanceBase::__FindGVGKey(DWORD dwSrcGuildID, DWORD dwDstGuildID)
 {
 	DWORD dwGVGKey=__GetPVPKey(dwSrcGuildID, dwDstGuildID);
@@ -493,7 +493,7 @@ bool CInstanceBase::__FindGVGKey(DWORD dwSrcGuildID, DWORD dwDstGuildID)
 
 	return true;
 }
-//대련 모드에서는 대련 상대만 공격할 수 있다.
+// In sparring mode, you can only attack your sparring opponent.
 bool CInstanceBase::__FindDUELKey(DWORD dwVIDSrc, DWORD dwVIDDst)
 {
 	DWORD dwDUELKey=__GetPVPKey(dwVIDSrc, dwVIDDst);
@@ -512,7 +512,7 @@ bool CInstanceBase::IsPVPInstance(CInstanceBase& rkInstSel)
 	DWORD dwGuildIDSrc=GetGuildID();
 	DWORD dwGuildIDDst=rkInstSel.GetGuildID();
 
-	if (GetDuelMode())	//대련 모드일때는 ~_~
+	if (GetDuelMode())	// When in sparring mode ~_~
 		return true;	
 
 	return __FindPVPKey(dwVIDSrc, dwVIDDst) || __FindGVGKey(dwGuildIDSrc, dwGuildIDDst);
@@ -690,7 +690,7 @@ void CInstanceBase::RefreshTextTailTitle()
 	RefreshTextTail();
 }
 
-// 2004.07.25.myevan.이펙트 안 붙는 문제 해결
+// 2004.07.25.myevan.Solved the problem of effects not appearing
 /////////////////////////////////////////////////
 void CInstanceBase::__ClearAffectFlagContainer()
 {
@@ -784,7 +784,7 @@ void CInstanceBase::__SetReviveInvisibilityAffect(bool isVisible)
 {
 	if (isVisible)
 	{
-		// NOTE : Dress 를 입고 있으면 Alpha 를 넣지 않는다.
+		// NOTE: If you are wearing a dress, do not enter Alpha.
 		if (IsWearingDress())
 			return;
 
@@ -800,7 +800,7 @@ void CInstanceBase::__Assassin_SetEunhyeongAffect(bool isVisible)
 {
 	if (isVisible)
 	{
-		// NOTE : Dress 를 입고 있으면 Alpha 를 넣지 않는다.
+		// NOTE: If you are wearing a dress, do not enter Alpha.
 		if (IsWearingDress())
 			return;
 
@@ -810,7 +810,7 @@ void CInstanceBase::__Assassin_SetEunhyeongAffect(bool isVisible)
 		}
 		else
 		{
-			// 2004.10.16.myevan.은형법 완전 투명
+			// 2004.10.16.myevan. Criminal law is completely transparent
 			m_GraphicThingInstance.BlendAlphaValue(0.0f, 1.0f);
 			m_GraphicThingInstance.HideAllAttachingEffect();
 		}
@@ -863,34 +863,34 @@ void CInstanceBase::__SetAffect(UINT eAffect, bool isVisible)
 				return;
 			break;
 /*
-		case AFFECT_GWIGEOM: // 전기 속성 공격으로 바뀔 예정
-			if (isVisible)
-			{
-				m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_ELECTRIC_HIT]);
-				m_GraphicThingInstance.SetBattleAttachEffect(ms_adwCRCAffectEffect[EFFECT_ELECTRIC_ATTACH]);
-			}
-			else
-			{
-				m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_HIT]);
-				m_GraphicThingInstance.SetBattleAttachEffect(0);
-			}
-			return;
+		case AFFECT_GWIGEOM: // Will change to electric attack 
+			if (isVisible) 
+			{ 
+				m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_ELECTRIC_HIT]); 
+				m_GraphicThingInstance.SetBattleAttachEffect(ms_adwCRCAffectEffect[EFFECT_ELECTRIC_ATTACH]); 
+			} 
+			else 
+			{ 
+				m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_HIT]); 
+				m_GraphicThingInstance.SetBattleAttachEffect(0); 
+			} 
+			return; 
+			break; 
+		case AFFECT_HWAYEOM: // Will change to fire attribute attack 
+			if (isVisible) 
+			{ 
+				m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_FLAME_HIT]); 
+				m_GraphicThingInstance.SetBattleAttachEffect(ms_adwCRCAffectEffect[EFFECT_FLAME_ATTACH]); 
+			} 
+			else 
+			{ 
+				m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_HIT]); 
+				m_GraphicThingInstance.SetBattleAttachEffect(0); 
+			} 
+			// Flame slash is only temporarily visible when attacking. 
+			return; 
 			break;
-		case AFFECT_HWAYEOM: // 화염 속성 공격으로 바뀔 예정
-			if (isVisible)
-			{
-				m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_FLAME_HIT]);
-				m_GraphicThingInstance.SetBattleAttachEffect(ms_adwCRCAffectEffect[EFFECT_FLAME_ATTACH]);
-			}
-			else
-			{
-				m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_HIT]);
-				m_GraphicThingInstance.SetBattleAttachEffect(0);
-			}
-			// 화염참은 공격할 때만 일시적으로 Visible 합니다.
-			return;
-			break;
-*/
+ */
 		case AFFECT_CHEONGEUN:
 			m_GraphicThingInstance.SetResistFallen(isVisible);
 			break;
@@ -906,13 +906,13 @@ void CInstanceBase::__SetAffect(UINT eAffect, bool isVisible)
 			break;
 		case AFFECT_GYEONGGONG:
 		case AFFECT_KWAESOK:
-			// 경공술, 쾌속은 뛸때만 Attaching 시킵니다. - [levites]
+			// Light techniques and rapid techniques are only attached when running. - [levites]
 			if (isVisible)
 				if (!IsWalking())
 					return;
 			break;
 		case AFFECT_INVISIBILITY:
-			// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
+			// 2004.07.17.levites.isShow changed to ViewFrustumCheck
 			if (isVisible)
 			{
 				m_GraphicThingInstance.ClearAttachingEffect();
@@ -1030,7 +1030,7 @@ void CInstanceBase::__DetachEffect(DWORD dwEID)
 
 DWORD CInstanceBase::__AttachEffect(UINT eEftType)
 {
-	// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
+	// 2004.07.17.levites.isShow changed to ViewFrustumCheck
 	if (IsAffect(AFFECT_INVISIBILITY))
 		return 0;
 
@@ -1045,8 +1045,8 @@ DWORD CInstanceBase::__AttachEffect(UINT eEftType)
 	{
 		std::string & rstrBoneName = ms_astAffectEffectAttachBone[eEftType];
 		const char * c_szBoneName;
-		// 양손에 붙일 때 사용한다.
-		// 이런 식의 예외 처리를 해놓은 것은 캐릭터 마다 Equip 의 Bone Name 이 다르기 때문.
+		// Use it when attaching it to both hands.
+		// The reason this type of exception handling is done is because the Equip Bone Name is different for each character.
 		if (0 == rstrBoneName.compare("PART_WEAPON"))
 		{
 			if (m_GraphicThingInstance.GetAttachingBoneName(CRaceData::PART_WEAPON, &c_szBoneName))

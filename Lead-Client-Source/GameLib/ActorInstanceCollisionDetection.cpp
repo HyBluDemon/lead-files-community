@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterLib/GrpMath.h"
 
 #include "ActorInstance.h"
@@ -34,7 +34,7 @@ void CActorInstance::UpdatePointInstance(TCollisionPointInstance * pPointInstanc
 {
 	if (!pPointInstance)
 	{
-		assert(!"CActorInstance::UpdatePointInstance - pPointInstance is NULL"); // 레퍼런스로 교체하시오
+		assert(!"CActorInstance::UpdatePointInstance - pPointInstance is NULL"); // Replace with reference
 		return;
 	}
 
@@ -95,12 +95,12 @@ void CActorInstance::UpdatePointInstance(TCollisionPointInstance * pPointInstanc
 
 void CActorInstance::UpdateAdvancingPointInstance()
 {
-	// 말을 탔을 경우 사람은 이동값을 가지고 있지 않기 때문에 말로 부터 얻어와야 한다 - [levites]
+	// When riding a horse, the person does not have movement value, so you have to get it from the horse - [levites]
 	D3DXVECTOR3 v3Movement = m_v3Movement;
 	if (m_pkHorse)
 		v3Movement = m_pkHorse->m_v3Movement;
 
-	// 말은 업데이트 하지 않아도 된다 - [levites]
+	// Words don't need to be updated - [levites]
 	if (m_pkHorse)
 		m_pkHorse->UpdateAdvancingPointInstance();
 
@@ -169,7 +169,7 @@ bool CActorInstance::CheckCollisionDetection(const CDynamicSphereInstanceVector 
 {
 	if (!c_pAttackingSphereVector)
 	{
-		assert(!"CActorInstance::CheckCollisionDetection - c_pAttackingSphereVector is NULL"); // 레퍼런스로 교체하시오
+		assert(!"CActorInstance::CheckCollisionDetection - c_pAttackingSphereVector is NULL"); // Replace with reference
 		return false;
 	}
 
@@ -186,7 +186,7 @@ bool CActorInstance::CheckCollisionDetection(const CDynamicSphereInstanceVector 
 
 			if (DetectCollisionDynamicSphereVSDynamicSphere(c_rAttackingSphere, c_rDefendingSphere))
 			{
-				// FIXME : 두 원의 교점을 찾아내는 식으로 바꿔야 한다.
+				// FIXME: It must be changed to find the intersection of two circles.
 				*pv3Position = (c_rAttackingSphere.v3Position + c_rDefendingSphere.v3Position) / 2.0f;
 				return true;
 			}
@@ -200,19 +200,19 @@ bool CActorInstance::CreateCollisionInstancePiece(DWORD dwAttachingModelIndex, c
 {
 	if (!c_pAttachingData)
 	{
-		assert(!"CActorInstance::CreateCollisionInstancePiece - c_pAttachingData is NULL"); // 레퍼런스로 교체하시오
+		assert(!"CActorInstance::CreateCollisionInstancePiece - c_pAttachingData is NULL"); // Replace with reference
 		return false;
 	}
 
 	if (!c_pAttachingData->pCollisionData)
 	{
-		assert(!"CActorInstance::CreateCollisionInstancePiece - c_pAttachingData->pCollisionData is NULL"); // 레퍼런스로 교체하시오
+		assert(!"CActorInstance::CreateCollisionInstancePiece - c_pAttachingData->pCollisionData is NULL"); // Replace with reference
 		return false;
 	}
 
 	if (!pPointInstance)
 	{
-		assert(!"CActorInstance::CreateCollisionInstancePiece - pPointInstance is NULL"); // 레퍼런스로 교체하시오
+		assert(!"CActorInstance::CreateCollisionInstancePiece - pPointInstance is NULL"); // Replace with reference
 		return false;
 	}
 
@@ -279,29 +279,29 @@ BOOL CActorInstance::__SplashAttackProcess(CActorInstance & rVictim)
 	const NRaceData::TAttackData & c_rAttackData = c_pAttackingEvent->AttackData;
 	THittedInstanceMap & rHittedInstanceMap = m_kSplashArea.HittedInstanceMap;
 
-	// NOTE : 이미 때렸다면 때릴 수 없음
+	// NOTE: You cannot hit if you have already hit.
 	if (rHittedInstanceMap.end() != rHittedInstanceMap.find(&rVictim))
 	{
 		return FALSE;
 	}
 
-	// NOTE : Snipe 모드이고..
+	// NOTE: It's Snipe mode...
 	if (NRaceData::ATTACK_TYPE_SNIPE == c_rAttackData.iAttackType)
 	{
-		// Target 이 PC 라면..
+		// If the target is a PC...
 		if (__IsFlyTargetPC())
-			// 다른 객체는 때릴 수 없다
+			// Cannot hit other objects
 			if (!__IsSameFlyTarget(&rVictim))
 				return FALSE;
 
 /*
 		if (IsFlyTargetObject())
-		{
+		{ 
 			CActorInstance * pActorInstance = (CActorInstance *)m_kFlyTarget.GetFlyTarget();
-
-			// NOTE : Target 이 PC 일때는 한명만 때릴 수 있다.
-			if (pActorInstance->IsPC())
-				if (&rVictim != pActorInstance)
+		
+			// NOTE: When the target is a PC, only one person can be hit. 
+			if (pActorInstance->IsPC()) 
+				if (&rVictim != pActorInstance) 
 					return FALSE;
 		}
 */
@@ -333,7 +333,7 @@ BOOL CActorInstance::__SplashAttackProcess(CActorInstance & rVictim)
 BOOL CActorInstance::__NormalAttackProcess(CActorInstance & rVictim)
 {
 	// Check Distance
-	// NOTE - 일단 근접 체크만 하고 있음
+	// NOTE - For now, we are only checking proximity.
 	D3DXVECTOR3 v3Distance(rVictim.m_x - m_x, rVictim.m_z - m_z, rVictim.m_z - m_z);
 	float fDistance = D3DXVec3LengthSq(&v3Distance);
 
@@ -362,7 +362,7 @@ BOOL CActorInstance::__NormalAttackProcess(CActorInstance & rVictim)
 	{
 		const NRaceData::THitData & c_rHitData = *itorHitData;
 
-		// NOTE : 이미 맞았는지 체크
+		// NOTE: Check if it is already correct
 		THitDataMap::iterator itHitData = m_HitDataMap.find(&c_rHitData);
 		if (itHitData != m_HitDataMap.end())
 		{
@@ -437,7 +437,7 @@ BOOL CActorInstance::__NormalAttackProcess(CActorInstance & rVictim)
 							//Tracef(" ----------- Next Hit : %d\n", itHitData->second.size());
 
 							int iCurrentHitCount = itHitData->second.size();
-							// NOTE : 보통 공격은 16명이 한계
+							// NOTE: Normal attack is limited to 16 people.
 							if (NRaceData::MOTION_TYPE_COMBO == pad->iMotionType || NRaceData::MOTION_TYPE_NORMAL == pad->iMotionType)
 							{
 								if (iCurrentHitCount > 16)
@@ -458,7 +458,7 @@ BOOL CActorInstance::__NormalAttackProcess(CActorInstance & rVictim)
 
 						D3DXVECTOR3 v3HitPosition = (GetPosition() + rVictim.GetPosition()) *0.5f;
 
-						// #0000780: [M2KR] 수룡 타격구 문제
+						// #0000780: [M2KR] Water dragon hitting ball problem
 						extern bool IS_HUGE_RACE(unsigned int vnum);
 						if (IS_HUGE_RACE(rVictim.GetRace()))
 						{
@@ -503,8 +503,8 @@ BOOL CActorInstance::TestPhysicsBlendingCollision(CActorInstance & rVictim)
 	if (fDistance > 800.0f*800.0f)
 		return FALSE;
 	
-	// NOTE : 공격 중일때는 Defending Sphere로 Collision Check를 합니다.
-	// NOTE : Wait로 블렌딩 되는 도중에 뚫고 들어가는 문제가 있어서.. - [levites]
+	// NOTE: When attacking, perform a Collision Check with Defending Sphere.
+	// NOTE: There was a problem with penetration during blending with Wait... - [levites]
 	TCollisionPointInstanceList * pMainList;
 	TCollisionPointInstanceList * pVictimList;
 	if (isAttacking() || IsWaiting())
@@ -589,17 +589,17 @@ BOOL CActorInstance::TestActorCollision(CActorInstance & rVictim)
 		return FALSE;
 
 	// Check Distance
-	// NOTE : 적당히 멀면 체크 안함
-	//        프레임 스킵시나 대상 오브젝트의 크기가 클경우 문제가 생길 여지가 있음
-	//        캐릭터가 자신의 Body Sphere Radius 보다 더 크게 이동했는지를 체크하고,
-	//        만약 그렇지 않다면 거리로 체크해서 걸러준다.
+	// NOTE: Do not check if it is reasonably far away.
+	// Problems may arise when a frame is skipped or the size of the target object is large.
+	// Check whether the character has moved larger than his Body Sphere Radius,
+	// If not, check and filter by distance.
 	D3DXVECTOR3 v3Distance = D3DXVECTOR3(rVictim.m_x - m_x, rVictim.m_y - m_y, rVictim.m_z - m_z);
 	float fDistance = D3DXVec3LengthSq(&v3Distance);
 	if (fDistance > 800.0f*800.0f)
 		return FALSE;
 	
-	// NOTE : 공격 중일때는 Defending Sphere로 Collision Check를 합니다.
-	// NOTE : Wait로 블렌딩 되는 도중에 뚫고 들어가는 문제가 있어서.. - [levites]
+	// NOTE: When attacking, perform a Collision Check with Defending Sphere.
+	// NOTE: There was a problem with penetration during blending with Wait... - [levites]
 	TCollisionPointInstanceList * pMainList;
 	TCollisionPointInstanceList * pVictimList;
 	if (isAttacking() || IsWaiting())

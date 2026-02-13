@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "GrpText.h"
 #include "../eterBase/Stl.h"
 
@@ -213,7 +213,7 @@ CGraphicFontTexture::TCharacterInfomation* CGraphicFontTexture::UpdateCharacterI
 	wchar_t keyValue = code.second;
 
 	if (keyValue == 0x08)
-		keyValue = L' '; // ÅÇÀº °ø¹éÀ¸·Î ¹Ù²Û´Ù (¾Æ¶ø Ãâ·Â½Ã ÅÇ »ç¿ë: NAME:\tTEXT -> TEXT\t:NAME ·Î ÀüÈ¯µÊ )
+		keyValue = L' '; // Tabs are replaced with spaces (Use tabs when printing in Arabic: NAME:\tTEXT -> converted to TEXT\t:NAME)
 
 	ABCFLOAT	stABC;
 	SIZE		size;

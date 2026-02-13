@@ -1,4 +1,4 @@
-// Decal.cpp: implementation of the CDecal class.
+﻿// Decal.cpp: implementation of the CDecal class.
 //
 //////////////////////////////////////////////////////////////////////
 

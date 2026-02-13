@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "ReferenceObject.h"
 
 CReferenceObject::CReferenceObject() : m_refCount(0), m_destructed(false)

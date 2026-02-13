@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "../eterBase/Random.h"
 #include "../eterLib/StateManager.h"
 #include "ParticleSystemData.h"
@@ -161,8 +161,8 @@ void CParticleSystemInstance::CreateParticles(float fElapsedTime)
 			D3DXVec3TransformCoord(&v3TimePosition, &v3TimePosition, mc_pmatLocal);
 		}
 		pInstance->m_v3StartPosition = v3TimePosition;
-		// NOTE : Update¸¦ È£ÃâÇÏÁö ¾Ê°í Rendering µÇ±â ¶§¹®¿¡ length°¡ 0ÀÌ µÇ´Â ¹®Á¦°¡ ÀÖ´Ù.
-		//        Velocity¸¦ ±¸ÇÑ ÈÄ ±×¸¸Å­ »©ÁØ °ªÀ¸·Î ÃÊ±âÈ­ ÇØÁÖµµ·Ï ¹Ù²åÀ½ - [levites]
+		// NOTE: Because it is rendered without calling Update, there is a problem with the length being 0.
+		// After finding the velocity, I changed it to initialize it to the value subtracted by that amount - [levites]
 		//pInstance->m_v3LastPosition = pInstance->m_v3Position;
 
 		// Direction & Velocity
@@ -214,8 +214,8 @@ void CParticleSystemInstance::CreateParticles(float fElapsedTime)
 		// Rotation
 		pInstance->m_fRotation = m_pParticleProperty->m_wRotationRandomStartingBegin;
 		pInstance->m_fRotation = frandom(m_pParticleProperty->m_wRotationRandomStartingBegin,m_pParticleProperty->m_wRotationRandomStartingEnd);
-		// Rotation - Lie ÀÏ °æ¿ì LocalMatrix ÀÇ Rotation °ªÀ» Random ¿¡ Àû¿ëÇÑ´Ù.
-		//            ¸Å¹ø ÇÒ ÇÊ¿ä´Â ¾øÀ»µí. ¾î´À Á¤µµÀÇ ÃÖÀûÈ­°¡ ÇÊ¿ä. - [levites]
+		// Rotation - In case of Lie, the Rotation value of LocalMatrix is â€‹â€‹applied to Random.
+		// I don't think you need to do it every time. Some degree of optimization is required. - [levites]
 		if (BILLBOARD_TYPE_LIE == m_pParticleProperty->m_byBillboardType && mc_pmatLocal)
 		{
 			pInstance->m_fRotation += fLieRotation;
@@ -495,7 +495,7 @@ void CParticleSystemInstance::OnInitialize()
 
 void CParticleSystemInstance::OnDestroy()
 {
-	// 2004. 3. 1. myevan. ÆÄÆ¼Å¬ Á¦°Å ·çÆ¾
+	// 2004. 3. 1. myevan. Particle Removal Routine
 	TParticleInstanceListVector::iterator i;
 	for(i = m_ParticleInstanceListVector.begin(); i!=m_ParticleInstanceListVector.end(); ++i)
 	{

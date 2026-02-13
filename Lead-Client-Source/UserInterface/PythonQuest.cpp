@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonQuest.h"
 
 void CPythonQuest::RegisterQuestInstance(const SQuestInstance & c_rQuestInstance)
@@ -133,22 +133,8 @@ bool CPythonQuest::__GetQuestInstancePtr(DWORD dwQuestIndex, SQuestInstance ** p
 void CPythonQuest::__Initialize()
 {
 /*
-#ifdef _DEBUG
-	for (int i = 0; i < 7; ++i)
-	{
-		SQuestInstance test;
-		test.dwIndex = i;
-		test.strIconFileName = "";
-		test.strTitle = _getf("test%d", i);
-		test.strClockName = "남은 시간";
-		test.strCounterName = "남은 마리수";
-		test.iClockValue = 1000;
-		test.iCounterValue = 1000;
-		test.iStartTime = 0;
-		RegisterQuestInstance(test);
-	}
-#endif
-*/
+ * #ifdef _DEBUG for (int i = 0; i < 7; ++i) { SQuestInstance test; test.dwIndex = i; test.strIconFileName = ""; test.strTitle = _getf("test%d", i); test.strClockName = "Time remaining"; test.strCounterName = "Number of animals remaining"; test.iClockValue = 1000; test.iCounterValue = 1000; test.iStartTime = 0; RegisterQuestInstance(test); } #endif
+ */
 }
 
 void CPythonQuest::Clear()
@@ -196,7 +182,7 @@ PyObject * questGetQuestData(PyObject * poSelf, PyObject * poArgs)
 	else
 	{
 		{
-			// 비어있을 경우 디폴트 이미지를 넣는다.
+			// If it is empty, enter the default image.
 			std::string strIconFileName = "season1/icon/scroll_open.tga";
 			pImage = (CGraphicImage *)CResourceManager::Instance().GetResourcePointer(strIconFileName.c_str());
 		}
@@ -238,7 +224,7 @@ PyObject * questGetQuestLastTime(PyObject * poSelf, PyObject * poArgs)
 		iLastTime = (pQuestInstance->iStartTime + pQuestInstance->iClockValue) - int(CTimer::Instance().GetCurrentSecond());
 	}
 
-	// 시간 증가 처리 코드
+	// Time increment processing code
 //	else
 //	{
 //		iLastTime = int(CTimer::Instance().GetCurrentSecond()) - pQuestInstance->iStartTime;

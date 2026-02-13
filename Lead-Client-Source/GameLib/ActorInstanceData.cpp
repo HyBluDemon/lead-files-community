@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "ActorInstance.h"
 #include "RaceManager.h"
 #include "ItemManager.h"
@@ -79,7 +79,7 @@ bool CActorInstance::SetRace(DWORD eRace)
 
 	CGraphicThingInstance::Clear();
 
-	//NOTE : PC만 Part별로 다 생성하게 해준다.
+	// NOTE: Only PCs can be created for each part.
 	if( IsPC())
 	{
 		CGraphicThingInstance::ReserveModelThing(CRaceData::PART_MAX_NUM);

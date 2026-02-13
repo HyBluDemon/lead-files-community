@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GrpColor.h"
 #include "Pool.h"

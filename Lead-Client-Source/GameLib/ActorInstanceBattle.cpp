@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../effectLib/EffectManager.h"
 #include "../milesLib/SoundManager.h"
 
@@ -171,28 +171,28 @@ bool CActorInstance::InputComboAttackCommand(float fDirRot)
 	}
 	else if (m_pkCurRaceMotionData->IsComboInputTimeData())
 	{
-		// 동작 경과 시간
+		// motion elapsed time
  		float fElapsedTime = GetAttackingElapsedTime();	
 
-		// 이미 입력 한계 시간이 지났다면..
+		// If the input limit time has already passed...
 		if (fElapsedTime > m_pkCurRaceMotionData->GetComboInputEndTime())
 		{
-			//Tracen("입력 한계 시간 지남");
+			// Tracen("Input limit time passed");
 			if (IsBowMode())
 				m_isNextPreInput = TRUE;
 			return false;
 		}
 
-		if (fElapsedTime > m_pkCurRaceMotionData->GetNextComboTime()) // 콤보 발동 시간 이 후라면
+		if (fElapsedTime > m_pkCurRaceMotionData->GetNextComboTime()) // After the combo activation time
 		{
-			//Tracen("다음 콤보 동작");
+			// Tracen("Next combo move");
 			// args : BlendingTime
 			__RunNextCombo();
 			return true;
 		}
-		else if (fElapsedTime > m_pkCurRaceMotionData->GetComboInputStartTime()) // 선 입력 시간 범위 라면..
+		else if (fElapsedTime > m_pkCurRaceMotionData->GetComboInputStartTime()) // If it is the line input time range...
 		{
-			//Tracen("선 입력 설정");
+			// Tracen("Set line input");
 			m_isPreInput = TRUE;
 			return false;
 		}
@@ -200,9 +200,9 @@ bool CActorInstance::InputComboAttackCommand(float fDirRot)
 	else
 	{
 		float fElapsedTime = GetAttackingElapsedTime();	
-		if (fElapsedTime > m_pkCurRaceMotionData->GetMotionDuration()*0.9f) // 콤보 발동 시간 이 후라면
+		if (fElapsedTime > m_pkCurRaceMotionData->GetMotionDuration()*0.9f) // After the combo activation time
 		{
-			//Tracen("다음 콤보 동작");
+			// Tracen("Next combo move");
 			// args : BlendingTime
 			__RunNextCombo();
 			return true;
@@ -230,7 +230,7 @@ void CActorInstance::ComboProcess()
 		// Process PreInput
 		if (m_isPreInput)
 		{
-			//Tracenf("선입력 %f 다음콤보시간 %f", fElapsedTime, m_pkCurRaceMotionData->GetNextComboTime());
+			// Tracenf("Previous input %f Next combo time %f", fElapsedTime, m_pkCurRaceMotionData->GetNextComboTime());
 			if (fElapsedTime > m_pkCurRaceMotionData->GetNextComboTime())
 			{
   				__RunNextCombo();
@@ -244,8 +244,8 @@ void CActorInstance::ComboProcess()
 	{
 		m_isPreInput = FALSE;
 
-		if (!IsUsingSkill())	// m_isNextPreInput는 활모드 일때만 사용하는 변수
-		if (m_isNextPreInput)	// 활일때만 스킬이 캔슬 되는건 이곳 때문임
+		if (!IsUsingSkill())	// m_isNextPreInput is a variable used only when in active mode.
+		if (m_isNextPreInput)	// This is why the skill is canceled only when using a bow.
 		{
 			__RunNextCombo();
 			m_isNextPreInput = FALSE;
@@ -289,7 +289,7 @@ void CActorInstance::__RunNextCombo()
 	ComboAttack(wcurComboMotionIndex, m_fAtkDirRot, 0.1f);
 
 	////////////////////////////////
-	// 콤보가 끝났다면
+	// When the combo is over
 	if (m_dwcurComboIndex == pComboData->ComboIndexVector.size())
 	{
 		__OnEndCombo();
@@ -303,8 +303,8 @@ void CActorInstance::__OnEndCombo()
 		m_dwcurComboIndex = 1;
 	}
 
-	// 여기서 콤보를 초기화 해선 안된다.
-	// 콤보가 초기화 되는 곳은 마지막 콤보가 끝나고 Motion 이 자동으로 Wait 으로 돌아가는 시점이다.
+	// The combo should not be initialized here.
+	// The place where the combo is initialized is when the last combo is finished and Motion automatically returns to Wait.
 }
 
 void CActorInstance::__ClearCombo()
@@ -567,7 +567,7 @@ bool CActorInstance::__CanPushDestActor(CActorInstance& rkActorDst)
 	if (rkActorDst.IsNPC())
 		return false;
 
-	// 거대 몬스터 밀림 제외
+	// Excluding giant monster jungle
 	extern bool IS_HUGE_RACE(unsigned int vnum);
 	if (IS_HUGE_RACE(rkActorDst.GetRace()))
 		return false;
@@ -588,15 +588,15 @@ bool IS_PARTY_HUNTING_RACE(unsigned int vnum)
 {
 	return true;
 
-	// 모든 몬스터 파티 사냥 적용
+	// Applies to all monster party hunts
 	/*
-	if (vnum < 8) // 플레이어
-		return true;
-
-	if (vnum >= 8000 && vnum <= 8112) // 메틴석
-		return true;
-
-	if (vnum >= 2400 && vnum <  5000) // 천의 동굴 이후 몬스터
+	if (vnum < 8) // player
+		return true;  
+	
+	if (vnum >= 8000 && vnum <= 8112) // methinestone 
+		return true;  
+	
+	if (vnum >= 2400 && vnum < 5000) // Monster after Thousand Caves 
 		return true;
 
 	return false;
@@ -624,13 +624,13 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData & c
 	// Invisible Time
 	if (IS_PARTY_HUNTING_RACE(rVictim.GetRace()))
 	{
-		if (uiSkill) // 파티 사냥 몬스터라도 스킬이면 무적시간 적용
+		if (uiSkill) // Even party hunting monsters have invincibility time if they are skills.
 			rVictim.m_fInvisibleTime = CTimer::Instance().GetCurrentSecond() + c_rAttackData.fInvisibleTime;
 
-		if (m_isMain) // #0000794: [M2KR] 폴리모프 - 밸런싱 문제 타인 공격에 의한 무적 타임은 고려하지 않고 자신 공격에 의한것만 체크한다
+		if (m_isMain) // #0000794: [M2KR] Polymorph - Balancing issue It does not consider the invincibility time due to other people's attacks and only checks for own attacks.
 			rVictim.m_fInvisibleTime = CTimer::Instance().GetCurrentSecond() + c_rAttackData.fInvisibleTime;
 	}
-	else // 파티 사냥 몬스터가 아닐 경우만 적용
+	else // Applies only to non-party hunt monsters
 	{
 		rVictim.m_fInvisibleTime = CTimer::Instance().GetCurrentSecond() + c_rAttackData.fInvisibleTime;
 	}
@@ -641,7 +641,7 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData & c
 	// Hit Effect
 	D3DXVECTOR3 vec3Effect(rVictim.m_x, rVictim.m_y, rVictim.m_z);
 	
-	// #0000780: [M2KR] 수룡 타격구 문제
+	// #0000780: [M2KR] Water dragon hitting hole problem
 	extern bool IS_HUGE_RACE(unsigned int vnum);
 	if (IS_HUGE_RACE(rVictim.GetRace()))
 	{
@@ -652,7 +652,7 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData & c
 
 	float fHeight = D3DXToDegree(atan2(-vec3Effect.x + v3Pos.x,+vec3Effect.y - v3Pos.y));
 
-	// 2004.08.03.myevan.빌딩이나 문의 경우 타격 효과가 보이지 않는다
+	// 2004.08.03.myevan. The effect of hitting is not visible in the case of buildings or doors.
 	if (rVictim.IsBuilding()||rVictim.IsDoor())
 	{
 		D3DXVECTOR3 vec3Delta=vec3Effect-v3Pos;
@@ -674,7 +674,7 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData & c
 
 	if (rVictim.IsBuilding())
 	{
-		// 2004.08.03.빌딩의 경우 흔들리면 이상하다
+		// 2004.08.03.It is strange when a building shakes.
 	}
 	else if (rVictim.IsStone() || rVictim.IsDoor())
 	{

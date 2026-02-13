@@ -1,4 +1,4 @@
-#include "stdafx.h"
+癤�#include "stdafx.h"
 #include "MarkImage.h"
 
 #if !defined(_MSC_VER)
@@ -140,10 +140,10 @@ void CGuildMarkImage::GetData(UINT x, UINT y, UINT width, UINT height, void * da
 	ilCopyPixels(x, y, 0, width, height, 1, IL_BGRA, IL_UNSIGNED_BYTE, data);	
 }
 
-// 이미지 = 512x512
-//   블럭 = 마크 4 x 4
-//   마크 = 16 x 12
-// 한 이미지의 블럭 = 8 x 10
+// image = 512x512
+// Block = Mark 4 x 4
+// Mark = 16 x 12
+// Blocks of one image = 8 x 10
 
 // SERVER
 bool CGuildMarkImage::SaveMark(DWORD posMark, BYTE * pbImage)
@@ -154,14 +154,14 @@ bool CGuildMarkImage::SaveMark(DWORD posMark, BYTE * pbImage)
 		return false;
 	}
 
-	// 마크를 전체 이미지에 그린다.
+	// Draw a mark over the entire image.
 	DWORD colMark = posMark % MARK_COL_COUNT;
 	DWORD rowMark = posMark / MARK_COL_COUNT;
 
 	printf("PutMark pos %u %ux%u\n", posMark, colMark * SGuildMark::WIDTH, rowMark * SGuildMark::HEIGHT);
 	PutData(colMark * SGuildMark::WIDTH, rowMark * SGuildMark::HEIGHT, SGuildMark::WIDTH, SGuildMark::HEIGHT, pbImage);
 
-	// 그려진 곳의 블럭을 업데이트
+	// Update the block where it was drawn
 	DWORD rowBlock = rowMark / SGuildMarkBlock::MARK_PER_BLOCK_HEIGHT;
 	DWORD colBlock = colMark / SGuildMarkBlock::MARK_PER_BLOCK_WIDTH;
 
@@ -208,7 +208,7 @@ bool CGuildMarkImage::SaveBlockFromCompressedData(DWORD posBlock, const BYTE * p
 	return true;
 }
 
-void CGuildMarkImage::BuildAllBlocks() // 이미지 전체를 블럭화
+void CGuildMarkImage::BuildAllBlocks() // Block the entire image
 {
 	Pixel apxBuf[SGuildMarkBlock::SIZE];
 	sys_log(0, "CGuildMarkImage::BuildAllBlocks");

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../EterLib/NetStream.h"
 #include "MarkManager.h"

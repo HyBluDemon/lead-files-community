@@ -1,4 +1,4 @@
-// TerrainPatch.h: interface for the CTerrainPatch class.
+﻿// TerrainPatch.h: interface for the CTerrainPatch class.
 //
 //////////////////////////////////////////////////////////////////////
 

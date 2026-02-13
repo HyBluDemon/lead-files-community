@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../EffectLib/EffectManager.h"
 
 #include "ActorInstance.h"
@@ -74,7 +74,7 @@ void CActorInstance::AttachWeapon(DWORD dwItemIndex,DWORD dwParentPartIndex, DWO
 	}
 
 	__DestroyWeaponTrace();
-	//양손무기(자객 이도류) 왼손,오른손 모두에 장착.
+	// Two-handed weapon (assassin's dual sword style) equipped on both left and right hands.
 	if (__IsRightHandWeapon(pItemData->GetWeaponType()))
 		AttachWeapon(dwParentPartIndex, CRaceData::PART_WEAPON, pItemData);
 	if (__IsLeftHandWeapon(pItemData->GetWeaponType()))
@@ -97,7 +97,7 @@ void CActorInstance::AttachWeapon(DWORD dwParentPartIndex, DWORD dwPartIndex, CI
 	if (!GetAttachingBoneName(dwPartIndex, &szBoneName))
 		return;
 
-	// NOTE : (이도류처리)단도일 경우 형태가 다른 것으로 얻는다. 없을 경우 디폴트를 리턴
+	// NOTE: (Dual sword processing) If it is a single sword, it is obtained in a different shape. If not present, returns default
 	if (CRaceData::PART_WEAPON_LEFT == dwPartIndex)
 	{
 		RegisterModelThing(dwPartIndex, pItemData->GetSubModelThing());
@@ -120,7 +120,7 @@ void CActorInstance::AttachWeapon(DWORD dwParentPartIndex, DWORD dwPartIndex, CI
 	SetModelInstance(dwPartIndex, dwPartIndex, 0);
 	AttachModelInstance(dwParentPartIndex, szBoneName, dwPartIndex);
 
-	// 20041208.myevan.무기스펙큘러(값옷은 SetShape에서 직접 해준다.)
+	// 20041208.myevan.Weapon specular (value clothing is done directly in SetShape.)
 	if (USE_WEAPON_SPECULAR)
 	{
 		SMaterialData kMaterialData;
@@ -339,8 +339,8 @@ void CActorInstance::RefreshActorInstance()
 					{
 						const NRaceData::TCollisionData * c_pCollisionData = c_pAttachingData->pCollisionData;
 						
-						// FIXME : 첫번째 인자는 Part의 번호다.
-						//         Base는 무조건 0인가? - [levites]
+						// FIXME: The first argument is the part number.
+						// Is Base always 0? - [levites]
 						TCollisionPointInstance PointInstance;
 						if (NRaceData::COLLISION_TYPE_ATTACKING == c_pCollisionData->iCollisionType)
 							continue;

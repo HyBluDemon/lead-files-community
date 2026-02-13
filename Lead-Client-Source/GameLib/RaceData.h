@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "../eterGrnLib/Thing.h"
 
@@ -16,8 +16,8 @@ class CRaceData
 		enum EParts
 		{
 			// Share index with server 
-			// ECharacterEquipmentPart도 수정해주세요.
-			//패킷 크기가 변합니다 서버와 상의후 추가해주세요.
+			// Please also edit ECharacterEquipmentPart.
+			// The packet size changes. Please add it after consulting with the server.
 			PART_MAIN,
 			PART_WEAPON,
 			PART_HEAD,

@@ -1,4 +1,4 @@
-#ifndef _JPEGFILE_H_
+﻿#ifndef _JPEGFILE_H_
 #define _JPEGFILE_H_
 
 #include <stdio.h>

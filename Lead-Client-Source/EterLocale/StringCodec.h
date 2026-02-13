@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 int Ymir_WideCharToMultiByte(
   UINT CodePage, 

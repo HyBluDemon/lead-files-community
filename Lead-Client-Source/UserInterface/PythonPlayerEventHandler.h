@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "../gamelib/ActorInstance.h"
 #include "../gamelib/FlyHandler.h"
@@ -63,9 +63,9 @@ class CPythonPlayerEventHandler : public CActorInstance::IEventHandler
 				virtual void OnSetFlyTarget();
 				virtual void OnShoot(DWORD dwSkillIndex);
 
-				virtual void OnNoTarget() { /*Tracenf("Shoot : target이 없습니다.");*/ }
-				virtual void OnExplodingOutOfRange() { /*Tracenf("Shoot : 사정거리가 끝났습니다.");*/ }
-				virtual void OnExplodingAtBackground() { /*Tracenf("Shoot : 배경에 맞았습니다.");*/ }
+				virtual void OnNoTarget() { /* Tracenf("Shoot: There is no target."); */ }
+				virtual void OnExplodingOutOfRange() { /* Tracenf("Shoot: Range is over."); */ }
+				virtual void OnExplodingAtBackground() { /* Tracenf("Shoot: Hit the background."); */ }
 				virtual void OnExplodingAtAnotherTarget(DWORD dwSkillIndex, DWORD dwVID);
 				virtual void OnExplodingAtTarget(DWORD dwSkillIndex);
 

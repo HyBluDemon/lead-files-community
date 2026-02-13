@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../eterBase/Timer.h"
 #include "../eterBase/Debug.h"
@@ -74,7 +74,7 @@ class CProfiler : public CSingleton<CProfiler>
 			{
 				CGraphicTextInstance * pGraphicTextInstance = CGraphicTextInstance::New();
 
-				CResource * pResource = CResourceManager::Instance().GetResourcePointer("±¼¸²Ã¼.fnt");
+				CResource * pResource = CResourceManager::Instance().GetResourcePointer("êµ´ë¦¼ì²´.fnt");
 				pGraphicTextInstance->Clear();
 				pGraphicTextInstance->SetTextPointer(static_cast<CGraphicText*>(pResource));
 
@@ -114,7 +114,7 @@ class CProfiler : public CSingleton<CProfiler>
 
 				CGraphicTextInstance * pGraphicTextInstance = m_GraphicTextInstancePool.Alloc();
 
-				CResource * pResource = CResourceManager::Instance().GetResourcePointer("±¼¸²Ã¼.fnt");
+				CResource * pResource = CResourceManager::Instance().GetResourcePointer("êµ´ë¦¼ì²´.fnt");
 				pGraphicTextInstance->Clear();
 				pGraphicTextInstance->SetTextPointer(static_cast<CGraphicText*>(pResource));
 

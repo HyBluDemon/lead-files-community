@@ -1,4 +1,4 @@
-// Terrain.h: interface for the CTerrainImpl class.
+癤�// Terrain.h: interface for the CTerrainImpl class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -74,7 +74,7 @@ class CTerrainImpl
 
 	public:
 		static void				SetTextureSet(CTextureSet * pTextureSet);
-		static CTextureSet *	GetTextureSet();	// 무조건 성공해야 함
+		static CTextureSet *	GetTextureSet();	// Must succeed at all costs
 
 	protected:
 		static CTextureSet	*	ms_pTextureSet;
@@ -134,7 +134,7 @@ class CTerrainImpl
 		//////////////////////////////////////////////////////////////////////////
 
 		//////////////////////////////////////////////////////////////////////////
-		// TileMap과 HeightMap 비율
+		// TileMap and HeightMap ratio
 // 		int						m_iHeightTileRatio;
 
 		//////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GrpCollisionObject.h"
 
 bool CGraphicCollisionObject::IntersectBoundBox(const D3DXMATRIX* c_pmatWorld, const TBoundBox& c_rboundBox, float* pu, float* pv, float* pt)

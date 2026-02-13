@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "MapUtil.h"
 
 void Environment_Init(SEnvironmentData& envData)

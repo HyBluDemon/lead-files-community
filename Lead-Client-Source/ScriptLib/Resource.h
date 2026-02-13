@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../EffectLib/StdAfx.h"
 #include "../eterlib/Resource.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "PythonNetworkStream.h"
 #include "Packet.h"
 
@@ -179,7 +179,7 @@ void CPythonNetworkStream::GamePhase()
     while (ret)
 	{
 		if(dwRecvCount++ >= MAX_RECV_COUNT-1 && GetRecvBufferSize() < SAFE_RECV_BUFSIZE
-			&& m_strPhase == "Game") //phase_game ÀÌ ¾Æ´Ï¾îµµ ¿©±â·Î µé¾î¿À´Â °æ¿ì°¡ ÀÖ´Ù.
+			&& m_strPhase == "Game") // Even if it is not phase_game, it may come here.
 			break;
 
 		if (!CheckPacket(&header))
@@ -193,7 +193,7 @@ void CPythonNetworkStream::GamePhase()
 
 			case HEADER_GC_PHASE:
 				ret = RecvPhasePacket();
-				return; // µµÁß¿¡ Phase °¡ ¹Ù²î¸é ÀÏ´Ü ¹«Á¶°Ç GamePhase Å»Ãâ - [levites]
+				return; // If the phase changes during the process, escape GamePhase unconditionally - [levites]
 				break;
 
 			case HEADER_GC_PVP:
@@ -696,9 +696,9 @@ void CPythonNetworkStream::Warp(int32_t lGlobalX, int32_t lGlobalY)
 	//rkBgMgr.SetShadowLevel(CPythonBackground::SHADOW_ALL);
 	rkBgMgr.RefreshShadowLevel();
 
-	// NOTE : Warp ÇßÀ»¶§ CenterPositionÀÇ Height°¡ 0ÀÌ±â ¶§¹®¿¡ Ä«¸Þ¶ó°¡ ¶¥¹Ù´Ú¿¡ ¹ÚÇôÀÖ°Ô µÊ
-	//        ¿òÁ÷ÀÏ¶§¸¶´Ù Height°¡ °»½Å µÇ±â ¶§¹®ÀÌ¹Ç·Î ¸ÊÀ» ÀÌµ¿ÇÏ¸é PositionÀ» °­Á¦·Î ÇÑ¹ø
-	//        ¼ÂÆÃÇØÁØ´Ù - [levites]
+	// NOTE: When warping, the camera is stuck on the ground because the CenterPosition's Height is 0.
+	// Because the Height is updated every time you move, when you move the map, the Position is forced to change once.
+	// Set it up - [levites]
 	int32_t lLocalX = lGlobalX;
 	int32_t lLocalY = lGlobalY;
 	__GlobalPositionToLocalPosition(lLocalX, lLocalY);
@@ -746,7 +746,7 @@ void CPythonNetworkStream::SetGamePhase()
 	m_phaseProcessFunc.Set(this, &CPythonNetworkStream::GamePhase);
 	m_phaseLeaveFunc.Set(this, &CPythonNetworkStream::__LeaveGamePhase);
 
-	// Main Character µî·ÏO
+	// Main Character RegistrationO
 
 	IAbstractPlayer & rkPlayer = IAbstractPlayer::GetSingleton();
 	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
@@ -831,11 +831,11 @@ bool CPythonNetworkStream::RecvPVPPacket()
 		case PVP_MODE_AGREE:
 			rkChrMgr.RemovePVPKey(kPVPPacket.dwVIDSrc, kPVPPacket.dwVIDDst);
 
-			// »ó´ë°¡ ³ª(Dst)¿¡°Ô µ¿ÀÇ¸¦ ±¸ÇßÀ»¶§
+			// When the other person asks for consent from me (Dst)
 			if (rkPlayer.IsMainCharacterIndex(kPVPPacket.dwVIDDst))
 				rkPlayer.RememberChallengeInstance(kPVPPacket.dwVIDSrc);
 
-			// »ó´ë¿¡°Ô µ¿ÀÇ¸¦ ±¸ÇÑ µ¿¾È¿¡´Â ´ë°á ºÒ´É
+			// Confrontation is not allowed while the other person's consent has been sought.
 			if (rkPlayer.IsMainCharacterIndex(kPVPPacket.dwVIDSrc))
 				rkPlayer.RememberCantFightInstance(kPVPPacket.dwVIDDst);
 			break;
@@ -846,11 +846,11 @@ bool CPythonNetworkStream::RecvPVPPacket()
 			DWORD dwKiller = kPVPPacket.dwVIDSrc;
 			DWORD dwVictim = kPVPPacket.dwVIDDst;
 
-			// ³»(victim)°¡ »ó´ë¿¡°Ô º¹¼öÇÒ ¼ö ÀÖÀ»¶§
+			// When I (victim) can take revenge on the other person
 			if (rkPlayer.IsMainCharacterIndex(dwVictim))
 				rkPlayer.RememberRevengeInstance(dwKiller);
 
-			// »ó´ë(victim)°¡ ³ª¿¡°Ô º¹¼öÇÏ´Â µ¿¾È¿¡´Â ´ë°á ºÒ´É
+			// You cannot fight while the victim is taking revenge on you.
 			if (rkPlayer.IsMainCharacterIndex(dwKiller))
 				rkPlayer.RememberCantFightInstance(dwVictim);
 			break;
@@ -868,7 +868,7 @@ bool CPythonNetworkStream::RecvPVPPacket()
 			break;
 	}
 
-	// NOTE : PVP Åä±Û½Ã TargetBoard ¸¦ ¾÷µ¥ÀÌÆ® ÇÕ´Ï´Ù.
+	// NOTE: TargetBoard is updated when PVP is toggled.
 	__RefreshTargetBoardByVID(kPVPPacket.dwVIDSrc);
 	__RefreshTargetBoardByVID(kPVPPacket.dwVIDDst);
 
@@ -931,7 +931,7 @@ bool CPythonNetworkStream::SendMessengerAddByNamePacket(const char * c_szName)
 		return false;
 	char szName[CHARACTER_NAME_MAX_LEN];
 	strncpy(szName, c_szName, CHARACTER_NAME_MAX_LEN-1);
-	szName[CHARACTER_NAME_MAX_LEN-1] = '\0'; // #720: ¸Þ½ÅÀú ÀÌ¸§ °ü·Ã ¹öÆÛ ¿À¹öÇÃ·Î¿ì ¹ö±× ¼öÁ¤
+	szName[CHARACTER_NAME_MAX_LEN-1] = '\0'; // #720: Fixed buffer overflow bug related to messenger name.
 
 	if (!Send(sizeof(szName), &szName))
 		return false;
@@ -965,7 +965,7 @@ bool CPythonNetworkStream::SendCharacterStatePacket(const TPixelPosition& c_rkPP
 	else if (fDstRot > 360.0f)
 		fDstRot = fmodf(fDstRot, 360.0f);
 
-	// TODO: ³ªÁß¿¡ ÆÐÅ¶ÀÌ¸§À» ¹Ù²ÙÀÚ
+	// TODO: Letâ€™s change the packet name later
 	TPacketCGMove kStatePacket;
 	kStatePacket.bHeader = HEADER_CG_MOVE;
 	kStatePacket.bFunc = eFunc;
@@ -994,7 +994,7 @@ bool CPythonNetworkStream::SendCharacterStatePacket(const TPixelPosition& c_rkPP
 	return SendSequence();
 }
 
-// NOTE : SlotIndex´Â ÀÓ½Ã
+// NOTE: SlotIndex is temporary
 bool CPythonNetworkStream::SendUseSkillPacket(DWORD dwSkillIndex, DWORD dwTargetVID)
 {
 	TPacketCGUseSkill UseSkillPacket;
@@ -1136,9 +1136,9 @@ bool CPythonNetworkStream::RecvChatPacket()
 
 	buf[uChatSize]='\0';
 	
-	// À¯·´ ¾Æ¶ø ¹öÀü Ã³¸®
-	// "ÀÌ¸§: ³»¿ë" ÀÔ·ÂÀ» "³»¿ë: ÀÌ¸§" ¼ø¼­·Î Ãâ·ÂÇÏ±â À§ÇØ ÅÇ(0x08)À» ³ÖÀ½
-	// ÅÇÀ» ¾Æ¶ø¾î ±âÈ£·Î Ã³¸®ÇØ (¿µ¾î1) : (¿µ¾î2) ·Î ÀÔ·ÂµÇ¾îµµ (¿µ¾î2) : (¿µ¾î1) ·Î Ãâ·ÂÇÏ°Ô ¸¸µç´Ù
+	// European Arabic version processing
+	// Insert tab (0x08) to output â€œName: Contentâ€ input in â€œContent: Nameâ€ order.
+	// By processing tabs with Arabic symbols, even if input is (English 1) : (English 2), it is output as (English 2) : (English 1)
 	if (LocaleService_IsEUROPE() && GetDefaultCodePage() == 1256)
 	{
 		char * p = strchr(buf, ':'); 
@@ -1164,11 +1164,11 @@ bool CPythonNetworkStream::RecvChatPacket()
 		
 		switch (kChat.type)
 		{
-		case CHAT_TYPE_TALKING:  /* ±×³É Ã¤ÆÃ */
-		case CHAT_TYPE_PARTY:    /* ÆÄÆ¼¸» */
-		case CHAT_TYPE_GUILD:    /* ±æµå¸» */
-		case CHAT_TYPE_SHOUT:	/* ¿ÜÄ¡±â */
-		case CHAT_TYPE_WHISPER:	// ¼­¹ö¿Í´Â ¿¬µ¿µÇÁö ¾Ê´Â Only Client Enum
+		case CHAT_TYPE_TALKING:  /* just chat */
+		case CHAT_TYPE_PARTY:    /* Party talk */
+		case CHAT_TYPE_GUILD:    /* guild talk */
+		case CHAT_TYPE_SHOUT:	/* bawling */
+		case CHAT_TYPE_WHISPER:	// Only Client Enum that does not work with the server
 			{
 				char * p = strchr(buf, ':');
 
@@ -1206,9 +1206,9 @@ bool CPythonNetworkStream::RecvChatPacket()
 				}
 			}
 			break;
-		case CHAT_TYPE_COMMAND:	/* ¸í·É */
-		case CHAT_TYPE_INFO:     /* Á¤º¸ (¾ÆÀÌÅÛÀ» Áý¾ú´Ù, °æÇèÄ¡¸¦ ¾ò¾ú´Ù. µî) */
-		case CHAT_TYPE_NOTICE:   /* °øÁö»çÇ× */
+		case CHAT_TYPE_COMMAND:	/* command */
+		case CHAT_TYPE_INFO:     /* Information (item picked up, experience gained, etc.) */
+		case CHAT_TYPE_NOTICE:   /* announcement */
 		case CHAT_TYPE_BIG_NOTICE:
 		case CHAT_TYPE_MAX_NUM:
 		default:
@@ -1320,7 +1320,7 @@ bool CPythonNetworkStream::RecvPointChange()
 
 	CInstanceBase * pInstance = CPythonCharacterManager::Instance().GetMainInstancePtr();
 
-	// ÀÚ½ÅÀÇ Point°¡ º¯°æµÇ¾úÀ» °æ¿ì..
+	// If your Point changes...
 	if (pInstance)
 	if (PointChange.dwVID == pInstance->GetVirtualID())
 	{
@@ -1417,7 +1417,7 @@ bool CPythonNetworkStream::RecvDeadPacket()
 		CInstanceBase* pkInstMain=rkChrMgr.GetMainInstancePtr();
 		if (pkInstMain==pkChrInstSel)
 		{
-			Tracenf("ÁÖÀÎ°ø »ç¸Á");
+			Tracenf("main character diesharacter dies");
 			if (false == pkInstMain->GetDuelMode())
 			{
 				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnGameOver", Py_BuildValue("()"));
@@ -2006,7 +2006,7 @@ bool CPythonNetworkStream::SendExchangeExitPacket()
 	return SendSequence();
 }
 
-// PointReset °³ÀÓ½Ã
+// When resetting PointReset
 bool CPythonNetworkStream::SendPointResetPacket()
 {
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartPointReset", Py_BuildValue("()"));
@@ -2340,7 +2340,7 @@ bool CPythonNetworkStream::RecvAddFlyTargetingPacket()
 
 	__GlobalPositionToLocalPosition(kPacket.x, kPacket.y);
 
-	Tracef("VID [%d]°¡ Å¸°ÙÀ» Ãß°¡ ¼³Á¤\n",kPacket.dwShooterVID);
+	Tracef("VID [%d] sets additional target\nnal target\nnal target\nnal target\n",kPacket.dwShooterVID);
 
 	CPythonCharacterManager & rpcm = CPythonCharacterManager::Instance();
 
@@ -2738,7 +2738,7 @@ bool CPythonNetworkStream::RecvPartyUpdate()
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "UpdatePartyMemberInfo", Py_BuildValue("(i)", kPartyUpdatePacket.pid));
 
-	// ¸¸¾à ¸®´õ°¡ ¹Ù²î¾ú´Ù¸é, TargetBoard ÀÇ ¹öÆ°À» ¾÷µ¥ÀÌÆ® ÇÑ´Ù.
+	// If the leader changes, update the button on the TargetBoard.
 	DWORD dwVID;
 	if (CPythonPlayer::Instance().PartyMemberPIDToVID(kPartyUpdatePacket.pid, &dwVID))
 	if (byOldState != kPartyUpdatePacket.role)
@@ -3102,7 +3102,7 @@ bool CPythonNetworkStream::RecvGuild()
 			if (!Recv(sizeof(dwPID), &dwPID))
 				return false;
 
-			// Main Player ÀÏ °æ¿ì DeleteGuild
+			// DeleteGuild in case of Main Player
 			if (CPythonGuild::Instance().IsMainPlayer(dwPID))
 			{
 				CPythonGuild::Instance().Destroy();
@@ -3984,7 +3984,7 @@ bool CPythonNetworkStream::RecvTargetCreatePacket()
 
 //#ifdef _DEBUG
 //	char szBuf[256+1];
-//	_snprintf(szBuf, sizeof(szBuf), "Ä³¸¯ÅÍ Å¸°ÙÀÌ »ý¼º µÇ¾ú½À´Ï´Ù [%d:%s:%d]", kTargetCreate.lID, kTargetCreate.szTargetName, kTargetCreate.dwVID);
+// _snprintf(szBuf, sizeof(szBuf), "Character target has been created [%d:%s:%d]", kTargetCreate.lID, kTargetCreate.szTargetName, kTargetCreate.dwVID);
 //	CPythonChat::Instance().AppendChat(CHAT_TYPE_NOTICE, szBuf);
 //	Tracef(" >> RecvTargetCreatePacketNew %d : %d/%d\n", kTargetCreate.lID, kTargetCreate.byType, kTargetCreate.dwVID);
 //#endif
@@ -4007,7 +4007,7 @@ bool CPythonNetworkStream::RecvTargetUpdatePacket()
 
 //#ifdef _DEBUG
 //	char szBuf[256+1];
-//	_snprintf(szBuf, sizeof(szBuf), "Å¸°ÙÀÇ À§Ä¡°¡ °»½Å µÇ¾ú½À´Ï´Ù [%d:%d/%d]", kTargetUpdate.lID, kTargetUpdate.lX, kTargetUpdate.lY);
+// _snprintf(szBuf, sizeof(szBuf), "The target's location has been updated [%d:%d/%d]", kTargetUpdate.lID, kTargetUpdate.lX, kTargetUpdate.lY);
 //	CPythonChat::Instance().AppendChat(CHAT_TYPE_NOTICE, szBuf);
 //	Tracef(" >> RecvTargetUpdatePacket %d : %d, %d\n", kTargetUpdate.lID, kTargetUpdate.lX, kTargetUpdate.lY);
 //#endif
@@ -4086,7 +4086,7 @@ bool CPythonNetworkStream::RecvDigMotionPacket()
 }
 
 
-// ¿ëÈ¥¼® °­È­
+// Dragon Soul Stone Enhancement
 bool CPythonNetworkStream::SendDragonSoulRefinePacket(BYTE bRefineType, TItemPos* pos)
 {
 	TPacketCGDragonSoulRefine pk;

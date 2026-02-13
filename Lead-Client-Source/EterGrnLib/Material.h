@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <granny/granny.h>
 #include <windows.h>

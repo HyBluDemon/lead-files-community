@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "ModelInstance.h"
 #include "Model.h"
 
@@ -112,7 +112,7 @@ void CGrannyModelInstance::ChangeMotionPointer(const CGrannyMotion* pMotion, int
 	if (!pgrnModelInstance)
 		return;
 
-	// 보간 되는 앞부분을 스킵 하기 위해 LocalTime 을 어느 정도 무시한다. - [levites]
+	// LocalTime is ignored to some extent in order to skip the first part of the interpolation. - [levites]
 	float fSkipTime = 0.3f;
 	float localTime = GetLocalTime() - fSkipTime;
 

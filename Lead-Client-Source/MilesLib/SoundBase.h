@@ -1,4 +1,4 @@
-#ifndef __MILESLIB_CSOUNDBASE_H__
+﻿#ifndef __MILESLIB_CSOUNDBASE_H__
 #define __MILESLIB_CSOUNDBASE_H__
 
 #include <map>

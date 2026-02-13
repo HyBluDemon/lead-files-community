@@ -1,4 +1,4 @@
-#ifndef __INC_TERRAINLIB_TEXTURESET_H__
+ï»¿#ifndef __INC_TERRAINLIB_TEXTURESET_H__
 #define __INC_TERRAINLIB_TEXTURESET_H__
 
 #include "../eterLib/GrpImageInstance.h"
@@ -28,7 +28,7 @@ typedef struct STerrainTexture
 	float						UOffset;
 	float						VOffset;
 	bool						bSplat;
-	unsigned short				Begin, End;	// 0 ~ 65535 ÀÇ 16bit heightfield ³ôÀÌ°ª.
+	unsigned short				Begin, End;	// 16bit heightfield height value from 0 to 65535.
 	D3DXMATRIX					m_matTransform;
 } TTerrainTexture;
 

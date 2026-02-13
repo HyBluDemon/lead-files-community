@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "StateManager.h"
 
 //#define StateManager_Assert(a) if (!(a)) puts("assert"#a)

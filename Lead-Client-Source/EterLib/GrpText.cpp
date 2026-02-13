@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "../eterBase/Utils.h"
 #include "GrpText.h"
 
@@ -38,9 +38,9 @@ bool CGraphicText::OnLoad(int /*iSize*/, const void* /*c_pvBuf*/)
 	bool bItalic = false;
 
 	// format
-	// ±¼¸².fnt		"±¼¸²" ÆùÆ® ±âº» »çÀÌÁî 12 ·Î ·Îµù
-	// ±¼¸²:18.fnt  "±¼¸²" ÆùÆ® »çÀÌÁî 18 ·Î ·Îµù
-	// ±¼¸²:14i.fnt "±¼¸²" ÆùÆ® »çÀÌÁî 14 & ÀÌÅÅ¸¯À¸·Î ·Îµù
+	// Gulim.fnt Loads â€œGulimâ€ font default size 12
+	// Gulim:18.fnt Loading with â€œGulimâ€ font size 18
+	// Gulim:14i.fnt â€œGulimâ€ font size 14 & loading in italics
 	const char * p = strrchr(GetFileName(), ':');
 
 	if (p)

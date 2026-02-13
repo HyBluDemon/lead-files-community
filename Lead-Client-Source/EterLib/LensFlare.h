@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+癤�///////////////////////////////////////////////////////////////////////  
 //	CLensFlare Class
 //
 //	(c) 2003 IDV, Inc.
@@ -81,7 +81,7 @@ public:
 	CLensFlare();
 	virtual ~CLensFlare();
 	
-	void			Compute(const D3DXVECTOR3 & c_rv3LightDirection); // D3DTS_VIEW로 부터 카메라 방향을 얻어오므로, 카메라 설정 뒤에 해야 함.
+	void			Compute(const D3DXVECTOR3 & c_rv3LightDirection); // Since the camera direction is obtained from D3DTS_VIEW, this must be done after camera setup.
 
 	void			DrawBeforeFlare();
 	void			DrawAfterFlare();

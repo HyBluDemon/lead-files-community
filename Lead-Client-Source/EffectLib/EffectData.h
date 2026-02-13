@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "../milesLib/Type.h"
 
@@ -42,8 +42,8 @@ class CEffectData
 		void __ClearLightDataVector();
 		void __ClearMeshDataVector();
 
-		// FIXME : 이 부분은 그다지 맘에 들지 않는다. 좋은 아이디어를 찾아내어 고치자.
-		//         상위가 (특화된) 상위의 인터페이스 때문에 모양이 바뀌어야 한다는 것은 옳지 못하다. - [levites]
+		// FIXME: I don't really like this part. Let's find good ideas and fix them.
+		// It is not right that a parent should change its appearance because of its (specialized) interface. - [levites]
 		virtual CParticleSystemData *	AllocParticle();
 		virtual CEffectMeshScript *		AllocMesh();
 		virtual CLightData *			AllocLight();

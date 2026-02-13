@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "InstanceBase.h"
 #include "PythonBackground.h"
 #include "../eterLib/GrpMath.h"
@@ -166,7 +166,7 @@ void CInstanceBase::EndWalking(float fBlendingTime)
 
 	m_isGoing = FALSE;
 
-	// °È°í ÀÖÀ»¶§´Â ¹«Á¶°Ç ¸ØÃß°Ô ÇØ¾ß ÇÑ´Ù
+	// When you are walking, you must stop at all costs.
 	if (IsWalking()||!IsAttacked())
 	{
 		m_GraphicThingInstance.Stop(fBlendingTime);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 BOOL ShiftJIS_IsLeadByte( const char chByte );
 BOOL ShiftJIS_IsTrailByte( const char chByte );

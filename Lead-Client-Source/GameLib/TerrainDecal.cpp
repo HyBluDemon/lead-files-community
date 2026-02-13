@@ -1,4 +1,4 @@
-// TerrainDecal.cpp: implementation of the CTerrainDecal class.
+﻿// TerrainDecal.cpp: implementation of the CTerrainDecal class.
 //
 //////////////////////////////////////////////////////////////////////
 

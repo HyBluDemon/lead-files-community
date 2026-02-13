@@ -1,4 +1,4 @@
-enum
+﻿enum
 {
 	TEXT_TAG_PLAIN,
 	TEXT_TAG_TAG, // ||

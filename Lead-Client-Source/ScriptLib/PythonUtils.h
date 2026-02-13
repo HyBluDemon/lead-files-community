@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define SET_EXCEPTION(x) PyErr_SetString(PyExc_RuntimeError, #x)
 

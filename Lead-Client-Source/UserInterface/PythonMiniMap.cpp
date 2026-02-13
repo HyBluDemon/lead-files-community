@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterLib/StateManager.h"
 #include "../eterLib/GrpSubImage.h"
 #include "../eterlib/Camera.h"
@@ -91,11 +91,11 @@ void CPythonMiniMap::Update(float fCenterX, float fCenterY)
 	if (!rkBG.IsMapOutdoor())
 		return;
 	
-	// 미니맵 그림 갱신
+	// Updated minimap image
 	if (m_fCenterX != fCenterX || m_fCenterY != fCenterY )
 		SetCenterPosition(fCenterX, fCenterY);
 
-	// 캐릭터 리스트 갱신
+	// Character list update
 	m_OtherPCPositionVector.clear();
 	m_PartyPCPositionVector.clear();
 	m_NPCPositionVector.clear();
@@ -434,7 +434,7 @@ void CPythonMiniMap::Render(float fScreenX, float fScreenY)
 	STATEMANAGER.SaveSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	STATEMANAGER.SaveSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
-	// 캐릭터 마크
+	// character mark
 	CInstanceBase * pkInst = CPythonCharacterManager::Instance().GetMainInstancePtr();
 
 	if (pkInst)
@@ -470,7 +470,7 @@ void CPythonMiniMap::Render(float fScreenX, float fScreenY)
 
 	CCamera* pkCmrCur=CCameraManager::Instance().GetCurrentCamera();
 
-	// 카메라 방향
+	// camera direction
 	if (pkCmrCur)
 	{
 		m_MiniMapCameraraphicImageInstance.SetRotation(pkCmrCur->GetRoll());
@@ -530,7 +530,7 @@ bool CPythonMiniMap::Create()
 	const std::string strPlayerMark = strImageRoot + "minimap/playermark.sub";
 	const std::string strWhiteMark = strImageRoot + "minimap/whitemark.sub";
 
-	// 미니맵 커버
+	// mini map cover
 	CGraphicImage * pImage = (CGraphicImage *) CResourceManager::Instance().GetResourcePointer(strImageFilter.c_str());
 	m_MiniMapFilterGraphicImageInstance.SetImagePointer(pImage);
 	pImage = (CGraphicImage *) CResourceManager::Instance().GetResourcePointer(strImageCamera.c_str());
@@ -540,7 +540,7 @@ bool CPythonMiniMap::Create()
 	m_matMiniMapCover._22 = 1.0f / ((float)m_MiniMapFilterGraphicImageInstance.GetHeight());
 	m_matMiniMapCover._33 = 0.0f;
 
-	// 캐릭터 마크
+	// character mark
 	CGraphicSubImage * pSubImage = (CGraphicSubImage *) CResourceManager::Instance().GetResourcePointer(strPlayerMark.c_str());
 	m_PlayerMark.SetImagePointer(pSubImage);
 
@@ -569,7 +569,7 @@ bool CPythonMiniMap::Create()
 
 	m_GuildAreaFlagImageInstance.SetImagePointer((CGraphicSubImage *) CResourceManager::Instance().GetResourcePointer("d:/ymir work/ui/minimap/GuildArea01.sub"));
 
-	// 그려질 폴리곤 세팅
+	// Setting up polygons to be drawn
 #pragma pack(push)
 #pragma pack(1)
 	LPMINIMAPVERTEX		lpMiniMapVertex;

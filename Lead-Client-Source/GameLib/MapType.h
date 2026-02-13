@@ -1,4 +1,4 @@
-#ifndef __MapType_Header__
+癤�#ifndef __MapType_Header__
 #define __MapType_Header__
 
 class CProperty;
@@ -182,7 +182,7 @@ typedef struct SEnvironmentData
 	std::string strMainFlareTextureFileName; 
 	float fMainFlareSize;
 	
-	BOOL bReserve; // 외부에서 설정을 고치지 않음
+	BOOL bReserve; // Do not modify settings externally
 } TEnvironmentData;
 
 typedef std::map<DWORD, TEnvironmentData*> TEnvironmentDataMap;

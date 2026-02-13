@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "../milesLib/Type.h"
 #include "RaceMotionDataEvent.h"
@@ -56,41 +56,41 @@ class CRaceMotionData
 
 		enum EName
 		{
-			NAME_NONE,                // 0 없음
-			NAME_WAIT,                // 1 대기          (00.msa)
-			NAME_WALK,                // 2 걷기          (02.msa)
-			NAME_RUN,                 // 3 뛰기          (03.msa)
-			NAME_CHANGE_WEAPON,       // 4 무기바꾸기
-			NAME_DAMAGE,              // 5 정면맞기      (30.msa)
-			NAME_DAMAGE_FLYING,       // 6 정면날아가기  (32.msa)
-			NAME_STAND_UP,            // 7 정면일어나기  (33.msa)
-			NAME_DAMAGE_BACK,         // 8 후면맞기      (34.msa)
-			NAME_DAMAGE_FLYING_BACK,  // 9 후면날아가기  (35.msa)
-			NAME_STAND_UP_BACK,       // 10 후면일어나기 (36.msa)
-			NAME_DEAD,                // 11 죽기         (31.msa)
-			NAME_DEAD_BACK,           // 12 후면죽기     (37.msa)
-			NAME_NORMAL_ATTACK,       // 13 공격         (20.msa)
-			NAME_COMBO_ATTACK_1,      // 14 콤보 공격
-			NAME_COMBO_ATTACK_2,      // 15 콤보 공격
-			NAME_COMBO_ATTACK_3,      // 16 콤보 공격
-			NAME_COMBO_ATTACK_4,      // 17 콤보 공격
-			NAME_COMBO_ATTACK_5,      // 18 콤보 공격
-			NAME_COMBO_ATTACK_6,      // 19 콤보 공격
-			NAME_COMBO_ATTACK_7,      // 20 콤보 공격
-			NAME_COMBO_ATTACK_8,      // 21 콤보 공격
-			NAME_INTRO_WAIT,          // 22 선택화면 대기
-			NAME_INTRO_SELECTED,      // 23 선택화면 선택
-			NAME_INTRO_NOT_SELECTED,  // 24 선택화면 비선택
-			NAME_SPAWN,               // 25 소환
-			NAME_FISHING_THROW,       // 26 낚시 던지기
-			NAME_FISHING_WAIT,        // 27 낚시 대기
-			NAME_FISHING_STOP,        // 28 낚시 그만두기
-			NAME_FISHING_REACT,       // 29 낚시 반응
-			NAME_FISHING_CATCH,       // 30 낚시 잡기
-			NAME_FISHING_FAIL,        // 31 낚시 실패
-			NAME_STOP,                // 32 말 멈추기
-			NAME_SPECIAL_1,           // 33 몬스터/NPC 특수 동작 (24.msa)
-			NAME_SPECIAL_2,           // 34 몬스터/NPC 특수 동작 (25.msa)
+			NAME_NONE,                // 0 none
+			NAME_WAIT,                // 1 Standby (00.msa)
+			NAME_WALK,                // 2 Walking (02.msa)
+			NAME_RUN,                 // 3 run (03.msa)
+			NAME_CHANGE_WEAPON,       // 4 Switch weapons
+			NAME_DAMAGE,              // 5 Head on (30.msa)
+			NAME_DAMAGE_FLYING,       // 6 Flying straight ahead (32.msa)
+			NAME_STAND_UP,            // 7 Standing up front (33.msa)
+			NAME_DAMAGE_BACK,         // 8 Back hit (34.msa)
+			NAME_DAMAGE_FLYING_BACK,  // 9 Rear Fly (35.msa)
+			NAME_STAND_UP_BACK,       // 10 Rear Standing (36.msa)
+			NAME_DEAD,                // 11 Dying (31.msa)
+			NAME_DEAD_BACK,           // 12 Rear Death (37.msa)
+			NAME_NORMAL_ATTACK,       // 13 Attack (20.msa)
+			NAME_COMBO_ATTACK_1,      // 14 combo attack
+			NAME_COMBO_ATTACK_2,      // 15 combo attack
+			NAME_COMBO_ATTACK_3,      // 16 combo attack
+			NAME_COMBO_ATTACK_4,      // 17 combo attack
+			NAME_COMBO_ATTACK_5,      // 18 combo attack
+			NAME_COMBO_ATTACK_6,      // 19 combo attack
+			NAME_COMBO_ATTACK_7,      // 20 combo attack
+			NAME_COMBO_ATTACK_8,      // 21 Combo Attack
+			NAME_INTRO_WAIT,          // 22 Wait for selection screen
+			NAME_INTRO_SELECTED,      // 23 Select selection screen
+			NAME_INTRO_NOT_SELECTED,  // 24 Selection screen non-selection
+			NAME_SPAWN,               // 25 Summon
+			NAME_FISHING_THROW,       // 26 Fishing Throw
+			NAME_FISHING_WAIT,        // 27 Waiting for fishing
+			NAME_FISHING_STOP,        // 28 Quit fishing
+			NAME_FISHING_REACT,       // 29 fishing reaction
+			NAME_FISHING_CATCH,       // 30 Fishing Catch
+			NAME_FISHING_FAIL,        // 31 Fishing Failed
+			NAME_STOP,                // 32 Stop talking
+			NAME_SPECIAL_1,           // 33 Monster/NPC special moves (24.msa)
+			NAME_SPECIAL_2,           // 34 Monster/NPC special moves (25.msa)
 			NAME_SPECIAL_3,
 			NAME_SPECIAL_4,
 			NAME_SPECIAL_5,
@@ -139,7 +139,7 @@ class CRaceMotionData
 			NAME_DANCE_3,
 			NAME_DANCE_4,
 			NAME_DANCE_5,
-			NAME_DANCE_6,		// 강남스타일
+			NAME_DANCE_6,		// gangnam style
 			
 			NAME_DANCE_END = NAME_DANCE_1 + 16,
 
@@ -210,8 +210,8 @@ class CRaceMotionData
 
 		void			SetName(UINT eName);
 
-		UINT			GetType() const;		// 모션 타입 얻기
-		bool			IsLock() const;			// 락된 모션 인가? (다른 모션에 캔슬되지 않음)
+		UINT			GetType() const;		// Get motion type
+		bool			IsLock() const;			// Is it a locked motion? (Not canceled by other motions)
 
 		int				GetLoopCount() const;
 
@@ -225,7 +225,7 @@ class CRaceMotionData
 		void			SetAccumulationPosition(const TPixelPosition & c_rPos);
 		const			TPixelPosition & GetAccumulationPosition() { return m_accumulationPosition; }
 
-		BOOL			IsComboInputTimeData() const; // 콤보 입력 타이밍 데이터가 있는가? 
+		BOOL			IsComboInputTimeData() const; // Is there combo input timing data?
 
 		float			GetComboInputStartTime() const;
 		float			GetNextComboTime() const;

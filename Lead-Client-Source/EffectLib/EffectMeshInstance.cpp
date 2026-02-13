@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../eterLib/StateManager.h"
 #include "../eterLib/ResourceManager.h"
 #include "EffectMeshInstance.h"

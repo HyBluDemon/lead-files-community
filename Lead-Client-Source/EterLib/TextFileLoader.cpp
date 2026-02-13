@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../eterBase/CRC32.h"
 #include <string>
 #include "../eterPack/EterPackManager.h"

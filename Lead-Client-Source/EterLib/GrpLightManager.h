@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../eterBase/Singleton.h"
 
@@ -93,8 +93,8 @@ class CLightManager : public CGraphicBase, public CLightBase, public CSingleton<
 
 		void		Initialize();
 
-		// NOTE : FlushLightÈÄ ·»´õ¸µ
-		//        ±× ÈÄ ¹Ýµå½Ã RestoreLight¸¦ ÇØÁà¾ß¸¸ ÇÑ´Ù.
+		// NOTE: Rendering after FlushLight
+		// After that, you must perform RestoreLight.
 		void		Update();
 		void		FlushLight();
 		void		RestoreLight();

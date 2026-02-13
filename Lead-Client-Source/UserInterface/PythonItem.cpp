@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "../eterlib/GrpMath.h"
 #include "../gamelib/ItemManager.h"
 #include "../EffectLib/EffectManager.h"
@@ -371,7 +371,7 @@ void CPythonItem::CreateItem(DWORD dwVirtualID, DWORD dwVirtualNumber, float x, 
 
 		if (/*f[1].first-f[0].first < (f[2].first-f[0].first)*0.30f*/ bStabGround)
 		{
-			// »ÏÁ·
+			// pointed
 			if (f[2].second == 0) // axis x
 			{
 				rEnd.y = 90.0f + frandom(-15.0f, 15.0f);
@@ -393,8 +393,8 @@ void CPythonItem::CreateItem(DWORD dwVirtualID, DWORD dwVirtualNumber, float x, 
 		}
 		else
 		{
-			// ³ÐÀû
-			// ¶¥ÀÇ ³ë¸»ÀÇ ¿µÇâÀ» ¹ÞÀ» °Í
+			// wide
+			// Will be affected by the normal state of the land
 			if (f[0].second == 0)
 			{
 				// y,z = by normal

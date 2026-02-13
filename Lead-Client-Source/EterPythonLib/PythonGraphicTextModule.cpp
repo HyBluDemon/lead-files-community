@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 bool PyTuple_GetTextInstance(PyObject* poArgs, int pos, CGraphicTextInstance** ppTextInstance)
 {
@@ -287,7 +287,7 @@ PyObject* grpGetSplitingTextLineCount(PyObject* poSelf, PyObject* poArgs)
 		{
 			i += 1;
 			
-			// ÀÚµ¿ ÁÙ ¹Ù²ÞµÇ°í ¹Ù·Î | °¡ ÀÖÀ» °æ¿ì
+			// Automatic line wrapping and immediate | If there is
 			if (iPosition>0)
 				++iLineCount;
 
@@ -337,15 +337,15 @@ PyObject* grpGetSplitingTextLine(PyObject* poSelf, PyObject* poArgs)
 	int iPosition = 0;
 	int iLineCount = 0;
 
-	// 1Â÷ : Á¶±Ý ´õ ±ò²ûÇÏ°Ô ¾ÈµÉ±î -_-a
-	// 2Â÷ : ¿À.. Á» ³ª¾ÆÁ³´Ù +_+
+	// 1st: CouldnÃ¢â‚¬â„¢t it be a little neater? -_-a
+	// 2nd round: Oh... it got a little better +_+
 	for (DWORD i = 0; i < strlen(szText);)
 	{
 		if ('|' == szText[i])
 		{
 			i += 1;
 
-			// ÀÚµ¿ ÁÙ ¹Ù²ÞµÇ°í ¹Ù·Î | °¡ ÀÖÀ» °æ¿ì
+			// Automatic line wrapping and immediate | If there is
 			if (iPosition>0)
 				++iLineCount;
 			iPosition = 0;

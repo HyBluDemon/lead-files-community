@@ -1,8 +1,53 @@
-# Generated build files
-.vs
-/**/Release/
-/**/Development/
-/**/Debug/
+# Visual Studio generated files, directories, and other build artifacts
+.vs/
+Debug/
+Release/
+Development/
+x64/
+x86/
+ipch/
 
-# Ignore installed dependencies
-vcpkg_installed
+# Compilation Artifacts
+*.obj
+*.iobj
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+*.builds
+*.pidb
+*.svclog
+*.scc
+
+# Visual Studio Cache and User Files
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+*.suo
+*.user
+*.db
+*.opendb
+
+# Upgrade Logs
+UpgradeLog.xml
+UpgradeLog.htm
+_UpgradeReport_Files/
+
+# Installed dependencies
+vcpkg_installed/
+
+# JetBrains IDE
+.idea/

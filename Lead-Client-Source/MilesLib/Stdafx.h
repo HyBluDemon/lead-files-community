@@ -1,4 +1,4 @@
-#ifndef __INC_MILESLIB_STDAFX_H__
+﻿#ifndef __INC_MILESLIB_STDAFX_H__
 #define __INC_MILESLIB_STDAFX_H__
 
 #if _MSC_VER > 1000

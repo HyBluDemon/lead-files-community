@@ -1,8 +1,8 @@
-#pragma once
+癤�#pragma once
 
-// Note : 화면상에 떨어진 Item의 Update와 Rendering을 책임지는 한편
-//        각 아이템의 데이타와 Icon Image Instance의 매니져 역할까지 주관
-//        조금 난잡해진거 같기도 하다 - 2003. 01. 13. [levites]
+// Note: Responsible for updating and rendering items dropped on the screen
+// Supervises the data of each item and plays the role of manager of the Icon Image Instance.
+// It seems like things have gotten a little messy - 2003. 01. 13. [levites]
 
 #include "../EterGrnLib/ThingInstance.h"
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "PythonNetworkStream.h"
 #include "Packet.h"
 #include "AccountConnector.h"
@@ -92,7 +92,7 @@ void CPythonNetworkStream::SetLoginPhase()
 		else
 			SendLoginPacket(m_stID.c_str(), m_stPassword.c_str());
 
-		// 비밀번호를 메모리에 계속 갖고 있는 문제가 있어서, 사용 즉시 날리는 것으로 변경
+		// There was a problem with the password still being stored in memory, so I changed it to throwing it away immediately after use.
 		ClearLoginInfo();
 		CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();
@@ -104,7 +104,7 @@ void CPythonNetworkStream::SetLoginPhase()
 		else
 			SendLoginPacket(m_stID.c_str(), m_stPassword.c_str());
 
-		// 비밀번호를 메모리에 계속 갖고 있는 문제가 있어서, 사용 즉시 날리는 것으로 변경
+		// There was a problem with the password still being stored in memory, so I changed it to throwing it away immediately after use.
 		ClearLoginInfo();
 		CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();

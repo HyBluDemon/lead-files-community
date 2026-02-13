@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "AccountConnector.h"
 #include "Packet.h"
 #include "PythonNetworkStream.h"
@@ -92,7 +92,7 @@ bool CAccountConnector::__HandshakeState_Process()
 	if (!__AnalyzePacket(HEADER_GC_PING, sizeof(TPacketGCPing), &CAccountConnector::__AuthState_RecvPing))
 		return false;
 
-	//  TODO :  차후 서버와 동일하게 가변길이 data serialize & deserialize  작업해야 한다.
+	// TODO: In the future, variable-length data serialization and deserialization must be performed in the same manner as the server.
 	if (!__AnalyzeVarSizePacket(HEADER_GC_HYBRIDCRYPT_KEYS, &CAccountConnector::__AuthState_RecvHybridCryptKeys))
 		return false;
 
@@ -122,7 +122,7 @@ bool CAccountConnector::__AuthState_Process()
 	if (!__AnalyzePacket(HEADER_GC_HANDSHAKE, sizeof(TPacketGCHandshake), &CAccountConnector::__AuthState_RecvHandshake))
 		return false;
 
-	//  TODO :  차후 서버와 동일하게 가변길이 data serialize & deserialize  작업해야 한다.
+	// TODO: In the future, variable-length data serialization and deserialization must be performed in the same manner as the server.
 	if (!__AnalyzeVarSizePacket(HEADER_GC_HYBRIDCRYPT_KEYS, &CAccountConnector::__AuthState_RecvHybridCryptKeys))
 		return false;
 
@@ -382,7 +382,7 @@ void CAccountConnector::OnConnectSuccess()
 
 void CAccountConnector::OnRemoteDisconnect()
 {
-	// Matrix Card Number 를 보내 놓았는데 close 되면 프로그램을 종료 한다.
+	// I sent the Matrix Card Number, and when it is closed, the program ends.
 	if (m_isWaitKey)
 	{
 		if (m_poHandler)

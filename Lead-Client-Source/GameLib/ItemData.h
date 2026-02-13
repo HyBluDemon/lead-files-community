@@ -1,6 +1,6 @@
-#pragma once
+癤�#pragma once
 
-// NOTE : Item의 통합 관리 클래스다.
+// NOTE: This is an integrated management class for Item.
 //        Icon, Model (droped on ground), Game Data
 
 #include "../eterLib/GrpSubImage.h"
@@ -22,18 +22,18 @@ class CItemData
 		enum EItemType
 		{
 			ITEM_TYPE_NONE,					//0
-			ITEM_TYPE_WEAPON,				//1//무기
-			ITEM_TYPE_ARMOR,				//2//갑옷
-			ITEM_TYPE_USE,					//3//아이템 사용
+			ITEM_TYPE_WEAPON,				// 1//Weapon
+			ITEM_TYPE_ARMOR,				// 2//Armor
+			ITEM_TYPE_USE,					// 3//Use item
 			ITEM_TYPE_AUTOUSE,				//4
 			ITEM_TYPE_MATERIAL,				//5
-			ITEM_TYPE_SPECIAL,				//6 //스페셜 아이템
+			ITEM_TYPE_SPECIAL,				// 6 //Special item
 			ITEM_TYPE_TOOL,					//7
-			ITEM_TYPE_UNUSED_1,				//8//복권
-			ITEM_TYPE_ELK,					//9//돈
+			ITEM_TYPE_UNUSED_1,				// 8//Lottery
+			ITEM_TYPE_ELK,					// 9//money
 			ITEM_TYPE_METIN,				//10
 			ITEM_TYPE_CONTAINER,			//11
-			ITEM_TYPE_FISH,					//12//낚시
+			ITEM_TYPE_FISH,					// 12//Fishing
 			ITEM_TYPE_ROD,					//13
 			ITEM_TYPE_RESOURCE,				//14
 			ITEM_TYPE_CAMPFIRE,				//15
@@ -41,21 +41,21 @@ class CItemData
 			ITEM_TYPE_SKILLBOOK,			//17
 			ITEM_TYPE_QUEST,				//18
 			ITEM_TYPE_POLYMORPH,			//19
-			ITEM_TYPE_TREASURE_BOX,			//20//보물상자
-			ITEM_TYPE_TREASURE_KEY,			//21//보물상자 열쇠
+			ITEM_TYPE_TREASURE_BOX,			// 20//Treasure Chest
+			ITEM_TYPE_TREASURE_KEY,			// 21//Treasure Chest Key
 			ITEM_TYPE_SKILLFORGET,			//22
 			ITEM_TYPE_GIFTBOX,				//23
 			ITEM_TYPE_PICK,					//24
-			ITEM_TYPE_HAIR,					//25//머리
-			ITEM_TYPE_TOTEM,				//26//토템
-			ITEM_TYPE_BLEND,				//27//생성될때 랜덤하게 속성이 붙는 약물
-			ITEM_TYPE_COSTUME,				//28//코스츔 아이템 (2011년 8월 추가된 코스츔 시스템용 아이템)
-			ITEM_TYPE_DS,					//29 //용혼석
-			ITEM_TYPE_SPECIAL_DS,			//30 // 특수한 용혼석 (DS_SLOT에 착용하는 UNIQUE 아이템이라 생각하면 됨)
-			ITEM_TYPE_EXTRACT,					//31 추출도구.
-			ITEM_TYPE_SECONDARY_COIN,			//32 명도전.
-			ITEM_TYPE_RING,						//33 반지 (유니크 슬롯이 아닌 순수 반지 슬롯)
-			ITEM_TYPE_BELT,						//34 벨트
+			ITEM_TYPE_HAIR,					// 25//head
+			ITEM_TYPE_TOTEM,				// 26//Totem
+			ITEM_TYPE_BLEND,				// 27//Drug with random properties when created
+			ITEM_TYPE_COSTUME,				// 28//Costume item (Item for costume system added in August 2011)
+			ITEM_TYPE_DS,					// 29 //Dragon Soul Stone
+			ITEM_TYPE_SPECIAL_DS,			// 30 // Special Dragon Soul Stone (think of it as a UNIQUE item worn in DS_SLOT)
+			ITEM_TYPE_EXTRACT,					// 31 Extraction Tool.
+			ITEM_TYPE_SECONDARY_COIN,			// 32 Myeongdojeon.
+			ITEM_TYPE_RING,						// 33 rings (pure ring slot, not unique slot)
+			ITEM_TYPE_BELT,						// 34 belt
 
 			ITEM_TYPE_MAX_NUM,				
 		};
@@ -63,7 +63,7 @@ class CItemData
 		enum EWeaponSubTypes
 		{
 			WEAPON_SWORD,
-			WEAPON_DAGGER,	//이도류
+			WEAPON_DAGGER,	// Two swords
 			WEAPON_BOW,
 			WEAPON_TWO_HANDED,
 			WEAPON_BELL,
@@ -100,8 +100,8 @@ class CItemData
 
 		enum ECostumeSubTypes
 		{
-			COSTUME_BODY,				//0	갑옷(main look)
-			COSTUME_HAIR,				//1	헤어(탈착가능)
+			COSTUME_BODY,				// 0 Armor (main look)
+			COSTUME_HAIR,				// 1 Hair (removable)
 			COSTUME_NUM_TYPES,
 		};
 
@@ -136,8 +136,8 @@ class CItemData
 			USE_UNBIND,
 			USE_TIME_CHARGE_PER,
 			USE_TIME_CHARGE_FIX,				// 28
-			USE_PUT_INTO_BELT_SOCKET,			// 29 벨트 소켓에 사용할 수 있는 아이템 
-			USE_PUT_INTO_RING_SOCKET,			// 30 반지 소켓에 사용할 수 있는 아이템 (유니크 반지 말고, 새로 추가된 반지 슬롯)
+			USE_PUT_INTO_BELT_SOCKET,			// 29 Items that can be used in belt sockets
+			USE_PUT_INTO_RING_SOCKET,			// Items that can be used in 30 ring sockets (not unique rings, but newly added ring slots)
 		};
 
 		enum EDragonSoulSubType
@@ -167,16 +167,16 @@ class CItemData
 			LIMIT_INT,
 			LIMIT_CON,
 
-			/// 착용 여부와 상관 없이 실시간으로 시간 차감 (socket0에 소멸 시간이 박힘: unix_timestamp 타입)
+			// / Deducts time in real time regardless of whether it is worn or not (extinction time embedded in socket0: unix_timestamp type)
 			LIMIT_REAL_TIME,						
 
-			/// 아이템을 맨 처음 사용(혹은 착용) 한 순간부터 리얼타임 타이머 시작 
-			/// 최초 사용 전에는 socket0에 사용가능시간(초단위, 0이면 프로토의 limit value값 사용) 값이 쓰여있다가 
-			/// 아이템 사용시 socket1에 사용 횟수가 박히고 socket0에 unix_timestamp 타입의 소멸시간이 박힘.
+			// / Real-time timer starts from the moment the item is first used (or worn)
+			// / Before first use, the available time (in seconds, if 0, use Proto's limit value) is written in socket0.
+			// / When using an item, the number of uses is stamped into socket1 and the expiration time of unix_timestamp type is stamped into socket0.
 			LIMIT_REAL_TIME_START_FIRST_USE,
 
-			/// 아이템을 착용 중일 때만 사용 시간이 차감되는 아이템
-			/// socket0에 남은 시간이 초단위로 박힘. (아이템 최초 사용시 해당 값이 0이면 프로토의 limit value값을 socket0에 복사)
+			// / An item whose usage time is deducted only when the item is being worn
+			// / The time remaining in socket0 is in seconds. (If the value is 0 when using the item for the first time, copy the limit value of the proto to socket0)
 			LIMIT_TIMER_BASED_ON_WEAR,
 
 			LIMIT_MAX_NUM
@@ -184,41 +184,41 @@ class CItemData
 
 		enum EItemAntiFlag
 		{
-			ITEM_ANTIFLAG_FEMALE        = (1 << 0),		// 여성 사용 불가
-			ITEM_ANTIFLAG_MALE          = (1 << 1),		// 남성 사용 불가
-			ITEM_ANTIFLAG_WARRIOR       = (1 << 2),		// 무사 사용 불가
-			ITEM_ANTIFLAG_ASSASSIN      = (1 << 3),		// 자객 사용 불가
-			ITEM_ANTIFLAG_SURA          = (1 << 4),		// 수라 사용 불가 
-			ITEM_ANTIFLAG_SHAMAN        = (1 << 5),		// 무당 사용 불가
-			ITEM_ANTIFLAG_GET           = (1 << 6),		// 집을 수 없음
-			ITEM_ANTIFLAG_DROP          = (1 << 7),		// 버릴 수 없음
-			ITEM_ANTIFLAG_SELL          = (1 << 8),		// 팔 수 없음
-			ITEM_ANTIFLAG_EMPIRE_A      = (1 << 9),		// A 제국 사용 불가
-			ITEM_ANTIFLAG_EMPIRE_B      = (1 << 10),	// B 제국 사용 불가
-			ITEM_ANTIFLAG_EMPIRE_R      = (1 << 11),	// C 제국 사용 불가
-			ITEM_ANTIFLAG_SAVE          = (1 << 12),	// 저장되지 않음
-			ITEM_ANTIFLAG_GIVE          = (1 << 13),	// 거래 불가
-			ITEM_ANTIFLAG_PKDROP        = (1 << 14),	// PK시 떨어지지 않음
-			ITEM_ANTIFLAG_STACK         = (1 << 15),	// 합칠 수 없음
-			ITEM_ANTIFLAG_MYSHOP        = (1 << 16),	// 개인 상점에 올릴 수 없음
+			ITEM_ANTIFLAG_FEMALE        = (1 << 0),		// Not available for women
+			ITEM_ANTIFLAG_MALE          = (1 << 1),		// Not available for men
+			ITEM_ANTIFLAG_WARRIOR       = (1 << 2),		// Musa cannot be used
+			ITEM_ANTIFLAG_ASSASSIN      = (1 << 3),		// Assassins cannot be used
+			ITEM_ANTIFLAG_SURA          = (1 << 4),		// Sura cannot be used
+			ITEM_ANTIFLAG_SHAMAN        = (1 << 5),		// Shaman not allowed
+			ITEM_ANTIFLAG_GET           = (1 << 6),		// Can't pick it up
+			ITEM_ANTIFLAG_DROP          = (1 << 7),		// cannot be thrown away
+			ITEM_ANTIFLAG_SELL          = (1 << 8),		// can't sell
+			ITEM_ANTIFLAG_EMPIRE_A      = (1 << 9),		// A Empire not available
+			ITEM_ANTIFLAG_EMPIRE_B      = (1 << 10),	// B Empire not available
+			ITEM_ANTIFLAG_EMPIRE_R      = (1 << 11),	// C Empire not available
+			ITEM_ANTIFLAG_SAVE          = (1 << 12),	// not saved
+			ITEM_ANTIFLAG_GIVE          = (1 << 13),	// No transaction
+			ITEM_ANTIFLAG_PKDROP        = (1 << 14),	// Does not fall during PK
+			ITEM_ANTIFLAG_STACK         = (1 << 15),	// cannot be combined
+			ITEM_ANTIFLAG_MYSHOP        = (1 << 16),	// Can't post to personal store
 		};
 
 		enum EItemFlag
 		{
-			ITEM_FLAG_REFINEABLE        = (1 << 0),		// 개량 가능
+			ITEM_FLAG_REFINEABLE        = (1 << 0),		// possible to improve
 			ITEM_FLAG_SAVE              = (1 << 1),
-			ITEM_FLAG_STACKABLE         = (1 << 2),     // 여러개 합칠 수 있음
-			ITEM_FLAG_COUNT_PER_1GOLD   = (1 << 3),		// 가격이 개수 / 가격으로 변함
-			ITEM_FLAG_SLOW_QUERY        = (1 << 4),		// 게임 종료시에만 SQL에 쿼리함
+			ITEM_FLAG_STACKABLE         = (1 << 2),     // Multiple can be combined
+			ITEM_FLAG_COUNT_PER_1GOLD   = (1 << 3),		// Price changes to number/price
+			ITEM_FLAG_SLOW_QUERY        = (1 << 4),		// Query SQL only when the game ends
 			ITEM_FLAG_RARE              = (1 << 5),
 			ITEM_FLAG_UNIQUE            = (1 << 6),
 			ITEM_FLAG_MAKECOUNT			= (1 << 7),
 			ITEM_FLAG_IRREMOVABLE		= (1 << 8),
 			ITEM_FLAG_CONFIRM_WHEN_USE	= (1 << 9),
-			ITEM_FLAG_QUEST_USE         = (1 << 10),    // 퀘스트 스크립트 돌리는지?
-			ITEM_FLAG_QUEST_USE_MULTIPLE= (1 << 11),    // 퀘스트 스크립트 돌리는지?
+			ITEM_FLAG_QUEST_USE         = (1 << 10),    // Are you running the quest script?
+			ITEM_FLAG_QUEST_USE_MULTIPLE= (1 << 11),    // Are you running the quest script?
 			ITEM_FLAG_UNUSED03          = (1 << 12),    // UNUSED03
-			ITEM_FLAG_LOG               = (1 << 13),    // 사용시 로그를 남기는 아이템인가?
+			ITEM_FLAG_LOG               = (1 << 13),    // Is this an item that leaves a log when used?
 			ITEM_FLAG_APPLICABLE		= (1 << 14),
 		};
 
@@ -318,34 +318,34 @@ class CItemData
 			APPLY_ATT_BONUS_TO_SURA,    // 61
 			APPLY_ATT_BONUS_TO_SHAMAN,  // 62
 			APPLY_ATT_BONUS_TO_MONSTER, // 63
-			APPLY_MALL_ATTBONUS,        // 64 공격력 +x%
-			APPLY_MALL_DEFBONUS,        // 65 방어력 +x%
-			APPLY_MALL_EXPBONUS,        // 66 경험치 +x%
-			APPLY_MALL_ITEMBONUS,       // 67 아이템 드롭율 x/10배
-			APPLY_MALL_GOLDBONUS,       // 68 돈 드롭율 x/10배
-			APPLY_MAX_HP_PCT,           // 69 최대 생명력 +x%
-			APPLY_MAX_SP_PCT,           // 70 최대 정신력 +x%
-			APPLY_SKILL_DAMAGE_BONUS,   // 71 스킬 데미지 * (100+x)%
-			APPLY_NORMAL_HIT_DAMAGE_BONUS,      // 72 평타 데미지 * (100+x)%
-			APPLY_SKILL_DEFEND_BONUS,   // 73 스킬 데미지 방어 * (100-x)%
-			APPLY_NORMAL_HIT_DEFEND_BONUS,      // 74 평타 데미지 방어 * (100-x)%
+			APPLY_MALL_ATTBONUS,        // 64 Attack power +x%
+			APPLY_MALL_DEFBONUS,        // 65 Defense +x%
+			APPLY_MALL_EXPBONUS,        // 66 Experience +x%
+			APPLY_MALL_ITEMBONUS,       // 67 Item drop rate x/10 times
+			APPLY_MALL_GOLDBONUS,       // 68 Money drop rate x/10x
+			APPLY_MAX_HP_PCT,           // 69 Maximum Life +x%
+			APPLY_MAX_SP_PCT,           // 70 Maximum Spirit +x%
+			APPLY_SKILL_DAMAGE_BONUS,   // 71 Skill Damage * (100+x)%
+			APPLY_NORMAL_HIT_DAMAGE_BONUS,      // 72 normal hit damage * (100+x)%
+			APPLY_SKILL_DEFEND_BONUS,   // 73 Skill Damage Defense * (100-x)%
+			APPLY_NORMAL_HIT_DEFEND_BONUS,      // 74 Normal attack damage defense * (100-x)%
 			APPLY_EXTRACT_HP_PCT,		//75
 			APPLY_RESIST_WARRIOR,			//78
 			APPLY_RESIST_ASSASSIN ,			//79
 			APPLY_RESIST_SURA,				//80
 			APPLY_RESIST_SHAMAN,			//81
 			APPLY_ENERGY,					//82
-			APPLY_DEF_GRADE,				// 83 방어력. DEF_GRADE_BONUS는 클라에서 두배로 보여지는 의도된 버그(...)가 있다.
-			APPLY_COSTUME_ATTR_BONUS,		// 84 코스튬 아이템에 붙은 속성치 보너스
-			APPLY_MAGIC_ATTBONUS_PER,		// 85 마법 공격력 +x%
-			APPLY_MELEE_MAGIC_ATTBONUS_PER,			// 86 마법 + 밀리 공격력 +x%
+			APPLY_DEF_GRADE,				// 83 defense. DEF_GRADE_BONUS has an intended bug (...) that causes it to appear twice in class.
+			APPLY_COSTUME_ATTR_BONUS,		// 84 Attribute value bonus attached to costume item
+			APPLY_MAGIC_ATTBONUS_PER,		// 85 Magic Attack +x%
+			APPLY_MELEE_MAGIC_ATTBONUS_PER,			// 86 Magic + Melee Attack +x%
 			
-			APPLY_RESIST_ICE,		// 87 냉기 저항
-			APPLY_RESIST_EARTH,		// 88 대지 저항
-			APPLY_RESIST_DARK,		// 89 어둠 저항
+			APPLY_RESIST_ICE,		// 87 Cold Resistance
+			APPLY_RESIST_EARTH,		// 88 Earth Resistance
+			APPLY_RESIST_DARK,		// 89 Dark Resistance
 
-			APPLY_ANTI_CRITICAL_PCT,	//90 크리티컬 저항
-			APPLY_ANTI_PENETRATE_PCT,	//91 관통타격 저항
+			APPLY_ANTI_CRITICAL_PCT,	// 90 Critical Resistance
+			APPLY_ANTI_PENETRATE_PCT,	// 91 Penetrating Hit Resistance
 
    			MAX_APPLY_NUM,              // 
 		};

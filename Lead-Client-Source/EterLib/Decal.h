@@ -1,4 +1,4 @@
-// Decal.h: interface for the CDecal class.
+癤�// Decal.h: interface for the CDecal class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -42,15 +42,15 @@ protected:
 	D3DXPLANE		m_v4FrontPlane;
 	D3DXPLANE		m_v4BackPlane;
 
-	// 개수
+	// count
 	DWORD			m_dwVertexCount;
 	DWORD			m_dwPrimitiveCount;
 
-	// 버택스 버퍼와 인댁스 버퍼
+	// Vertex buffer and index buffer
 //	CGraphicVertexBuffer	m_GraphicVertexBuffer;
 //	CGraphicIndexBuffer		m_GraphicIndexBuffer;
 
-	// 버택스 버퍼와 인댁스 버퍼 대신에 배열 만들고 DrawIndexedPrimitiveUP로 그리자.
+	// Let's create an array instead of the vertex buffer and index buffer and draw it with DrawIndexedPrimitiveUP.
 	typedef struct 
 	{
 		WORD			m_wMinIndex;

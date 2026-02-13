@@ -1,4 +1,4 @@
-// AreaLoaderThread.h: interface for the CAreaLoaderThread class.
+﻿// AreaLoaderThread.h: interface for the CAreaLoaderThread class.
 //
 //////////////////////////////////////////////////////////////////////
 

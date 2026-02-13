@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "GuildMarkUploader.h"
 #include "Packet.h"
 
@@ -27,41 +27,9 @@ bool CGuildMarkUploader::IsCompleteUploading()
 
 bool CGuildMarkUploader::__Save(const char* c_szFileName)
 {
-	/* 업로더에서 저장하지 않아야 함;
-	ILuint uImg;
-	ilGenImages(1, &uImg);
-	ilBindImage(uImg);
-	ilEnable(IL_FILE_OVERWRITE);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-
-	if (!ilLoad(IL_TYPE_UNKNOWN, (const ILstring)c_szFileName))	
-	{
-		return false;
-	}
-
-	if (ilGetInteger(IL_IMAGE_WIDTH) != CGuildMarkImage::WIDTH)	
-	{
-		return false;
-	}
-
-	if (ilGetInteger(IL_IMAGE_HEIGHT) != CGuildMarkImage::HEIGHT)
-	{
-		return false;
-	}
-
-	ilConvertImage(IL_BGRA, IL_BYTE);
-
-	UINT uColCount = CGuildMarkImage::MARK_COL_COUNT;
-	UINT uCol = m_dwGuildID % uColCount;
-	UINT uRow = m_dwGuildID / uColCount;
-
-	ilSetPixels(uCol*SGuildMark::WIDTH, uRow*SGuildMark::HEIGHT, 0, SGuildMark::WIDTH, SGuildMark::HEIGHT, 1, IL_BGRA, IL_BYTE, (ILvoid*)m_kMark.m_apxBuf);
-
-	ilSave(IL_TGA, (ILstring)c_szFileName);
-
-	ilDeleteImages(1, &uImg);
-	*/
+	/*
+ * Must not save from uploader; ILuint uImg; ilGenImages(1, &uImg); ilBindImage(uImg); ilEnable(IL_FILE_OVERWRITE); ilEnable(IL_ORIGIN_SET); ilOriginFunc(IL_ORIGIN_UPPER_LEFT);  if (!ilLoad(IL_TYPE_UNKNOWN, (const ILstring)c_szFileName)) { return false; } if (ilGetInteger(IL_IMAGE_WIDTH) != CGuildMarkImage::WIDTH) { return false; } if (ilGetInteger(IL_IMAGE_HEIGHT) != CGuildMarkImage::HEIGHT) { return false; } ilConvertImage(IL_BGRA, IL_BYTE);  UINT uColCount = CGuildMarkImage::MARK_COL_COUNT; UINT uCol = m_dwGuildID % uColCount; UINT uRow = m_dwGuildID / uColCount;  ilSetPixels(uCol*SGuildMark::WIDTH, uRow*SGuildMark::HEIGHT, 0, SGuildMark::WIDTH, SGuildMark::HEIGHT, 1, IL_BGRA, IL_BYTE, (ILvoid*)m_kMark.m_apxBuf);  ilSave(IL_TGA, (ILstring)c_szFileName);  ilDeleteImages(1, &uImg);
+ */
 	return true;
 }
 

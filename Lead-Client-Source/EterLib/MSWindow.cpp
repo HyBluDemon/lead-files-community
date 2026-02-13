@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "MsWindow.h"
 
 #include <windowsx.h>

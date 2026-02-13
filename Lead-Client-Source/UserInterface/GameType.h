@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 #include "../GameLib/ItemData.h"
 #include "common/tables.h"
 
@@ -54,12 +54,12 @@ const DWORD c_Equipment_Unique2	= c_Equipment_Start + 8;
 const DWORD c_Equipment_Arrow	= c_Equipment_Start + 9;
 const DWORD c_Equipment_Shield	= c_Equipment_Start + 10;
 
-// 새로 추가된 신규 반지 & 벨트
-// 장착형 아이템에 할당할 수 있는 위치가 기존 장비, 채기랍 퀘스트 보상, 코스튬 시스템 등으로 인해서 공간이 잘려있다.
-// 이게 다 채기랍 보상 버프를 장착아이템처럼 구현한 ㅅㄲ 때문에 난리났따... ㅆㅂ
+// Newly added rings & belts
+// The space that can be assigned to the equipable item is cut off due to existing equipment, Chaegi Rap quest rewards, costume system, etc.
+// This is all uproar because they implemented the Chaegi Rap compensation buff as an equipped item...
 // 
-// 정리하면, 기존 장비창들은 서버DB상 아이템 포지션이 90 ~ 102 이고,
-// 2013년 초에 새로 추가되는 슬롯들은 111 ~ 부터 시작한다. 착용 장비에서 최대로 사용할 수 있는 값은 121 까지이고, 122부터는 용혼석에서 사용한다.
+// To summarize, the existing equipment windows have item positions between 90 and 102 in the server DB.
+// New slots added in early 2013 start from 111 ~. The maximum value that can be used in the equipped equipment is 121, and from 122 it can be used in the Dragon Soul Stone.
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
 	const DWORD c_New_Equipment_Start = c_Equipment_Start + 21;
 	const DWORD c_New_Equipment_Count = 3;
@@ -69,7 +69,7 @@ const DWORD c_Equipment_Shield	= c_Equipment_Start + 10;
 #endif
 
 #ifdef ENABLE_COSTUME_SYSTEM
-	const DWORD c_Costume_Slot_Start	= c_Equipment_Start + 19;	// [주의] 숫자(19) 하드코딩 주의. 현재 서버에서 코스츔 슬롯은 19부터임. 서버 common/length.h 파일의 EWearPositions 열거형 참고.
+	const DWORD c_Costume_Slot_Start	= c_Equipment_Start + 19;	// [Caution] Be careful about hardcoding the number (19). In the current server, costume slots start at 19. See the EWearPositions enumeration in the server common/length.h file.
 	const DWORD	c_Costume_Slot_Body		= c_Costume_Slot_Start + 0;
 	const DWORD	c_Costume_Slot_Hair		= c_Costume_Slot_Start + 1;
 	const DWORD c_Costume_Slot_Count	= 2;
@@ -81,11 +81,11 @@ const DWORD c_DragonSoul_Equip_Start = INVENTORY_MAX_NUM + c_Wear_Max;
 const DWORD c_DragonSoul_Equip_Slot_Max = 6;
 const DWORD c_DragonSoul_Equip_End = c_DragonSoul_Equip_Start + c_DragonSoul_Equip_Slot_Max * DRAGON_SOUL_DECK_MAX_NUM;
 
-// NOTE: 2013년 2월 5일 현재... 용혼석 데크는 2개가 존재하는데, 향후 확장 가능성이 있어서 3개 데크 여유분을 할당 해 둠. 그 뒤 공간은 벨트 인벤토리로 사용
+// NOTE: As of February 5, 2013... There are two Dragon Soul Stone decks, but due to the possibility of expansion in the future, space for three decks has been allocated. The space behind it is used as belt inventory.
 const DWORD c_DragonSoul_Equip_Reserved_Count = c_DragonSoul_Equip_Slot_Max * 3;		
 
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
-	// 벨트 아이템이 제공하는 인벤토리
+	// Inventory provided by belt items
 	const DWORD c_Belt_Inventory_Slot_Start = c_DragonSoul_Equip_End + c_DragonSoul_Equip_Reserved_Count;
 	const DWORD c_Belt_Inventory_Width = 4;
 	const DWORD c_Belt_Inventory_Height= 4;
@@ -97,7 +97,7 @@ const DWORD c_DragonSoul_Equip_Reserved_Count = c_DragonSoul_Equip_Slot_Max * 3;
 	const DWORD c_Inventory_Count	= c_DragonSoul_Equip_End;
 #endif
 
-// 용혼석 전용 인벤토리
+// Dragon Soul Stone exclusive inventory
 const DWORD c_DragonSoul_Inventory_Start = 0;
 const DWORD c_DragonSoul_Inventory_Box_Size = 32;
 const DWORD c_DragonSoul_Inventory_Count = CItemData::DS_SLOT_NUM_TYPES * DRAGON_SOUL_GRADE_MAX * c_DragonSoul_Inventory_Box_Size;

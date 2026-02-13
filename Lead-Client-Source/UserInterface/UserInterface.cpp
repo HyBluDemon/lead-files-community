@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "PythonApplication.h"
 #include "ProcessScanner.h"
 #include "PythonExceptionSender.h"
@@ -185,20 +185,20 @@ bool PackInitialize(const char * c_pszFolder)
 	}
 
 #ifdef _DISTRIBUTE
-	Tracef("알림: 팩 모드입니다.\n");
+	Tracef("NOTE: Pack mode.\ne.\ne.\n");
 	
 	//if (0 == strPackType.compare("FILE"))
 	//{
 	//	bPackFirst = FALSE;
-	//	Tracef("알림: 파일 모드입니다.\n");
+	// Tracef("Notice: File mode.\n");
 	//}
 	//else
 	//{
-	//	Tracef("알림: 팩 모드입니다.\n");
+	// Tracef("Notice: Pack mode.\n");
 	//}
 #else
 	bPackFirst = FALSE;
-	Tracef("알림: 파일 모드입니다.\n");
+	Tracef("Notice: File mode.\nde.\nde.\n");
 #endif
 
 	CTextFileLoader::SetCacheMode();
@@ -208,7 +208,7 @@ bool PackInitialize(const char * c_pszFolder)
 	CEterPackManager::Instance().SetCacheMode();
 	CEterPackManager::Instance().SetSearchMode(bPackFirst);
 
-	CSoundData::SetPackMode(); // Miles 파일 콜백을 셋팅
+	CSoundData::SetPackMode(); // Setting up the Miles file callback
 
 	std::string strPackName, strTexCachePackName;
 	for (DWORD i = 1; i < TextLoader.GetLineCount() - 1; i += 2)
@@ -299,7 +299,7 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 		SplitLine(lpCmdLine,seperator,&stVec);
 		if (CmdSize == stVec.size() && stVec[0]==loginMark)
 		{
-			char buf[MAX_PATH];	//TODO 아래 함수 string 형태로 수정
+			char buf[MAX_PATH];	// Modify the function below TODO in string form
 			base64_decode(stVec[2].c_str(),buf);
 			stVec[2] = buf;
 			string_join(seperator,stVec,&stCmdLine);
@@ -391,12 +391,12 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 
 		if (pyLauncher.Create())
 		{
-			ret=RunMainScript(pyLauncher, lpCmdLine);	//게임 실행중엔 함수가 끝나지 않는다.
+			ret=RunMainScript(pyLauncher, lpCmdLine);	// The function does not end while the game is running.
 		}
 
 		//ProcessScanner_ReleaseQuitEvent();
 		
-		//게임 종료시.
+		// At the end of the game.
 		app->Clear();
 
 		timeEndPeriod(1);
@@ -487,7 +487,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	for( int i=0; i < nArgc; i++ ) {
 		if(szArgv[i] == 0)
 			continue;
-		if (__IsLocaleVersion(szArgv[i])) // #0000829: [M2EU] 버전 파일이 항상 생기지 않도록 수정 
+		if (__IsLocaleVersion(szArgv[i])) // #0000829: [M2EU] Modified so that version files are not always created.
 		{
 			char szModuleName[MAX_PATH];
 			char szVersionPath[MAX_PATH];
@@ -514,7 +514,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			bQuit = true;
 		} else if ((strcmp(szArgv[i], "--force-set-locale") == 0))
 		{
-			// locale 설정엔 인자가 두 개 더 필요함 (로케일 명칭, 데이터 경로)
+			// Setting locale requires two more arguments (locale name, data path)
 			if (nArgc <= i + 2)
 			{
 				MessageBox(NULL, "Invalid arguments", ApplicationStringTable_GetStringz(IDS_APP_NAME, "APP_NAME"), MB_ICONSTOP);
@@ -532,7 +532,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		goto Clean;
 
 #if defined(NEEDED_COMMAND_ARGUMENT)
-	// 옵션이 없으면 비정상 실행으로 간주, 프로그램 종료
+	// If there is no option, it is considered abnormal execution and the program is terminated.
 	if (strstr(lpCmdLine, NEEDED_COMMAND_ARGUMENT) == 0) {
 		MessageBox(NULL, ApplicationStringTable_GetStringz(IDS_ERR_MUST_LAUNCH_FROM_PATCHER, "ERR_MUST_LAUNCH_FROM_PATCHER"), ApplicationStringTable_GetStringz(IDS_APP_NAME, "APP_NAME"), MB_ICONSTOP);
 			goto Clean;
@@ -596,9 +596,7 @@ static void GrannyError(granny_log_message_type Type,
 
 int Setup(LPSTR lpCmdLine)
 {
-	/* 
-	 *	타이머 정밀도를 올린다.
-	 */
+	/* Increase timer precision. */
 	TIMECAPS tc; 
 	UINT wTimerRes; 
 
@@ -608,9 +606,7 @@ int Setup(LPSTR lpCmdLine)
 	wTimerRes = MINMAX(tc.wPeriodMin, 1, tc.wPeriodMax); 
 	timeBeginPeriod(wTimerRes); 
 
-	/*
-	 *	그래니 에러 핸들링
-	 */
+	/* Granny Error Handling */
 
 	granny_log_callback Callback;
     Callback.Function = GrannyError;

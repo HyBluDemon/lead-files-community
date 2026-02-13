@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "PythonApplication.h"
 
 #include "../eterbase/timer.h"
@@ -91,7 +91,7 @@ void CPythonApplication::__UpdateCamera()
 	// Sound Setting
 	const D3DXVECTOR3 & c_rv3CameraDirection = pMainCamera->GetView();
 	const D3DXVECTOR3 & c_rv3CameraUp = pMainCamera->GetUp();
-	m_SoundManager.SetPosition(m_v3CenterPosition.x, m_v3CenterPosition.y, m_v3CenterPosition.z);	// Listener - Ä³¸¯ÅÍ À§Ä¡
+	m_SoundManager.SetPosition(m_v3CenterPosition.x, m_v3CenterPosition.y, m_v3CenterPosition.z);	// Listener - Character Location
 	m_SoundManager.SetDirection(c_rv3CameraDirection.x, c_rv3CameraDirection.y, c_rv3CameraDirection.z, c_rv3CameraUp.x, c_rv3CameraUp.y, c_rv3CameraUp.z);
 	m_SoundManager.Update();
 	//////////////////////

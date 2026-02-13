@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonWindow.h"
 #include "PythonSlotWindow.h"
 #include "PythonGridSlotWindow.h"
@@ -1260,7 +1260,7 @@ PyObject * wndMgrSetSlotCoolTime(PyObject * poSelf, PyObject * poArgs)
 
 PyObject * wndMgrSetToggleSlot(PyObject * poSelf, PyObject * poArgs)
 {
-	assert(!"wndMgrSetToggleSlot - 사용하지 않는 함수");
+	assert(!"wndMgrSetToggleSlot - Deprecated function function function");
 	return Py_BuildNone();
 }
 
@@ -1889,13 +1889,13 @@ PyObject * wndMarkBox_SetImageFilename(PyObject * poSelf, PyObject * poArgs)
 
 PyObject * wndMarkBox_SetImage(PyObject * poSelf, PyObject * poArgs)
 {
-	// 아무것도 하지 않음
+	// do nothing
 	return Py_BuildNone();
 }
 
 PyObject * wndMarkBox_Load(PyObject * poSelf, PyObject * poArgs)
 {
-	// 아무것도 하지 않음
+	// do nothing
 	return Py_BuildNone();
 }
 
@@ -2501,7 +2501,7 @@ void initwndMgr()
 
 	PyObject * poModule = Py_InitModule("wndMgr", s_methods);
 
-// 하나의 딕셔너리에 너무 많은 Function이 포함 되는 것 같아 이런식으로 딕셔너리를 나누는 것을 고려 중 - [levites]
+// It seems like too many functions are included in one dictionary, so I am considering dividing the dictionary in this way - [levites]
 //	PyObject * poMgrModule = Py_InitModule("wndMgr", s_methods);
 //	PyObject * poTextModule = Py_InitModule("wndText", s_methods);
 //	PyObject * poSlotModule = Py_InitModule("wndSlot", s_methods);

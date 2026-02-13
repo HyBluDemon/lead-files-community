@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "EffectElementBaseInstance.h"
 
 bool CEffectElementBaseInstance::Update(float fElapsedTime)

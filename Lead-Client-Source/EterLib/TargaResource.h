@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Ref.h"
 #include "Resource.h"

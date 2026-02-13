@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "PythonExceptionSender.h"
 
 void CPythonExceptionSender::Send()

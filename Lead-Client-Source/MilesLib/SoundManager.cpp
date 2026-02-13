@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include <math.h>
 
 #include "SoundManager.h"
@@ -381,7 +381,7 @@ void CSoundManager::PlayCharacterSound3D(float fx, float fy, float fz, const cha
 	if (0.0f == GetSoundVolume())
 		return;
 
-	// 어느 정도의 최적화가 필요할 수도 있다 - [levites]
+	// Some degree of optimization may be needed - [levites]
 	if (bCheckFrequency)
 	{
 		static float s_fLimitDistance = 5000*5000;
@@ -397,7 +397,7 @@ void CSoundManager::PlayCharacterSound3D(float fx, float fy, float fz, const cha
 			float fTime = itor->second;
 			if (CTimer::Instance().GetCurrentSecond() - fTime < 0.3f)
 			{
-				//Tracef("똑같은 소리가 0.3초 내에 다시 플레이 %s\n", c_szFileName);
+				// Tracef("Same sound played again within 0.3 seconds %s\n", c_szFileName);
 				return;
 			}
 		}
@@ -548,7 +548,7 @@ void CSoundManager::FadeOutAllMusic()
 
 void CSoundManager::SaveVolume()
 {
-	// NOTE : 두번 이상 Save를 시도할때는 그냥 Return
+	// NOTE: When trying to save more than once, just return
 	if (m_isSoundDisable)
 		return;
 

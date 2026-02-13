@@ -1,4 +1,4 @@
-#ifndef __VK_H__
+﻿#ifndef __VK_H__
 #define __VK_H__
 #ifndef VK_0
 #define VK_0				0x30

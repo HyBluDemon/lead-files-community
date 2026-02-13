@@ -1,4 +1,4 @@
-#include "stdafx.h"
+癤�#include "stdafx.h"
 #include "../eterPack/EterPackManager.h"
 #include "pythonnonplayer.h"
 #include "InstanceBase.h"
@@ -84,7 +84,7 @@ bool CPythonNonPlayer::GetInstanceType(DWORD dwVnum, BYTE* pbType)
 {
 	const TMobTable * p = GetTable(dwVnum);
 
-	// dwVnum를 찾을 수 없으면 플레이어 캐릭터로 간주 한다. 문제성 코드 -_- [cronan]
+	// If dwVnum cannot be found, it is assumed to be a player character. Problematic code -_- [cronan]
 	if (!p)
 		return false;
 

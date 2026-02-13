@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include <string.h>
 #include "../eterBase/TempFile.h"
 
@@ -7,12 +7,7 @@
 
 #include <chrono>
 /*
- *	CProperty 파일 포맷
- *
- *  0 ~ 4 bytes: fourcc
- *  5 ~ 6 bytes: \r\n
- *
- *  그 이후의 바이트들은 텍스트 파일 로더와 같은 구조
+ * CProperty file format 0 ~ 4 bytes: fourcc 5 ~ 6 bytes: \r\n The bytes after that have the same structure as the text file loader.
  */
 CProperty::CProperty(const char * c_pszFileName) : mc_pFileName(NULL), m_dwCRC(0)
 {
@@ -70,9 +65,9 @@ bool CProperty::GetVector(const char * c_pszKey, CTokenVector & rTokenVector)
 	if (m_stTokenMap.end() == it)
 		return false;
 
-// NOTE : 튕김 현상 발견
+// NOTE: Bouncing phenomenon discovered
 //	std::copy(rTokenVector.begin(), it->second.begin(), it->second.end());
-// NOTE : 레퍼런스에는 이런 식으로 하게끔 되어 있음
+// NOTE: The reference says to do it this way.
 ///////////////////////////////////////////////////////////////////////////////
 //	template <class InputIterator, class OutputIterator>
 //	OutputIterator copy(InputIterator first, InputIterator last,
@@ -84,11 +79,11 @@ bool CProperty::GetVector(const char * c_pszKey, CTokenVector & rTokenVector)
 //	copy(V.begin(), V.end(), L.begin());
 //	assert(equal(V.begin(), V.end(), L.begin()));
 ///////////////////////////////////////////////////////////////////////////////
-// 헌데 그래도 튕김. - [levites]
+// But it still bounces. - [levites]
 //	std::copy(it->second.begin(), it->second.end(), rTokenVector.begin());
 
-// 결국 이렇게.. - [levites]
-// 현재 사용하는 곳 : WorldEditor/Dialog/MapObjectPropertyPageBuilding.cpp
+// In the end, like this... - [levites]
+// Currently using: WorldEditor/Dialog/MapObjectPropertyPageBuilding.cpp
 	CTokenVector & rSourceTokenVector = it->second;
 	CTokenVector::iterator itor = rSourceTokenVector.begin();
 	for (; itor != rSourceTokenVector.end(); ++itor)
@@ -104,7 +99,7 @@ void CProperty::PutString(const char * c_pszKey, const char * c_pszString)
 	std::string stTempKey = c_pszKey;
 	stl_lowers(stTempKey);
 
-	// 이미 있는걸 지움
+	// Delete what already exists
 	CTokenVectorMap::iterator itor = m_stTokenMap.find(stTempKey);
 
 	if (itor != m_stTokenMap.end())

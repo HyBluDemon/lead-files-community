@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GrpImage.h"
 
 CGraphicImage::CGraphicImage(const char * c_szFileName, DWORD dwFilter) : 

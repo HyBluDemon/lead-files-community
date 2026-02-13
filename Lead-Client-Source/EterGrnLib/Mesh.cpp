@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "Mesh.h"
 #include "Model.h"
 #include "Material.h"
@@ -159,7 +159,7 @@ bool CGrannyMesh::LoadTriGroupNodeList(CGrannyMaterialPalette& rkMtrlPal)
 	assert(m_triGroupNodes == NULL);
 
 	int mtrlCount		= m_pgrnMesh->MaterialBindingCount;
-	if (mtrlCount <= 0) // ÃµÀÇ µ¿±¼ 2Ãþ Å©·¡½¬ ¹ß»ý
+	if (mtrlCount <= 0) // Crash occurs on the 2nd floor of Thousand Caves
 		return true;
 
 	int GroupNodeCount	= GrannyGetMeshTriangleGroupCount(m_pgrnMesh);
@@ -199,7 +199,7 @@ bool CGrannyMesh::LoadTriGroupNodeList(CGrannyMaterialPalette& rkMtrlPal)
 
 void CGrannyMesh::RebuildTriGroupNodeList()
 {
-	assert(!"CGrannyMesh::RebuildTriGroupNodeList() - ¿Ö ¸®ºôµå¸¦ ÇÏ´Â°¡- -?");
+	assert(!"CGrannyMesh::RebuildTriGroupNodeList() - Why rebuild- -???");
 	/*
 	int mtrlCount = m_pgrnMesh->MaterialBindingCount;
 	int GroupNodeCount = GrannyGetMeshTriangleGroupCount(m_pgrnMesh);

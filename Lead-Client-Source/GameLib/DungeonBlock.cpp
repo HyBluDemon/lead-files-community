@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "DungeonBlock.h"
 
 #include "../eterlib/StateManager.h"
