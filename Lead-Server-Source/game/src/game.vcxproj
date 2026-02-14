@@ -35,7 +35,7 @@
     <_ProjectFileVersion>18.0.11312.151</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\Lead-Serverfiles\channel1\game1\</OutDir>
+    <OutDir>$(SolutionDir)..\Lead-Serverfiles\game_build\</OutDir>
     <IntDir>$(ProjectDir)OBJDIR/$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>game_d</TargetName>
@@ -49,6 +49,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)../Lead-Shared-Source/;$(SolutionDir)../Lead-Extern/include/;$(SolutionDir)../Lead-Extern/include/lzo-2.10/include/;$(ProjectDir)../../liblua/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;__WIN32__;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -56,7 +57,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>$(OutDir)$(ProjectName).pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -64,13 +65,14 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>mysqlclient.lib;ws2_32.lib;shlwapi.lib;secur32.lib;wsock32.lib;advapi32.lib;DevIL.lib;lzo-2.10MT_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)$(ProjectName)_d.exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)../Lead-Extern/lib;$(ProjectDir)../../../Extern/openssl/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <IgnoreSpecificDefaultLibraries>libcpmt.lib</IgnoreSpecificDefaultLibraries>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command />
