@@ -28,7 +28,7 @@ int		passes_per_sec = 25;
 WORD	db_port = 0;
 WORD	p2p_port = 50900;
 char	db_addr[ADDRESS_MAX_LEN + 1];
-int		save_event_second_cycle = passes_per_sec * 120;	// 3분
+int		save_event_second_cycle = passes_per_sec * 120;	// 3 minute
 int		ping_event_second_cycle = passes_per_sec * 60;
 bool	g_bNoMoreClient = false;
 bool	g_bNoRegen = false;
@@ -69,16 +69,16 @@ int SPEEDHACK_LIMIT_COUNT   = 50;
 int SPEEDHACK_LIMIT_BONUS   = 80;
 int g_iSyncHackLimitCount = 20; // 10 -> 20 2013 09 11 CYH
 
-//시야 = VIEW_RANGE + VIEW_BONUS_RANGE
-//VIEW_BONUSE_RANGE : 클라이언트와 시야 처리에서너무 딱 떨어질경우 문제가 발생할수있어 500CM의 여분을 항상준다.
+// field of vision = VIEW_RANGE + VIEW_BONUS_RANGE
+//VIEW_BONUSE_RANGE : If the client and view processing are too tight, problems may arise. 500CM Always give extra of .
 int VIEW_RANGE = 5000;
 int VIEW_BONUS_RANGE = 500;
 
 int g_server_id = 0;
 
-unsigned int g_uiSpamBlockDuration = 60 * 15; // 기본 15분
-unsigned int g_uiSpamBlockScore = 100; // 기본 100점
-unsigned int g_uiSpamReloadCycle = 60 * 10; // 기본 10분
+unsigned int g_uiSpamBlockDuration = 60 * 15; // basic 15 minute
+unsigned int g_uiSpamBlockScore = 100; // basic 100 dot
+unsigned int g_uiSpamReloadCycle = 60 * 10; // basic 10 minute
 
 bool		g_bCheckMultiHack = true;
 
@@ -86,7 +86,7 @@ int			g_iSpamBlockMaxLevel = 10;
 
 void		LoadStateUserCount();
 void		LoadValidCRCList();
-bool            g_protectNormalPlayer   = false;        // 범법자가 "평화모드" 인 일반유저를 공격하지 못함
+bool            g_protectNormalPlayer   = false;        // criminal " peace mode " Cannot attack regular users
 
 int gPlayerMaxLevel = 99;
 
@@ -280,7 +280,7 @@ void config_init(const string& st_localeServiceName)
 	}
 
 	char db_host[2][64], db_user[2][64], db_pwd[2][64], db_db[2][64];
-	// ... 아... db_port는 이미 있는데... 네이밍 어찌해야함...
+	// ... ah ... db_port already exists ... What should I do with the naming? ...
 	int mysql_db_port[2];
 
 	for (int n = 0; n < 2; ++n)
@@ -301,9 +301,9 @@ void config_init(const string& st_localeServiceName)
 	*log_db = '\0';
 
 
-	// DB에서 로케일정보를 세팅하기위해서는 다른 세팅값보다 선행되어서
-	// DB정보만 읽어와 로케일 세팅을 한후 다른 세팅을 적용시켜야한다.
-	// 이유는 로케일관련된 초기화 루틴이 곳곳에 존재하기 때문.
+	// DB In order to set locale information, it takes precedence over other setting values.
+	// DB You only need to read the information, set the locale, and then apply other settings. .
+	// The reason is that locale-related initialization routines exist everywhere. .
 
 	bool isCommonSQL = false;	
 	bool isPlayerSQL = false;
@@ -410,7 +410,7 @@ void config_init(const string& st_localeServiceName)
 		}
 	}
 
-	//처리가 끝났으니 파일을 닫자.
+	// Once processing is complete, close the file. .
 	fclose(fpOnlyForDB);
 
 	// CONFIG_SQL_INFO_ERROR
@@ -436,7 +436,7 @@ void config_init(const string& st_localeServiceName)
 		exit(1);
 	}
 
-	// Common DB 가 Locale 정보를 가지고 있기 때문에 가장 먼저 접속해야 한다.
+	// Common DB go Locale Since you have the information, you must access it first. .
 	AccountDB::instance().Connect(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1]);
 
 	if (false == AccountDB::instance().IsConnected())
@@ -447,8 +447,8 @@ void config_init(const string& st_localeServiceName)
 
 	fprintf(stdout, "CommonSQL connected\n");
 
-	// 로케일 정보를 가져오자 
-	// <경고> 쿼리문에 절대 조건문(WHERE) 달지 마세요. (다른 지역에서 문제가 생길수 있습니다)
+	// Let's get locale information 
+	// < warning > Absolute conditional statement in query statement (WHERE) Don't sweeten it . ( Problems may arise in other areas )
 	{
 		char szQuery[512];
 		snprintf(szQuery, sizeof(szQuery), "SELECT mKey, mValue FROM locale");
@@ -465,7 +465,7 @@ void config_init(const string& st_localeServiceName)
 
 		while (NULL != (row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
 		{
-			// 로케일 세팅
+			// Locale settings
 			if (strcasecmp(row[0], "LOCALE") == 0)
 			{
 				if (LocaleService_Init(row[1]) == false)
@@ -477,15 +477,15 @@ void config_init(const string& st_localeServiceName)
 		}
 	}
 
-	// 로케일 정보를 COMMON SQL에 세팅해준다.
-	// 참고로 g_stLocale 정보는 LocaleService_Init() 내부에서 세팅된다.
+	// locale information COMMON SQL Set it to .
+	// For reference g_stLocale The information is LocaleService_Init() It is set internally .
 	fprintf(stdout, "Setting DB to locale %s\n", g_stLocale.c_str());
 
 	AccountDB::instance().SetLocale(g_stLocale);
 
 	AccountDB::instance().ConnectAsync(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1], g_stLocale.c_str());
 
-	// Player DB 접속
+	// Player DB connection
 	DBManager::instance().Connect(db_host[0], mysql_db_port[0], db_user[0], db_pwd[0], db_db[0]);
 
 	if (!DBManager::instance().IsConnected())
@@ -496,9 +496,9 @@ void config_init(const string& st_localeServiceName)
 
 	fprintf(stdout, "PlayerSQL connected\n");
 
-	if (false == g_bAuthServer) // 인증 서버가 아닐 경우
+	if (false == g_bAuthServer) // If it is not an authentication server
 	{
-		// Log DB 접속
+		// Log DB connection
 		LogManager::instance().Connect(log_host, log_port, log_user, log_pwd, log_db);
 
 		if (!LogManager::instance().IsConnected())
@@ -513,8 +513,8 @@ void config_init(const string& st_localeServiceName)
 	}
 
 	// SKILL_POWER_BY_LEVEL
-	// 스트링 비교의 문제로 인해서 AccountDB::instance().SetLocale(g_stLocale) 후부터 한다.
-	// 물론 국내는 별로 문제가 안된다(해외가 문제)
+	// Due to string comparison problems AccountDB::instance().SetLocale(g_stLocale) I'll do it later .
+	// Of course, domestically it is not much of a problem. ( Overseas is the problem )
 	{
 		char szQuery[256];
 		snprintf(szQuery, sizeof(szQuery), "SELECT mValue FROM locale WHERE mKey='SKILL_POWER_BY_LEVEL'");
@@ -555,13 +555,13 @@ void config_init(const string& st_localeServiceName)
 			}
 		}
 
-		// 종족별 스킬 세팅
+		// Skill settings for each race
 		for (int job = 0; job < JOB_MAX_NUM * 2; ++job)
 		{
 			snprintf(szQuery, sizeof(szQuery), "SELECT mValue from locale where mKey='SKILL_POWER_BY_LEVEL_TYPE%d' ORDER BY CAST(mValue AS unsigned)", job);
 			std::unique_ptr<SQLMsg> pMsg(AccountDB::instance().DirectQuery(szQuery));
 
-			// 세팅이 안되어있으면 기본테이블을 사용한다.
+			// If there is no setting, the default table is used. .
 			if (pMsg->Get()->uiNumRows == 0)
 			{
 				CTableBySkill::instance().SetSkillPowerByLevelFromType(job, aiBaseSkillPowerByLevelTable);
@@ -873,7 +873,7 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("spam_block_reload_cycle")
 		{
 			str_to_number(g_uiSpamReloadCycle, value_string);
-			g_uiSpamReloadCycle = MAX(60, g_uiSpamReloadCycle); // 최소 1분
+			g_uiSpamReloadCycle = MAX(60, g_uiSpamReloadCycle); // minimum 1 minute
 		}
 
 		TOKEN("check_multihack")

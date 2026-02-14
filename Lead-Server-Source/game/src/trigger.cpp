@@ -46,7 +46,7 @@ int OnClickShop(TRIGGERPARAM)
 }
 
 /*
- * 몬스터 AI 함수들을 BattleAI 클래스로 수정
+ * monster AI functions BattleAI Edit with class
  */
 int OnIdleDefault(TRIGGERPARAM)
 {
@@ -100,7 +100,7 @@ class FuncFindMobVictim
 					pkChr->IsAffectFlag(AFF_REVIVE_INVISIBLE))
 				return false;
 
-			if (pkChr->IsAffectFlag(AFF_TERROR) && m_pkChr->IsImmune(IMMUNE_TERROR) == false )	// 공포 처리
+			if (pkChr->IsAffectFlag(AFF_TERROR) && m_pkChr->IsImmune(IMMUNE_TERROR) == false )	// fear processing
 			{
 				if ( pkChr->GetLevel() >= m_pkChr->GetLevel() )
 					return false;
@@ -137,7 +137,7 @@ class FuncFindMobVictim
 
 		LPCHARACTER GetVictim()
 		{
-			// 근처에 건물이 있고 피가 많이 있다면 건물을 공격한다. 건물만 있어도 건물을 공격
+			// If there is a building nearby and there is a lot of blood, attack the building. . Attack buildings even if they are just buildings
 			if (m_pkChrBuilding && m_pkChr->GetHP() * 2 > m_pkChr->GetMaxHP() || !m_pkChrVictim)
 			{
 				return m_pkChrBuilding;

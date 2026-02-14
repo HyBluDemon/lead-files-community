@@ -3,8 +3,8 @@
 
 class CHARACTER;
 
-// CPVP에는 DWORD 아이디 두개를 받아서 m_dwCRC를 만들어서 가지고 있는다.
-// CPVPManager에서 이렇게 만든 CRC를 통해 검색한다.
+// CPVP In DWORD Receive two IDs m_dwCRC I made and have it. .
+// CPVPManager made like this in CRC Search through .
 class CPVP
 {
 	public:
@@ -26,8 +26,8 @@ class CPVP
 		CPVP(CPVP & v);
 		~CPVP();
 
-		void	Win(DWORD dwPID); // dwPID가 이겼다!
-		bool	CanRevenge(DWORD dwPID); // dwPID가 복수할 수 있어?
+		void	Win(DWORD dwPID); // dwPID won !
+		bool	CanRevenge(DWORD dwPID); // dwPID I can take revenge ?
 		bool	IsFight();
 		bool	Agree(DWORD dwPID);
 
@@ -57,7 +57,7 @@ class CPVPManager : public singleton<CPVPManager>
 
 	void			Insert(LPCHARACTER pkChr, LPCHARACTER pkVictim);
 	bool			CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim);
-	bool			Dead(LPCHARACTER pkChr, DWORD dwKillerPID);	// PVP에 있었나 없었나를 리턴
+	bool			Dead(LPCHARACTER pkChr, DWORD dwKillerPID);	// PVP Returns whether it was in or not
 	void			GiveUp(LPCHARACTER pkChr, DWORD dwKillerPID);
 	void			Connect(LPCHARACTER pkChr);
 	void			Disconnect(LPCHARACTER pkChr);

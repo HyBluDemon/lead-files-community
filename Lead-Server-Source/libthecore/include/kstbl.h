@@ -1,8 +1,8 @@
 /*
  *    Filename: kstbl.h
- * Description: KS 완성형 2350자의 조합형 코드
+ * Description: KS complete form 2350 Combination code of characters
  *
- *      Author: 비엽 (server), myevan (Client)
+ *      Author: Rain leaves (server), myevan (Client)
  */
 #ifndef __KSTBL_H__
 #define __KSTBL_H__

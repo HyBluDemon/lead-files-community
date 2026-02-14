@@ -1,8 +1,8 @@
 /*
  *    Filename: log.c
- * Description: local log file 관련
+ * Description: local log file related
  *
- *      Author: 비엽 aka. Cronan
+ *      Author: Rain leaves aka. Cronan
  */
 #define __LIBTHECORE__
 #include "stdafx.h"
@@ -113,7 +113,7 @@ void _sys_err(const char *func, int line, const char *format, ...)
 	time_t ct = time(0);  
 	char *time_s = asctime(localtime(&ct));
 
-	char buf[1024 + 2]; // \n을 붙이기 위해..
+	char buf[1024 + 2]; // \n to attach ..
 	int len;
 
 	if (!log_file_err)
@@ -132,11 +132,11 @@ void _sys_err(const char *func, int line, const char *format, ...)
 
 	strcat(buf, "\n");
 
-	// log_file_err 에 출력
+	// log_file_err output to
 	fputs(buf, log_file_err->fp);
 	fflush(log_file_err->fp);
 
-	// log_file_sys 에도 출력
+	// log_file_sys Edo output
 	fputs(buf, log_file_sys->fp);
 	fflush(log_file_sys->fp);
 }
@@ -147,7 +147,7 @@ void _sys_err(const char *func, int line, const char *format, ...)
 	time_t ct = time(0);  
 	char *time_s = asctime(localtime(&ct));
 
-	char buf[1024 + 2]; // \n을 붙이기 위해..
+	char buf[1024 + 2]; // \n to attach ..
 	int len;
 
 	if (!log_file_err)
@@ -166,11 +166,11 @@ void _sys_err(const char *func, int line, const char *format, ...)
 
 	strcat(buf, "\n");
 
-	// log_file_err 에 출력
+	// log_file_err output to
 	fputs(buf, log_file_err->fp);
 	fflush(log_file_err->fp);
 
-	// log_file_sys 에도 출력
+	// log_file_sys Edo output
 	fputs(buf, log_file_sys->fp);
 	fflush(log_file_sys->fp);
 
@@ -212,7 +212,7 @@ void sys_log(unsigned int bit, const char *format, ...)
 	}
 
 #ifndef __WIN32__
-	// log_level이 1 이상일 경우에는 테스트일 경우가 많으니 stdout에도 출력한다.
+	// log_level this 1 If it is abnormal, it is often a test. stdout It is also printed to .
 	if (log_level_bits > 1)
 	{
 #endif
@@ -293,7 +293,7 @@ void log_file_check(LPLOGFILE logfile)
 {
 	struct stat	sb;
 
-	// 파일이 없으므로 다시 연다.
+	// The file does not exist, so open it again. .
 	if (stat(logfile->filename, &sb) != 0 && errno == ENOENT)
 	{
 		fclose(logfile->fp);
@@ -433,10 +433,10 @@ void log_file_rotate(LPLOGFILE logfile)
 		sys_log(0, "SYSTEM: LOG ROTATE (%04d-%02d-%02d %d)", 
 				curr_tm.tm_year + 1900, curr_tm.tm_mon + 1, curr_tm.tm_mday, logfile->last_hour);
 
-		// 로그 파일을 닫고
+		// close the log file
 		fclose(logfile->fp);
 
-		// 옮긴다.
+		// move .
 #ifndef __WIN32__
 		snprintf(system_cmd, 128, "mv %s %s/%s.%02d", logfile->filename, dir, logfile->filename, logfile->last_hour);
 #else
@@ -444,10 +444,10 @@ void log_file_rotate(LPLOGFILE logfile)
 #endif
 		system(system_cmd);
 
-		// 마지막 저장시간 저장
+		// Save last save time
 		logfile->last_hour = curr_tm.tm_hour;
 
-		// 로그 파일을 다시 연다.	
+		// Open the log file again .	
 		logfile->fp = fopen(logfile->filename, "a+");
 	}
 }

@@ -171,10 +171,10 @@ static int FN_random_index()
 	return 0;
 }
 
-// Ãæ±âÈ¯ÀÇ È®·ü Å×ÀÌºí
-// blend.txt¿¡¼­ È®·üµµ ¹Şµµ·Ï °íÄ¡¸é ±ò²ûÇÏ°ÚÁö¸¸
-// °¢ ³ª¶óº°·Î item proto µîÀ» µû·Î °ü¸®ÇÏ¹Ç·Î,
-// È¥¶õÀÌ ¿Ã ¼ö ÀÖ¾î ÀÌ·¸°Ô Ãß°¡ÇÑ´Ù.
+// Choong Gi-hwanâ€™s probability table
+// blend.txt It would be neat to change it so that it also accepts the probability.
+// For each country item proto Because we manage things separately, ,
+// This may cause confusion, so I added it like this: .
 // by rtsummit
 
 static int FN_ECS_random_index()

@@ -149,7 +149,7 @@ namespace quest
 	int quest_coroutine_yield(lua_State * L)
 	{
 		CQuestManager& q = CQuestManager::instance();
-		// other_pc_block 내부에서는 yield가 일어나서는 안된다. 절대로.
+		// other_pc_block Inside yield shouldn't happen . never .
 		if (q.IsInOtherPCBlock())
 		{
 			sys_err("FATAL ERROR! Yield occur in other_pc_block.");
@@ -223,10 +223,10 @@ namespace quest
 			{ "done",					quest_done					},
 			{ "getcurrentquestindex",	quest_get_current_quest_index	},
 			{ "no_send",				quest_no_send				},
-			// begin_other_pc_block(pid), end_other_pc_block 사이를 other_pc_block이라고 하자.
-			// other_pc_block에서는 current_pc가 pid로 변경된다.
-			//						끝나면 다시 원래의 current_pc로 돌아간다.
-			/*		이런 것을 위해 만듬.
+			// begin_other_pc_block(pid), end_other_pc_block between other_pc_block Let's say .
+			// other_pc_block In current_pc go pid is changed to .
+			//						When it's over, it goes back to its original state current_pc return to .
+			/*		Made for something like this .
 					for i, pid in next, pids, nil do
 						q.begin_other_pc_block(pid)
 						if pc.count_item(PASS_TICKET) < 1 then
@@ -236,7 +236,7 @@ namespace quest
 						q.end_other_pc_block()
 					end
 			*/
-			// 주의 : other_pc_block 내부에서는 절대로 yield가 일어나서는 안된다.(ex. wait, select, input, ...)
+			// caution : other_pc_block Never inside yield shouldn't happen .(ex. wait, select, input, ...)
 			{ "begin_other_pc_block",	quest_begin_other_pc_block	}, 
 			{ "end_other_pc_block",		quest_end_other_pc_block	},
 			{ NULL,						NULL						}

@@ -20,7 +20,7 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 
 		void                    Destroy();
 
-		void			GracefulShutdown();	// 정상적 셧다운할 때 사용. PC를 모두 저장시키고 Destroy 한다.
+		void			GracefulShutdown();	// Used for normal shutdown . PC Save everything and Destroy do .
 
 		DWORD			AllocVID();
 
@@ -49,11 +49,11 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		bool			AddToStateList(LPCHARACTER ch);
 		void			RemoveFromStateList(LPCHARACTER ch);
 
-		// DelayedSave: 어떠한 루틴 내에서 저장을 해야 할 짓을 많이 하면 저장
-		// 쿼리가 너무 많아지므로 "저장을 한다" 라고 표시만 해두고 잠깐
-		// (예: 1 frame) 후에 저장시킨다.
+		// DelayedSave: If you do a lot of things that need to be saved within a routine, save it.
+		// Because there are too many queries " Save it " Just mark it and wait a moment.
+		// ( yes : 1 frame) Save it later .
 		void                    DelayedSave(LPCHARACTER ch);
-		bool                    FlushDelayedSave(LPCHARACTER ch); // Delayed 리스트에 있다면 지우고 저장한다. 끊김 처리시 사용 됨.
+		bool                    FlushDelayedSave(LPCHARACTER ch); // Delayed If it is on the list, delete it and save it. . Used when handling disconnection .
 		void			ProcessDelayedSave();
 
 		template<class Func>	Func for_each_pc(Func f);
@@ -117,7 +117,7 @@ class CHARACTER_MANAGER : public singleton<CHARACTER_MANAGER>
 		NAME_MAP			m_map_pkPCChr;
 
 		char				dummy1[1024];	// memory barrier
-		CHARACTER_SET		m_set_pkChrState;	// FSM이 돌아가고 있는 놈들
+		CHARACTER_SET		m_set_pkChrState;	// FSM These guys are running around
 		CHARACTER_SET		m_set_pkChrForDelayedSave;
 		CHARACTER_SET		m_set_pkChrMonsterLog;
 

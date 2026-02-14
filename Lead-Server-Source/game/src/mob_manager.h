@@ -3,8 +3,8 @@
 
 typedef struct SMobSplashAttackInfo
 {
-	DWORD	dwTiming; // 스킬 사용 후 실제로 데미지 먹힐때까지 기다리는 시간 (ms)
-	DWORD	dwHitDistance; // 스킬 사용시 실제로 스킬 계산이 되는 거리 (전방 몇cm)
+	DWORD	dwTiming; // Waiting time for actual damage to occur after using a skill (ms)
+	DWORD	dwHitDistance; // The distance at which the skill is actually calculated when using the skill ( front few cm)
 
 	SMobSplashAttackInfo(DWORD dwTiming, DWORD dwHitDistance)
 		: dwTiming(dwTiming)
@@ -37,8 +37,8 @@ class CMobInstance
 	public:
 		CMobInstance();
 
-		PIXEL_POSITION	m_posLastAttacked;	// 마지막 맞은 위치
-		DWORD		m_dwLastAttackedTime;	// 마지막 맞은 시간
+		PIXEL_POSITION	m_posLastAttacked;	// last hit location
+		DWORD		m_dwLastAttackedTime;	// last hit time
 		DWORD		m_dwLastWarpTime;
 
 		bool m_IsBerserk;

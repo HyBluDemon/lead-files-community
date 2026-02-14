@@ -46,7 +46,7 @@ extern int g_nPortalLimitTime;
 
 static int __deposit_limit()
 {
-	return (1000*10000); // 1천만
+	return (1000*10000); // 1 10 million
 }
 
 void CInputMain::TargetInfoLoad(LPCHARACTER ch, const char* c_pData)
@@ -215,7 +215,7 @@ int GetTextTag(const char * src, int maxLen, int & tagLen, std::string & extraIn
 
 	const char * cur = ++src;
 
-	if (*cur == '|') // ||는 |로 표시한다.
+	if (*cur == '|') // || Is | Displayed as .
 	{
 		tagLen = 2;
 		return TEXT_TAG_TAG;
@@ -225,7 +225,7 @@ int GetTextTag(const char * src, int maxLen, int & tagLen, std::string & extraIn
 		tagLen = 2;
 		return TEXT_TAG_COLOR;
 	}
-	else if (*cur == 'H') // hyperlink |Hitem:10000:0:0:0:0|h[이름]|h
+	else if (*cur == 'H') // hyperlink |Hitem:10000:0:0:0:0|h[ name ]|h
 	{
 		tagLen = 2;
 		return TEXT_TAG_HYPERLINK_START;
@@ -263,12 +263,12 @@ void GetTextTagInfo(const char * src, int src_len, int & hyperlinks, bool & colo
 
 int ProcessTextTag(LPCHARACTER ch, const char * c_pszText, size_t len)
 {
-	//2012.05.17 김용욱
-	//0 : 정상적으로 사용
-	//1 : 금강경 부족
-	//2 : 금강경이 있으나, 개인상점에서 사용중
-	//3 : 교환중
-	//4 : 에러
+	//2012.05.17 Yongwook Kim
+	//0 : Use normally
+	//1 : Diamond Sutra Tribe
+	//2 : There is a Diamond Sutra , Used in private store
+	//3 : Exchanging
+	//4 : error
 	int hyperlinks;
 	bool colored;
 	
@@ -451,18 +451,18 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 			if (g_bEmpireWhisper)
 				if (!ch->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_LANGUAGE))
 					if (!(pkChr && pkChr->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_LANGUAGE)))
-						if (bOpponentEmpire != ch->GetEmpire() && ch->GetEmpire() && bOpponentEmpire // 서로 제국이 다르면서
-								&& ch->GetGMLevel() == GM_PLAYER && gm_get_level(pinfo->szNameTo) == GM_PLAYER) // 둘다 일반 플레이어이면
-							// 이름 밖에 모르니 gm_get_level 함수를 사용
+						if (bOpponentEmpire != ch->GetEmpire() && ch->GetEmpire() && bOpponentEmpire // Different empires
+								&& ch->GetGMLevel() == GM_PLAYER && gm_get_level(pinfo->szNameTo) == GM_PLAYER) // If both are regular players
+							// I only know your name gm_get_level use function
 						{
 							if (!pkChr)
 							{
-								// 다른 서버에 있으니 제국 표시만 한다. bType의 상위 4비트를 Empire번호로 사용한다.
+								// Since it's on a different server, it only shows the empire. . bType top of 4 beat Empire Use as a number .
 								bType = ch->GetEmpire() << 4;
 							}
 							else
 							{
-								ConvertEmpireText(ch->GetEmpire(), buf, buflen, 10 + 2 * pkChr->GetSkillPower(SKILL_LANGUAGE1 + ch->GetEmpire() - 1)/*변환확률*/);
+								ConvertEmpireText(ch->GetEmpire(), buf, buflen, 10 + 2 * pkChr->GetSkillPower(SKILL_LANGUAGE1 + ch->GetEmpire() - 1)/* Conversion probability */);
 							}
 						}
 
@@ -477,7 +477,7 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 					{
 						char buf[128];
 						int len;
-						if (3==processReturn) //교환중
+						if (3==processReturn) // Exchanging
 							len = snprintf(buf, sizeof(buf), LC_TEXT("You can't use a private shop now."), pTable->szLocaleName);
 						else
 							len = snprintf(buf, sizeof(buf), LC_TEXT("%s needed."), pTable->szLocaleName);
@@ -486,7 +486,7 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 						if (len < 0 || len >= (int) sizeof(buf))
 							len = sizeof(buf) - 1;
 
-						++len;  // \0 문자 포함
+						++len;  // \0 contains letters
 
 						TPacketGCWhisper pack;
 
@@ -502,7 +502,7 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 					}
 				}
 
-				// 릴래이 상태일 수 있으므로 릴래이를 풀어준다.
+				// It may be in relay state, so release the relay. .
 				pkDesc->SetRelay("");
 				return (iExtraLen);
 			}
@@ -519,8 +519,8 @@ int CInputMain::Whisper(LPCHARACTER ch, const char * data, size_t uiBytes)
 				pack.bType = bType;
 				strlcpy(pack.szNameFrom, ch->GetName(), sizeof(pack.szNameFrom));
 
-				// desc->BufferedPacket을 하지 않고 버퍼에 써야하는 이유는 
-				// P2P relay되어 패킷이 캡슐화 될 수 있기 때문이다.
+				// desc->BufferedPacket The reason why you should write to the buffer instead of 
+				// P2P relay This is because packets can be encapsulated. .
 				TEMP_BUFFER tmpbuf;
 
 				tmpbuf.write(&pack, sizeof(pack));
@@ -590,7 +590,7 @@ struct FEmpireChatPacket
 		}
 		else
 		{
-			// 사람마다 스킬레벨이 다르니 매번 해야합니다
+			// Everyone's skill level is different, so you have to do it every time.
 			size_t len = strlcpy(converted_msg, orig_msg, sizeof(converted_msg));
 
 			if (len >= sizeof(converted_msg))
@@ -625,17 +625,17 @@ struct FYmirChatPacket
 		m_iMapIndex(iMapIndex), m_bEmpire(empire),
 		m_ring(ring)
 	{
-		m_len_orig_msg = snprintf(m_orig_msg, sizeof(m_orig_msg), "%s : %s", m_szName, m_szChat) + 1; // 널 문자 포함
+		m_len_orig_msg = snprintf(m_orig_msg, sizeof(m_orig_msg), "%s : %s", m_szName, m_szChat) + 1; // Contains null characters
 
 		if (m_len_orig_msg < 0 || m_len_orig_msg >= (int) sizeof(m_orig_msg))
 			m_len_orig_msg = sizeof(m_orig_msg) - 1;
 
-		m_len_conv_msg = snprintf(m_conv_msg, sizeof(m_conv_msg), "??? : %s", m_szChat) + 1; // 널 문자 미포함
+		m_len_conv_msg = snprintf(m_conv_msg, sizeof(m_conv_msg), "??? : %s", m_szChat) + 1; // No null character
 
 		if (m_len_conv_msg < 0 || m_len_conv_msg >= (int) sizeof(m_conv_msg))
 			m_len_conv_msg = sizeof(m_conv_msg) - 1;
 
-		ConvertEmpireText(m_bEmpire, m_conv_msg + 6, m_len_conv_msg - 6, 10); // 6은 "??? : "의 길이
+		ConvertEmpireText(m_bEmpire, m_conv_msg + 6, m_len_conv_msg - 6, 10); // 6 silver "??? : " length of
 	}
 
 	void operator() (LPDESC d)
@@ -703,7 +703,7 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 		return iExtraLen;
 	}
 
-	// 채팅 금지 Affect 처리
+	// no chat Affect treatment
 	const CAffect* pAffect = ch->FindAffect(AFFECT_BLOCK_CHAT);
 
 	if (pAffect != NULL)
@@ -737,7 +737,7 @@ int CInputMain::Chat(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 		if (NULL != pTable)
 		{
-			if (3==processReturn) //교환중
+			if (3==processReturn) // Exchanging
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can't use a private shop now."), pTable->szLocaleName);
 			else
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s needed."), pTable->szLocaleName);
@@ -947,7 +947,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 					return sizeof(TPacketCGMessengerAddByVID);
 				}
 
-				if (ch->GetDesc() == d) // 자신은 추가할 수 없다.
+				if (ch->GetDesc() == d) // You cannot add yourself .
 					return sizeof(TPacketCGMessengerAddByVID);
 
 				MessengerManager::instance().RequestToAdd(ch, ch_companion);
@@ -975,7 +975,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("%s is not online."), name);
 				else
 				{
-					if (tch == ch) // 자신은 추가할 수 없다.
+					if (tch == ch) // You cannot add yourself .
 						return CHARACTER_NAME_MAX_LEN;
 
 					if (tch->IsBlockMode(BLOCK_MESSENGER_INVITE) == true)
@@ -984,7 +984,7 @@ int CInputMain::Messenger(LPCHARACTER ch, const char* c_pData, size_t uiBytes)
 					}
 					else
 					{
-						// 메신저가 캐릭터단위가 되면서 변경
+						// Changed as messenger became character-based
 						MessengerManager::instance().RequestToAdd(ch, tch);
 						//MessengerManager::instance().AddToList(ch->GetName(), tch->GetName());
 					}
@@ -1253,7 +1253,7 @@ static const int ComboSequenceBySkillLevel[3][8] =
 DWORD ClacValidComboInterval( LPCHARACTER ch, BYTE bArg )
 {
 	int nInterval = 300;
-	float fAdjustNum = 1.5f; // 일반 유저가 speed hack 에 걸리는 것을 막기 위해. 2013.09.10 CYH
+	float fAdjustNum = 1.5f; // General users speed hack To prevent getting caught in . 2013.09.10 CYH
 
 	if( !ch )
 	{
@@ -1284,17 +1284,17 @@ DWORD ClacValidComboInterval( LPCHARACTER ch, BYTE bArg )
 
 bool CheckComboHack(LPCHARACTER ch, BYTE bArg, DWORD dwTime, bool CheckSpeedHack)
 {
-	//	죽거나 기절 상태에서는 공격할 수 없으므로, skip한다.
-	//	이렇게 하지 말고, CHRACTER::CanMove()에 
+	//	You cannot attack when dead or stunned. , skip do .
+	//	Don't do this , CHRACTER::CanMove() to 
 	//	if (IsStun() || IsDead()) return false;
-	//	를 추가하는게 맞다고 생각하나,
-	//	이미 다른 부분에서 CanMove()는 IsStun(), IsDead()과
-	//	독립적으로 체크하고 있기 때문에 수정에 의한 영향을
-	//	최소화하기 위해 이렇게 땜빵 코드를 써놓는다.
+	//	Do you think it is right to add ,
+	//	Already in another part CanMove() Is IsStun(), IsDead() class
+	//	Because it is independently checked, there is no impact from modifications.
+	//	In order to minimize it, I write tinkering code like this: .
 	if (ch->IsStun() || ch->IsDead())
 		return false;
 	int ComboInterval = dwTime - ch->GetLastComboTime();
-	int HackScalar = 0; // 기본 스칼라 단위 1
+	int HackScalar = 0; // default scalar unit 1
 
 	// [2013 09 11 CYH] debugging log
 		/*sys_log(0, "COMBO_TEST_LOG: %s arg:%u interval:%d valid:%u atkspd:%u riding:%s",
@@ -1309,18 +1309,18 @@ bool CheckComboHack(LPCHARACTER ch, BYTE bArg, DWORD dwTime, bool CheckSpeedHack
 	sys_log(0, "COMBO: %s arg:%u seq:%u delta:%d checkspeedhack:%d",
 			ch->GetName(), bArg, ch->GetComboSequence(), ComboInterval - ch->GetValidComboInterval(), CheckSpeedHack);
 #endif
-	// bArg 14 ~ 21번 까지 총 8콤보 가능
-	// 1. 첫 콤보(14)는 일정 시간 이후에 반복 가능
-	// 2. 15 ~ 21번은 반복 불가능
-	// 3. 차례대로 증가한다.
+	// bArg 14 ~ 21 Total number of times 8 Combo possible
+	// 1. first combo (14) can be repeated after a certain period of time
+	// 2. 15 ~ 21 Number is not repeatable
+	// 3. increases in sequence .
 	if (bArg == 14)
 	{
 		if (CheckSpeedHack && ComboInterval > 0 && ComboInterval < ch->GetValidComboInterval() - COMBO_HACK_ALLOWABLE_MS)
 		{
-			// FIXME 첫번째 콤보는 이상하게 빨리 올 수가 있어서 300으로 나눔 -_-;
-			// 다수의 몬스터에 의해 다운되는 상황에서 공격을 하면
-			// 첫번째 콤보가 매우 적은 인터벌로 들어오는 상황 발생.
-			// 이로 인해 콤보핵으로 튕기는 경우가 있어 다음 코드 비 활성화.
+			// FIXME The first combo can come strangely quickly. 300 Divide by -_-;
+			// If you attack while being downed by multiple monsters,
+			// A situation arises where the first combo comes in with a very small interval. .
+			// Due to this, the following code may be disabled as it may crash with the combo hack. .
 			//HackScalar = 1 + (ch->GetValidComboInterval() - ComboInterval) / 300;
 
 			//sys_log(0, "COMBO_HACK: 2 %s arg:%u interval:%d valid:%u atkspd:%u riding:%s",
@@ -1342,13 +1342,13 @@ bool CheckComboHack(LPCHARACTER ch, BYTE bArg, DWORD dwTime, bool CheckSpeedHack
 	{
 		int idx = MIN(2, ch->GetComboIndex());
 
-		if (ch->GetComboSequence() > 5) // 현재 6콤보 이상은 없다.
+		if (ch->GetComboSequence() > 5) // today 6 There is nothing more than a combo .
 		{
 			HackScalar = 1;
 			ch->SetValidComboInterval(300);
 			sys_log(0, "COMBO_HACK: 5 %s combo_seq:%d", ch->GetName(), ch->GetComboSequence());
 		}
-		// 자객 쌍수 콤보 예외처리
+		// Assassin dual-wielding combo exception handling
 		else if (bArg == 21 &&
 				 idx == 2 &&
 				 ch->GetComboSequence() == 5 &&
@@ -1383,7 +1383,7 @@ bool CheckComboHack(LPCHARACTER ch, BYTE bArg, DWORD dwTime, bool CheckSpeedHack
 						ch->IsRiding() ? "yes" : "no");
 			}
 
-			// 말을 탔을 때는 15번 ~ 16번을 반복한다
+			// When riding a horse 15 th ~ 16 repeat number
 			//if (ch->IsHorseRiding())
 			if (ch->IsRiding())
 				ch->SetComboSequence(ch->GetComboSequence() == 1 ? 2 : 1);
@@ -1396,13 +1396,13 @@ bool CheckComboHack(LPCHARACTER ch, BYTE bArg, DWORD dwTime, bool CheckSpeedHack
 			ch->SetLastComboTime(dwTime);
 		}
 	}
-	else if (bArg == 13) // 기본 공격 (둔갑(Polymorph)했을 때 온다)
+	else if (bArg == 13) // basic attack ( disguise (Polymorph) It comes when you do it )
 	{
 		if (CheckSpeedHack && ComboInterval > 0 && ComboInterval < ch->GetValidComboInterval() - COMBO_HACK_ALLOWABLE_MS)
 		{
-			// 다수의 몬스터에 의해 다운되는 상황에서 공격을 하면
-			// 첫번째 콤보가 매우 적은 인터벌로 들어오는 상황 발생.
-			// 이로 인해 콤보핵으로 튕기는 경우가 있어 다음 코드 비 활성화.
+			// If you attack while being downed by multiple monsters,
+			// A situation arises where the first combo comes in with a very small interval. .
+			// Due to this, the following code may be disabled as it may crash with the combo hack. .
 			//HackScalar = 1 + (ch->GetValidComboInterval() - ComboInterval) / 100;
 
 			//sys_log(0, "COMBO_HACK: 6 %s arg:%u interval:%d valid:%u atkspd:%u",
@@ -1425,8 +1425,8 @@ bool CheckComboHack(LPCHARACTER ch, BYTE bArg, DWORD dwTime, bool CheckSpeedHack
 				sys_err("cannot find motion by race %u", ch->GetRaceNum());
 			else
 			{
-				// 정상적 계산이라면 1000.f를 곱해야 하지만 클라이언트가 애니메이션 속도의 90%에서
-				// 다음 애니메이션 블렌딩을 허용하므로 900.f를 곱한다.
+				// If it is a normal calculation 1000.f , but the client needs to multiply the animation speed by 90% at
+				// This allows for blending of the following animations, so 900.f Multiply by .
 				int k = (int) (pkMotion->GetDuration() / ((float) ch->GetPoint(POINT_ATT_SPEED) / 100.f) * 900.f);
 				ch->SetValidComboInterval(k);
 				ch->SetLastComboTime(dwTime);
@@ -1443,32 +1443,32 @@ bool CheckComboHack(LPCHARACTER ch, BYTE bArg, DWORD dwTime, bool CheckSpeedHack
 		}
 		else
 		{
-			// 말이 안되는 콤보가 왔다 해커일 가능성?
+			// A combo that doesn't make sense has arrived. It may be a hacker. ?
 			//if (ch->GetDesc()->DelayedDisconnect(number(2, 9)))
 			//{
 			//	LogManager::instance().HackLog("Hacker", ch);
 			//	sys_log(0, "HACKER: %s arg %u", ch->GetName(), bArg);
 			//}
 
-			// 위 코드로 인해, 폴리모프를 푸는 중에 공격 하면,
-			// 가끔 핵으로 인식하는 경우가 있다.
+			// Due to the above code , If you attack while unraveling the polymorph, ,
+			// Sometimes it is recognized as a nucleus .
 
-			// 자세히 말혀면,
-			// 서버에서 poly 0를 처리했지만,
-			// 클라에서 그 패킷을 받기 전에, 몹을 공격. <- 즉, 몹인 상태에서 공격.
+			// In detail, ,
+			// on the server poly 0 I handled it but ,
+			// before receiving the packet from the client , attack mobs . <- in other words , Attack while in mob form .
 			//
-			// 그러면 클라에서는 서버에 몹 상태로 공격했다는 커맨드를 보내고 (arg == 13)
+			// Then, the client sends a command to the server indicating that it was attacked in a mob state. (arg == 13)
 			//
-			// 서버에서는 race는 인간인데 공격형태는 몹인 놈이다! 라고 하여 핵체크를 했다.
+			// On the server race He is a human, but his attack type is a mob. ! He said he did a nuclear check. .
 
-			// 사실 공격 패턴에 대한 것은 클라이언트에서 판단해서 보낼 것이 아니라,
-			// 서버에서 판단해야 할 것인데... 왜 이렇게 해놨을까...
+			// In fact, the attack pattern is not determined by the client and then sent. ,
+			// This will have to be decided by the server. ... Why did they do it like this? ...
 			// by rtsummit
 		}
 	}
 	else
 	{
-		// 말이 안되는 콤보가 왔다 해커일 가능성?
+		// A combo that doesn't make sense has arrived. It may be a hacker. ?
 		if (ch->GetDesc()->DelayedDisconnect(number(2, 9)))
 		{
 			LogManager::instance().HackLog("Hacker", ch);
@@ -1481,7 +1481,7 @@ bool CheckComboHack(LPCHARACTER ch, BYTE bArg, DWORD dwTime, bool CheckSpeedHack
 
 	if (HackScalar)
 	{
-		// 말에 타거나 내렸을 때 1.5초간 공격은 핵으로 간주하지 않되 공격력은 없게 하는 처리
+		// When getting on or off a horse 1.5 Second-second attacks are not considered nuclear, but have no attack power.
 		if (get_dword_time() - ch->GetLastMountTime() > 1500)
 			ch->IncreaseComboHackCount(1 + HackScalar);
 
@@ -1516,9 +1516,9 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 	//	FUNC_SKILL = 0x80,
 	//};  
 
-	// 텔레포트 핵 체크
+	// Teleport hack check
 
-//	if (!test_server)	//2012.05.15 김용욱 : 테섭에서 (무적상태로) 다수 몬스터 상대로 다운되면서 공격시 콤보핵으로 죽는 문제가 있었다.
+//	if (!test_server)	//2012.05.15 Yongwook Kim : In Tesup ( In an invincible state ) There was an issue with going down against multiple monsters and dying from a combo hack when attacking. .
 	{
 		const float fDist = DISTANCE_SQRT((ch->GetX() - pinfo->lX) / 100, (ch->GetY() - pinfo->lY) / 100);
 
@@ -1532,10 +1532,10 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 		}
 
 		//
-		// 스피드핵(SPEEDHACK) Check
+		// speed hack (SPEEDHACK) Check
 		//
 		DWORD dwCurTime = get_dword_time();
-		// 시간을 Sync하고 7초 후 부터 검사한다. (20090702 이전엔 5초였음)
+		// time Sync do 7 Check after seconds . (20090702 Before, 5 It was seconds )
 		bool CheckSpeedHack = (false == ch->GetDesc()->IsHandshaking() && dwCurTime - ch->GetDesc()->GetClientTime() > 7000);
 
 		if (CheckSpeedHack)
@@ -1545,13 +1545,13 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 
 			iDelta = (int) (dwCurTime - pinfo->dwTime);
 
-			// 시간이 늦게간다. 일단 로그만 해둔다. 진짜 이런 사람들이 많은지 체크해야함. TODO
+			// time goes by late . Just log it for now . We need to check if there are really a lot of people like this. . TODO
 			if (iDelta >= 30000)
 			{
 				sys_log(0, "SPEEDHACK: slow timer name %s delta %d", ch->GetName(), iDelta);
 				ch->GetDesc()->DelayedDisconnect(3);
 			}
-			// 1초에 20msec 빨리 가는거 까지는 이해한다.
+			// 1 in seconds 20msec I understand that it goes quickly. .
 			else if (iDelta < -(iServerDelta / 50))
 			{
 				sys_log(0, "SPEEDHACK: DETECTED! %s (delta %d %d)", ch->GetName(), iDelta, iServerDelta);
@@ -1560,11 +1560,11 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 		}
 
 		//
-		// 콤보핵 및 스피드핵 체크
+		// Combo hack and speed hack check
 		//
 		if (pinfo->bFunc == FUNC_COMBO && g_bCheckMultiHack)
 		{
-			CheckComboHack(ch, pinfo->bArg, pinfo->dwTime, CheckSpeedHack); // 콤보 체크
+			CheckComboHack(ch, pinfo->bArg, pinfo->dwTime, CheckSpeedHack); // combo check
 		}
 	}
 
@@ -1573,7 +1573,7 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 		if (ch->GetLimitPoint(POINT_MOV_SPEED) == 0)
 			return;
 
-		ch->SetRotation(pinfo->bRot * 5);	// 중복 코드
+		ch->SetRotation(pinfo->bRot * 5);	// duplicate code
 		ch->ResetStopTime();				// ""
 
 		ch->Goto(pinfo->lX, pinfo->lY);
@@ -1612,7 +1612,7 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 			ch->OnMove();
 		}
 
-		ch->SetRotation(pinfo->bRot * 5);	// 중복 코드
+		ch->SetRotation(pinfo->bRot * 5);	// duplicate code
 		ch->ResetStopTime();				// ""
 
 		ch->Move(pinfo->lX, pinfo->lY);
@@ -1634,13 +1634,13 @@ void CInputMain::Move(LPCHARACTER ch, const char * data)
 
 	ch->PacketAround(&pack, sizeof(TPacketGCMove), ch);
 /*
-	if (pinfo->dwTime == 10653691) // 디버거 발견
+	if (pinfo->dwTime == 10653691) // Debugger Discovery
 	{
 		if (ch->GetDesc()->DelayedDisconnect(number(15, 30)))
 			LogManager::instance().HackLog("Debugger", ch);
 
 	}
-	else if (pinfo->dwTime == 10653971) // Softice 발견
+	else if (pinfo->dwTime == 10653971) // Softice find
 	{
 		if (ch->GetDesc()->DelayedDisconnect(number(15, 30)))
 			LogManager::instance().HackLog("Softice", ch);
@@ -1816,20 +1816,20 @@ int CInputMain::SyncPosition(LPCHARACTER ch, const char * c_pcData, size_t uiByt
 				continue;
 		}
 
-		// 소유권 검사
+		// ownership check
 		if (!victim->SetSyncOwner(ch))
 			continue;
 
 		const float fDistWithSyncOwner = DISTANCE_SQRT( (victim->GetX() - ch->GetX()) / 100, (victim->GetY() - ch->GetY()) / 100 );
 		static const float fLimitDistWithSyncOwner = 2500.f + 1000.f;
-		// victim과의 거리가 2500 + a 이상이면 핵으로 간주.
-		//	거리 참조 : 클라이언트의 __GetSkillTargetRange, __GetBowRange 함수
-		//	2500 : 스킬 proto에서 가장 사거리가 긴 스킬의 사거리, 또는 활의 사거리
-		//	a = POINT_BOW_DISTANCE 값... 인데 실제로 사용하는 값인지는 잘 모르겠음. 아이템이나 포션, 스킬, 퀘스트에는 없는데...
-		//		그래도 혹시나 하는 마음에 버퍼로 사용할 겸해서 1000.f 로 둠...
+		// victim The distance from 2500 + a Anything above that is considered nuclear. .
+		//	distance reference : client's __GetSkillTargetRange, __GetBowRange function
+		//	2500 : skill proto The range of the skill with the longest range in , or the range of the bow
+		//	a = POINT_BOW_DISTANCE value ... But I'm not sure if it's the value that's actually used. . Item or Potion , skill , It's not in the quest ...
+		//		Still, just in case, I used it as a buffer. 1000.f Let's do it ...
 		if (fDistWithSyncOwner > fLimitDistWithSyncOwner)
 		{
-			// g_iSyncHackLimitCount번 까지는 봐줌.
+			// g_iSyncHackLimitCount I'll watch it until the end .
 			if (ch->GetSyncHackCount() < g_iSyncHackLimitCount)
 			{
 				ch->SetSyncHackCount(ch->GetSyncHackCount() + 1);
@@ -1854,11 +1854,11 @@ int CInputMain::SyncPosition(LPCHARACTER ch, const char * c_pcData, size_t uiByt
 		const timeval &tvLastSyncTime = victim->GetLastSyncTime();
 		timeval *tvDiff = timediff(&tvCurTime, &tvLastSyncTime);
 		
-		// SyncPosition을 악용하여 타유저를 이상한 곳으로 보내는 핵 방어하기 위하여,
-		// 같은 유저를 g_lValidSyncInterval ms 이내에 다시 SyncPosition하려고 하면 핵으로 간주.
+		// SyncPosition In order to defend against nuclear weapons that abuse and send other users to strange places. ,
+		// same user g_lValidSyncInterval ms back within SyncPosition If you try to do it, it will be considered nuclear. .
 		if (tvDiff->tv_sec == 0 && tvDiff->tv_usec < g_lValidSyncInterval)
 		{
-			// g_iSyncHackLimitCount번 까지는 봐줌.
+			// g_iSyncHackLimitCount I'll watch it until the end .
 			if (ch->GetSyncHackCount() < g_iSyncHackLimitCount)
 			{
 				ch->SetSyncHackCount(ch->GetSyncHackCount() + 1);
@@ -1945,11 +1945,11 @@ void CInputMain::ScriptAnswer(LPCHARACTER ch, const void* c_pData)
 	TPacketCGScriptAnswer * p = (TPacketCGScriptAnswer *) c_pData;
 	sys_log(0, "QUEST ScriptAnswer pid %d answer %d", ch->GetPlayerID(), p->answer);
 
-	if (p->answer > 250) // 다음 버튼에 대한 응답으로 온 패킷인 경우
+	if (p->answer > 250) // If the packet came in response to the next button
 	{
 		quest::CQuestManager::Instance().Resume(ch->GetPlayerID());
 	}
-	else // 선택 버튼을 골라서 온 패킷인 경우
+	else // In case of a packet received by selecting the selection button
 	{
 		quest::CQuestManager::Instance().Select(ch->GetPlayerID(),  p->answer);
 	}
@@ -2092,9 +2092,9 @@ void CInputMain::SafeboxCheckout(LPCHARACTER ch, const char * c_pData, bool bMal
 	if (!ch->IsEmptyItemGrid(p->ItemPos, pkItem->GetSize()))
 		return;
 
-	// 아이템 몰에서 인벤으로 옮기는 부분에서 용혼석 특수 처리
-	// (몰에서 만드는 아이템은 item_proto에 정의된대로 속성이 붙기 때문에,
-	//  용혼석의 경우, 이 처리를 하지 않으면 속성이 하나도 붙지 않게 된다.)
+	// Special treatment of Dragon Soul Stone when transferring from item mall to inventory
+	// ( Items made in the mall item_proto Because the properties are attached as defined in ,
+	//  In the case of Dragon Soul Stone , If you do not do this, no properties will be attached. .)
 	if (pkItem->IsDragonSoul())
 	{
 		if (bMall)
@@ -2140,7 +2140,7 @@ void CInputMain::SafeboxCheckout(LPCHARACTER ch, const char * c_pData, bool bMal
 				sys_err ("pkItem->GetProto() == NULL (id : %d)",pkItem->GetID());
 				return ;
 			}
-			// 100% 확률로 속성이 붙어야 하는데 안 붙어있다면 새로 붙힌다. ...............
+			// 100% There is a probability that the attribute should be attached, but if it is not attached, add a new one. . ...............
 			if (100 == pkItem->GetProto()->bAlterToMagicItemPct && 0 == pkItem->GetAttributeCount())
 			{
 				pkItem->AlterToMagicItem();
@@ -2209,7 +2209,7 @@ void CInputMain::PartyInviteAnswer(LPCHARACTER ch, const char * c_pData)
 
 	LPCHARACTER pInviter = CHARACTER_MANAGER::instance().Find(p->leader_vid);
 
-	// pInviter 가 ch 에게 파티 요청을 했었다.
+	// pInviter go ch I requested a party from .
 
 	if (!pInviter)
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Group] The player who invited you is not online."));
@@ -2520,7 +2520,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 	{
 		case GUILD_SUBHEADER_CG_DEPOSIT_MONEY:
 			{
-				// by mhh : 길드자금은 당분간 넣을 수 없다.
+				// by mhh : Guild funds cannot be deposited for the time being. .
 				return SubPacketLen;
 
 				const int gold = MIN(*reinterpret_cast<const int*>(c_pData), __deposit_limit());
@@ -2543,7 +2543,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 		case GUILD_SUBHEADER_CG_WITHDRAW_MONEY:
 			{
-				// by mhh : 길드자금은 당분간 뺄 수 없다.
+				// by mhh : Guild funds cannot be withdrawn for the time being. .
 				return SubPacketLen;
 
 				const int gold = MIN(*reinterpret_cast<const int*>(c_pData), 500000);
@@ -2726,7 +2726,7 @@ int CInputMain::Guild(LPCHARACTER ch, const char * data, size_t uiBytes)
 
 				if (length > GUILD_COMMENT_MAX_LEN)
 				{
-					// 잘못된 길이.. 끊어주자.
+					// wrong length .. Let's hang up .
 					sys_err("POST_COMMENT: %s comment too long (length: %u)", ch->GetName(), length);
 					ch->GetDesc()->SetPhase(PHASE_CLOSE);
 					return -1;
@@ -2866,7 +2866,7 @@ void CInputMain::Hack(LPCHARACTER ch, const char * c_pData)
 
 	sys_err("HACK_DETECT: %s %s", ch->GetName(), buf);
 
-	// 현재 클라이언트에서 이 패킷을 보내는 경우가 없으므로 무조건 끊도록 한다
+	// Currently, the client is not sending this packet, so it should be disconnected unconditionally.
 	ch->GetDesc()->SetPhase(PHASE_CLOSE);
 }
 

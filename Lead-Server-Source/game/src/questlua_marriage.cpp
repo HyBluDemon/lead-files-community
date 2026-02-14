@@ -169,7 +169,7 @@ namespace quest
 		}
 		if (pMarriage->pWeddingInfo)
 		{
-			// 결혼식 끝내기 요청
+			// request to end the wedding
 			pMarriage->RequestEndWedding();
 		}
 		return 0;

@@ -104,10 +104,10 @@ LPSHOP CShopManager::GetByNPCVnum(DWORD dwVnum)
 }
 
 /*
- * 인터페이스 함수들
+ * interface functions
  */
 
-// 상점 거래를 시작
+// Start trading with your store
 bool CShopManager::StartShopping(LPCHARACTER pkChr, LPCHARACTER pkChrShopKeeper, int iShopVnum)
 {
 	if (pkChr->GetShopOwner() == pkChrShopKeeper)
@@ -194,7 +194,7 @@ void CShopManager::DestroyPCShop(LPCHARACTER ch)
 	M2_DELETE(pkShop);
 }
 
-// 상점 거래를 종료
+// end store transaction
 void CShopManager::StopShopping(LPCHARACTER ch)
 {
 	LPSHOP shop;
@@ -210,7 +210,7 @@ void CShopManager::StopShopping(LPCHARACTER ch)
 	sys_log(0, "SHOP: END: %s", ch->GetName());
 }
 
-// 아이템 구입
+// Purchase an item
 void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 {
 	if (!ch->GetShop())
@@ -250,7 +250,7 @@ void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 
 	int ret = pkShop->Buy(ch, pos);
 
-	if (SHOP_SUBHEADER_GC_OK != ret) // 문제가 있었으면 보낸다.
+	if (SHOP_SUBHEADER_GC_OK != ret) // Send if there is a problem .
 	{
 		TPacketGCShop pack;
 
@@ -320,7 +320,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, ItemStackType bCount)
 
 	dwPrice /= 5;
 	
-	//세금 계산
+	// tax calculation
 	DWORD dwTax = 0;
 	int iVal = 3;
 
@@ -339,7 +339,7 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, ItemStackType bCount)
 		return;
 	}
 
-	// 20050802.myevan.상점 판매 로그에 아이템 ID 추가
+	// 20050802.myevan. Items in store sales log ID addition
 	sys_log(0, "SHOP: SELL: %s item name: %s(x%d):%u price: %u", ch->GetName(), item->GetName(), bCount, item->GetID(), dwPrice);
 
 	if (iVal > 0)
@@ -482,8 +482,8 @@ bool ConvertToShopItemTable(IN CGroupNode* pNode, OUT TShopTableEx& shopTable)
 
 bool CShopManager::ReadShopTableEx(const char* stFileName)
 {
-	// file 유무 체크.
-	// 없는 경우는 에러로 처리하지 않는다.
+	// file presence check .
+	// If not present, it is not treated as an error. .
 	FILE* fp = fopen(stFileName, "rb");
 	if (NULL == fp)
 		return true;

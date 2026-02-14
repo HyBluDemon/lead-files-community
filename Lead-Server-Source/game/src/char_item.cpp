@@ -72,7 +72,7 @@ struct FFindStone
 };
 
 
-//귀환부, 귀환기억부, 결혼반지
+// return department , return memory , wedding ring
 static bool IS_SUMMON_ITEM(int vnum)
 {
 	switch (vnum)
@@ -105,36 +105,36 @@ static bool IS_MONKEY_DUNGEON(int map_index)
 
 bool IS_SUMMONABLE_ZONE(int map_index)
 {
-	// 몽키던전
+	// Monkey Dungeon
 	if (IS_MONKEY_DUNGEON(map_index))
 		return false;
-	// 성
+	// castle
 
 	switch (map_index)
 	{
-		case 66 : // 사귀타워
-		case 71 : // 거미 던전 2층
-		case 72 : // 천의 동굴
-		case 73 : // 천의 동굴 2층
-		case 193 : // 거미 던전 2-1층
+		case 66 : // Sasa Tower
+		case 71 : // spider dungeon 2 floor
+		case 72 : // Thousand Caves
+		case 73 : // Thousand Caves 2 floor
+		case 193 : // spider dungeon 2-1 floor
 #if 0
-		case 184 : // 천의 동굴(신수)
-		case 185 : // 천의 동굴 2층(신수)
-		case 186 : // 천의 동굴(천조)
-		case 187 : // 천의 동굴 2층(천조)
-		case 188 : // 천의 동굴(진노)
-		case 189 : // 천의 동굴 2층(진노)
+		case 184 : // Thousand Caves ( Shinsu )
+		case 185 : // Thousand Caves 2 floor ( Shinsu )
+		case 186 : // Thousand Caves ( quadrillion )
+		case 187 : // Thousand Caves 2 floor ( quadrillion )
+		case 188 : // Thousand Caves ( wrath )
+		case 189 : // Thousand Caves 2 floor ( wrath )
 #endif
-//		case 206 : // 아귀동굴
-		case 216 : // 아귀동굴
-		case 217 : // 거미 던전 3층
-		case 208 : // 천의 동굴 (용방)
+//		case 206 : // Angler Cave
+		case 216 : // Angler Cave
+		case 217 : // spider dungeon 3 floor
+		case 208 : // Thousand Caves ( Yongbang )
 			return false;
 	}
 
 	if (CBattleArena::IsBattleArenaMap(map_index)) return false;
 
-	// 모든 private 맵으론 워프 불가능
+	// every private Warp is not possible on the map.
 	if (map_index > 10000) return false;
 
 	return true;
@@ -169,7 +169,7 @@ static bool FN_check_item_socket(LPITEM item)
 	return true;
 }
 
-// item socket 복사 -- by mhh
+// item socket copy -- by mhh
 static void FN_copy_item_socket(LPITEM dest, LPITEM src)
 {
 	for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
@@ -179,13 +179,13 @@ static void FN_copy_item_socket(LPITEM dest, LPITEM src)
 }
 static bool FN_check_item_sex(LPCHARACTER ch, LPITEM item)
 {
-	// 남자 금지
+	// man prohibited
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_MALE))
 	{
 		if (SEX_MALE==GET_SEX(ch))
 			return false;
 	}
-	// 여자금지
+	// No women allowed
 	if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_FEMALE)) 
 	{
 		if (SEX_FEMALE==GET_SEX(ch))
@@ -278,7 +278,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 		assert(!"GetOwner exist");
 		return;
 	}
-	// 기본 인벤토리
+	// basic inventory
 	switch(window_type)
 	{
 	case INVENTORY:
@@ -324,8 +324,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 						if (p >= INVENTORY_MAX_NUM)
 							continue;
 
-						// wCell + 1 로 하는 것은 빈곳을 체크할 때 같은
-						// 아이템은 예외처리하기 위함
+						// wCell + 1 This is the same as when checking an empty space.
+						// Items are for exception handling.
 						m_pointsInstant.bItemGrid[p] = wCell + 1;
 					}
 				}
@@ -336,7 +336,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 			m_pointsInstant.pItems[wCell] = pItem;
 		}
 		break;
-	// 용혼석 인벤토리
+	// Dragon Soul Stone Inventory
 	case DRAGON_SOUL_INVENTORY:
 		{
 			LPITEM pOld = m_pointsInstant.pDSItems[wCell];
@@ -379,8 +379,8 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 						if (p >= DRAGON_SOUL_INVENTORY_MAX_NUM)
 							continue;
 
-						// wCell + 1 로 하는 것은 빈곳을 체크할 때 같은
-						// 아이템은 예외처리하기 위함
+						// wCell + 1 This is the same as when checking an empty space.
+						// Items are for exception handling.
 						m_pointsInstant.wDSItemGrid[p] = wCell + 1;
 					}
 				}
@@ -424,7 +424,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 
 	if (GetDesc())
 	{
-		// 확장 아이템: 서버에서 아이템 플래그 정보를 보낸다
+		// expansion item : The server sends item flag information
 		if (pItem)
 		{
 			TPacketGCItemSet pack;
@@ -481,7 +481,7 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 
 LPITEM CHARACTER::GetWear(ItemCellType bCell) const
 {
-	// > WEAR_MAX_NUM : 용혼석 슬롯들.
+	// > WEAR_MAX_NUM : Dragon Soul Stone Slots .
 	if (bCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 	{
 		sys_err("CHARACTER::GetWear: invalid wear cell %d", bCell);
@@ -493,7 +493,7 @@ LPITEM CHARACTER::GetWear(ItemCellType bCell) const
 
 void CHARACTER::SetWear(ItemCellType bCell, LPITEM item)
 {
-	// > WEAR_MAX_NUM : 용혼석 슬롯들.
+	// > WEAR_MAX_NUM : Dragon Soul Stone Slots .
 	if (bCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
 	{
 		sys_err("CHARACTER::SetItem: invalid item cell %d", bCell);
@@ -504,7 +504,7 @@ void CHARACTER::SetWear(ItemCellType bCell, LPITEM item)
 
 	if (!item && bCell == WEAR_WEAPON)
 	{
-		// 귀검 사용 시 벗는 것이라면 효과를 없애야 한다.
+		// If you take it off when using the Demon Sword, the effect must be eliminated. .
 		if (IsAffectFlag(AFF_GWIGUM))
 			RemoveAffect(SKILL_GWIGEOM);
 
@@ -563,8 +563,8 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 		{
 			ItemCellType bCell = Cell.cell;
 
-			// bItemCell은 0이 false임을 나타내기 위해 + 1 해서 처리한다.
-			// 따라서 iExceptionCell에 1을 더해 비교한다.
+			// bItemCell silver 0 this false to indicate that + 1 Deal with it .
+			// thus iExceptionCell to 1 Compare by adding .
 			++iExceptionCell;
 
 			if (Cell.IsBeltInventoryPosition())
@@ -624,7 +624,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 					return false;
 			}
 
-			// 크기가 1이면 한칸을 차지하는 것이므로 그냥 리턴
+			// size 1 If it is, it takes up one space, so just return it.
 			if (1 == bSize)
 				return true;
 			else
@@ -658,8 +658,8 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 			if (wCell >= DRAGON_SOUL_INVENTORY_MAX_NUM)
 				return false;
 
-			// bItemCell은 0이 false임을 나타내기 위해 + 1 해서 처리한다.
-			// 따라서 iExceptionCell에 1을 더해 비교한다.
+			// bItemCell silver 0 this false to indicate that + 1 Deal with it .
+			// thus iExceptionCell to 1 Compare by adding .
 			iExceptionCell++;
 
 			if (m_pointsInstant.wDSItemGrid[wCell])
@@ -690,7 +690,7 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 					return false;
 			}
 
-			// 크기가 1이면 한칸을 차지하는 것이므로 그냥 리턴
+			// size 1 If it is, it takes up one space, so just return it.
 			if (1 == bSize)
 				return true;
 			else
@@ -734,8 +734,8 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 
 int CHARACTER::GetEmptyInventory(BYTE size) const
 {
-	// NOTE: 현재 이 함수는 아이템 지급, 획득 등의 행위를 할 때 인벤토리의 빈 칸을 찾기 위해 사용되고 있는데,
-	//		벨트 인벤토리는 특수 인벤토리이므로 검사하지 않도록 한다. (기본 인벤토리: INVENTORY_MAX_NUM 까지만 검사)
+	// NOTE: Currently, this function provides item , It is used to find empty spaces in the inventory when performing actions such as acquisition. ,
+	//		Belt inventory is a special inventory, so do not inspect it. . ( basic inventory : INVENTORY_MAX_NUM Check only up to )
 	for ( int i = 0; i < INVENTORY_MAX_NUM; ++i)
 		if (IsEmptyItemGrid(TItemPos (INVENTORY, i), size))
 			return i;
@@ -795,7 +795,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 	// END_OF_ACCESSORY_REFINE
 	else
 	{
-		// 여기서 깨진석이 자동적으로 청소 됨
+		// Here, broken stones are automatically cleaned.
 		for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 		{
 			if (!pkOldItem->GetSocket(i))
@@ -804,7 +804,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 				pkNewItem->SetSocket(i, 1);
 		}
 
-		// 소켓 설정
+		// Socket Settings
 		int slot = 0;
 
 		for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
@@ -817,7 +817,7 @@ void TransformRefineItem(LPITEM pkOldItem, LPITEM pkNewItem)
 
 	}
 
-	// 매직 아이템 설정
+	// Magic item settings
 	pkOldItem->CopyAttributeTo(pkNewItem);
 }
 
@@ -861,8 +861,8 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		return false;
 	}
 	
-	//개량 시간제한 : upgrade_refine_scroll.quest 에서 개량후 5분이내에 일반 개량을 
-	//진행할수 없음
+	// Improvement time limit : upgrade_refine_scroll.quest After improvement from 5 General improvements within minutes 
+	// Can't proceed
 	if (quest::CQuestManager::instance().GetEventFlag("update_refine_time") != 0)
 	{
 		if (get_global_time() < quest::CQuestManager::instance().GetEventFlag("update_refine_time") + (60 * 5))
@@ -970,7 +970,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 
 	if (prob <= prt->prob)
 	{
-		// 성공! 모든 아이템이 사라지고, 같은 속성의 다른 아이템 획득
+		// success ! All items disappear , Obtain another item with the same attribute
 		LPITEM pkNewItem = ITEM_MANAGER::instance().CreateItem(result_vnum, 1, 0, false);
 
 		if (pkNewItem)
@@ -999,7 +999,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 		else
 		{
 			// DETAIL_REFINE_LOG
-			// 아이템 생성에 실패 -> 개량 실패로 간주
+			// Failed to create item -> Considered a failure of improvement
 			sys_err("cannot create item %u", result_vnum);
 			NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
 			// END_OF_DETAIL_REFINE_LOG
@@ -1007,7 +1007,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 	}
 	else
 	{
-		// 실패! 모든 아이템이 사라짐.
+		// failure ! All items disappear .
 		DBManager::instance().SendMoneyLog(MONEY_LOG_REFINE, item->GetVnum(), -cost);
 		NotifyRefineFail(this, item, IsRefineThroughGuild() ? "GUILD" : "POWER");
 		item->AttrLog();
@@ -1023,7 +1023,7 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 enum enum_RefineScrolls
 {
 	CHUKBOK_SCROLL = 0,
-	HYUNIRON_CHN   = 1, // 중국에서만 사용
+	HYUNIRON_CHN   = 1, // Only used in China
 	YONGSIN_SCROLL = 2,
 	MUSIN_SCROLL   = 3,
 	YAGONG_SCROLL  = 4,
@@ -1041,8 +1041,8 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	ClearRefineMode();
 
-	//개량 시간제한 : upgrade_refine_scroll.quest 에서 개량후 5분이내에 일반 개량을 
-	//진행할수 없음
+	// Improvement time limit : upgrade_refine_scroll.quest After improvement from 5 General improvements within minutes 
+	// Can't proceed
 	if (quest::CQuestManager::instance().GetEventFlag("update_refine_time") != 0)
 	{
 		if (get_global_time() < quest::CQuestManager::instance().GetEventFlag("update_refine_time") + (60 * 5))
@@ -1059,7 +1059,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	LPITEM pkItemScroll;
 
-	// 개량서 체크
+	// Check the improvement book
 	if (m_iRefineAdditionalCell < 0)
 		return false;
 
@@ -1226,7 +1226,7 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 
 	if (prob <= success_prob)
 	{
-		// 성공! 모든 아이템이 사라지고, 같은 속성의 다른 아이템 획득
+		// success ! All items disappear , Obtain another item with the same attribute
 		LPITEM pkNewItem = ITEM_MANAGER::instance().CreateItem(result_vnum, 1, 0, false);
 
 		if (pkNewItem)
@@ -1248,14 +1248,14 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		}
 		else
 		{
-			// 아이템 생성에 실패 -> 개량 실패로 간주
+			// Failed to create item -> Considered a failure of improvement
 			sys_err("cannot create item %u", result_vnum);
 			NotifyRefineFail(this, item, szRefineType);
 		}
 	}
 	else if (!bDestroyWhenFail && result_fail_vnum)
 	{
-		// 실패! 모든 아이템이 사라지고, 같은 속성의 낮은 등급의 아이템 획득
+		// failure ! All items disappear , Obtain a low-grade item with the same attribute
 		LPITEM pkNewItem = ITEM_MANAGER::instance().CreateItem(result_fail_vnum, 1, 0, false);
 
 		if (pkNewItem)
@@ -1279,14 +1279,14 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		}
 		else
 		{
-			// 아이템 생성에 실패 -> 개량 실패로 간주
+			// Failed to create item -> Considered a failure of improvement
 			sys_err("cannot create item %u", result_fail_vnum);
 			NotifyRefineFail(this, item, szRefineType);
 		}
 	}
 	else
 	{
-		NotifyRefineFail(this, item, szRefineType); // 개량시 아이템 사라지지 않음
+		NotifyRefineFail(this, item, szRefineType); // Items do not disappear when improved
 		
 		PayRefineFee(prt->cost);
 	}
@@ -1362,7 +1362,7 @@ bool CHARACTER::RefineInformation(ItemCellType bCell, BYTE bType, int iAdditiona
 	//MAIN_QUEST_LV7
 	if (GetQuestFlag("main_quest_lv7.refine_chance") > 0)
 	{
-		// 일본은 제외
+		// Excluding Japan
 		if (!item->CheckItemUseLevel(20) || item->GetType() != ITEM_WEAPON)
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The free weapon improvements can only be used on weapons up to level 20."));
@@ -1400,8 +1400,8 @@ bool CHARACTER::RefineItem(LPITEM pkItem, LPITEM pkTarget)
 
 	if (pkItem->GetSubType() == USE_TUNING)
 	{
-		// XXX 성능, 소켓 개량서는 사라졌습니다...
-		// XXX 성능개량서는 축복의 서가 되었다!
+		// XXX performance , Socket improvements are gone ...
+		// XXX The performance improvement book became a book of blessings. !
 		// MUSIN_SCROLL
 		if (pkItem->GetValue(0) == MUSIN_SCROLL)
 			RefineInformation(pkTarget->GetCell(), REFINE_TYPE_MUSIN, pkItem->GetCell());
@@ -1445,7 +1445,7 @@ bool CHARACTER::RefineItem(LPITEM pkItem, LPITEM pkTarget)
 					AutoGiveItem(socket);
 					//TItemTable* pTable = ITEM_MANAGER::instance().GetTable(pkTarget->GetSocket(i));
 					//pkTarget->SetSocket(i, pTable->alValues[2]);
-					// 깨진돌로 대체해준다
+					// Replace with broken stone
 					pkTarget->SetSocket(i, ITEM_BROKEN_METIN_VNUM);
 				}
 			}
@@ -1512,12 +1512,12 @@ bool CHARACTER::GiveRecallItem(LPITEM item)
 
 	int pos;
 
-	if (item->GetCount() == 1)	// 아이템이 하나라면 그냥 셋팅.
+	if (item->GetCount() == 1)	// If there is only one item, just set it .
 	{
 		item->SetSocket(0, GetX());
 		item->SetSocket(1, GetY());
 	}
-	else if ((pos = GetEmptyInventory(item->GetSize())) != -1) // 그렇지 않다면 다른 인벤토리 슬롯을 찾는다.
+	else if ((pos = GetEmptyInventory(item->GetSize())) != -1) // If not, find another inventory slot .
 	{
 		LPITEM item2 = ITEM_MANAGER::instance().CreateItem(item->GetVnum(), 1);
 
@@ -1563,7 +1563,7 @@ void CHARACTER::ProcessRecallItem(LPITEM item)
 		case 216:
 			iEmpireByMapIndex = -1;
 			break;
-		// 악룡군도 일때
+		// When it was the Akryong Islands
 		case 301:
 		case 302:
 		case 303:
@@ -1617,14 +1617,14 @@ void CHARACTER::SendMyShopPriceListCmd(DWORD dwItemVnum, DWORD dwItemPrice)
 }
 
 //
-// DB 캐시로 부터 받은 리스트를 User 에게 전송하고 상점을 열라는 커맨드를 보낸다.
+// DB List received from cache User and send a command to open the store. .
 //
 void CHARACTER::UseSilkBotaryReal(const TPacketMyshopPricelistHeader* p)
 {
 	const TItemPriceInfo* pInfo = (const TItemPriceInfo*)(p + 1);
 
 	if (!p->byCount)
-		// 가격 리스트가 없다. dummy 데이터를 넣은 커맨드를 보내준다.
+		// There is no price list . dummy Sends a command containing data .
 		SendMyShopPriceListCmd(1, 0);
 	else {
 		for (int idx = 0; idx < p->byCount; idx++)
@@ -1635,8 +1635,8 @@ void CHARACTER::UseSilkBotaryReal(const TPacketMyshopPricelistHeader* p)
 }
 
 //
-// 이번 접속 후 처음 상점을 Open 하는 경우 리스트를 Load 하기 위해 DB 캐시에 가격정보 리스트 요청 패킷을 보낸다.
-// 이후부터는 바로 상점을 열라는 응답을 보낸다.
+// First time visiting the store after logging in Open If you do a list Load to do DB Send a price information list request packet to the cache. .
+// From then on, a response is sent immediately telling you to open a store. .
 //
 void CHARACTER::UseSilkBotary(void)
 {
@@ -1671,7 +1671,7 @@ int CalculateConsume(LPCHARACTER ch)
 		consumeLife = needLife;
 
 
-		// CheckMinLifeForWarp: 독에 의해서 죽으면 안되므로 생명력 최소량는 남겨준다
+		// CheckMinLifeForWarp: Since you cannot die from poison, leave a minimum amount of vitality.
 		const int minPercent	= WARP_MIN_LIFE_PERCENT;
 		const int minLife	= ch->GetMaxHP() * minPercent / 100;
 		if (curLife - needLife < minLife)
@@ -1906,8 +1906,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 		case ITEM_WEAPON:
 		case ITEM_ARMOR:
 		case ITEM_ROD:
-		case ITEM_RING:		// 신규 반지 아이템
-		case ITEM_BELT:		// 신규 벨트 아이템
+		case ITEM_RING:		// New ring item
+		case ITEM_BELT:		// New belt item
 			// MINING
 		case ITEM_PICK:
 			// END_OF_MINING
@@ -1916,10 +1916,10 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			else
 				UnequipItem(item);
 			break;
-			// 착용하지 않은 용혼석은 사용할 수 없다.
-			// 정상적인 클라라면, 용혼석에 관하여 item use 패킷을 보낼 수 없다.
-			// 용혼석 착용은 item move 패킷으로 한다.
-			// 착용한 용혼석은 추출한다.
+			// Unworn Dragon Soul Stones cannot be used. .
+			// If it's normal Clara , About the Dragon Soul Stone item use Packet could not be sent .
+			// Wearing the Dragon Soul Stone item move Do it in packets .
+			// The worn Dragon Soul Stone is extracted. .
 		case ITEM_DS:
 			{
 				if (!item->IsEquipped())
@@ -2136,7 +2136,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				}
 				else
 				{
-					// 새로운 수련서는 value 0 에 스킬 번호가 있으므로 그것을 사용.
+					// New training book value 0 There is a skill number in so use it .
 					dwVnum = item->GetValue(0);
 				}
 
@@ -2261,7 +2261,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							bool used = false;
 
-							if (item->GetValue(0) != 0) // HP 절대값 회복
+							if (item->GetValue(0) != 0) // HP Absolute value recovery
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -2271,7 +2271,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(1) != 0)	// SP 절대값 회복
+							if (item->GetValue(1) != 0)	// SP Absolute value recovery
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -2281,7 +2281,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(3) != 0) // HP % 회복
+							if (item->GetValue(3) != 0) // HP % recovery
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -2291,7 +2291,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(4) != 0) // SP % 회복
+							if (item->GetValue(4) != 0) // SP % recovery
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -2352,7 +2352,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								return false;
 							}
-							// 우선 용혼석에 관해서만 하도록 한다.
+							// First, let's talk about the dragon soul stone. .
 							if (pDestItem->IsDragonSoul())
 							{
 								int ret;
@@ -2408,7 +2408,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							{
 								return false;
 							}
-							// 우선 용혼석에 관해서만 하도록 한다.
+							// First, let's talk about the dragon soul stone. .
 							if (pDestItem->IsDragonSoul())
 							{
 								int ret = pDestItem->GiveMoreTime_Fix(item->GetValue(ITEM_VALUE_CHARGING_AMOUNT_IDX));
@@ -2437,15 +2437,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						
 						switch (item->GetVnum())
 						{
-							//크리스마스 란주
+							// christmas lanju
 							case ITEM_NOG_POCKET:
 								{
 									/*
-									란주능력치 : item_proto value 의미
-										이동속도  value 1
-										공격력	  value 2
-										경험치    value 3
-										지속시간  value 0 (단위 초)
+									Lanju Abilities : item_proto value meaning
+										moving speed  value 1
+										attack power	  value 2
+										experience    value 3
+										duration  value 0 ( unit second )
 
 									*/
 									if (FindAffect(AFFECT_NOG_ABILITY))
@@ -2464,15 +2464,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 								
-							//라마단용 사탕
+							// candy for ramadan
 							case ITEM_RAMADAN_CANDY:
 								{
 									/*
-									사탕능력치 : item_proto value 의미
-										이동속도  value 1
-										공격력	  value 2
-										경험치    value 3
-										지속시간  value 0 (단위 초)
+									Candy ability : item_proto value meaning
+										moving speed  value 1
+										attack power	  value 2
+										experience    value 3
+										duration  value 0 ( unit second )
 
 									*/
 									long time = item->GetValue(0);
@@ -2522,9 +2522,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-								//기존 용기의 망토
+								// Cloak of Legacy Courage
 							case UNIQUE_ITEM_CAPE_OF_COURAGE:
-								//라마단 보상용 용기의 망토
+								// Cloak of Courage for Ramadan Reward
 							case 70057:
 							case REWARD_BOX_UNIQUE_ITEM_CAPE_OF_COURAGE:
 								AggregateMonster();
@@ -2613,7 +2613,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50004: // 이벤트용 감지기
+							case 50004: // Detector for events
 								{
 									if (item->GetSocket(0))
 									{
@@ -2621,7 +2621,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 									else
 									{
-										// 처음 사용시
+										// When using for the first time
 										int iMapIndex = GetMapIndex();
 
 										PIXEL_POSITION pos;
@@ -2644,10 +2644,10 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (distance < 1000.0f)
 									{
-										// 발견!
+										// find !
 										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The Event Detector vanished in a mysterious light."));
 
-										// 사용횟수에 따라 주는 아이템을 다르게 한다.
+										// Different items are given depending on the number of uses. .
 										struct TEventStoneInfo
 										{
 											DWORD dwVnum;
@@ -2752,7 +2752,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (len < 0 || len >= (int) sizeof(chatbuf))
 											len = sizeof(chatbuf) - 1;
 
-										++len;  // \0 문자까지 보내기
+										++len;  // \0 Send a text message
 
 										TPacketGCChat pack_chat;
 										pack_chat.header	= HEADER_GC_CHAT;
@@ -2778,7 +2778,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									else
 										dist = 3;
 
-									// 많이 사용했으면 사라진다.
+									// If you use it a lot, it disappears. .
 									const int STONE_DETECT_MAX_TRY = 10;
 									if (item->GetSocket(0) >= STONE_DETECT_MAX_TRY)
 									{
@@ -2798,7 +2798,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										if (len < 0 || len >= (int) sizeof(chatbuf))
 											len = sizeof(chatbuf) - 1;
 
-										++len;  // \0 문자까지 보내기
+										++len;  // \0 Send a text message
 
 										TPacketGCChat pack_chat;
 										pack_chat.header	= HEADER_GC_CHAT;
@@ -2818,8 +2818,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 27989: // 영석감지기
-							case 76006: // 선물용 영석감지기
+							case 27989: // Arcanum Detector
+							case 76006: // Spiritual gem detector for gift
 								{
 									LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(GetMapIndex());
 
@@ -2881,13 +2881,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 27996: // 독병
+							case 27996: // poison bottle
 								item->SetCount(item->GetCount() - 1);
 								/*if (GetSkillLevel(SKILL_CREATE_POISON))
 								  AddAffect(AFFECT_ATT_GRADE, POINT_ATT_GRADE, 3, AFF_DRINK_POISON, 15*60, 0, true);
 								  else
 								  {
-								// 독다루기가 없으면 50% 즉사 50% 공격력 +2
+								// If there is no poison 50% instant death 50% attack power +2
 								if (number(0, 1))
 								{
 								if (GetHP() > 100)
@@ -2900,12 +2900,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}*/
 								break;
 
-							case 27987: // 조개
-								// 50  돌조각 47990
-								// 30  꽝
-								// 10  백진주 47992
-								// 7   청진주 47993
-								// 3   피진주 47994
+							case 27987: // seashell
+								// 50  stone carving 47990
+								// 30  Boom
+								// 10  white pearl 47992
+								// 7   blue pearl 47993
+								// 3   blood pearl 47994
 								{
 									item->SetCount(item->GetCount() - 1);
 
@@ -2953,12 +2953,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71013: // 축제용폭죽
+							case 71013: // Festival fireworks
 								CreateFly(number(FLY_FIREWORK1, FLY_FIREWORK6), this);
 								item->SetCount(item->GetCount() - 1);
 								break;
 
-							case 50100: // 폭죽
+							case 50100: // firecracker
 							case 50101:
 							case 50102:
 							case 50103:
@@ -2978,7 +2978,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								item->SetCount(item->GetCount() - 1);
 								break;
 
-							case 50301: // 통솔력 수련서
+							case 50301: // Leadership training book
 							case 50302:
 							case 50303:
 								{
@@ -3012,7 +3012,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50304: // 연계기 수련서
+							case 50304: // Link training book
 							case 50305:
 							case 50306:
 								{
@@ -3051,7 +3051,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 								}
 								break;
-							case 50311: // 언어 수련서
+							case 50311: // language training book
 							case 50312:
 							case 50313:
 								{
@@ -3079,7 +3079,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50061 : // 일본 말 소환 스킬 수련서
+							case 50061 : // Japanese Summoning Skill Training Book
 								{
 									if (IsPolymorphed())
 									{
@@ -3106,9 +3106,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50314: case 50315: case 50316: // 변신 수련서
-							case 50323: case 50324: // 증혈 수련서
-							case 50325: case 50326: // 철통 수련서
+							case 50314: case 50315: case 50316: // transformation training book
+							case 50323: case 50324: // Blood Streamline Training Book
+							case 50325: case 50326: // Iron Training Book
 								{
 									if (IsPolymorphed() == true)
 									{
@@ -3268,7 +3268,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									{
 										if (FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
 										{
-											// 주안술서 사용중에는 시간 제한 무시
+											// Ignore the time limit while using the magic spell.
 											RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
 											ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have escaped the evil ghost curse with the help of an Exorcism Scroll."));
 										}
@@ -3307,8 +3307,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 70102: // 선두
-							case 70103: // 선두
+							case 70102: // head
+							case 70103: // head
 								{
 									if (GetAlignment() >= 0)
 										return false;
@@ -3328,7 +3328,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71107: // 천도복숭아
+							case 71107: // Nectarine
 								{
 									int val = item->GetValue(0);
 									int interval = item->GetValue(1);
@@ -3375,7 +3375,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71109: // 탈석서
+							case 71109: // Deduction letter
 							case 72719:
 								{
 									LPITEM item2;
@@ -3446,12 +3446,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 70201:   // 탈색제
-							case 70202:   // 염색약(흰색)
-							case 70203:   // 염색약(금색)
-							case 70204:   // 염색약(빨간색)
-							case 70205:   // 염색약(갈색)
-							case 70206:   // 염색약(검은색)
+							case 70201:   // decolorant
+							case 70202:   // hair dye ( white )
+							case 70203:   // hair dye ( gold )
+							case 70204:   // hair dye ( red )
+							case 70205:   // hair dye ( brown )
+							case 70206:   // hair dye ( black )
 								{
 									// NEW_HAIR_STYLE_ADD
 									if (GetPart(PART_HAIR) >= 1001)
@@ -3525,7 +3525,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									if (item->GetVnum() == ITEM_VALENTINE_ROSE && SEX_MALE==GET_SEX(this) ||
 										item->GetVnum() == ITEM_VALENTINE_CHOCOLATE && SEX_FEMALE==GET_SEX(this))
 									{
-										// 성별이 맞지않아 쓸 수 없다.
+										// I can't use it because the gender doesn't match. .
 										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This item can only be opened by the another gender."));
 										return false;
 									}
@@ -3549,7 +3549,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									if (item->GetVnum() == ITEM_WHITEDAY_CANDY && SEX_MALE==GET_SEX(this) ||
 										item->GetVnum() == ITEM_WHITEDAY_ROSE && SEX_FEMALE==GET_SEX(this))
 									{
-										// 성별이 맞지않아 쓸 수 없다.
+										// I can't use it because the gender doesn't match. .
 										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This item can only be opened by the another gender."));
 										return false;
 									}
@@ -3560,7 +3560,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 50011: // 월광보합
+							case 50011: // Moonlight Compatibility
 								{
 									DWORD dwBoxVnum = 50011;
 									std::vector <DWORD> dwVnums;
@@ -3641,7 +3641,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case 50107:
 								{
 									EffectPacket(SE_CHINA_FIREWORK);
-									// 스턴 공격을 올려준다
+									// Increases stun attack
 									AddAffect(AFFECT_CHINA_FIREWORK, POINT_STUN_PCT, 30, AFF_CHINA_FIREWORK, 5*60, 0, true);
 									item->SetCount(item->GetCount()-1);
 								}
@@ -3656,7 +3656,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									}
 
 									EffectPacket(SE_SPIN_TOP);
-									// 스턴 공격을 올려준다
+									// Increases stun attack
 									AddAffect(AFFECT_CHINA_FIREWORK, POINT_STUN_PCT, 30, AFF_CHINA_FIREWORK, 5*60, 0, true);
 									item->SetCount(item->GetCount()-1);
 								}
@@ -3677,7 +3677,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								item->SetCount(item->GetCount()-1);
 								break;
 
-							case ITEM_ELK_VNUM: // 돈꾸러미
+							case ITEM_ELK_VNUM: // bundle of money
 								{
 									int iGold = item->GetSocket(0);
 									ITEM_MANAGER::instance().RemoveItem(item);
@@ -3757,7 +3757,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 								break;
 
-							case 71052 : // 진재경
+							case 71052 : // Jin Jae-kyung
 								{
 									return false;
 
@@ -3798,8 +3798,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case ITEM_AUTO_SP_RECOVERY_M:
 							case ITEM_AUTO_SP_RECOVERY_L:
 							case ITEM_AUTO_SP_RECOVERY_X:
-							// 무시무시하지만 이전에 하던 걸 고치기는 무섭고...
-							// 그래서 그냥 하드 코딩. 선물 상자용 자동물약 아이템들.
+							// It's scary, but it's scary to change what was done before. ...
+							// So just hardcode . Auto potion items for gift boxes .
 							case REWARD_BOX_ITEM_AUTO_SP_RECOVERY_XS: 
 							case REWARD_BOX_ITEM_AUTO_SP_RECOVERY_S: 
 							case REWARD_BOX_ITEM_AUTO_HP_RECOVERY_XS: 
@@ -4005,7 +4005,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							bool used = false;
 
-							if (item->GetValue(0) != 0) // HP 절대값 회복
+							if (item->GetValue(0) != 0) // HP Absolute value recovery
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -4015,7 +4015,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(1) != 0)	// SP 절대값 회복
+							if (item->GetValue(1) != 0)	// SP Absolute value recovery
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -4025,7 +4025,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(3) != 0) // HP % 회복
+							if (item->GetValue(3) != 0) // HP % recovery
 							{
 								if (GetHP() < GetMaxHP())
 								{
@@ -4035,7 +4035,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								}
 							}
 
-							if (item->GetValue(4) != 0) // SP % 회복
+							if (item->GetValue(4) != 0) // SP % recovery
 							{
 								if (GetSP() < GetMaxSP())
 								{
@@ -4217,7 +4217,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							const int MEMORY_PORTAL = 2;
 
 
-							// gm_guild_build, oxevent 맵에서 귀환부 귀환기억부 를 사용못하게 막음
+							// gm_guild_build, oxevent Prevents the use of the return and return memories on the map.
 							if (GetMapIndex() == 200 || GetMapIndex() == 113)
 							{
 								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot use this from your current position."));
@@ -4243,7 +4243,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								return false;
 							// END_OF_CONSUME_LIFE_WHEN_USE_WARP_ITEM
 
-							if (item->GetValue(0) == TOWN_PORTAL) // 귀환부
+							if (item->GetValue(0) == TOWN_PORTAL) // return department
 							{
 								if (item->GetSocket(0) == 0)
 								{
@@ -4274,7 +4274,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									ProcessRecallItem(item);
 								}
 							}
-							else if (item->GetValue(0) == MEMORY_PORTAL) // 귀환기억부
+							else if (item->GetValue(0) == MEMORY_PORTAL) // return memory
 							{
 								if (item->GetSocket(0) == 0)
 								{
@@ -4312,15 +4312,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							if (item2->IsExchanging())
 								return false;
 	
-							if (item2->GetVnum() >= 28330 && item2->GetVnum() <= 28343) // 영석+3
+							if (item2->GetVnum() >= 28330 && item2->GetVnum() <= 28343) // spirit stone +3
 							{
 								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("+3 Arcanum cannot be improved with this item"));
 								return false;
 							}
 							
-							if (item2->GetVnum() >= 28430 && item2->GetVnum() <= 28443)  // 영석+4
+							if (item2->GetVnum() >= 28430 && item2->GetVnum() <= 28443)  // spirit stone +4
 							{
-								if (item->GetVnum() == 71056) // 청룡의숨결
+								if (item->GetVnum() == 71056) // Breath of the Blue Dragon
 								{
 									RefineItem(item, item2);
 								}
@@ -4356,9 +4356,9 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 								BuffOnAttr_RemoveBuffsFromItem(item2);
 							}
 
-							// [NOTE] 코스튬 아이템에는 아이템 최초 생성시 랜덤 속성을 부여하되, 재경재가 등등은 막아달라는 요청이 있었음.
-							// 원래 ANTI_CHANGE_ATTRIBUTE 같은 아이템 Flag를 추가하여 기획 레벨에서 유연하게 컨트롤 할 수 있도록 할 예정이었으나
-							// 그딴거 필요없으니 닥치고 빨리 해달래서 그냥 여기서 막음... -_-
+							// [NOTE] Costume items are given random properties when they are first created. , There was a request to block finance, economics, etc. .
+							// usually ANTI_CHANGE_ATTRIBUTE same item Flag was planned to be added to enable flexible control at the planning level.
+							// There's no need for that, so just shut up and do it quickly so I'll just stop here. ... -_-
 							if (ITEM_COSTUME == item2->GetType())
 							{
 								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot change the upgrade of this item."));
@@ -4426,8 +4426,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									if (GM_PLAYER == GetGMLevel() && false == test_server)
 									{
 										//
-										// Event Flag 를 통해 이전에 아이템 속성 변경을 한 시간으로 부터 충분한 시간이 흘렀는지 검사하고
-										// 시간이 충분히 흘렀다면 현재 속성변경에 대한 시간을 설정해 준다.
+										// Event Flag Check whether sufficient time has passed since the previous item property change was made.
+										// If enough time has passed, set the time for the current property change. .
 										//
 
 										DWORD dwChangeItemAttrCycle = quest::CQuestManager::instance().GetEventFlag(msc_szChangeItemAttrCycleFlag);
@@ -4474,8 +4474,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									else
 									{
-										// 연재경 특수처리
-										// 절대로 연재가 추가 안될거라 하여 하드 코딩함.
+										// Yeonjae-kyung special treatment
+										// I hard coded it because I thought it would never be added to the series. .
 										if (item->GetVnum() == 71151 || item->GetVnum() == 76023)
 										{
 											if ((item2->GetType() == ITEM_WEAPON)
@@ -4524,8 +4524,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (item2->GetAttributeCount() < 4)
 									{
-										// 연재가 특수처리
-										// 절대로 연재가 추가 안될거라 하여 하드 코딩함.
+										// Serialization is specially treated
+										// I hard coded it because I thought it would never be added to the series. .
 										if (item->GetVnum() == 71152 || item->GetVnum() == 76024)
 										{
 											if ((item2->GetType() == ITEM_WEAPON)
@@ -4586,15 +4586,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									break;
 
 								case USE_ADD_ATTRIBUTE2 :
-									// 축복의 구슬 
-									// 재가비서를 통해 속성을 4개 추가 시킨 아이템에 대해서 하나의 속성을 더 붙여준다.
+									// bead of blessing 
+									// Properties through a home secretary 4 Adds one more attribute to each added item. .
 									if (item2->GetAttributeSetIndex() == -1)
 									{
 										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot change the upgrade of this item."));
 										return false;
 									}
 
-									// 속성이 이미 4개 추가 되었을 때만 속성을 추가 가능하다.
+									// property already exists 4 Properties can be added only when a number has been added. .
 									if (item2->GetAttributeCount() == 4)
 									{
 										char buf[21];
@@ -4776,7 +4776,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 						item->SetCount(item->GetCount() - 1);
 						break;
 
-					// 물약 제조 스킬용 레시피 처리	
+					// Recipe processing for potion making skills	
 					case USE_RECIPE :
 						{
 							LPITEM pSource1 = FindSpecifyItem(item->GetValue(1));
@@ -4907,7 +4907,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 				for (i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 					if (item2->GetSocket(i) >= 1 && item2->GetSocket(i) <= 2 && item2->GetSocket(i) >= item->GetValue(2))
 					{
-						// 석 확률
+						// stone probability
 						if (number(1, 100) <= 30)
 						{
 							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have attached the Spirit Stone successfully."));
@@ -4943,7 +4943,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 			break;
 
 		case ITEM_BLEND:
-			// 새로운 약초들
+			// new herbs
 			sys_log(0,"ITEM_BLEND!!");
 			if (Blend_Item_find(item->GetVnum()))
 			{
@@ -5081,7 +5081,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 		int iPulse = thecore_pulse();
 
-		//창고 연후 체크
+		// Check after warehouse opening
 		if (iPulse - GetSafeboxLoadTime() < PASSES_PER_SEC(g_nPortalLimitTime))
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("After opening the Storeroom you cannot use a Scroll of the Location for %d seconds."), g_nPortalLimitTime);
@@ -5091,7 +5091,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 			return false; 
 		}
 
-		//거래관련 창 체크
+		// Check transaction related window
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot use a Scroll of the Location while another window is open."));
@@ -5099,7 +5099,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		}
 
 		//PREVENT_REFINE_HACK
-		//개량후 시간체크 
+		// Check time after improvement 
 		{
 			if (iPulse - GetRefineTime() < PASSES_PER_SEC(g_nPortalLimitTime))
 			{
@@ -5122,7 +5122,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		//END_PREVENT_ITEM_COPY
 		
 
-		//귀환부 거리체크
+		// Return distance check
 		if (item->GetVnum() != 70302)
 		{
 			PIXEL_POSITION posWarp;
@@ -5132,13 +5132,13 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 			double nDist = 0;
 			const double nDistant = 5000.0;
-			//귀환기억부 
+			// return memory 
 			if (item->GetVnum() == 22010)
 			{
 				x = item->GetSocket(0) - GetX();
 				y = item->GetSocket(1) - GetY();
 			}
-			//귀환부
+			// return department
 			else if (item->GetVnum() == 22000) 
 			{
 				SECTREE_MANAGER::instance().GetRecallPositionByEmpire(GetMapIndex(), GetEmpire(), posWarp);
@@ -5167,7 +5167,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 		}
 
 		//PREVENT_PORTAL_AFTER_EXCHANGE
-		//교환 후 시간체크
+		// Check time after exchange
 		if (iPulse - GetExchangeTime()  < PASSES_PER_SEC(g_nPortalLimitTime))
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("After a trade you cannot use a Scroll of the Location for %d seconds."), g_nPortalLimitTime);
@@ -5177,7 +5177,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 	}
 
-	//보따리 비단 사용시 거래창 제한 체크 
+	// Check transaction window restrictions when using bundle silk 
 	if (item->GetVnum() == 50200 | item->GetVnum() == 71049)
 	{
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
@@ -5189,7 +5189,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 	}
 	//END_PREVENT_TRADE_WINDOW
 
-	if (IS_SET(item->GetFlag(), ITEM_FLAG_LOG)) // 사용 로그를 남기는 아이템 처리
+	if (IS_SET(item->GetFlag(), ITEM_FLAG_LOG)) // Handling items that leave usage logs
 	{
 		DWORD vid = item->GetVID();
 		DWORD oldCount = item->GetCount();
@@ -5203,7 +5203,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 
 		bool ret = UseItemEx(item, DestCell);
 
-		if (NULL == ITEM_MANAGER::instance().FindByVID(vid)) // UseItemEx에서 아이템이 삭제 되었다. 삭제 로그를 남김
+		if (NULL == ITEM_MANAGER::instance().FindByVID(vid)) // UseItemEx The item was deleted from . Leave a delete log
 		{
 			LogManager::instance().ItemLog(this, vid, vnum, "REMOVE", hint);
 		}
@@ -5253,7 +5253,7 @@ bool CHARACTER::DropItem(TItemPos Cell, ItemStackType bCount)
 	if (bCount == 0 || bCount > item->GetCount())
 		bCount = item->GetCount();
 
-	SyncQuickslot(QUICKSLOT_TYPE_ITEM, Cell.cell, 255);	// Quickslot 에서 지움
+	SyncQuickslot(QUICKSLOT_TYPE_ITEM, Cell.cell, 255);	// Quickslot erased from
 
 	LPITEM pkItemToDrop;
 
@@ -5383,7 +5383,7 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, ItemStackType count)
 		return false;
 	}
 
-	// 기획자의 요청으로 벨트 인벤토리에는 특정 타입의 아이템만 넣을 수 있다.
+	// At the request of the planner, only certain types of items can be placed in the belt inventory. .
 	if (DestCell.IsBeltInventoryPosition() && false == CBeltInventoryHelper::CanMoveIntoBeltInventory(item))
 	{
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot equip this item in your belt inventory."));			
@@ -5414,13 +5414,13 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, ItemStackType count)
 		return false;
 	}
 
-	// 이미 착용중인 아이템을 다른 곳으로 옮기는 경우, '장책 해제' 가능한 지 확인하고 옮김
+	// When moving an item that is already being worn to another location , ' release book ' Check if possible and move
 	if (Cell.IsEquipPosition() && !CanUnequipNow(item))
 		return false;
 
 	if (DestCell.IsEquipPosition())
 	{
-		if (GetItem(DestCell))	// 장비일 경우 한 곳만 검사해도 된다.
+		if (GetItem(DestCell))	// In the case of equipment, only one location needs to be inspected. .
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have already equipped this kind of Dragon Stone."));
 			
@@ -5448,7 +5448,7 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, ItemStackType count)
 					return false;
 			}
 		}
-		// 용혼석이 아닌 아이템은 용혼석 인벤에 들어갈 수 없다.
+		// Items that are not Dragon Soul Stones cannot be placed in the Dragon Soul Stone inventory. .
 		else if (DRAGON_SOUL_INVENTORY == DestCell.window_type)
 			return false;
 
@@ -5456,7 +5456,7 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, ItemStackType count)
 
 		if ((item2 = GetItem(DestCell)) && item != item2 && item2->IsStackable() &&
 				!IS_SET(item2->GetAntiFlag(), ITEM_ANTIFLAG_STACK) &&
-				item2->GetVnum() == item->GetVnum()) // 합칠 수 있는 아이템의 경우
+				item2->GetVnum() == item->GetVnum()) // For items that can be combined
 		{
 			for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 				if (item2->GetSocket(i) != item->GetSocket(i))
@@ -5566,7 +5566,7 @@ namespace NPartyPickupDistribute
 				{
 					ch->PointChange(POINT_GOLD, iMoney, true);
 
-					if (iMoney > 1000) // 천원 이상만 기록한다.
+					if (iMoney > 1000) // Record only over 1,000 won .
 						LogManager::instance().CharLog(ch, iMoney, "GET_GOLD", "");
 				}
 		}
@@ -5584,7 +5584,7 @@ void CHARACTER::GiveGold(int iAmount)
 	{
 		LPPARTY pParty = GetParty();
 
-		// 파티가 있는 경우 나누어 가진다.
+		// If you have a party, share. .
 		DWORD dwTotal = iAmount;
 		DWORD dwMyAmount = dwTotal;
 
@@ -5603,7 +5603,7 @@ void CHARACTER::GiveGold(int iAmount)
 
 		PointChange(POINT_GOLD, dwMyAmount, true);
 
-		if (dwMyAmount > 1000) // 천원 이상만 기록한다.
+		if (dwMyAmount > 1000) // Record only over 1,000 won .
 			LogManager::instance().CharLog(this, dwMyAmount, "GET_GOLD", "");
 	}
 	else
@@ -5629,7 +5629,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 	{
 		if (item->IsOwnership(this))
 		{
-			// 만약 주으려 하는 아이템이 엘크라면
+			// If the item you want to give is an elk
 			if (item->GetType() == ITEM_ELK)
 			{
 				GiveGold(item->GetCount());
@@ -5639,7 +5639,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 				Save();
 			}
-			// 평범한 아이템이라면
+			// If it's an ordinary item
 			else
 			{
 				if (item->IsStackable() && !IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
@@ -5724,7 +5724,7 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 		}
 		else if (!IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_GIVE | ITEM_ANTIFLAG_DROP) && GetParty())
 		{
-			// 다른 파티원 소유권 아이템을 주으려고 한다면
+			// If you are trying to give an item owned by another party member
 			NPartyPickupDistribute::FFindOwnership funcFindOwnership(item);
 
 			GetParty()->ForEachOnlineMember(funcFindOwnership);
@@ -5796,23 +5796,23 @@ bool CHARACTER::SwapItem(ItemCellType bCell, ItemCellType bDestCell)
 
 	TItemPos srcCell(INVENTORY, bCell), destCell(INVENTORY, bDestCell);
 
-	// 올바른 Cell 인지 검사
-	// 용혼석은 Swap할 수 없으므로, 여기서 걸림.
+	// upright Cell cognitive testing
+	// Dragon soul stone Swap Because I can't , caught here .
 	//if (bCell >= INVENTORY_MAX_NUM + WEAR_MAX_NUM || bDestCell >= INVENTORY_MAX_NUM + WEAR_MAX_NUM)
 	if (srcCell.IsDragonSoulEquipPosition() || destCell.IsDragonSoulEquipPosition())
 		return false;
 
-	// 같은 CELL 인지 검사
+	// same CELL cognitive testing
 	if (bCell == bDestCell)
 		return false;
 
-	// 둘 다 장비창 위치면 Swap 할 수 없다.
+	// Both are located in the equipment window. Swap can't do it .
 	if (srcCell.IsEquipPosition() && destCell.IsEquipPosition())
 		return false;
 
 	LPITEM item1, item2;
 
-	// item2가 장비창에 있는 것이 되도록.
+	// item2 so that it is in the equipment window. .
 	if (srcCell.IsEquipPosition())
 	{
 		item1 = GetInventoryItem(bDestCell);
@@ -5833,21 +5833,21 @@ bool CHARACTER::SwapItem(ItemCellType bCell, ItemCellType bDestCell)
 	    return false;
 	}
 
-	// item2가 bCell위치에 들어갈 수 있는지 확인한다.
+	// item2 go bCell Make sure you can get into the location .
 	if (!IsEmptyItemGrid(TItemPos (INVENTORY, item1->GetCell()), item2->GetSize(), item1->GetCell()))
 		return false;
 
-	// 바꿀 아이템이 장비창에 있으면
+	// If the item to be changed is in the equipment window
 	if (TItemPos(EQUIPMENT, item2->GetCell()).IsEquipPosition())
 	{
 		ItemCellType bEquipCell = item2->GetCell() - INVENTORY_MAX_NUM;
 		ItemCellType bInvenCell = item1->GetCell();
 
-		// 착용중인 아이템을 벗을 수 있고, 착용 예정 아이템이 착용 가능한 상태여야만 진행
+		// You can take off the item you are wearing , Proceed only if the item to be worn is wearable.
 		if (false == CanUnequipNow(item2) || false == CanEquipNow(item1))
 			return false;
 
-		if (bEquipCell != item1->FindEquipCell(this)) // 같은 위치일때만 허용
+		if (bEquipCell != item1->FindEquipCell(this)) // Only allowed when in the same location
 			return false;
 
 		item2->RemoveFromCharacter();
@@ -5902,7 +5902,7 @@ bool CHARACTER::UnequipItem(LPITEM item)
 }
 
 //
-// @version	05/07/05 Bang2ni - Skill 사용후 1.5 초 이내에 장비 착용 금지
+// @version	05/07/05 Bang2ni - Skill After use 1.5 Do not wear equipment within seconds
 //
 bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 {
@@ -5920,7 +5920,7 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 	if (iWearCell < 0)
 		return false;
 
-	// 무언가를 탄 상태에서 턱시도 입기 금지
+	// Do not wear a tuxedo while riding something.
 	if (iWearCell == WEAR_BODY && IsRiding() && (item->GetVnum() >= 11901 && item->GetVnum() <= 11904))
 	{
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot wear robes while riding a horse."));
@@ -5939,14 +5939,14 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 		return false;
 	}
 
-	//신규 탈것 사용시 기존 말 사용여부 체크
+	// Check whether to use an existing horse when using a new mount
 	if(item->IsRideItem() && IsRiding())
 	{
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You're already riding. Get off first."));
 		return false;
 	}
 
-	// 화살 이외에는 마지막 공격 시간 또는 스킬 사용 1.5 후에 장비 교체가 가능
+	// Last attack time or skill use other than arrows 1.5 Equipment can be replaced later
 	DWORD dwCurTime = get_dword_time();
 
 	if (iWearCell != WEAR_ARROW 
@@ -5956,11 +5956,11 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 		return false;
 	}
 
-	// 용혼석 특수 처리
+	// Dragon Soul Stone special treatment
 	if (item->IsDragonSoul())
 	{
-		// 같은 타입의 용혼석이 이미 들어가 있다면 착용할 수 없다.
-		// 용혼석은 swap을 지원하면 안됨.
+		// It cannot be worn if a Dragon Soul Stone of the same type is already present. .
+		// Dragon soul stone swap should not be supported .
 		if(GetInventoryItem(INVENTORY_MAX_NUM + iWearCell))
 		{
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You are already carrying a Dragon Stone of this type."));
@@ -5972,13 +5972,13 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 			return false;
 		}
 	}
-	// 용혼석이 아님.
+	// Not a dragon soul stone .
 	else
 	{
-		// 착용할 곳에 아이템이 있다면,
+		// If there is an item where to wear it ,
 		if (GetWear(iWearCell) && !IS_SET(GetWear(iWearCell)->GetFlag(), ITEM_FLAG_IRREMOVABLE))
 		{
-			// 이 아이템은 한번 박히면 변경 불가. swap 역시 완전 불가
+			// This item cannot be changed once it is stuck. . swap Also completely impossible
 			if (item->GetWearFlag() == WEARABLE_ABILITY) 
 				return false;
 
@@ -6000,13 +6000,13 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 	if (true == item->IsEquipped())
 	{
-		// 아이템 최초 사용 이후부터는 사용하지 않아도 시간이 차감되는 방식 처리. 
+		// After the first use of an item, time is deducted even if it is not used. . 
 		if (-1 != item->GetProto()->cLimitRealTimeFirstUseIndex)
 		{
-			// 한 번이라도 사용한 아이템인지 여부는 Socket1을 보고 판단한다. (Socket1에 사용횟수 기록)
+			// Whether the item has been used even once Socket1 Judge by looking at . (Socket1 Record the number of uses in )
 			if (0 == item->GetSocket(1))
 			{
-				// 사용가능시간은 Default 값으로 Limit Value 값을 사용하되, Socket0에 값이 있으면 그 값을 사용하도록 한다. (단위는 초)
+				// Available time is Default by value Limit Value Use the value , Socket0 If there is a value, use that value. . ( Unit is seconds )
 				long duration = (0 != item->GetSocket(0)) ? item->GetSocket(0) : item->GetProto()->aLimits[item->GetProto()->cLimitRealTimeFirstUseIndex].lValue;
 
 				if (0 == duration)
@@ -6024,27 +6024,27 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 		const DWORD& dwVnum = item->GetVnum();
 
-		// 라마단 이벤트 초승달의 반지(71135) 착용시 이펙트 발동
+		// Ramadan Event Crescent Ring (71135) Effect activates when worn
 		if (true == CItemVnumHelper::IsRamadanMoonRing(dwVnum))
 		{
 			this->EffectPacket(SE_EQUIP_RAMADAN_RING);
 		}
-		// 할로윈 사탕(71136) 착용시 이펙트 발동
+		// halloween candy (71136) Effect activates when worn
 		else if (true == CItemVnumHelper::IsHalloweenCandy(dwVnum))
 		{
 			this->EffectPacket(SE_EQUIP_HALLOWEEN_CANDY);
 		}
-		// 행복의 반지(71143) 착용시 이펙트 발동
+		// ring of happiness (71143) Effect activates when worn
 		else if (true == CItemVnumHelper::IsHappinessRing(dwVnum))
 		{
 			this->EffectPacket(SE_EQUIP_HAPPINESS_RING);
 		}
-		// 사랑의 팬던트(71145) 착용시 이펙트 발동
+		// pendant of love (71145) Effect activates when worn
 		else if (true == CItemVnumHelper::IsLovePendant(dwVnum))
 		{
 			this->EffectPacket(SE_EQUIP_LOVE_PENDANT);
 		}
-		// ITEM_UNIQUE의 경우, SpecialItemGroup에 정의되어 있고, (item->GetSIGVnum() != NULL)
+		// ITEM_UNIQUE For , SpecialItemGroup is defined in , (item->GetSIGVnum() != NULL)
 		// 
 		else if (ITEM_UNIQUE == item->GetType() && 0 != item->GetSIGVnum())
 		{
@@ -6194,7 +6194,7 @@ int CHARACTER::CountSpecifyItem(DWORD vnum) const
 		item = GetInventoryItem(i);
 		if (NULL != item && item->GetVnum() == vnum)
 		{
-			// 개인 상점에 등록된 물건이면 넘어간다.
+			// If it is an item registered in a private store, it will be passed over. .
 			if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
 			{
 				continue;
@@ -6222,7 +6222,7 @@ void CHARACTER::RemoveSpecifyItem(DWORD vnum, DWORD count)
 		if (GetInventoryItem(i)->GetVnum() != vnum)
 			continue;
 
-		//개인 상점에 등록된 물건이면 넘어간다. (개인 상점에서 판매될때 이 부분으로 들어올 경우 문제!)
+		// If it is an item registered in a private store, it will be passed over. . ( Problems coming into this section when sold in private stores !)
 		if(m_pkMyShop)
 		{
 			bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
@@ -6248,7 +6248,7 @@ void CHARACTER::RemoveSpecifyItem(DWORD vnum, DWORD count)
 		}
 	}
 
-	// 예외처리가 약하다.
+	// Exception handling is weak .
 	if (count)
 		sys_log(0, "CHARACTER::RemoveSpecifyItem cannot remove enough item vnum %u, still remain %d", vnum, count);
 }
@@ -6282,7 +6282,7 @@ void CHARACTER::RemoveSpecifyTypeItem(BYTE type, DWORD count)
 		if (GetInventoryItem(i)->GetType() != type)
 			continue;
 
-		//개인 상점에 등록된 물건이면 넘어간다. (개인 상점에서 판매될때 이 부분으로 들어올 경우 문제!)
+		// If it is an item registered in a private store, it will be passed over. . ( Problems coming into this section when sold in private stores !)
 		if(m_pkMyShop)
 		{
 			bool isItemSelling = m_pkMyShop->IsSellingItem(GetInventoryItem(i)->GetID());
@@ -6475,9 +6475,9 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, ItemStackType bCount, int iRare
 	{
 		item->AddToGround(GetMapIndex(), GetXYZ());
 		item->StartDestroyEvent();
-		// 안티 드랍 flag가 걸려있는 아이템의 경우, 
-		// 인벤에 빈 공간이 없어서 어쩔 수 없이 떨어트리게 되면,
-		// ownership을 아이템이 사라질 때까지(300초) 유지한다.
+		// anti drop flag In case of an item with , 
+		// If you have no choice but to drop it because there is no free space in your inventory. ,
+		// ownership until the item disappears (300 candle ) maintain .
 		if (IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_DROP))
 			item->SetOwnership(this, 300);
 		else
@@ -6590,7 +6590,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 		case 20101:
 		case 20102:
 		case 20103:
-			// 초급 말
+			// beginner horse
 			if (item->GetVnum() == ITEM_REVIVE_HORSE_1)
 			{
 				if (!IsDead())
@@ -6617,7 +6617,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 		case 20104:
 		case 20105:
 		case 20106:
-			// 중급 말
+			// intermediate horse
 			if (item->GetVnum() == ITEM_REVIVE_HORSE_2)
 			{
 				if (!IsDead())
@@ -6644,7 +6644,7 @@ bool CHARACTER::CanReceiveItem(LPCHARACTER from, LPITEM item) const
 		case 20107:
 		case 20108:
 		case 20109:
-			// 고급 말
+			// classy horse
 			if (item->GetVnum() == ITEM_REVIVE_HORSE_3)
 			{
 				if (!IsDead())
@@ -6781,7 +6781,7 @@ bool CHARACTER::IsEquipUniqueItem(DWORD dwItemVnum) const
 			return true;
 	}
 
-	// 언어반지인 경우 언어반지(견본) 인지도 체크한다.
+	// In case of language ring, language ring ( sample ) Check awareness .
 	if (dwItemVnum == UNIQUE_ITEM_RING_OF_LANGUAGE)
 		return IsEquipUniqueItem(UNIQUE_ITEM_RING_OF_LANGUAGE_SAMPLE);
 
@@ -6942,7 +6942,7 @@ bool CHARACTER::ItemProcess_Hair(LPITEM item, int iDestCell)
 {
 	if (item->CheckItemUseLevel(GetLevel()) == false)
 	{
-		// 레벨 제한에 걸림
+		// Level restricted
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Your level is too low to wear this Hairstyle."));
 		return false;
 	}
@@ -6952,7 +6952,7 @@ bool CHARACTER::ItemProcess_Hair(LPITEM item, int iDestCell)
 	switch (GetJob())
 	{
 		case JOB_WARRIOR :
-			hair -= 72000; // 73001 - 72000 = 1001 부터 헤어 번호 시작
+			hair -= 72000; // 73001 - 72000 = 1001 Hair number starts from
 			break;
 
 		case JOB_ASSASSIN :
@@ -7171,8 +7171,8 @@ void CHARACTER::AutoRecoveryItemProcess(const EAffectTypes type)
 						const int pct_of_will_used = (amount_of_used + amount) * 100 / amount_of_full;
 
 						bool bLog = false;
-						// 사용량의 10% 단위로 로그를 남김
-						// (사용량의 %에서, 십의 자리가 바뀔 때마다 로그를 남김.)
+						// of usage 10% Leave logs in units
+						// ( of usage % at , Leave a log every time the tens place changes .)
 						if ((pct_of_will_used / 10) - (pct_of_used / 10) >= 1)
 							bLog = true;
 						pItem->SetSocket(idx_of_amount_of_used, amount_of_used + amount, bLog);
@@ -7246,7 +7246,7 @@ bool CHARACTER::IsValidItemPosition(TItemPos Pos) const
 }
 
 
-// 귀찮아서 만든 매크로.. exp가 true면 msg를 출력하고 return false 하는 매크로 (일반적인 verify 용도랑은 return 때문에 약간 반대라 이름때문에 헷갈릴 수도 있겠다..)
+// A macro I made because I was lazy. .. exp go true noodle msg and output return false macro to do ( general verify With the purpose return Because it is a bit opposite, you may be confused by the name. ..)
 #define VERIFY_MSG(exp, msg)  \
 	if (true == (exp)) { \
 			ChatPacket(CHAT_TYPE_INFO, LC_TEXT(msg)); \
@@ -7254,7 +7254,7 @@ bool CHARACTER::IsValidItemPosition(TItemPos Pos) const
 	}
 
 		
-/// 현재 캐릭터의 상태를 바탕으로 주어진 item을 착용할 수 있는 지 확인하고, 불가능 하다면 캐릭터에게 이유를 알려주는 함수
+/// Given based on the current character's status item Make sure you can wear it , If it is impossible, a function that tells the character why.
 bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TItemPos& destCell) /*const*/
 {
 	const TItemTable* itemTable = item->GetProto();
@@ -7352,18 +7352,18 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 	return true;
 }
 
-/// 현재 캐릭터의 상태를 바탕으로 착용 중인 item을 벗을 수 있는 지 확인하고, 불가능 하다면 캐릭터에게 이유를 알려주는 함수
+/// Based on the current character's status, item Check if you can take it off , If it is impossible, a function that tells the character why.
 bool CHARACTER::CanUnequipNow(const LPITEM item, const TItemPos& srcCell, const TItemPos& destCell) /*const*/
 {	
 
 	if (ITEM_BELT == item->GetType())
 		VERIFY_MSG(CBeltInventoryHelper::IsExistItemInBeltInventory(this), LC_TEXT("You cannot unequip the belt while items are inside the beld inventory."));
 
-	// 영원히 해제할 수 없는 아이템
+	// Items that can never be unlocked
 	if (IS_SET(item->GetFlag(), ITEM_FLAG_IRREMOVABLE))
 		return false;
 
-	// 아이템 unequip시 인벤토리로 옮길 때 빈 자리가 있는 지 확인
+	// item unequip Check to see if there are any openings when moving to city inventory
 	{
 		int pos = -1;
 

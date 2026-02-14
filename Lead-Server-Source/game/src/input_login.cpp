@@ -323,7 +323,7 @@ bool RaceToJob(unsigned race, unsigned* ret_job)
 	return true;
 }
 
-// 신규 캐릭터 지원
+// New character support
 bool NewPlayerTable2(TPlayerTable * table, const char * name, BYTE race, BYTE shape, BYTE bEmpire)
 {
 	if (race >= MAIN_RACE_MAX_NUM)
@@ -347,7 +347,7 @@ bool NewPlayerTable2(TPlayerTable * table, const char * name, BYTE race, BYTE sh
 	strlcpy(table->name, name, sizeof(table->name));
 
 	table->level		= 1;
-	table->job			= race;	// 직업대신 종족을 넣는다
+	table->job			= race;	// Insert race instead of occupation
 	table->voice		= 0;
 	table->part_base	= shape;
 
@@ -507,7 +507,7 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 	CGuildManager::instance().LoginMember(ch);
 
-	// 캐릭터를 맵에 추가 
+	// Add characters to the map 
 	ch->Show(ch->GetMapIndex(), pos.x, pos.y, pos.z);
 
 	SECTREE_MANAGER::instance().SendNPCPosition(ch);
@@ -515,8 +515,8 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 
 	d->SetPhase(PHASE_GAME);
 
-	if(ch->GetItemAward_cmd())																		//게임페이즈 들어가면
-		quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());	//questmanager 호출
+	if(ch->GetItemAward_cmd())																		// Entering the game phase
+		quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());	//questmanager call
 	
 	sys_log(0, "ENTERGAME: %s %dx%dx%d %s map_index %d", 
 			ch->GetName(), ch->GetX(), ch->GetY(), ch->GetZ(), d->GetHostName(), ch->GetMapIndex());
@@ -526,10 +526,10 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		ch->EnterHorse();
 	}
 
-	// 플레이시간 레코딩 시작
+	// Start recording playtime
 	ch->ResetPlayTime();
 
-	// 자동 저장 이벤트 추가
+	// Add autosave event
 	ch->StartSaveEvent();
 	ch->StartRecoveryEvent();
 	ch->StartCheckSpeedHackEvent();
@@ -639,10 +639,10 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	}
 	else if (ch->GetMapIndex() == 113)
 	{
-		// ox 이벤트 맵
+		// ox event map
 		if (COXEventManager::instance().Enter(ch) == false)
 		{
-			// ox 맵 진입 허가가 나지 않음. 플레이어면 마을로 보내자
+			// ox No permission to enter the map . If it's a player, let's send it to town.
 			if (ch->GetGMLevel() == GM_PLAYER)
 				ch->WarpSet(EMPIRE_START_X(ch->GetEmpire()), EMPIRE_START_Y(ch->GetEmpire()));
 		}
@@ -716,13 +716,13 @@ int CInputLogin::GuildSymbolUpload(LPDESC d, const char* c_pData, size_t uiBytes
 
 	if (iSymbolSize <= 0 || iSymbolSize > 64 * 1024)
 	{
-		// 64k 보다 큰 길드 심볼은 올릴수없다
-		// 접속을 끊고 무시
+		// 64k Larger guild symbols cannot be raised.
+		// Disconnect and ignore
 		d->SetPhase(PHASE_CLOSE);
 		return 0;
 	}
 
-	// 땅을 소유하지 않은 길드인 경우.
+	// For guilds that do not own land .
 	if (!test_server)
 		if (!building::CManager::instance().FindLandByGuild(p->guild_id))
 		{
@@ -838,7 +838,7 @@ void CInputLogin::GuildMarkCRCList(LPDESC d, const char* c_pData)
 	CGuildMarkManager::instance().GetDiffBlocks(pCG->imgIdx, pCG->crclist, mapDiffBlocks);
 
 	DWORD blockCount = 0;
-	TEMP_BUFFER buf(1024 * 1024); // 1M 버퍼
+	TEMP_BUFFER buf(1024 * 1024); // 1M buffer
 
 	for (itertype(mapDiffBlocks) it = mapDiffBlocks.begin(); it != mapDiffBlocks.end(); ++it)
 	{

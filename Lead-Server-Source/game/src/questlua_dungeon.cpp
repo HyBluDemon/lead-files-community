@@ -999,7 +999,7 @@ namespace quest
 		return 0;
 	}
 
-	int dungeon_exit(lua_State* L) // 던전에 들어오기 전 위치로 보냄
+	int dungeon_exit(lua_State* L) // Sent to the location before entering the dungeon
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
@@ -1007,7 +1007,7 @@ namespace quest
 		return 0;
 	}
 
-	int dungeon_exit_all(lua_State* L) // 던전에 있는 모든 사람을 던전에 들어오기 전 위치로 보냄
+	int dungeon_exit_all(lua_State* L) // Send everyone in the dungeon to the location they were in before entering the dungeon.
 	{
 		CQuestManager& q = CQuestManager::instance();
 		LPDUNGEON pDungeon = q.GetCurrentDungeon();
@@ -1135,7 +1135,7 @@ namespace quest
 		}
 	};
 	
-	int dungeon_exit_all_by_item_group (lua_State* L) // 특정 아이템 그룹에 속한 아이템이 없는사람은 강퇴
+	int dungeon_exit_all_by_item_group (lua_State* L) // People who do not have items belonging to a specific item group are kicked out.
 	{
 		if (!lua_isstring(L, 1))
 		{
@@ -1200,7 +1200,7 @@ namespace quest
 		}
 	};
 	
-	int dungeon_delete_item_in_item_group_from_all(lua_State* L) // 특정 아이템을 던전 내 pc에게서 삭제.
+	int dungeon_delete_item_in_item_group_from_all(lua_State* L) // Specific items in the dungeon pc delete from .
 	{
 		if (!lua_isstring(L, 1))
 		{

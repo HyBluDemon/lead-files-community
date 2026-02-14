@@ -48,7 +48,7 @@ const char *quote_find_end(const char *string)
 	{
 		if (quote && *tmp == '\\' && *(tmp + 1))
 		{
-			// \ 다음 문자가 " 면 스킵한다.
+			// \ The next character is " If so, skip it. .
 			switch (*(tmp + 1))
 			{
 				case '"':

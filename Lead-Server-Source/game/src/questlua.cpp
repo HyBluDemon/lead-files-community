@@ -421,7 +421,7 @@ namespace quest
 	}
 
 	/**
-	 * @version 05/06/08	Bang2ni - __get_guildid_byname 스크립트 함수 등록
+	 * @version 05/06/08	Bang2ni - __get_guildid_byname Register script function
 	 */
 	bool CQuestManager::InitializeLua()
 	{
@@ -642,7 +642,7 @@ namespace quest
 
 		if (chReply)
 		{
-			// 시간 지나면 알아서 닫힘
+			// Closes automatically over time
 		}
 
 		if (chWait)
@@ -662,12 +662,12 @@ namespace quest
 
 		sys_log(0, "GotoConfirmState vid %u msg '%s', timeout %d", dwVID, szMsg, iTimeout);
 
-		// 1. 상대방에게 확인창 띄움
-		// 2. 나에게 확인 기다린다고 표시하는 창 띄움
-		// 3. 타임아웃 설정 (타임아웃 되면 상대방 창 닫고 나에게도 창 닫으라고 보냄)
+		// 1. Display a confirmation window to the other party
+		// 2. A window pops up indicating that it is waiting for confirmation.
+		// 3. Timeout settings ( When it times out, it closes the other person's window and sends a message to me to close the window as well. )
 
 		// 1
-		// 상대방이 없는 경우는 그냥 상대방에게 보내지 않는다. 타임아웃에 의해서 넘어가게됨
+		// If the other party is not there, just do not send it to the other party. . Skips due to timeout
 		LPCHARACTER ch = CHARACTER_MANAGER::instance().Find(dwVID);
 		if (ch && ch->IsPC())
 		{
@@ -703,7 +703,7 @@ namespace quest
 		AddScript("[INPUT]");
 		SendScript();
 
-		// 시간 제한을 검
+		// Check the time limit
 		//event_create(input_timeout_event, dwEI, PASSES_PER_SEC(iTimeout));
 	}
 

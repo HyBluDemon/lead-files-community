@@ -9,12 +9,12 @@
 
 /*
    Return Value
-		0 : 알 수 없는 에러 or 쿼리 에러
-		1 : 동일한 제국으로 바꾸려고함
-		2 : 길드 가입한 캐릭터가 있음
-		3 : 결혼한 캐릭터가 있음
+		0 : unknown error or query error
+		1 : Trying to change it to the same empire
+		2 : There is a character who has joined a guild
+		3 : There is a married character
 
-		999 : 제국 이동 성공
+		999 : Successful movement of empire
 */
 int CHARACTER::ChangeEmpire(BYTE empire)
 {
@@ -27,7 +27,7 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	memset(dwPID, 0, sizeof(dwPID));
 
 	{
-		// 1. 내 계정의 모든 pid를 얻어 온다
+		// 1. everything in my account pid get it
 		snprintf(szQuery, sizeof(szQuery), 
 				"SELECT id, pid1, pid2, pid3, pid4 FROM player_index%s WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u AND empire=%u", 
 				get_table_postfix(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
@@ -51,8 +51,8 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	const int loop = 4;
 
 	{
-		// 2. 각 캐릭터의 길드 정보를 얻어온다.
-		//   한 캐릭터라도 길드에 가입 되어 있다면, 제국 이동을 할 수 없다.
+		// 2. Retrieves guild information for each character .
+		//   If at least one character is in a guild , Empire cannot be moved .
 		DWORD dwGuildID[4];
 		CGuild * pGuild[4];
 		SQLMsg * pMsg = NULL;
@@ -91,8 +91,8 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	}
 
 	{
-		// 3. 각 캐릭터의 결혼 정보를 얻어온다.
-		//   한 캐릭터라도 결혼 상태라면 제국 이동을 할 수 없다.
+		// 3. Obtain marriage information for each character .
+		//   If even one character is married, he or she cannot move to the empire. .
 		for (int i = 0; i < loop; ++i)
 		{
 			if (marriage::CManager::instance().IsEngagedOrMarried(dwPID[i]) == true)
@@ -101,7 +101,7 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 	}
 	
 	{
-		// 4. db의 제국 정보를 업데이트 한다.
+		// 4. db Update the empire information of .
 		snprintf(szQuery, sizeof(szQuery), "UPDATE player_index%s SET empire=%u WHERE pid1=%u OR pid2=%u OR pid3=%u OR pid4=%u AND empire=%u", 
 				get_table_postfix(), empire, GetPlayerID(), GetPlayerID(), GetPlayerID(), GetPlayerID(), GetEmpire());
 
@@ -109,7 +109,7 @@ int CHARACTER::ChangeEmpire(BYTE empire)
 
 		if (msg->Get()->uiAffectedRows > 0)
 		{
-			// 5. 제국 변경 이력을 추가한다.
+			// 5. Add empire change history .
 			SetChangeEmpireCount();
 
 			return 999;

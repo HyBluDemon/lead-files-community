@@ -5,8 +5,8 @@ namespace xmas
 {
 	enum
 	{
-		MOB_SANTA_VNUM = 20031,	//산타 
-	//	MOB_SANTA_VNUM = 20095,	//노해
+		MOB_SANTA_VNUM = 20031,	// santa 
+	//	MOB_SANTA_VNUM = 20095,	// anger
 		MOB_XMAS_TREE_VNUM = 20032,
 		MOB_XMAS_FIRWORK_SELLER_VNUM = 9004,
 	};

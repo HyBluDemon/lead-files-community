@@ -131,7 +131,7 @@ void CPVP::Win(DWORD dwPID)
 
 	m_bRevenge = true;
 
-	m_players[iSlot].bAgree = true; // 자동으로 동의
+	m_players[iSlot].bAgree = true; // automatically agree
 	m_players[!iSlot].bCanRevenge = true;
 	m_players[!iSlot].bAgree = false;
 
@@ -180,7 +180,7 @@ void CPVPManager::Insert(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 
 	if ((pkPVP = Find(kPVP.m_dwCRC)))
 	{
-		// 복수할 수 있으면 바로 싸움!
+		// If you can get revenge, fight right away !
 		if (pkPVP->Agree(pkChr->GetPlayerID()))
 		{
 			pkVictim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The battle with %s has begun!"), pkChr->GetName());
@@ -299,8 +299,8 @@ void CPVPManager::GiveUp(LPCHARACTER pkChr, DWORD dwKillerPID) // This method is
 	}
 }
 
-// 리턴값: 0 = PK, 1 = PVP
-// PVP를 리턴하면 경험치나 아이템을 떨구고 PK면 떨구지 않는다.
+// return value : 0 = PK, 1 = PVP
+// PVP If it returns, it drops experience points or items. PK Don't drop it .
 bool CPVPManager::Dead(LPCHARACTER pkChr, DWORD dwKillerPID)
 {
 	CPVPSetMap::iterator it = m_map_pkPVPSetByID.find(pkChr->GetPlayerID());
@@ -354,7 +354,7 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 			return false;
 	}
 
-	if (pkChr == pkVictim)  // 내가 날 칠라고 하네 -_-
+	if (pkChr == pkVictim)  // I'm telling you to hit me -_-
 		return false;
 
 	if (pkVictim->IsNPC() && pkChr->IsNPC() && !pkChr->IsGuardNPC())
@@ -380,7 +380,7 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 			case 20116:
 			case 20117:
 			case 20118:
-				//신규 탈것 고급
+				// New Mount Advanced
 			case 20205:
 			case 20206:
 			case 20207:
@@ -389,21 +389,21 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 			case 20210:
 			case 20211:
 			case 20212:
-			case 20119:		// 라마단 흑마
-			case 20219:		// 라마단 흑마 클론 (할로윈용)
-			case 20220:		// 크리스마스 탈것
-			case 20221:		// 전갑 백웅
-			case 20222:		// 전갑 팬더
+			case 20119:		// Ramadan Warlock
+			case 20219:		// Ramadan Warlock Clone ( For Halloween )
+			case 20220:		// christmas ride
+			case 20221:		// Jeongap Baekwoong
+			case 20222:		// panther panda
 			case 20120:
 			case 20121:
 			case 20122:
 			case 20123:
 			case 20124:
 			case 20125:
-			case 20214:		// 난폭한 전갑순순록	
-			case 20215:		// 용맹한 전갑순순록	
-			case 20217:		// 난폭한 전갑암순록	
-			case 20218:		// 용맹한 전갑암순록	
+			case 20214:		// Violent full-armored reindeer	
+			case 20215:		// Brave reindeer	
+			case 20217:		// Violent full-armored reindeer	
+			case 20218:		// Brave reindeer	
 				break;
 
 			default:
@@ -457,7 +457,7 @@ bool CPVPManager::CanAttack(LPCHARACTER pkChr, LPCHARACTER pkVictim)
 		{
 		    if (g_protectNormalPlayer)
 		    {
-			// 범법자는 평화모드인 착한사람을 공격할 수 없다.
+			// Criminals cannot attack good people who are in peace mode. .
 			if (PK_MODE_PEACE == pkVictim->GetPKMode())
 			    return false;
 		    }
@@ -589,7 +589,7 @@ void CPVPManager::SendList(LPDESC d)
 		if (!pkPVP->m_players[0].dwVID || !pkPVP->m_players[1].dwVID)
 			continue;
 
-		// VID가 둘다 있을 경우에만 보낸다.
+		// VID Send only if both exist .
 		if (pkPVP->IsFight())
 		{
 			pack.bMode = PVP_MODE_FIGHT;
@@ -644,7 +644,7 @@ void CPVPManager::Process()
 	{
 		CPVP * pvp = (it++)->second;
 
-		if (get_dword_time() - pvp->GetLastFightTime() > 600000) // 10분 이상 싸움이 없었으면
+		if (get_dword_time() - pvp->GetLastFightTime() > 600000) // 10 If there wasn't a fight for more than a minute
 		{
 			pvp->Packet(true);
 			Delete(pvp);

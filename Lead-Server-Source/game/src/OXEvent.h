@@ -10,10 +10,10 @@ struct tag_Quiz
 
 enum OXEventStatus
 {
-	OXEVENT_FINISH = 0, // OX이벤트가 완전히 끝난 상태
-	OXEVENT_OPEN = 1,	// OX이벤트가 시작됨. 을두지(20012)를 통해서 입장가능
-	OXEVENT_CLOSE = 2,	// OX이벤트의 참가가 끝남. 을두지(20012)를 통한 입장이 차단됨
-	OXEVENT_QUIZ = 3,	// 퀴즈를 출제함.
+	OXEVENT_FINISH = 0, // OX Event is completely over
+	OXEVENT_OPEN = 1,	// OX Event started . Eulduji (20012) Entry is possible through
+	OXEVENT_CLOSE = 2,	// OX Participation in the event has ended . Eulduji (20012) Entry through is blocked.
+	OXEVENT_QUIZ = 3,	// Take a quiz .
 
 	OXEVENT_ERR = 0xff
 };

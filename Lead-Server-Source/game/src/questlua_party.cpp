@@ -330,8 +330,8 @@ namespace quest
 		}
 	};
 	
-	// 파티 단위로 버프 주는 함수.
-	// 같은 맵에 있는 파티원만 영향을 받는다.
+	// Function that gives buffs per party .
+	// Only party members on the same map are affected. .
 	int party_give_buff (lua_State* L)
 	{
 		CQuestManager & q = CQuestManager::instance();
@@ -412,7 +412,7 @@ namespace quest
 			{ "is_in_dungeon",	party_is_in_dungeon	},
 			{ "give_buff",		party_give_buff		},
 			{ "is_map_member_flag_lt",	party_is_map_member_flag_lt	},
-			{ "get_member_pids",		party_get_member_pids	}, // 파티원들의 pid를 return
+			{ "get_member_pids",		party_get_member_pids	}, // of party members pid cast return
 			{ NULL,				NULL				}
 		};
 

@@ -87,7 +87,7 @@ int check_name_independent(const char * str)
 	if (CBanwordManager::instance().CheckString(str, strlen(str)))
 		return 0;
 
-	// 몬스터 이름으로는 만들 수 없다.
+	// You can't make it with a monster's name. .
 	char szTmp[256];
 	str_lower(str, szTmp, sizeof(szTmp));
 
@@ -128,12 +128,12 @@ int check_name_gb2312(const char * str)
 			b1 = str[i++];
 			b2 = str[i++];
 
-			// 중국 간체는 첫번째 바이트 범위가 b0 -> f7 까지고
-			// 두번째 바이트 범위가 a1 -> fe 다.
+			// For Simplified Chinese, the first byte range is b0 -> f7 Until then
+			// The second byte range is a1 -> fe all .
 			if (b1 < 0xb0 || b1 > 0xf7 || b2 < 0xa1 || b2 > 0xfe)
 				return 0;
 
-			// 예외가 있다.
+			// There are exceptions .
 			for (j = 0; j < 5; j++)
 				if (b1 == exceptions[j][0] && b2 == exceptions[j][1])
 					return 0;
@@ -180,8 +180,8 @@ int check_name_big5(const char * str )
 			b[0] = b2;
 			b[1] = b1;
 
-			// 중국 번체 ( big5 : 홍콩 )
-			// 범위는 다음과 같다.
+			// traditional chinese ( big5 : Hong Kong )
+			// The range is as follows .
 			//  big5: 0xA140--0xF9D5
 			//  extended big5: 0x40--0x7E and 0xA1--0xFE
 
@@ -240,15 +240,15 @@ int check_name_euckr(const char * str)
 
 	for (tmp = str; *tmp; ++tmp)
 	{
-		// 한글이 아니고 빈칸이면 잘못된 것
+		// If it is not in Korean and is blank, it is wrong.
 		if (isnhspace(*tmp))
 			return 0;
 
-		// 한글이 아니고 숫자라면 적합하다.
+		// It is suitable if it is a number and not Hangul. .
 		if (isnhdigit(*tmp))
 			continue;
 
-		// 한글이 아니고 영문이라면 적합하다.   
+		// It is suitable if it is in English and not Korean. .   
 		if (!ishan(*tmp) && isalpha(*tmp))
 			continue;
 
@@ -280,15 +280,15 @@ int check_name_latin1(const char * str)
 
 	for (tmp = str; *tmp; ++tmp)
 	{
-		// 한글이 아니고 빈칸이면 잘못된 것
+		// If it is not in Korean and is blank, it is wrong.
 		if (isnhspace(*tmp))
 			return 0;
 
-		// 한글이 아니고 숫자라면 적합하다.
+		// It is suitable if it is a number and not Hangul. .
 		if (isnhdigit(*tmp))
 			continue;
 
-		// 한글이 아니고 영문이라면 적합하다.   
+		// It is suitable if it is in English and not Korean. .   
 		if (!ishan(*tmp) && isalpha(*tmp))
 			continue;
 

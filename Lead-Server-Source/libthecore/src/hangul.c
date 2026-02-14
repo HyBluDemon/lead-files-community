@@ -1,8 +1,8 @@
 /*
  *    Filename: hangul.c
- * Description: 한글 관련 구현 소스
+ * Description: Hangul related implementation source
  *
- *      Author: 비엽 aka. Cronan
+ *      Author: Rain leaves aka. Cronan
  */
 #define __LIBTHECORE__
 #include "stdafx.h"
@@ -44,22 +44,22 @@ const char *first_han(const BYTE *str)
 {
     unsigned char high, low;
     int len, i;
-    const char *p = "그외";
+    const char *p = " Other than that ";
 
     static const char* wansung[] =
     {
-	"가", "가", "나", "다", "다",
-	"라", "마", "바", "바", "사",
-	"사", "아", "자", "자", "차", 
-	"카", "타", "파", "하", ""
+	" go ", " go ", " me ", " all ", " all ",
+	" la ", " mind ", " bar ", " bar ", " buy ",
+	" buy ", " ah ", " ruler ", " ruler ", " car ", 
+	" card ", " get on ", " green onion ", " under ", ""
     };
 
     static const char* johab[] =
     {
-	"늏", "똞", "륾", "봞", "쁝",
-	"쏿", "쟞", "쨅", "쮉", "촡",
-	"캻", "큑", "퇫", "펈", "픞",
-	"훍", "?", "?", "?", "" 
+	" Wow ", " So ", " Wow ", " Wow ", " Sigh ",
+	" Pot ", " Hey ", " Tsk ", " Wow ", " Cheap ",
+	" Wow ", " Pfft ", " Wow ", " Wow ", " Hehe ",
+	" Whoop ", "?", "?", "?", "" 
     };
 
     len = strlen((const char*) str);

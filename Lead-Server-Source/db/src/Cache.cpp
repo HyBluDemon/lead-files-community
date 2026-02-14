@@ -24,12 +24,12 @@ CItemCache::~CItemCache()
 {
 }
 
-// 이거 이상한데...
-// Delete를 했으면, Cache도 해제해야 하는것 아닌가???
-// 근데 Cache를 해제하는 부분이 없어.
-// 못 찾은 건가?
-// 이렇게 해놓으면, 계속 시간이 될 때마다 아이템을 계속 지워...
-// 이미 사라진 아이템인데... 확인사살??????
+// This is strange ...
+// Delete If you did , Cache Shouldn't it be released as well? ???
+// however Cache There is no part to turn it off .
+// Couldn't I find it? ?
+// If you do it like this , Continue deleting items whenever time permits ...
+// This item has already disappeared. ... confirmed kill ??????
 // fixme
 // by rtsummit
 void CItemCache::Delete()
@@ -48,12 +48,12 @@ void CItemCache::Delete()
 	OnFlush();
 	
 	//m_bNeedQuery = false;
-	//m_lastUpdateTime = time(0) - m_expireTime; // 바로 타임아웃 되도록 하자.
+	//m_lastUpdateTime = time(0) - m_expireTime; // Let's take a timeout right away. .
 }
 
 void CItemCache::OnFlush()
 {
-	if (m_data.vnum == 0) // vnum이 0이면 삭제하라고 표시된 것이다.
+	if (m_data.vnum == 0) // vnum this 0 If so, it is marked for deletion. .
 	{
 		char szQuery[QUERY_MAX_LEN];
 		snprintf(szQuery, sizeof(szQuery), "DELETE FROM item%s WHERE id=%u", GetTablePostfix(), m_data.id);
@@ -185,7 +185,7 @@ CItemPriceListTableCache::CItemPriceListTableCache()
 void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList)
 {
 	//
-	// 이미 캐싱된 아이템과 중복된 아이템을 찾고 중복되지 않는 이전 정보는 tmpvec 에 넣는다.
+	// Find duplicate items with already cached items and retrieve non-duplicate previous information. tmpvec put in .
 	//
 
 	std::vector<TItemPriceInfo> tmpvec;
@@ -201,7 +201,7 @@ void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList
 	}
 
 	//
-	// pUpdateList 를 m_data 에 복사하고 남은 공간을 tmpvec 의 앞에서 부터 남은 만큼 복사한다.
+	// pUpdateList cast m_data Copy the remaining space to tmpvec Copy as much as is left from the beginning. .
 	// 
 
 	if (pUpdateList->byCount > SHOP_PRICELIST_MAX_NUM)
@@ -214,7 +214,7 @@ void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList
 
 	thecore_memcpy(m_data.aPriceInfo, pUpdateList->aPriceInfo, sizeof(TItemPriceInfo) * pUpdateList->byCount);
 
-	int nDeletedNum;	// 삭제된 가격정보의 갯수
+	int nDeletedNum;	// Number of deleted price information
 
 	if (pUpdateList->byCount < SHOP_PRICELIST_MAX_NUM)
 	{
@@ -243,14 +243,14 @@ void CItemPriceListTableCache::OnFlush()
 	char szQuery[QUERY_MAX_LEN];
 
 	//
-	// 이 캐시의 소유자에 대한 기존에 DB 에 저장된 아이템 가격정보를 모두 삭제한다.
+	// Existing for the owner of this cache DB Delete all item price information stored in .
 	//
 
 	snprintf(szQuery, sizeof(szQuery), "DELETE FROM myshop_pricelist%s WHERE owner_id = %u", GetTablePostfix(), m_data.dwOwnerID);
 	CDBManager::instance().ReturnQuery(szQuery, QID_ITEMPRICE_DESTROY, 0, NULL);
 
 	//
-	// 캐시의 내용을 모두 DB 에 쓴다.
+	// All contents of the cache DB write in .
 	//
 
 	for (int idx = 0; idx < m_data.byCount; ++idx)

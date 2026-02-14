@@ -39,8 +39,8 @@ void CBuffOnAttributes::RemoveBuffFromItem(LPITEM pItem)
 		{
 			TPlayerItemAttribute attr = pItem->GetAttribute(j);
 			TMapAttr::iterator it = m_map_additional_attrs.find(attr.bType);
-			// m_map_additional_attrs에서 해당 attribute type에 대한 값을 제거하고,
-			// 변경된 값의 (m_bBuffValue)%만큼의 버프 효과 감소
+			// m_map_additional_attrs corresponding to attribute type remove the value for ,
+			// of changed value (m_bBuffValue)% Reduces buff effect by
 			if (it != m_map_additional_attrs.end())
 			{
 				int& sum_of_attr_value = it->second;
@@ -76,15 +76,15 @@ void CBuffOnAttributes::AddBuffFromItem(LPITEM pItem)
 			TPlayerItemAttribute attr = pItem->GetAttribute(j);
 			TMapAttr::iterator it = m_map_additional_attrs.find(attr.bType);
 			
-			// m_map_additional_attrs에서 해당 attribute type에 대한 값이 없다면 추가.
-			// 추가된 값의 (m_bBuffValue)%만큼의 버프 효과 추가
+			// m_map_additional_attrs corresponding to attribute type If there is no value for , add .
+			// of added value (m_bBuffValue)% Add buff effect as much as
 			if (it == m_map_additional_attrs.end())
 			{
 				m_pBuffOwner->ApplyPoint(attr.bType, attr.sValue * m_bBuffValue / 100);
 				m_map_additional_attrs.insert(TMapAttr::value_type(attr.bType, attr.sValue));
 			}
-			// m_map_additional_attrs에서 해당 attribute type에 대한 값이 있다면, 그 값을 증가시키고,
-			// 변경된 값의 (m_bBuffValue)%만큼의 버프 효과 추가
+			// m_map_additional_attrs corresponding to attribute type If there is a value for , increase its value ,
+			// of changed value (m_bBuffValue)% Add buff effect as much as
 			else
 			{
 				int& sum_of_attr_value = it->second;
@@ -105,8 +105,8 @@ void CBuffOnAttributes::ChangeBuffValue(BYTE bNewValue)
 		Off();
 	else
 	{
-		// 기존에, m_map_additional_attrs의 값의 (m_bBuffValue)%만큼이 버프로 들어가 있었으므로,
-		// (bNewValue)%만큼으로 값을 변경함.
+		// Previously , m_map_additional_attrs of the value of (m_bBuffValue)% Because it was buffed as much as ,
+		// (bNewValue)% Change the value to .
 		for (TMapAttr::iterator it = m_map_additional_attrs.begin(); it != m_map_additional_attrs.end(); it++)
 		{
 			int& sum_of_attr_value = it->second;

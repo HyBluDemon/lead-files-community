@@ -178,7 +178,7 @@ protected:
 protected:
 	void		MapLocations(const char * c_pData);
 	void		LoginSuccess(DWORD dwHandle, const char *data);
-	void		PlayerCreateFailure(LPDESC d, BYTE bType);	// 0 = 일반 실패 1 = 이미 있음
+	void		PlayerCreateFailure(LPDESC d, BYTE bType);	// 0 = general failure 1 = Already exists
 	void		PlayerDeleteSuccess(LPDESC d, const char * data);
 	void		PlayerDeleteFail(LPDESC d);
 	void		PlayerLoad(LPDESC d, const char* data);

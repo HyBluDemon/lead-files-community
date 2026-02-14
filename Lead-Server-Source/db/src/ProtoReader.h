@@ -6,8 +6,8 @@
 
 #include "CsvReader.h"
 
-//csv 파일을 읽어와서 아이템 테이블에 넣어준다.
-void putItemIntoTable(); //(테이블, 테스트여부)
+//csv Read the file and place it in the item table. .
+void putItemIntoTable(); //( table , Whether to test )
 
 int get_Item_Type_Value(std::string inputString);
 int get_Item_SubType_Value(int type_value, std::string inputString);
@@ -19,7 +19,7 @@ int get_Item_LimitType_Value(std::string inputString);
 int get_Item_ApplyType_Value(std::string inputString);
 
 
-//몬스터 프로토도 읽을 수 있다.
+// You can also read Monster Proto .
 int get_Mob_Rank_Value(std::string inputString);
 int get_Mob_Type_Value(std::string inputString);
 int get_Mob_BattleType_Value(std::string inputString);

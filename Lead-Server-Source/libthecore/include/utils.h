@@ -17,45 +17,45 @@ extern "C"
 #define str_cmp strcasecmp
 #define STRNCPY(dst, src, len)          do {strncpy(dst, src, len); dst[len] = '\0'; } while(0)
 
-    extern char *	str_dup(const char * source);	// ¸Ş¸ğ¸® ÇÒ´ç ÇØ¼­ source º¹»ç ÇÑ°Å ¸®ÅÏ
-    extern void		printdata(const unsigned char * data, int bytes); // data¸¦ hex¶û ascii·Î Ãâ·Â (ÆĞÅ¶ ºĞ¼® µî¿¡ ¾²ÀÓ)
-    extern int		filesize(FILE * fp);	// ÆÄÀÏ Å©±â ¸®ÅÏ
+    extern char *	str_dup(const char * source);	// By allocating memory source Return what you copied
+    extern void		printdata(const unsigned char * data, int bytes); // data cast hex with ascii output to ( Used for packet analysis, etc. )
+    extern int		filesize(FILE * fp);	// return file size
 
 #define core_dump()	core_dump_unix(__FILE__, __LINE__)
-    extern void		core_dump_unix(const char *who, WORD line);	// ÄÚ¾î¸¦ °­Á¦·Î ´ıÇÁ
+    extern void		core_dump_unix(const char *who, WORD line);	// Force dump the core
 
 #define TOKEN(string) if (!str_cmp(token_string, string))
-    // src = ÅäÅ« : °ª
+    // src = token : value
     extern void		parse_token(char * src, char * token, char * value);
 
     extern void		trim_and_lower(const char * src, char * dest, size_t dest_size);
 
-    // ¹®ÀÚ¿­À» ¼Ò¹®ÀÚ·Î
+    // lowercase string
     extern void		lower_string(const char * src, char * dest, size_t dest_len);
 
-    // arg1ÀÌ arg2·Î ½ÃÀÛÇÏ´Â°¡? (´ë¼Ò¹®ÀÚ ±¸º°ÇÏÁö ¾ÊÀ½)
+    // arg1 this arg2 Does it start with ? ( Case insensitive )
     extern int		is_abbrev(char *arg1, char *arg2);
 
-    // a¿Í bÀÇ ½Ã°£ÀÌ ¾ó¸¶³ª Â÷ÀÌ³ª´ÂÁö ¸®ÅÏ
+    // a and b Returns how much the time difference is
     extern struct timeval *	timediff(const struct timeval *a, const struct timeval *b);
 
-    // aÀÇ ½Ã°£¿¡ bÀÇ ½Ã°£À» ´õÇØ ¸®ÅÏ
+    // a in the time of b Return by adding the time of
     extern struct timeval *	timeadd(struct timeval *a, struct timeval *b);
 
-    // ÇöÀç ½Ã°£ curr_tmÀ¸·Î ºÎÅÍ days°¡ Áö³­ ³¯À» ¸®ÅÏ
+    // current time curr_tm from days returns the past day
     extern struct tm *		tm_calc(const struct tm *curr_tm, int days);
 
-    extern int MAX(int a, int b); // µÑÁß¿¡ Å« °ªÀ» ¸®ÅÏ
-    extern int MIN(int a, int b); // µÑÁß¿¡ ÀÛÀº °ªÀ» ¸®ÅÏ
-    extern int MINMAX(int min, int value, int max); // ÃÖ¼Ò ÃÖ´ë °ªÀ» ÇÔ²² ºñ±³ÇØ¼­ ¸®ÅÏ
+    extern int MAX(int a, int b); // Returns the larger value of the two
+    extern int MIN(int a, int b); // Returns the smaller of the two
+    extern int MINMAX(int min, int value, int max); // Returns by comparing the minimum and maximum values â€‹â€‹together
 
-    extern int		number_ex(int from, int to, const char *file, int line); // fromÀ¸·Î ºÎÅÍ to±îÁöÀÇ ·£´ı °ª ¸®ÅÏ
+    extern int		number_ex(int from, int to, const char *file, int line); // from from to Returns random values â€‹â€‹up to
 #define number(from, to) number_ex(from, to, __FILE__, __LINE__)
 
 	float	fnumber(float from, float to);
 
-    extern void		thecore_sleep(struct timeval * timeout);	// timeout¸¸Å­ ÇÁ·Î¼¼½º ½¬±â
-    extern DWORD	thecore_random();				// ·£´ı ÇÔ¼ö
+    extern void		thecore_sleep(struct timeval * timeout);	// timeout Rest the process as much as
+    extern DWORD	thecore_random();				// random function
 
     extern float	get_float_time();
     extern DWORD	get_dword_time();
@@ -72,7 +72,7 @@ extern "C"
 		sys_err("realloc failed [%d] %s", errno, strerror(errno)); \
 		abort(); } } while(0)
 
-    // Next ¿Í Prev °¡ ÀÖ´Â ¸®½ºÆ®¿¡ Ãß°¡
+    // Next and Prev Add to list with
 #define INSERT_TO_TW_LIST(item, head, prev, next)   \
     if (!(head))                                    \
     {                                               \

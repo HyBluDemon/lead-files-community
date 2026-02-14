@@ -16,23 +16,23 @@ public:
 	bool	ReadDragonSoulTableFile(const char * c_pszFileName);
 
 	void	GetDragonSoulInfo(DWORD dwVnum, OUT BYTE& bType, OUT BYTE& bGrade, OUT BYTE& bStep, OUT BYTE& bRefine) const;
-	// fixme : titempos·Î
+	// fixme : titempos as
 	WORD	GetBasePosition(const LPITEM pItem) const;
 	bool	IsValidCellForThisItem(const LPITEM pItem, const TItemPos& Cell) const;
 	int		GetDuration(const LPITEM pItem) const;
 	
-	// ¿ëÈ¥¼®À» ¹Þ¾Æ¼­ Æ¯Á¤ ¿ë½ÉÀ» ÃßÃâÇÏ´Â ÇÔ¼ö
+	// A function to receive a dragon soul and extract a specific dragon heart.
 	bool	ExtractDragonHeart(LPCHARACTER ch, LPITEM pItem, LPITEM pExtractor = NULL);
 
-	// Æ¯Á¤ ¿ëÈ¥¼®(pItem)À» ÀåºñÃ¢¿¡¼­ Á¦°ÅÇÒ ¶§¿¡ ¼º°ø ¿©ºÎ¸¦ °áÁ¤ÇÏ°í, 
-	// ½ÇÆÐ½Ã ºÎ»ê¹°À» ÁÖ´Â ÇÔ¼ö.(ºÎ»ê¹°Àº dragon_soul_table.txt¿¡ Á¤ÀÇ)
-	// DestCell¿¡ invalidÇÑ °ªÀ» ³ÖÀ¸¸é ¼º°ø ½Ã, ¿ëÈ¥¼®À» ºó °ø°£¿¡ ÀÚµ¿ Ãß°¡.
-	// ½ÇÆÐ ½Ã, ¿ëÈ¥¼®(pItem)Àº deleteµÊ.
-	// ÃßÃâ¾ÆÀÌÅÛÀÌ ÀÖ´Ù¸é ÃßÃâ ¼º°ø È®·üÀÌ pExtractor->GetValue(0)%¸¸Å­ Áõ°¡ÇÔ.
-	// ºÎ»ê¹°Àº ¾ðÁ¦³ª ÀÚµ¿ Ãß°¡.
+	// Specific Dragon Soul Stone (pItem) Determines success when removing from the equipment window , 
+	// Function that gives byproducts in case of failure .( The by-product is dragon_soul_table.txt definition in )
+	// DestCell to invalid If a value is entered and success occurs, , Automatically add Dragon Soul Stone to empty space .
+	// In case of failure , dragon soul stone (pItem) silver delete being .
+	// If there is an extraction item, the extraction success probability is pExtractor->GetValue(0)% increases by .
+	// By-products are always added automatically .
 	bool	PullOut(LPCHARACTER ch, TItemPos DestCell, IN OUT LPITEM& pItem, LPITEM pExtractor = NULL);
 
-	// ¿ëÈ¥¼® ¾÷±×·¹ÀÌµå ÇÔ¼ö
+	// Dragon Soul Stone Upgrade Function
 	bool	DoRefineGrade(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL_REFINE_GRID_SIZE]);
 	bool	DoRefineStep(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL_REFINE_GRID_SIZE]);
 	bool	DoRefineStrength(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL_REFINE_GRID_SIZE]);
@@ -47,7 +47,7 @@ public:
 private:
 	void	SendRefineResultPacket(LPCHARACTER ch, BYTE bSubHeader, const TItemPos& pos);
 
-	// Ä³¸¯ÅÍÀÇ ¿ëÈ¥¼® µ¦À» »ìÆìº¸°í, È°¼ºÈ­ µÈ ¿ëÈ¥¼®ÀÌ ¾ø´Ù¸é, Ä³¸¯ÅÍÀÇ ¿ëÈ¥¼® È°¼º »óÅÂ¸¦ off ½ÃÅ°´Â ÇÔ¼ö.
+	// Take a look at your characterâ€™s Dragon Soulstone deck. , If you don't have an activated dragon soul stone , The character's Dragon Soul Stone activation status off function .
 	void	RefreshDragonSoulState(LPCHARACTER ch);
 
 	DWORD	MakeDragonSoulVnum(BYTE bType, BYTE grade, BYTE step, BYTE refine);

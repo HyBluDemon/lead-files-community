@@ -114,7 +114,7 @@ void CInputDB::LoginSuccess(DWORD dwHandle, const char *data)
 		return;
 	}
 
-	if (strcmp(pTab->status, "OK")) // OK가 아니면
+	if (strcmp(pTab->status, "OK")) // OK If not
 	{
 		sys_log(0, "CInputDB::LoginSuccess - status[%s] is not OK [%s]", pTab->status, pTab->login);
 
@@ -137,7 +137,7 @@ void CInputDB::LoginSuccess(DWORD dwHandle, const char *data)
 
 	d->BindAccountTable(pTab);
 
-	if (!bFound) // 캐릭터가 없으면 랜덤한 제국으로 보낸다.. -_-
+	if (!bFound) // If there are no characters, they are sent to a random empire. .. -_-
 	{
 		TPacketGCEmpire pe;
 		pe.bHeader = HEADER_GC_EMPIRE;
@@ -210,7 +210,7 @@ void CInputDB::PlayerCreateSuccess(LPDESC d, const char * data)
 
 	d->Packet(&pack, sizeof(TPacketGCCharacterCreateSuccess));
 
-	// 기본 무기와 귀환부를 지급
+	// Provided basic weapons and return kit
 	TPlayerItem t;
 	memset(&t, 0, sizeof(t));
 
@@ -284,7 +284,7 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 	{
 		lMapIndex = SECTREE_MANAGER::instance().GetMapIndex(pTab->x, pTab->y);
 
-		if (lMapIndex == 0) // 좌표를 찾을 수 없다.
+		if (lMapIndex == 0) // Coordinates not found .
 		{
 			lMapIndex = EMPIRE_START_MAP(d->GetAccountTable().bEmpire);
 			pos.x = EMPIRE_START_X(d->GetAccountTable().bEmpire);
@@ -298,11 +298,11 @@ void CInputDB::PlayerLoad(LPDESC d, const char * data)
 	}
 	pTab->lMapIndex = lMapIndex;
 
-	// Private 맵에 있었는데, Private 맵이 사라진 상태라면 출구로 돌아가야 한다.
+	// Private It was on the map , Private If the map has disappeared, you must return to the exit. .
 	// ----
-	// 근데 출구로 돌아가야 한다면서... 왜 출구가 아니라 private map 상에 대응되는 pulic map의 위치를 찾냐고...
-	// 역사를 모르니... 또 하드코딩 한다.
-	// 아귀동굴이면, 출구로...
+	// But they said I had to go back to the exit. ... why not the exit private map corresponding to the image pulic map Are you looking for the location of ...
+	// Don't you know history? ... Hardcode it again .
+	// If it's monkfish cave , to the exit ...
 	// by rtsummit
 	if (!SECTREE_MANAGER::instance().GetValidLocation(pTab->lMapIndex, pTab->x, pTab->y, lMapIndex, pos, d->GetEmpire()))
 	{
@@ -405,11 +405,11 @@ void CInputDB::Boot(const char* data)
 {
 	signal_timer_disable();
 
-	// 패킷 사이즈 체크
+	// Packet size check
 	DWORD dwPacketSize = decode_4bytes(data);
 	data += 4;
 
-	// 패킷 버전 체크
+	// Packet version check
 	BYTE bVersion = decode_byte(data);
 	data += 1;
 
@@ -724,7 +724,7 @@ void CInputDB::Boot(const char* data)
 	data += size * sizeof(TItemIDRangeTable);
 
 	//ADMIN_MANAGER
-	//관리자 등록
+	// Administrator registration
 	int ChunkSize = decode_2bytes(data );
 	data += 2;
 	int HostSize = decode_2bytes(data );
@@ -998,7 +998,7 @@ void CInputDB::SafeboxLoad(LPDESC d, const char * c_pData)
 	// END_OF_ADD_PREMIUM
 
 	//if (d->GetCharacter()->IsEquipUniqueItem(UNIQUE_ITEM_SAFEBOX_EXPAND))
-	//bSize = 3; // 창고확장권
+	//bSize = 3; // Warehouse expansion ticket
 
 	//d->GetCharacter()->LoadSafebox(p->bSize * SAFEBOX_PAGE_SIZE, p->dwGold, p->wItemCount, (TPlayerItem *) (c_pData + sizeof(TSafeboxTable)));
 	d->GetCharacter()->LoadSafebox(bSize * SAFEBOX_PAGE_SIZE, p->dwGold, p->wItemCount, (TPlayerItem *) (c_pData + sizeof(TSafeboxTable)));
@@ -1018,7 +1018,7 @@ void CInputDB::SafeboxChangeSize(LPDESC d, const char * c_pData)
 }
 
 //
-// @version	05/06/20 Bang2ni - ReqSafeboxLoad 의 취소
+// @version	05/06/20 Bang2ni - ReqSafeboxLoad cancellation of
 //
 void CInputDB::SafeboxWrongPassword(LPDESC d)
 {
@@ -1078,7 +1078,7 @@ void CInputDB::LoginAlready(LPDESC d, const char * c_pData)
 	if (!d)
 		return;
 
-	// INTERNATIONAL_VERSION 이미 접속중이면 접속 끊음
+	// INTERNATIONAL_VERSION If you are already connected, disconnect
 	{ 
 		TPacketDGLoginAlready * p = (TPacketDGLoginAlready *) c_pData;
 
@@ -1634,7 +1634,7 @@ void CInputDB::AuthLogin(LPDESC d, const char * c_pData)
 	{
 		ptoc.dwLoginKey = d->GetLoginKey();
 
-		//NOTE: AuthSucess보다 먼저 보내야지 안그러면 PHASE Close가 되서 보내지지 않는다.-_-
+		//NOTE: AuthSucess You have to send it first, otherwise PHASE Close It is not sent because it is .-_-
 		//Send Client Package CryptKey
 		{
 			DESC_MANAGER::instance().SendClientPackageCryptKey(d);
@@ -1662,7 +1662,7 @@ void CInputDB::ChangeEmpirePriv(const char* c_pData)
 }
 
 /**
- * @version 05/06/08	Bang2ni - 지속시간 추가
+ * @version 05/06/08	Bang2ni - Add duration
  */
 void CInputDB::ChangeGuildPriv(const char* c_pData)
 {
@@ -1862,7 +1862,7 @@ void CInputDB::ReloadAdmin(const char * c_pData )
 
 ////////////////////////////////////////////////////////////////////
 // Analyze
-// @version	05/06/10 Bang2ni - 아이템 가격정보 리스트 패킷(HEADER_DG_MYSHOP_PRICELIST_RES) 처리루틴 추가.
+// @version	05/06/10 Bang2ni - Item price information list packet (HEADER_DG_MYSHOP_PRICELIST_RES) Add processing routine .
 ////////////////////////////////////////////////////////////////////
 int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 {
@@ -2166,7 +2166,7 @@ int CInputDB::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 	case HEADER_DG_NEED_LOGIN_LOG:
 		DetailLog( (TPacketNeedLoginLogInfo*) c_pData );
 		break;
-	// 독일 선물 기능 테스트
+	// German Futures Functional Test
 	case HEADER_DG_ITEMAWARD_INFORMER:
 		ItemAwardInformer((TPacketItemAwardInfromer*) c_pData);
 		break;
@@ -2240,7 +2240,7 @@ void CInputDB::DetailLog(const TPacketNeedLoginLogInfo* info)
 
 void CInputDB::ItemAwardInformer(TPacketItemAwardInfromer *data)
 {	
-	LPDESC d = DESC_MANAGER::instance().FindByLoginName(data->login);	//login정보
+	LPDESC d = DESC_MANAGER::instance().FindByLoginName(data->login);	//login information
 	
 	if(d == NULL)
 		return;
@@ -2249,12 +2249,12 @@ void CInputDB::ItemAwardInformer(TPacketItemAwardInfromer *data)
 		if (d->GetCharacter())
 		{
 			LPCHARACTER ch = d->GetCharacter();	
-			ch->SetItemAward_vnum(data->vnum);	// ch 에 임시 저장해놨다가 QuestLoad 함수에서 처리
+			ch->SetItemAward_vnum(data->vnum);	// ch I temporarily saved it in QuestLoad Processed in a function
 			ch->SetItemAward_cmd(data->command);		
 
-			if(d->IsPhase(PHASE_GAME))			//게임페이즈일때
+			if(d->IsPhase(PHASE_GAME))			// During the game phase
 			{
-				quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());	//questmanager 호출
+				quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());	//questmanager call
 			}
 		}
 	}

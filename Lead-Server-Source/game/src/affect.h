@@ -54,23 +54,23 @@ enum EAffectTypes
 	AFFECT_DEF_GRADE,		// 226
 
 	AFFECT_PREMIUM_START	= 500,
-	AFFECT_EXP_BONUS		= 500,	// 경험의 반지
-	AFFECT_ITEM_BONUS		= 501,	// 도둑의 장갑
+	AFFECT_EXP_BONUS		= 500,	// ring of experience
+	AFFECT_ITEM_BONUS		= 501,	// Thief's Gloves
 	AFFECT_SAFEBOX		= 502,  // PREMIUM_SAFEBOX,
 	AFFECT_AUTOLOOT		= 503,	// PREMIUM_AUTOLOOT,
 	AFFECT_FISH_MIND		= 504,	// PREMIUM_FISH_MIND,
-	AFFECT_MARRIAGE_FAST	= 505,	// 원앙의 깃털
-	AFFECT_GOLD_BONUS		= 506,	// 돈 드롭확률 50%증가
+	AFFECT_MARRIAGE_FAST	= 505,	// mandarin duck feather
+	AFFECT_GOLD_BONUS		= 506,	// Money drop probability 50% increase
 	AFFECT_PREMIUM_END		= 509,
 
-	AFFECT_MALL			= 510,	// 몰 아이템 에펙트
-	AFFECT_NO_DEATH_PENALTY	= 511,	// 용신의 가호 (경험치가 패널티를 한번 막아준다)
-	AFFECT_SKILL_BOOK_BONUS	= 512,	// 선인의 교훈 (책 수련 성공 확률이 50% 증가)
-	AFFECT_SKILL_NO_BOOK_DELAY	= 513,	// 주안술서
+	AFFECT_MALL			= 510,	// Mall Item Effect
+	AFFECT_NO_DEATH_PENALTY	= 511,	// Dragon God's Protection ( Experience prevents one penalty )
+	AFFECT_SKILL_BOOK_BONUS	= 512,	// Lessons from good men ( Book training success probability 50% increase )
+	AFFECT_SKILL_NO_BOOK_DELAY	= 513,	// Book of magic spells
 
-	AFFECT_HAIR	= 514,	// 헤어 효과
-	AFFECT_COLLECT = 515, //수집퀘스트 
-	AFFECT_EXP_BONUS_EURO_FREE = 516, // 경험의 반지 (유럽 버전 14 레벨 이하 기본 효과)
+	AFFECT_HAIR	= 514,	// hair effect
+	AFFECT_COLLECT = 515, // Collection Quest 
+	AFFECT_EXP_BONUS_EURO_FREE = 516, // ring of experience ( european version 14 Basic effects below level )
 	AFFECT_EXP_BONUS_EURO_FREE_UNDER_15 = 517,
 	AFFECT_UNIQUE_ABILITY = 518,
 
@@ -121,8 +121,8 @@ enum EAffectBits
 	AFF_SLOW,
 	AFF_STUN,
 
-	AFF_DUNGEON_READY,		// 던전에서 준비 상태
-	AFF_DUNGEON_UNIQUE,		// 던전 유니크 (클라이언트에서 컬링되지않음)
+	AFF_DUNGEON_READY,		// Readiness in the Dungeon
+	AFF_DUNGEON_UNIQUE,		// Dungeon Unique ( Not culled on client )
 
 	AFF_BUILDING_CONSTRUCTION_SMALL,
 	AFF_BUILDING_CONSTRUCTION_LARGE,
@@ -133,34 +133,34 @@ enum EAffectBits
 
 	AFF_FISH_MIND,
 
-	AFF_JEONGWIHON,		// 전귀혼
-	AFF_GEOMGYEONG,		// 검경
-	AFF_CHEONGEUN,		// 천근추
-	AFF_GYEONGGONG,		// 경공술
-	AFF_EUNHYUNG,		// 은형법
-	AFF_GWIGUM,			// 귀검
-	AFF_TERROR,			// 공포
-	AFF_JUMAGAP,		// 주마갑
-	AFF_HOSIN,			// 호신
-	AFF_BOHO,			// 보호
-	AFF_KWAESOK,		// 쾌속
-	AFF_MANASHIELD,		// 마나쉴드
-	AFF_MUYEONG,		// 무영진 affect
-	AFF_REVIVE_INVISIBLE,	// 부활시 잠시동안 무적
-	AFF_FIRE,			// 지속 불 데미지
-	AFF_GICHEON,		// 기천대공
-	AFF_JEUNGRYEOK,		// 증력술
-	AFF_TANHWAN_DASH,		// 탄환격용 달리기어펙트
-	AFF_PABEOP,			// 파법술
-	AFF_CHEONGEUN_WITH_FALL,	// 천근추
+	AFF_JEONGWIHON,		// ex-ghost marriage
+	AFF_GEOMGYEONG,		// speculum
+	AFF_CHEONGEUN,		// Cheongeunchu
+	AFF_GYEONGGONG,		// light surgery
+	AFF_EUNHYUNG,		// silver criminal law
+	AFF_GWIGUM,			// ghost sword
+	AFF_TERROR,			// horror
+	AFF_JUMAGAP,		// Jumagap
+	AFF_HOSIN,			// self defense
+	AFF_BOHO,			// protect
+	AFF_KWAESOK,		// Rapid
+	AFF_MANASHIELD,		// Mana Shield
+	AFF_MUYEONG,		// Youngjin Mu affect
+	AFF_REVIVE_INVISIBLE,	// Invincible for a while when resurrected
+	AFF_FIRE,			// Continuous fire damage
+	AFF_GICHEON,		// Grand Duke Gicheon
+	AFF_JEUNGRYEOK,		// Augmentation
+	AFF_TANHWAN_DASH,		// Running effect for bullet hits
+	AFF_PABEOP,			// Pabeopjutsu
+	AFF_CHEONGEUN_WITH_FALL,	// Cheongeunchu
 	AFF_POLYMORPH,
 	AFF_WAR_FLAG1,
 	AFF_WAR_FLAG2,
 	AFF_WAR_FLAG3,
 
 	AFF_CHINA_FIREWORK,
-	AFF_HAIR,	// 헤어
-	AFF_GERMANY, // 독일 
+	AFF_HAIR,	// hair
+	AFF_GERMANY, // germany 
 
 	AFF_BITS_MAX
 };
@@ -170,11 +170,11 @@ extern void SendAffectAddPacket(LPDESC d, CAffect * pkAff);
 // AFFECT_DURATION_BUG_FIX
 enum AffectVariable
 {
-	// Affect가 무한대로 들어가 있어야 할 경우 사용.
-	// 시간을 계속 줄이기 때문에 매우 큰값으로 무한대를 에뮬레이션함.
-	//// 24비트는 적으므로 25비트를 사용.
-	// ... 25비트 사용한다고 해놓고선 29bit 사용하고 있는 엄청난 주석이란...
-	// collect quest에서 무한 시간을 60년으로 사용하고 있으므로, 여기도 60년으로 하자.
+	// Affect Used when it must be infinite .
+	// Because we keep decreasing time, we emulate infinity with very large values. .
+	//// 24 Because there are few beats 25 use bits .
+	// ... 25 You say you're using beats 29bit What great annotations are being used? ...
+	// collect quest infinite time in 60 Since I am using it as a year , Here too 60 Let's make it a year .
 
 	INFINITE_AFFECT_DURATION = 60 * 365 * 24 * 60 * 60
 };

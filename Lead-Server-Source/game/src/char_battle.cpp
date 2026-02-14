@@ -148,7 +148,7 @@ void CHARACTER::DistributeSP(LPCHARACTER pkKiller, int iMethod)
 			else if (bMoving)
 				iAmount = 3 + GetMaxSP() * 2 / 100;
 			else
-				iAmount = 10 + GetMaxSP() * 3 / 100; // Æò»ó½Ã
+				iAmount = 10 + GetMaxSP() * 3 / 100; // usual times
 
 			iAmount += (iAmount * pkKiller->GetPoint(POINT_SP_REGEN)) / 100;
 			pkKiller->PointChange(POINT_SP, iAmount);
@@ -163,11 +163,11 @@ void CHARACTER::DistributeSP(LPCHARACTER pkKiller, int iMethod)
 				iAmount = 2 + pkKiller->GetMaxSP() / 100;
 			else
 			{
-				// Æò»ó½Ã
+				// usual times
 				if (pkKiller->GetHP() < pkKiller->GetMaxHP())
-					iAmount = 2 + (pkKiller->GetMaxSP() / 100); // ÇÇ ´Ù ¾ÈÃ¡À»¶§
+					iAmount = 2 + (pkKiller->GetMaxSP() / 100); // When the blood is not full
 				else
-					iAmount = 9 + (pkKiller->GetMaxSP() / 100); // ±âº»
+					iAmount = 9 + (pkKiller->GetMaxSP() / 100); // basic
 			}
 
 			iAmount += (iAmount * pkKiller->GetPoint(POINT_SP_REGEN)) / 100;
@@ -211,7 +211,7 @@ bool CHARACTER::Attack(LPCHARACTER pkVictim, BYTE bType)
 	if (bType == 0)
 	{
 		//
-		// ÀÏ¹Ý °ø°Ý
+		// normal attack
 		//
 		switch (GetMobBattleType())
 		{
@@ -385,7 +385,7 @@ void CHARACTER::Stun()
 
 	CloseMyShop();
 
-	event_cancel(&m_pkRecoveryEvent); // È¸º¹ ÀÌº¥Æ®¸¦ Á×ÀÎ´Ù.
+	event_cancel(&m_pkRecoveryEvent); // kill recovery event .
 
 	TPacketGCStun pack;
 	pack.header	= HEADER_GC_STUN;
@@ -507,7 +507,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 	bool isAutoLoot = 
 		(pkAttacker->GetPremiumRemainSeconds(PREMIUM_AUTOLOOT) > 0 ||
 		 pkAttacker->IsEquipUniqueGroup(UNIQUE_GROUP_AUTOLOOT))
-		? true : false; // Á¦3ÀÇ ¼Õ
+		? true : false; // my 3 hand of
 	// END_OF_ADD_PREMIUM
 
 	PIXEL_POSITION pos;
@@ -519,7 +519,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 
 	int iTotalGold = 0;
 	//
-	// --------- µ· µå·Ó È®·ü °è»ê ----------
+	// --------- Money drop probability calculation ----------
 	//
 	int iGoldPercent = MobRankStats[GetMobRank()].iGoldPercent;
 
@@ -553,35 +553,35 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 
 	int iGoldMultipler = 1;
 
-	if (1 == number(1, 50000)) // 1/50000 È®·ü·Î µ·ÀÌ 10¹è
+	if (1 == number(1, 50000)) // 1/50000 money with probability 10 ship
 		iGoldMultipler *= 10;
-	else if (1 == number(1, 10000)) // 1/10000 È®·ü·Î µ·ÀÌ 5¹è
+	else if (1 == number(1, 10000)) // 1/10000 money with probability 5 ship
 		iGoldMultipler *= 5;
 
-	// °³ÀÎ Àû¿ë
+	// personal application
 	if (pkAttacker->GetPoint(POINT_GOLD_DOUBLE_BONUS))
 		if (number(1, 100) <= pkAttacker->GetPoint(POINT_GOLD_DOUBLE_BONUS))
 			iGoldMultipler *= 2;
 
 	//
-	// --------- µ· µå·Ó ¹è¼ö °áÁ¤ ----------
+	// --------- Money Drop Multiplier Determination ----------
 	//
 	if (test_server)
 		pkAttacker->ChatPacket(CHAT_TYPE_PARTY, LC_TEXT("gold_mul %d rate %d"), iGoldMultipler, CHARACTER_MANAGER::instance().GetMobGoldAmountRate(pkAttacker));
 
 	//
-	// --------- ½ÇÁ¦ µå·Ó Ã³¸® -------------
+	// --------- Actual drop handling -------------
 	// 
 	LPITEM item;
 
 	int iGold10DropPct = 100;
 	iGold10DropPct = (iGold10DropPct * 100) / (100 + CPrivManager::instance().GetPriv(pkAttacker, PRIV_GOLD10_DROP));
 
-	// MOB_RANK°¡ BOSSº¸´Ù ³ôÀ¸¸é ¹«Á¶°Ç µ·ÆøÅº
+	// MOB_RANK go BOSS If it's higher than that, it's definitely a money bomb.
 	if (GetMobRank() >= MOB_RANK_BOSS && !IsStone() && GetMobTable().dwGoldMax != 0)
 	{
 		if (1 == number(1, iGold10DropPct))
-			iGoldMultipler *= 10; // 1% È®·ü·Î µ· 10¹è
+			iGoldMultipler *= 10; // 1% money with probability 10 ship
 
 		int iSplitCount = number(25, 35);
 
@@ -604,7 +604,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 				sys_log(0, "Drop Money gold %d GoldMin %d GoldMax %d", iGold, GetMobTable().dwGoldMax, GetMobTable().dwGoldMax);
 			}
 
-			// NOTE: µ· ÆøÅºÀº Á¦ 3ÀÇ ¼Õ Ã³¸®¸¦ ÇÏÁö ¾ÊÀ½
+			// NOTE: The money bomb is mine 3 does not handle the hands of
 			if ((item = ITEM_MANAGER::instance().CreateItem(1, iGold)))
 			{
 				pos.x = GetX() + ((number(-14, 14) + number(-14, 14)) * 23);
@@ -617,11 +617,11 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 			}
 		}
 	}
-	// 1% È®·ü·Î µ·À» 10°³ ¶³¾î ¶ß¸°´Ù. (10¹è µå·ÓÀÓ)
+	// 1% money with probability 10 dog drops . (10 It's a pear drop )
 	else if (1 == number(1, iGold10DropPct))
 	{
 		//
-		// µ· ÆøÅº½Ä µå·Ó
+		// money bomb drop
 		//
 		for (int i = 0; i < 10; ++i)
 		{
@@ -634,7 +634,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 				continue;
 			}
 
-			// NOTE: µ· ÆøÅºÀº Á¦ 3ÀÇ ¼Õ Ã³¸®¸¦ ÇÏÁö ¾ÊÀ½
+			// NOTE: The money bomb is mine 3 does not handle the hands of
 			if ((item = ITEM_MANAGER::instance().CreateItem(1, iGold)))
 			{
 				pos.x = GetX() + (number(-7, 7) * 20);
@@ -695,7 +695,7 @@ void CHARACTER::RewardGold(LPCHARACTER pkAttacker)
 
 void CHARACTER::Reward(bool bItemDrop)
 {
-	if (GetRaceNum() == 5001) // ¿Ö±¸´Â µ·À» ¹«Á¶°Ç µå·Ó
+	if (GetRaceNum() == 5001) // Japanese pirates drop money unconditionally
 	{
 		PIXEL_POSITION pos;
 
@@ -787,7 +787,7 @@ void CHARACTER::Reward(bool bItemDrop)
 		return;
 
 	//
-	// µ· µå·Ó
+	// money drop
 	//
 	//PROF_UNIT pu2("r2");
 	if (test_server)
@@ -796,7 +796,7 @@ void CHARACTER::Reward(bool bItemDrop)
 	//pu2.Pop();
 
 	//
-	// ¾ÆÀÌÅÛ µå·Ó
+	// item drop
 	//
 	//PROF_UNIT pu3("r3");
 	LPITEM item;
@@ -859,7 +859,7 @@ void CHARACTER::Reward(bool bItemDrop)
 
 			if (v.empty())
 			{
-				// µ¥¹ÌÁö¸¦ Æ¯º°È÷ ¸¹ÀÌ ÁØ »ç¶÷ÀÌ ¾øÀ¸´Ï ¼ÒÀ¯±Ç ¾øÀ½
+				// There is no one who caused a lot of damage, so there is no ownership.
 				while (iItemIdx >= 0)
 				{
 					item = s_vec_item[iItemIdx--];
@@ -871,7 +871,7 @@ void CHARACTER::Reward(bool bItemDrop)
 					}
 
 					item->AddToGround(GetMapIndex(), pos);
-					// 10% ÀÌÇÏ µ¥¹ÌÁö ÁØ »ç¶÷³¢¸®´Â ¼ÒÀ¯±Ç¾øÀ½
+					// 10% The people who caused the damage below have no ownership rights.
 					//item->SetOwnership(pkAttacker);
 					item->StartDestroyEvent();
 
@@ -885,7 +885,7 @@ void CHARACTER::Reward(bool bItemDrop)
 			}
 			else
 			{
-				// µ¥¹ÌÁö ¸¹ÀÌ ÁØ »ç¶÷µé ³¢¸®¸¸ ¼ÒÀ¯±Ç ³ª´²°¡Áü
+				// Ownership is divided only between those who caused the most damage.
 				std::vector<LPCHARACTER>::iterator it = v.begin();
 
 				while (iItemIdx >= 0)
@@ -941,15 +941,15 @@ struct TItemDropPenalty
 
 TItemDropPenalty aItemDropPenalty_kor[9] =
 {
-	{   0,   0,  0,  0 },	// ¼±¿Õ
-	{   0,   0,  0,  0 },	// ¿µ¿õ
-	{   0,   0,  0,  0 },	// ¼ºÀÚ
-	{   0,   0,  0,  0 },	// ÁöÀÎ
-	{   0,   0,  0,  0 },	// ¾ç¹Î
-	{  25,   1,  5,  1 },	// ³¶ÀÎ
-	{  50,   2, 10,  1 },	// ¾ÇÀÎ
-	{  75,   4, 15,  1 },	// ¸¶µÎ
-	{ 100,   8, 20,  1 },	// ÆÐ¿Õ
+	{   0,   0,  0,  0 },	// good king
+	{   0,   0,  0,  0 },	// hero
+	{   0,   0,  0,  0 },	// saint
+	{   0,   0,  0,  0 },	// acquaintance
+	{   0,   0,  0,  0 },	// yangmin
+	{  25,   1,  5,  1 },	// ronin
+	{  50,   2, 10,  1 },	// knave
+	{  75,   4, 15,  1 },	// madhu
+	{ 100,   8, 20,  1 },	// king
 };
 
 void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
@@ -1186,7 +1186,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	if (!pkKiller && m_dwKillerPID)
 		pkKiller = CHARACTER_MANAGER::instance().FindByPID(m_dwKillerPID);
 
-	m_dwKillerPID = 0; // ¹Ýµå½Ã ÃÊ±âÈ­ ÇØ¾ßÇÔ DO NOT DELETE THIS LINE UNLESS YOU ARE 1000000% SURE
+	m_dwKillerPID = 0; // Must be initialized DO NOT DELETE THIS LINE UNLESS YOU ARE 1000000% SURE
 
 	bool isAgreedPVP = false;
 	bool isUnderGuildWar = false;
@@ -1255,7 +1255,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 				if (GetPoint(POINT_EMPIRE_POINT) < 10)
 				{
-					// TODO : ÀÔ±¸·Î ³¯¸®´Â ÄÚµå¸¦ ³Ö¾î¾ß ÇÑ´Ù.
+					// TODO : You must enter a code that blows through the entrance. .
 				}
 
 				char buf[256];
@@ -1323,7 +1323,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	ClearSync();
 
 	//sys_log(1, "stun cancel %s[%d]", GetName(), (DWORD)GetVID());
-	event_cancel(&m_pkStunEvent); // ±âÀý ÀÌº¥Æ®´Â Á×ÀÎ´Ù.
+	event_cancel(&m_pkStunEvent); // The stun event kills. .
 
 	if (IsPC())
 	{
@@ -1333,12 +1333,12 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	}
 	else
 	{
-		// °¡µå¿¡°Ô °ø°Ý¹ÞÀº ¸ó½ºÅÍ´Â º¸»óÀÌ ¾ø¾î¾ß ÇÑ´Ù.
+		// Monsters attacked by guards should not receive compensation .
 		if (!IS_SET(m_pointsInstant.instant_flag, INSTANT_FLAG_NO_REWARD))
 		{
 			if (!(pkKiller && pkKiller->IsPC() && pkKiller->GetGuild() && pkKiller->GetGuild()->UnderAnyWar(GUILD_WAR_TYPE_FIELD)))
 			{
-				// ºÎÈ°ÇÏ´Â ¸ó½ºÅÍ´Â º¸»óÀ» ÁÖÁö ¾Ê´Â´Ù.
+				// Revived monsters do not give rewards .
 				if (GetMobTable().dwResurrectionVnum)
 				{
 					// DUNGEON_MONSTER_REBIRTH_BUG_FIX
@@ -1390,10 +1390,10 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 		REMOVE_BIT(m_pointsInstant.instant_flag, INSTANT_FLAG_STUN);
 
-		// ÇÃ·¹ÀÌ¾î Ä³¸¯ÅÍÀÌ¸é
+		// If the player character
 		if (GetDesc() != NULL) {
 			//
-			// Å¬¶óÀÌ¾ðÆ®¿¡ ¿¡ÆåÆ® ÆÐÅ¶À» ´Ù½Ã º¸³½´Ù.
+			// Send the effect packet back to the client .
 			//
 			itertype(m_list_pkAffect) it = m_list_pkAffect.begin();
 
@@ -1402,11 +1402,11 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		}
 
 		//
-		// Dead ÀÌº¥Æ® »ý¼º,
+		// Dead Event Creation ,
 		//
-		// Dead ÀÌº¥Æ®¿¡¼­´Â ¸ó½ºÅÍÀÇ °æ¿ì ¸îÃÊ ÈÄ¿¡ Destroy µÇµµ·Ï ÇØÁÖ¸ç,
-		// PCÀÇ °æ¿ì 3ºÐ ÀÖ´Ù°¡ ¸¶À»¿¡¼­ ³ª¿Àµµ·Ï ÇØ ÁØ´Ù. 3ºÐ ³»¿¡´Â À¯Àú·ÎºÎÅÍ
-		// ¸¶À»¿¡¼­ ½ÃÀÛÇÒ °ÇÁö, ¿©±â¼­ ½ÃÀÛÇÒ °ÇÁö °áÁ¤À» ¹Þ´Â´Ù.
+		// Dead In the event, for monsters, after a few seconds Destroy Let's make it happen ,
+		// PC For 3 Let me get out of the village in a minute. . 3 From users within minutes
+		// Are you going to start in the village? , Decide if you want to start here .
 		if (isDuel == false)
 		{
 			if (m_pkDeadEvent)
@@ -1530,12 +1530,12 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	}
 
 	//
-	// CHARACTER::Damage ¸Þ¼Òµå´Â this°¡ µ¥¹ÌÁö¸¦ ÀÔ°Ô ÇÑ´Ù.
+	// CHARACTER::Damage The method is this causes damage .
 	//
 	// Arguments
-	//    pAttacker		: °ø°ÝÀÚ
-	//    dam		: µ¥¹ÌÁö
-	//    EDamageType	: ¾î¶² Çü½ÄÀÇ °ø°ÝÀÎ°¡?
+	//    pAttacker		: attacker
+	//    dam		: damage
+	//    EDamageType	: What type of attack is it? ?
 	//
 	// Return value
 	//    true		: dead
@@ -1608,7 +1608,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			}
 		}
 
-		// ÆòÅ¸°¡ ¾Æ´Ò ¶§´Â °øÆ÷ Ã³¸®
+		// When it is not a normal hit, deal with fear
 		if (type != DAMAGE_TYPE_NORMAL && type != DAMAGE_TYPE_NORMAL_RANGE)
 		{
 			if (IsAffectFlag(AFF_TERROR))
@@ -1640,19 +1640,19 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		//PROF_UNIT puAttr("Attr");
 
 		//
-		// ¸¶¹ýÇü ½ºÅ³°ú, ·¹ÀÎÁöÇü ½ºÅ³Àº(±ÃÀÚ°´) Å©¸®Æ¼ÄÃ°ú, °üÅë°ø°Ý °è»êÀ» ÇÑ´Ù.
-		// ¿ø·¡´Â ÇÏÁö ¾Ê¾Æ¾ß ÇÏ´Âµ¥ Nerf(´Ù¿î¹ë·±½º)ÆÐÄ¡¸¦ ÇÒ ¼ö ¾ø¾î¼­ Å©¸®Æ¼ÄÃ°ú
-		// °üÅë°ø°ÝÀÇ ¿ø·¡ °ªÀ» ¾²Áö ¾Ê°í, /2 ÀÌ»óÇÏ¿© Àû¿ëÇÑ´Ù.
+		// Magic skills and , Range-type skills ( court assassin ) Critical and , Calculate penetrating attack .
+		// I shouldn't have done it in the first place Nerf( down balance ) Because I can't patch,
+		// Without using the original value of the piercing attack , /2 I apply it because itâ€™s strange. .
 		//
-		// ¹«»ç ÀÌ¾ß±â°¡ ¸¹¾Æ¼­ ¹Ð¸® ½ºÅ³µµ Ãß°¡
+		// Since there are a lot of samurai stories, melee skills have also been added.
 		//
-		// 20091109 : ¹«»ç°¡ °á°úÀûÀ¸·Î ¾öÃ»³ª°Ô °­ÇØÁø °ÍÀ¸·Î °á·Ð³², µ¶ÀÏ ±âÁØ ¹«»ç ºñÀ² 70% À°¹Ú
+		// 20091109 : It is concluded that the samurai ultimately became extremely strong. , Germany standard safe rate 70% close to
 		//
 		if (type == DAMAGE_TYPE_MELEE || type == DAMAGE_TYPE_RANGE || type == DAMAGE_TYPE_MAGIC)
 		{
 			if (pAttacker)
 			{
-				// Å©¸®Æ¼ÄÃ
+				// Critical
 				int iCriticalPct = pAttacker->GetPoint(POINT_CRITICAL_PCT);
 
 				if (!IsPC())
@@ -1660,12 +1660,12 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 				if (iCriticalPct)
 				{
-					if (iCriticalPct >= 10) // 10º¸´Ù Å©¸é 5% + (4¸¶´Ù 1%¾¿ Áõ°¡), µû¶ó¼­ ¼öÄ¡°¡ 50ÀÌ¸é 20%
+					if (iCriticalPct >= 10) // 10 If it is bigger than 5% + (4 every 1% increase ), So the numbers are 50 This side 20%
 						iCriticalPct = 5 + (iCriticalPct - 10) / 4;
-					else // 10º¸´Ù ÀÛÀ¸¸é ´Ü¼øÈ÷ ¹ÝÀ¸·Î ±ðÀ½, 10 = 5%
+					else // 10 If it is smaller than that, simply cut it in half. , 10 = 5%
 						iCriticalPct /= 2;
 
-					//Å©¸®Æ¼ÄÃ ÀúÇ× °ª Àû¿ë.
+					// Apply critical resistance value .
 					iCriticalPct -= GetPoint(POINT_RESIST_CRITICAL);
 
 					if (number(1, 100) <= iCriticalPct)
@@ -1681,7 +1681,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// °üÅë°ø°Ý
+				// Penetrating attack
 				int iPenetratePct = pAttacker->GetPoint(POINT_PENETRATE_PCT);
 
 				if (!IsPC())
@@ -1703,16 +1703,16 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 					if (iPenetratePct >= 10)
 					{
-						// 10º¸´Ù Å©¸é 5% + (4¸¶´Ù 1%¾¿ Áõ°¡), µû¶ó¼­ ¼öÄ¡°¡ 50ÀÌ¸é 20%
+						// 10 If it is bigger than 5% + (4 every 1% increase ), So the numbers are 50 This side 20%
 						iPenetratePct = 5 + (iPenetratePct - 10) / 4;
 					}
 					else
 					{
-						// 10º¸´Ù ÀÛÀ¸¸é ´Ü¼øÈ÷ ¹ÝÀ¸·Î ±ðÀ½, 10 = 5%
+						// 10 If it is smaller than that, simply cut it in half. , 10 = 5%
 						iPenetratePct /= 2;
 					}
 
-					//°üÅëÅ¸°Ý ÀúÇ× °ª Àû¿ë.
+					// Penetrating hit resistance value applied .
 					iPenetratePct -= GetPoint(POINT_RESIST_PENETRATE);
 
 					if (number(1, 100) <= iPenetratePct)
@@ -1733,13 +1733,13 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			}
 		}
 		//
-		// ÄÞº¸ °ø°Ý, È° °ø°Ý, Áï ÆòÅ¸ ÀÏ ¶§¸¸ ¼Ó¼º°ªµéÀ» °è»êÀ» ÇÑ´Ù.
+		// combo attack , bow attack , In other words, attribute values â€‹â€‹are calculated only when hitting normally. .
 		//
 		else if (type == DAMAGE_TYPE_NORMAL || type == DAMAGE_TYPE_NORMAL_RANGE)
 		{
 			if (type == DAMAGE_TYPE_NORMAL)
 			{
-				// ±ÙÁ¢ ÆòÅ¸ÀÏ °æ¿ì ¸·À» ¼ö ÀÖÀ½
+				// Can be blocked if it is a melee hit
 				if (GetPoint(POINT_BLOCK) && number(1, 100) <= GetPoint(POINT_BLOCK))
 				{
 					if (test_server)
@@ -1754,7 +1754,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			}
 			else if (type == DAMAGE_TYPE_NORMAL_RANGE)
 			{
-				// ¿ø°Å¸® ÆòÅ¸ÀÇ °æ¿ì ÇÇÇÒ ¼ö ÀÖÀ½
+				// Can be avoided in the case of long-distance normal attacks.
 				if (GetPoint(POINT_DODGE) && number(1, 100) <= GetPoint(POINT_DODGE))
 				{
 					if (test_server)
@@ -1778,19 +1778,19 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				dam = dam * (100 - GetPoint(POINT_RESIST_NORMAL_DAMAGE)) / 100;
 
 			//
-			// °ø°ÝÀÚ ¼Ó¼º Àû¿ë
+			// Apply attacker properties
 			//
 			if (pAttacker)
 			{
 				if (type == DAMAGE_TYPE_NORMAL)
 				{
-					// ¹Ý»ç
+					// reflection
 					if (GetPoint(POINT_REFLECT_MELEE))
 					{
 						int reflectDamage = dam * GetPoint(POINT_REFLECT_MELEE) / 100;
 
-						// NOTE: °ø°ÝÀÚ°¡ IMMUNE_REFLECT ¼Ó¼ºÀ» °®°íÀÖ´Ù¸é ¹Ý»ç¸¦ ¾È ÇÏ´Â °Ô
-						// ¾Æ´Ï¶ó 1/3 µ¥¹ÌÁö·Î °íÁ¤ÇØ¼­ µé¾î°¡µµ·Ï ±âÈ¹¿¡¼­ ¿äÃ».
+						// NOTE: the attacker IMMUNE_REFLECT If it has a property, it doesn't reflect.
+						// not 1/3 Planning requested that it be fixed as damage. .
 						if (pAttacker->IsImmune(IMMUNE_REFLECT))
 							reflectDamage = int(reflectDamage / 3.0f + 0.5f);
 
@@ -1798,7 +1798,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// Å©¸®Æ¼ÄÃ
+				// Critical
 				int iCriticalPct = pAttacker->GetPoint(POINT_CRITICAL_PCT);
 
 				if (!IsPC())
@@ -1806,7 +1806,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 				if (iCriticalPct)
 				{
-					//Å©¸®Æ¼ÄÃ ÀúÇ× °ª Àû¿ë.
+					// Apply critical resistance value .
 					iCriticalPct -= GetPoint(POINT_RESIST_CRITICAL);
 
 					if (number(1, 100) <= iCriticalPct)
@@ -1817,7 +1817,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// °üÅë°ø°Ý
+				// Penetrating attack
 				int iPenetratePct = pAttacker->GetPoint(POINT_PENETRATE_PCT);
 
 				if (!IsPC())
@@ -1838,7 +1838,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				if (iPenetratePct)
 				{
 
-					//°üÅëÅ¸°Ý ÀúÇ× °ª Àû¿ë.
+					// Penetrating hit resistance value applied .
 					iPenetratePct -= GetPoint(POINT_RESIST_PENETRATE);
 
 					if (number(1, 100) <= iPenetratePct)
@@ -1851,7 +1851,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// HP ½ºÆ¿
+				// HP steel
 				if (pAttacker->GetPoint(POINT_STEAL_HP))
 				{
 					int pct = 1;
@@ -1869,7 +1869,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// SP ½ºÆ¿
+				// SP steel
 				if (pAttacker->GetPoint(POINT_STEAL_SP))
 				{
 					int pct = 1;
@@ -1896,7 +1896,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// µ· ½ºÆ¿
+				// money steel
 				if (pAttacker->GetPoint(POINT_STEAL_GOLD))
 				{
 					if (number(1, 100) <= pAttacker->GetPoint(POINT_STEAL_GOLD))
@@ -1907,8 +1907,8 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// Ä¥ ¶§¸¶´Ù HPÈ¸º¹
-				if (pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) && number(0, 4) > 0) // 80% È®·ü
+				// Every time I hit it HP recovery
+				if (pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) && number(0, 4) > 0) // 80% probability
 				{
 					int i = MIN(dam, iCurHP) * pAttacker->GetPoint(POINT_HIT_HP_RECOVERY) / 100;
 
@@ -1919,8 +1919,8 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// Ä¥ ¶§¸¶´Ù SPÈ¸º¹
-				if (pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) && number(0, 4) > 0) // 80% È®·ü
+				// Every time I hit it SP recovery
+				if (pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) && number(0, 4) > 0) // 80% probability
 				{
 					int i = MIN(dam, iCurHP) * pAttacker->GetPoint(POINT_HIT_SP_RECOVERY) / 100;
 
@@ -1931,7 +1931,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 					}
 				}
 
-				// »ó´ë¹æÀÇ ¸¶³ª¸¦ ¾ø¾Ø´Ù.
+				// Removes opponent's mana .
 				if (pAttacker->GetPoint(POINT_MANA_BURN_PCT))
 				{
 					if (number(1, 100) <= pAttacker->GetPoint(POINT_MANA_BURN_PCT))
@@ -1941,7 +1941,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		}
 
 		//
-		// ÆòÅ¸ ¶Ç´Â ½ºÅ³·Î ÀÎÇÑ º¸³Ê½º ÇÇÇØ/¹æ¾î °è»ê
+		// Bonus damage from normal hits or skills / defense calculation
 		//
 		switch (type)
 		{
@@ -1972,16 +1972,16 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		}
 
 		//
-		// ¸¶³ª½¯µå(Èæ½Å¼öÈ£)
+		// Mana Shield ( Dark God Guardian )
 		//
 		if (IsAffectFlag(AFF_MANASHIELD))
 		{
-			// POINT_MANASHIELD ´Â ÀÛ¾ÆÁú¼ö·Ï ÁÁ´Ù
+			// POINT_MANASHIELD The smaller the better
 			int iDamageSPPart = dam / 3;
 			int iDamageToSP = iDamageSPPart * GetPoint(POINT_MANASHIELD) / 100;
 			int iSP = GetSP();
 
-			// SP°¡ ÀÖÀ¸¸é ¹«Á¶°Ç µ¥¹ÌÁö Àý¹Ý °¨¼Ò
+			// SP If present, damage is reduced by half.
 			if (iDamageToSP <= iSP)
 			{
 				PointChange(POINT_SP, -iDamageToSP);
@@ -1989,14 +1989,14 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			}
 			else
 			{
-				// Á¤½Å·ÂÀÌ ¸ðÀÚ¶ó¼­ ÇÇ°¡ ´õ ±ï¿©¾ßÇÒ‹š
+				// When I need to lose more blood because I lack mental strength
 				PointChange(POINT_SP, -GetSP());
 				dam -= iSP * 100 / MAX(GetPoint(POINT_MANASHIELD), 1);
 			}
 		}
 
 		//
-		// ÀüÃ¼ ¹æ¾î·Â »ó½Â (¸ô ¾ÆÀÌÅÛ)
+		// Increased overall defense ( mall items )
 		//
 		if (GetPoint(POINT_MALL_DEFBONUS) > 0)
 		{
@@ -2007,7 +2007,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		if (pAttacker)
 		{
 			//
-			// ÀüÃ¼ °ø°Ý·Â »ó½Â (¸ô ¾ÆÀÌÅÛ)
+			// Increased overall attack power ( mall items )
 			//
 			if (pAttacker->GetPoint(POINT_MALL_ATTBONUS) > 0)
 			{
@@ -2016,7 +2016,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			}
 
 			//
-			// Á¦±¹À¸·Î ÀÎÇÑ º¸³Ê½º (ÇÑ±¹ ¿Ãµå ¹öÀü¸¸ Àû¿ë)
+			// Bonuses from Empire ( Applicable only to Korean old version )
 			//
 			int iEmpire = GetEmpire();
 			long lMapIndex = GetMapIndex();
@@ -2068,7 +2068,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			else
 				SetLastAttacked(get_dword_time());
 
-			// ¸ó½ºÅÍ ´ë»ç : ¸ÂÀ» ¶§
+			// monster dialogue : When hit
 			MonsterChat(MONSTER_CHAT_ATTACKED);
 		}
 
@@ -2081,7 +2081,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		if (IsDead())
 			return true;
 
-		// µ¶ °ø°ÝÀ¸·Î Á×Áö ¾Êµµ·Ï ÇÔ.
+		// Prevents death from poison attacks .
 		if (type == DAMAGE_TYPE_POISON)
 		{
 			if (GetHP() - dam <= 0)
@@ -2096,7 +2096,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			dam = dam * iDmgPct / 100;
 		}
 
-		// STONE SKIN : ÇÇÇØ ¹ÝÀ¸·Î °¨¼Ò
+		// STONE SKIN : Damage reduced by half
 		if (IsMonster() && IsStoneSkinner())
 		{
 			if (GetHPPct() < GetMobTable().bStoneSkinPoint)
@@ -2106,7 +2106,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		//PROF_UNIT puRest1("Rest1");
 		if (pAttacker)
 		{
-			// DEATH BLOW : È®·ü ÀûÀ¸·Î 4¹è ÇÇÇØ (!? ÇöÀç ÀÌº¥Æ®³ª °ø¼ºÀü¿ë ¸ó½ºÅÍ¸¸ »ç¿ëÇÔ)
+			// DEATH BLOW : probabilistically 4 ship damage (!? Only current event or siege monsters are used. )
 			if (pAttacker->IsMonster() && pAttacker->IsDeathBlower())
 			{
 				if (pAttacker->IsDeathBlow())
@@ -2135,7 +2135,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				damageFlag |= DAMAGE_PENETRATE;
 
 
-			//ÃÖÁ¾ µ¥¹ÌÁö º¸Á¤
+			// Final damage correction
 			float damMul = this->GetDamMul();
 			float tempDam = dam;
 			dam = tempDam * damMul + 0.5f;
@@ -2175,7 +2175,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		}
 
 		//
-		// !!!!!!!!! ½ÇÁ¦ HP¸¦ ÁÙÀÌ´Â ºÎºÐ !!!!!!!!!
+		// !!!!!!!!! actual HP The part that reduces !!!!!!!!!
 		//
 		if (!cannot_dead)
 		{
@@ -2202,7 +2202,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			//puRest20.Pop();
 
 			//PROF_UNIT puRest21("Rest21");
-			StartRecoveryEvent(); // ¸ó½ºÅÍ´Â µ¥¹ÌÁö¸¦ ÀÔÀ¸¸é È¸º¹À» ½ÃÀÛÇÑ´Ù.
+			StartRecoveryEvent(); // When a monster takes damage, it begins to recover. .
 			//puRest21.Pop();
 
 			//PROF_UNIT puRest22("Rest22");
@@ -2227,36 +2227,36 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 	void CHARACTER::DistributeHP(LPCHARACTER pkKiller)
 	{
-		if (pkKiller->GetDungeon()) // ´øÁ¯³»¿¡¼± ¸¸µÎ°¡³ª¿ÀÁö¾Ê´Â´Ù
+		if (pkKiller->GetDungeon()) // Dumplings do not appear in the dungeon.
 			return;
 	}
 
 	static void GiveExp(LPCHARACTER from, LPCHARACTER to, int iExp)
 	{
-		// ·¹º§Â÷ °æÇèÄ¡ °¡°¨ºñÀ²
+		// Level difference experience point addition/subtraction ratio
 		iExp = CALCULATE_VALUE_LVDELTA(to->GetLevel(), from->GetLevel(), iExp);
 
 		int iBaseExp = iExp;
 
-		// Á¡¼ú, È¸»ç °æÇèÄ¡ ÀÌº¥Æ® Àû¿ë
+		// divination , Apply company experience event
 		iExp = iExp * (100 + CPrivManager::instance().GetPriv(to, PRIV_EXP_PCT)) / 100;
 
-		// °ÔÀÓ³» ±âº» Á¦°øµÇ´Â °æÇèÄ¡ º¸³Ê½º
+		// Experience bonus provided as standard in game
 		{
-			// ³ëµ¿Àý ¸Þ´Þ
+			// labor day medal
 			if (to->IsEquipUniqueItem(UNIQUE_ITEM_LARBOR_MEDAL))
 				iExp += iExp * 20 /100;
 
-			// »ç±ÍÅ¸¿ö °æÇèÄ¡ º¸³Ê½º
+			// Sagittarius Tower Experience Bonus
 			if (to->GetMapIndex() >= 660000 && to->GetMapIndex() < 670000)
-				iExp += iExp * 20 / 100; // 1.2¹è (20%)
+				iExp += iExp * 20 / 100; // 1.2 ship (20%)
 
-			// ¾ÆÀÌÅÛ °æÇèÄ¡ µÎ¹è ¼Ó¼º
+			// Double item experience attribute
 			if (to->GetPoint(POINT_EXP_DOUBLE_BONUS))
 				if (number(1, 100) <= to->GetPoint(POINT_EXP_DOUBLE_BONUS))
-					iExp += iExp * 30 / 100; // 1.3¹è (30%)
+					iExp += iExp * 30 / 100; // 1.3 ship (30%)
 
-			// °æÇèÀÇ ¹ÝÁö (2½Ã°£Â¥¸®)
+			// ring of experience (2 hourly )
 			if (to->IsEquipUniqueItem(UNIQUE_ITEM_DOUBLE_EXP))
 				iExp += iExp * 50 / 100;
 
@@ -2280,7 +2280,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				case 20123:
 				case 20124:
 				case 20125:
-					// ¹é»çÀÚ °æÇèÄ¡ º¸³Ê½º
+					// White Lion Experience Bonus
 					iExp += iExp * 30 / 100;
 					break;
 			}
@@ -2311,10 +2311,10 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				   );
 		}
 
-		// ±âÈ¹Ãø Á¶Á¤°ª 2005.04.21 ÇöÀç 85%
+		// Planning adjustment value 2005.04.21 today 85%
 		iExp = iExp * CHARACTER_MANAGER::instance().GetMobExpRate(to) / 100;
 
-		// °æÇèÄ¡ ÇÑ¹ø È¹µæ·® Á¦ÇÑ
+		// Limit the amount of experience gained once
 		iExp = MIN(to->GetNextExp() / 10, iExp);
 
 		if (test_server)
@@ -2330,10 +2330,10 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 		{
 			LPCHARACTER you = to->GetMarryPartner();
-			// ºÎºÎ°¡ ¼­·Î ÆÄÆ¼ÁßÀÌ¸é ±Ý½½ÀÌ ¿À¸¥´Ù
+			// When a couple is at a party, things get heated.
 			if (you)
 			{
-				// 1¾ïÀÌ 100%
+				// 1 Eun-i 100%
 				DWORD dwUpdatePoint = 2000*iExp/to->GetLevel()/to->GetLevel()/3;
 
 				if (to->GetPremiumRemainSeconds(PREMIUM_MARRIAGE_FAST) > 0 ||
@@ -2446,7 +2446,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 						pParty->ChatPacketToAllMember(CHAT_TYPE_INFO, "exp party bonus %d%%", pParty->GetExpBonusPercent());
 				}
 
-				// °æÇèÄ¡ ¸ô¾ÆÁÖ±â (ÆÄÆ¼°¡ È¹µæÇÑ °æÇèÄ¡¸¦ 5% »©¼­ ¸ÕÀú ÁÜ)
+				// Give away experience ( Experience gained by the party 5% Take it out and give it first )
 				if (pParty->GetExpCentralizeCharacter())
 				{
 					LPCHARACTER tch = pParty->GetExpCentralizeCharacter();
@@ -2485,7 +2485,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 		TDamageMap::iterator it = m_map_kDamage.begin();
 
-		// ÀÏ´Ü ÁÖÀ§¿¡ ¾ø´Â »ç¶÷À» °É·¯ ³½´Ù. (50m)
+		// First, filter out people who are not around. . (50m)
 		while (it != m_map_kDamage.end())
 		{
 			const VID & c_VID = it->first;
@@ -2495,7 +2495,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 			LPCHARACTER pAttacker = CHARACTER_MANAGER::instance().Find(c_VID);
 
-			// NPC°¡ ¶§¸®±âµµ ÇÏ³ª? -.-;
+			// NPC Sometimes I get hit ? -.-;
 			if (!pAttacker || pAttacker->IsNPC() || DISTANCE_APPROX(GetX()-pAttacker->GetX(), GetY()-pAttacker->GetY())>5000)
 				continue;
 
@@ -2545,10 +2545,10 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		SetExp(0);
 		//m_map_kDamage.clear();
 
-		if (iTotalDam == 0)	// µ¥¹ÌÁö ÁØ°Ô 0ÀÌ¸é ¸®ÅÏ
+		if (iTotalDam == 0)	// Damage done 0 If so, return
 			return NULL;
 
-		if (m_pkChrStone)	// µ¹ÀÌ ÀÖÀ» °æ¿ì °æÇèÄ¡ÀÇ ¹ÝÀ» µ¹¿¡°Ô ³Ñ±ä´Ù.
+		if (m_pkChrStone)	// If there is a stone, give half of the experience points to the stone. .
 		{
 			//sys_log(0, "__ Give half to Stone : %d", iExpToDistribute>>1);
 			int iExp = iExpToDistribute >> 1;
@@ -2564,11 +2564,11 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		if (damage_info_table.empty())
 			return NULL;
 
-		// Á¦ÀÏ µ¥¹ÌÁö¸¦ ¸¹ÀÌ ÁØ »ç¶÷ÀÌ HP È¸º¹À» ÇÑ´Ù.
-		DistributeHP(pkChrMostAttacked);	// ¸¸µÎ ½Ã½ºÅÛ
+		// The person who did the most damage HP recover .
+		DistributeHP(pkChrMostAttacked);	// dumpling system
 
 		{
-			// Á¦ÀÏ µ¥¹ÌÁö¸¦ ¸¹ÀÌ ÁØ »ç¶÷ÀÌ³ª ÆÄÆ¼°¡ ÃÑ °æÇèÄ¡ÀÇ 20% + ÀÚ±â°¡ ¶§¸°¸¸Å­ÀÇ °æÇèÄ¡¸¦ ¸Ô´Â´Ù.
+			// The person or party that inflicts the most damage receives the total experience. 20% + You get experience points equal to the amount you hit. .
 			TDamageInfoTable::iterator di = damage_info_table.begin();
 			{
 				TDamageInfoTable::iterator it;
@@ -2597,7 +2597,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 			di->Distribute(this, iExp);
 
-			// 100% ´Ù ¸Ô¾úÀ¸¸é ¸®ÅÏÇÑ´Ù.
+			// 100% Return when you're done eating .
 			if (fPercent == 1.0f)
 				return pkChrMostAttacked;
 
@@ -2605,7 +2605,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		}
 
 		{
-			// ³²Àº 80%ÀÇ °æÇèÄ¡¸¦ ºÐ¹èÇÑ´Ù.
+			// remainder 80% distribute experience points .
 			TDamageInfoTable::iterator it;
 
 			for (it = damage_info_table.begin(); it != damage_info_table.end(); ++it)
@@ -2628,7 +2628,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 		return pkChrMostAttacked;
 	}
 
-	// È­»ì °³¼ö¸¦ ¸®ÅÏÇØ ÁÜ
+	// Returns the number of arrows
 	int CHARACTER::GetArrowAndBow(LPITEM * ppkBow, LPITEM * ppkArrow, int iArrowCount/* = 1 */)
 	{
 		LPITEM pkBow;
@@ -2700,7 +2700,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				if (!pkVictim)
 					return;
 
-				// °ø°Ý ºÒ°¡
+				// Can't attack
 				if (!battle_is_attackable(m_me, pkVictim))
 					return;
 
@@ -2714,7 +2714,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 				switch (m_bType)
 				{
-					case 0: // ÀÏ¹ÝÈ°
+					case 0: // normal bow
 						{
 							int iDam = 0;
 
@@ -2748,7 +2748,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 							NormalAttackAffect(m_me, pkVictim);
 
-							// µ¥¹ÌÁö °è»ê
+							// Damage Calculation
 							iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST_BOW)) / 100;
 
 							//sys_log(0, "%s arrow %s dam %d", m_me->GetName(), pkVictim->GetName(), iDam);
@@ -2760,11 +2760,11 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 								pkVictim->BeginFight(m_me);
 
 							pkVictim->Damage(m_me, iDam, DAMAGE_TYPE_NORMAL_RANGE);
-							// Å¸°ÝÄ¡ °è»êºÎ ³¡
+							// End of hit calculation section
 						}
 						break;
 
-					case 1: // ÀÏ¹Ý ¸¶¹ý
+					case 1: // normal magic
 						{
 							int iDam;
 
@@ -2775,7 +2775,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 							NormalAttackAffect(m_me, pkVictim);
 
-							// µ¥¹ÌÁö °è»ê
+							// Damage Calculation
 							iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST_MAGIC)) / 100;
 
 							//sys_log(0, "%s arrow %s dam %d", m_me->GetName(), pkVictim->GetName(), iDam);
@@ -2787,16 +2787,16 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 								pkVictim->BeginFight(m_me);
 
 							pkVictim->Damage(m_me, iDam, DAMAGE_TYPE_MAGIC);
-							// Å¸°ÝÄ¡ °è»êºÎ ³¡
+							// End of hit calculation section
 						}
 						break;
 
-					case SKILL_YEONSA:	// ¿¬»ç
+					case SKILL_YEONSA:	// speaker
 						{
 							//int iUseArrow = 2 + (m_me->GetSkillPower(SKILL_YEONSA) *6/100);
 							int iUseArrow = 1;
 
-							// ÅäÅ»¸¸ °è»êÇÏ´Â°æ¿ì
+							// When calculating only the total
 							{
 								if (iUseArrow == m_me->GetArrowAndBow(&pkBow, &pkArrow, iUseArrow))
 								{
@@ -2928,7 +2928,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 							sys_log(0, "%s - Skill %d -> %s", m_me->GetName(), m_bType, pkVictim->GetName());
 							m_me->ComputeSkill(m_bType, pkVictim);
 
-							// TODO ¿©·¯¸í¿¡°Ô ½µ ½µ ½µ ÇÏ±â
+							// TODO Shook at several people
 						}
 						break;
 
@@ -3025,7 +3025,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 		TDamageMap::iterator it = m_map_kDamage.begin();
 
-		// ÀÏ´Ü ÁÖÀ§¿¡ ¾ø´Â »ç¶÷À» °É·¯ ³½´Ù.
+		// First, filter out people who are not around. .
 		while (it != m_map_kDamage.end())
 		{
 			const VID & c_VID = it->first;
@@ -3078,7 +3078,7 @@ LPCHARACTER CHARACTER::GetVictim() const
 	return CHARACTER_MANAGER::instance().Find(m_kVIDVictim);
 }
 
-LPCHARACTER CHARACTER::GetProtege() const // º¸È£ÇØ¾ß ÇÒ ´ë»óÀ» ¸®ÅÏ
+LPCHARACTER CHARACTER::GetProtege() const // Returns what needs to be protected
 {
 	if (m_pkChrStone)
 		return m_pkChrStone;
@@ -3231,7 +3231,7 @@ struct FuncAggregateMonster
 			if (ch->GetVictim())
 				return;
 
-			if (number(1, 100) <= 50) // ÀÓ½Ã·Î 50% È®·ü·Î ÀûÀ» ²ø¾î¿Â´Ù
+			if (number(1, 100) <= 50) // temporarily 50% Chance of attracting enemies
 				if (DISTANCE_APPROX(ch->GetX() - m_ch->GetX(), ch->GetY() - m_ch->GetY()) < 5000)
 					if (ch->CanBeginFight())
 						ch->BeginFight(m_ch);
@@ -3359,7 +3359,7 @@ void CHARACTER::PullMonster()
 
 void CHARACTER::UpdateAggrPointEx(LPCHARACTER pAttacker, EDamageType type, int dam, CHARACTER::TBattleInfo & info)
 {
-	// Æ¯Á¤ °ø°ÝÅ¸ÀÔ¿¡ µû¶ó ´õ ¿Ã¶ó°£´Ù
+	// It goes up further depending on the specific attack type.
 	switch (type)
 	{
 		case DAMAGE_TYPE_NORMAL_RANGE:
@@ -3378,7 +3378,7 @@ void CHARACTER::UpdateAggrPointEx(LPCHARACTER pAttacker, EDamageType type, int d
 			break;
 	}
 
-	// °ø°ÝÀÚ°¡ ÇöÀç ´ë»óÀÎ °æ¿ì º¸³Ê½º¸¦ ÁØ´Ù.
+	// Gives a bonus if the attacker is the current target .
 	if (pAttacker == GetVictim())
 		dam = (int) (dam * 1.2f);
 
@@ -3392,7 +3392,7 @@ void CHARACTER::UpdateAggrPointEx(LPCHARACTER pAttacker, EDamageType type, int d
 	{
 		LPPARTY pParty = GetParty();
 
-		// ¸®´õÀÎ °æ¿ì ¿µÇâ·ÂÀÌ Á»´õ °­ÇÏ´Ù
+		// If you are a leader, your influence is stronger.
 		int iPartyAggroDist = dam;
 
 		if (pParty->GetLeaderPID() == GetVID())
@@ -3424,7 +3424,7 @@ void CHARACTER::UpdateAggrPoint(LPCHARACTER pAttacker, EDamageType type, int dam
 
 void CHARACTER::ChangeVictimByAggro(int iNewAggro, LPCHARACTER pNewVictim)
 {
-	if (get_dword_time() - m_dwLastVictimSetTime < 3000) // 3ÃÊ´Â ±â´Ù·Á¾ßÇÑ´Ù
+	if (get_dword_time() - m_dwLastVictimSetTime < 3000) // 3 seconds have to wait
 		return;
 
 	if (pNewVictim == GetVictim())
@@ -3435,7 +3435,7 @@ void CHARACTER::ChangeVictimByAggro(int iNewAggro, LPCHARACTER pNewVictim)
 			return;
 		}
 
-		// Aggro°¡ °¨¼ÒÇÑ °æ¿ì
+		// Aggro If decreases
 		TDamageMap::iterator it;
 		TDamageMap::iterator itFind = m_map_kDamage.end();
 

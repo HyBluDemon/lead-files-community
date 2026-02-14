@@ -9,13 +9,13 @@ enum EDataType
 };
 
 //
-// 맵 속성들을 처리할 때 사용
+// Used when processing map properties
 //
 class CAttribute
 {
     public:
-	CAttribute(DWORD width, DWORD height); // dword 타잎으로 모두 0을 채운다.
-	CAttribute(DWORD * attr, DWORD width, DWORD height); // attr을 읽어서 smart하게 속성을 읽어온다.
+	CAttribute(DWORD width, DWORD height); // dword all in type 0 fill in .
+	CAttribute(DWORD * attr, DWORD width, DWORD height); // attr By reading smart Read the properties .
 	~CAttribute();
 	void Alloc();
 	int GetDataType();

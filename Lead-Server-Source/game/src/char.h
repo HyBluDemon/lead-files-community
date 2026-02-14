@@ -83,7 +83,7 @@ enum EDamageType
 	DAMAGE_TYPE_NONE,
 	DAMAGE_TYPE_NORMAL,
 	DAMAGE_TYPE_NORMAL_RANGE,
-	//스킬
+	// skill
 	DAMAGE_TYPE_MELEE,
 	DAMAGE_TYPE_RANGE,
 	DAMAGE_TYPE_FIRE,
@@ -138,7 +138,7 @@ struct DynamicCharacterPtr {
 	uint32_t id;
 };
 
-/* 저장하는 데이터 */
+/* data you save */
 typedef struct character_point
 {
 	long			points[POINT_MAX_NUM];
@@ -161,7 +161,7 @@ typedef struct character_point
 	BYTE			skill_group;
 } CHARACTER_POINT;
 
-/* 저장되지 않는 캐릭터 데이터 */
+/* Character data not saved */
 typedef struct character_point_instant
 {
 	long			points[POINT_MAX_NUM];
@@ -183,7 +183,7 @@ typedef struct character_point_instant
 	LPITEM				pItems[INVENTORY_AND_EQUIP_SLOT_MAX];
 	ItemCellType		bItemGrid[INVENTORY_AND_EQUIP_SLOT_MAX];
 
-	// 용혼석 인벤토리.
+	// Dragon Soul Stone Inventory .
 	LPITEM			pDSItems[DRAGON_SOUL_INVENTORY_MAX_NUM];
 	WORD			wDSItemGrid[DRAGON_SOUL_INVENTORY_MAX_NUM];
 
@@ -197,7 +197,7 @@ typedef struct character_point_instant
 
 	BYTE			gm_level;
 
-	BYTE			bBasePart;	// 평상복 번호
+	BYTE			bBasePart;	// casual number
 
 	int				iMaxStamina;
 
@@ -295,7 +295,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 {
 	protected:
 		//////////////////////////////////////////////////////////////////////////////////
-		// Entity 관련
+		// Entity related
 		virtual void	EncodeInsertPacket(LPENTITY entity);
 		virtual void	EncodeRemovePacket(LPENTITY entity);
 		//////////////////////////////////////////////////////////////////////////////////
@@ -305,7 +305,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				UpdatePacket();
 
 		//////////////////////////////////////////////////////////////////////////////////
-		// FSM (Finite State Machine) 관련
+		// FSM (Finite State Machine) related
 	protected:
 		CStateTemplate<CHARACTER>	m_stateMove;
 		CStateTemplate<CHARACTER>	m_stateBattle;
@@ -381,13 +381,13 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		DWORD			GetPlayerID() const	{ return m_dwPlayerID; }
 
 		void			SetPlayerProto(const TPlayerTable * table);
-		void			CreatePlayerProto(TPlayerTable & tab);	// 저장 시 사용
+		void			CreatePlayerProto(TPlayerTable & tab);	// Use when saving
 
 		void			SetProto(const CMob * c_pkMob);
 		WORD			GetRaceNum() const;
 
 		void			Save();		// DelayedSave
-		void			SaveReal();	// 실제 저장
+		void			SaveReal();	// actual storage
 		void			FlushDelayedSaveItem();
 
 		const char *	GetName() const;
@@ -428,7 +428,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		DWORD			GetExp() const		{ return m_points.exp;	}
 		void			SetExp(DWORD exp)	{ m_points.exp = exp;	}
 		DWORD			GetNextExp() const;
-		LPCHARACTER		DistributeExp();	// 제일 많이 때린 사람을 리턴한다.
+		LPCHARACTER		DistributeExp();	// Return to the person who hit the most .
 		void			DistributeHP(LPCHARACTER pkKiller);
 		void			DistributeSP(LPCHARACTER pkKiller, int iMethod=0);
 
@@ -511,14 +511,14 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		DWORD			GetPolymorphItemVnum() const;
 		DWORD			GetMonsterDrainSPPoint() const;
 
-		void			MainCharacterPacket();	// 내가 메인캐릭터라고 보내준다.
+		void			MainCharacterPacket();	// They tell me that I am the main character. .
 
 		void			ComputePoints();
 		void			ComputeBattlePoints();
 		void			PointChange(BYTE type, int amount, bool bAmount = false, bool bBroadcast = false);
 		void			PointsPacket();
 		void			ApplyPoint(BYTE bApplyType, int iVal);
-		void			CheckMaximumPoints();	// HP, SP 등의 현재 값이 최대값 보다 높은지 검사하고 높다면 낮춘다.
+		void			CheckMaximumPoints();	// HP, SP Check whether the current value of etc. is higher than the maximum value, and if so, lower it. .
 
 		bool			Show(long lMapIndex, long x, long y, long z = LONG_MAX, bool bShowSpawnMotion = false);
 
@@ -542,7 +542,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			IsBlockMode(BYTE bFlag) const	{ return (m_pointsInstant.bBlockMode & bFlag)?true:false; }
 
 		bool			IsPolymorphed() const		{ return m_dwPolymorphRace>0; }
-		bool			IsPolyMaintainStat() const	{ return m_bPolyMaintainStat; } // 이전 스텟을 유지하는 폴리모프.
+		bool			IsPolyMaintainStat() const	{ return m_bPolyMaintainStat; } // Polymorph retains previous stats .
 		void			SetPolymorph(DWORD dwRaceNum, bool bMaintainStat = false);
 		DWORD			GetPolymorphVnum() const	{ return m_dwPolymorphRace; }
 		int				GetPolymorphPower() const;
@@ -597,15 +597,15 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			SetNowWalking(bool bWalkFlag);	
 		void			ResetWalking()			{ SetNowWalking(m_bWalking); }
 
-		bool			Goto(long x, long y);	// 바로 이동 시키지 않고 목표 위치로 BLENDING 시킨다.
+		bool			Goto(long x, long y);	// To the target location without moving it immediately BLENDING let me do it .
 		void			Stop();
 
-		bool			CanMove() const;		// 이동할 수 있는가?
+		bool			CanMove() const;		// Can you move? ?
 
 		void			SyncPacket();
-		bool			Sync(long x, long y);	// 실제 이 메소드로 이동 한다 (각 종 조건에 의한 이동 불가가 없음)
-		bool			Move(long x, long y);	// 조건을 검사하고 Sync 메소드를 통해 이동 한다.
-		void			OnMove(bool bIsAttack = false);	// 움직일때 불린다. Move() 메소드 이외에서도 불릴 수 있다.
+		bool			Sync(long x, long y);	// Actually go to this method ( No movement is possible due to various conditions. )
+		bool			Move(long x, long y);	// check the conditions Sync Move through method .
+		void			OnMove(bool bIsAttack = false);	// It is called when moving . Move() Can also be called outside of the method .
 		DWORD			GetMotionMode() const;
 		float			GetMoveMotionSpeed() const;
 		float			GetMoveSpeed() const;
@@ -616,7 +616,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		DWORD			GetLastMoveTime() const		{ return m_dwLastMoveTime; }
 		DWORD			GetLastAttackTime() const	{ return m_dwLastAttackTime; }
 
-		void			SetLastAttacked(DWORD time);	// 마지막으로 공격받은 시간 및 위치를 저장함
+		void			SetLastAttacked(DWORD time);	// Saves time and location of last attack
 
 		bool			SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList = true);
 		bool			IsSyncOwner(LPCHARACTER ch) const;
@@ -643,7 +643,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		float			m_fSyncTime;
 		LPCHARACTER		m_pkChrSyncOwner;
-		CHARACTER_LIST	m_kLst_pkChrSyncOwned;	// 내가 SyncOwner인 자들
+		CHARACTER_LIST	m_kLst_pkChrSyncOwned;	// I SyncOwner Those who are
 
 		PIXEL_POSITION	m_posDest;
 		PIXEL_POSITION	m_posStart;
@@ -666,7 +666,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			m_bStaminaConsume;
 		// End
 
-		// Quickslot 관련
+		// Quickslot related
 	public:
 		void			SyncQuickslot(BYTE bType, BYTE bOldPos, BYTE bNewPos);
 		bool			GetQuickslot(BYTE pos, TQuickslot ** ppSlot);
@@ -695,7 +695,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			LoadAffect(DWORD dwCount, TPacketAffectElement * pElements);
 		void			SaveAffect();
 
-		// Affect loading이 끝난 상태인가?
+		// Affect loading Is this over? ?
 		bool			IsLoadedAffect() const	{ return m_bIsLoadedAffect; }		
 
 		bool			IsGoodAffect(BYTE bAffectType) const;
@@ -721,25 +721,25 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			DenyToParty(LPCHARACTER member);
 		void			AcceptToParty(LPCHARACTER member);
 
-		/// 자신의 파티에 다른 character 를 초대한다.
+		/// others in their party character invite .
 		/**
-		 * @param	pchInvitee 초대할 대상 character. 파티에 참여 가능한 상태이어야 한다.
+		 * @param	pchInvitee Who to invite character. Must be able to participate in the party .
 		 *
-		 * 양측 character 의 상태가 파티에 초대하고 초대받을 수 있는 상태가 아니라면 초대하는 캐릭터에게 해당하는 채팅 메세지를 전송한다.
+		 * both sides character If the status is not one in which you can invite and be invited to a party, the corresponding chat message is sent to the inviting character. .
 		 */
 		void			PartyInvite(LPCHARACTER pchInvitee);
 
-		/// 초대했던 character 의 수락을 처리한다.
+		/// invited character Process acceptance of .
 		/**
-		 * @param	pchInvitee 파티에 참여할 character. 파티에 참여가능한 상태이어야 한다.
+		 * @param	pchInvitee join the party character. Must be able to participate in the party .
 		 *
-		 * pchInvitee 가 파티에 가입할 수 있는 상황이 아니라면 해당하는 채팅 메세지를 전송한다.
+		 * pchInvitee If you are not in a situation where you can join the party, send the corresponding chat message. .
 		 */
 		void			PartyInviteAccept(LPCHARACTER pchInvitee);
 
-		/// 초대했던 character 의 초대 거부를 처리한다.
+		/// invited character Handles invitation rejections from .
 		/**
-		 * @param [in]	dwPID 초대 했던 character 의 PID
+		 * @param [in]	dwPID invited character of PID
 		 */
 		void			PartyInviteDeny(DWORD dwPID);
 
@@ -752,45 +752,45 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 	protected:
 
-		/// 파티에 가입한다.
+		/// join the party .
 		/**
-		 * @param	pkLeader 가입할 파티의 리더
+		 * @param	pkLeader Leader of the party to join
 		 */
 		void			PartyJoin(LPCHARACTER pkLeader);
 
 		/**
-		 * 파티 가입을 할 수 없을 경우의 에러코드.
-		 * Error code 는 시간에 의존적인가에 따라 변경가능한(mutable) type 과 정적(static) type 으로 나뉜다.
-		 * Error code 의 값이 PERR_SEPARATOR 보다 낮으면 변경가능한 type 이고 높으면 정적 type 이다.
+		 * Error code when you cannot join a party .
+		 * Error code is changeable depending on whether it is time-dependent or not. (mutable) type and static (static) type It is divided into .
+		 * Error code The value of PERR_SEPARATOR If it is lower, it can be changed type and if it is high, it is static type am .
 		 */
 		enum PartyJoinErrCode {
-			PERR_NONE		= 0,	///< 처리성공
-			PERR_SERVER,			///< 서버문제로 파티관련 처리 불가
-			PERR_DUNGEON,			///< 캐릭터가 던전에 있음
-			PERR_OBSERVER,			///< 관전모드임
-			PERR_LVBOUNDARY,		///< 상대 캐릭터와 레벨차이가 남
-			PERR_LOWLEVEL,			///< 상대파티의 최고레벨보다 30레벨 낮음
-			PERR_HILEVEL,			///< 상대파티의 최저레벨보다 30레벨 높음
-			PERR_ALREADYJOIN,		///< 파티가입 대상 캐릭터가 이미 파티중
-			PERR_PARTYISFULL,		///< 파티인원 제한 초과
+			PERR_NONE		= 0,	///< Processing success
+			PERR_SERVER,			///< Party related processing not possible due to server issue
+			PERR_DUNGEON,			///< Character is in a dungeon
+			PERR_OBSERVER,			///< It's spectator mode.
+			PERR_LVBOUNDARY,		///< There is a level difference with the opponent character.
+			PERR_LOWLEVEL,			///< Higher than the highest level of the opposing party 30 level low
+			PERR_HILEVEL,			///< Higher than the lowest level of the opposing party 30 level high
+			PERR_ALREADYJOIN,		///< The character to join the party is already in the party.
+			PERR_PARTYISFULL,		///< Party number limit exceeded
 			PERR_SEPARATOR,			///< Error type separator.
-			PERR_DIFFEMPIRE,		///< 상대 캐릭터와 다른 제국임
-			PERR_MAX				///< Error code 최고치. 이 앞에 Error code 를 추가한다.
+			PERR_DIFFEMPIRE,		///< It's a different empire than the other character.
+			PERR_MAX				///< Error code highest . in front of this Error code add .
 		};
 
-		/// 파티 가입이나 결성 가능한 조건을 검사한다.
+		/// Check conditions for joining or forming a party .
 		/**
-		 * @param 	pchLeader 파티의 leader 이거나 초대한 character
-		 * @param	pchGuest 초대받는 character
-		 * @return	모든 PartyJoinErrCode 가 반환될 수 있다.
+		 * @param 	pchLeader party leader or invited character
+		 * @param	pchGuest invited character
+		 * @return	every PartyJoinErrCode can be returned .
 		 */
 		static PartyJoinErrCode	IsPartyJoinableCondition(const LPCHARACTER pchLeader, const LPCHARACTER pchGuest);
 
-		/// 파티 가입이나 결성 가능한 동적인 조건을 검사한다.
+		/// Examines dynamic conditions for joining or forming a party .
 		/**
-		 * @param 	pchLeader 파티의 leader 이거나 초대한 character
-		 * @param	pchGuest 초대받는 character
-		 * @return	mutable type 의 code 만 반환한다.
+		 * @param 	pchLeader party leader or invited character
+		 * @param	pchGuest invited character
+		 * @return	mutable type of code returns only .
 		 */
 		static PartyJoinErrCode	IsPartyJoinableMutableCondition(const LPCHARACTER pchLeader, const LPCHARACTER pchGuest);
 
@@ -799,11 +799,11 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		LPEVENT			m_pkPartyRequestEvent;
 
 		/**
-		 * 파티초청 Event map.
-		 * key: 초대받은 캐릭터의 PID
-		 * value: event의 pointer
+		 * Party invitation Event map.
+		 * key: of invited characters PID
+		 * value: event of pointer
 		 *
-		 * 초대한 캐릭터들에 대한 event map.
+		 * About the invited characters event map.
 		 */
 		typedef std::map< DWORD, LPEVENT >	EventMap;
 		EventMap		m_PartyInviteEventMap;
@@ -837,7 +837,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		////////////////////////////////////////////////////////////////////////////////////////
 		// Item related
 	public:
-		bool			CanHandleItem(bool bSkipRefineCheck = false, bool bSkipObserver = false); // 아이템 관련 행위를 할 수 있는가?
+		bool			CanHandleItem(bool bSkipRefineCheck = false, bool bSkipObserver = false); // Can you perform item-related actions? ?
 
 		bool			IsItemLoaded() const	{ return m_bItemLoaded; }
 		void			SetItemLoaded()	{ m_bItemLoaded = true; }
@@ -854,14 +854,14 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		LPITEM			GetWear(ItemCellType bCell) const;
 
 		// MYSHOP_PRICE_LIST
-		void			UseSilkBotary(void); 		/// 비단 보따리 아이템의 사용
+		void			UseSilkBotary(void); 		/// Use of silk bundle items
 
-		/// DB 캐시로 부터 받아온 가격정보 리스트를 유저에게 전송하고 보따리 아이템 사용을 처리한다.
+		/// DB Sends the price information list received from the cache to the user and processes the use of bundled items. .
 		/**
-		 * @param [in] p	가격정보 리스트 패킷
+		 * @param [in] p	Price information list packet
 		 *
-		 * 접속한 후 처음 비단 보따리 아이템 사용 시 UseSilkBotary 에서 DB 캐시로 가격정보 리스트를 요청하고
-		 * 응답받은 시점에 이 함수에서 실제 비단보따리 사용을 처리한다.
+		 * When using the silk bundle item for the first time after logging in UseSilkBotary at DB Request a list of price information from Cash
+		 * When the response is received, this function handles the actual use of the silk bundle. .
 		 */
 		void			UseSilkBotaryReal(const TPacketMyshopPricelistHeader* p);
 		// END_OF_MYSHOP_PRICE_LIST
@@ -907,10 +907,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool			EquipItem(LPITEM item, int iCandidateCell = -1);
 		bool			UnequipItem(LPITEM item);
 
-		// 현재 item을 착용할 수 있는 지 확인하고, 불가능 하다면 캐릭터에게 이유를 알려주는 함수
+		// today item Make sure you can wear it , If it is impossible, a function that tells the character why.
 		bool			CanEquipNow(const LPITEM item, const TItemPos& srcCell = NPOS, const TItemPos& destCell = NPOS);
 
-		// 착용중인 item을 벗을 수 있는 지 확인하고, 불가능 하다면 캐릭터에게 이유를 알려주는 함수
+		// wearing item Check if you can take it off , If it is impossible, a function that tells the character why.
 		bool			CanUnequipNow(const LPITEM item, const TItemPos& srcCell = NPOS, const TItemPos& destCell = NPOS);
 
 		bool			SwapItem(ItemCellType bCell, ItemCellType bDestCell);
@@ -942,14 +942,14 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 	protected:
 
-		/// 한 아이템에 대한 가격정보를 전송한다.
+		/// Send price information for one item .
 		/**
-		 * @param [in]	dwItemVnum 아이템 vnum
-		 * @param [in]	dwItemPrice 아이템 가격
+		 * @param [in]	dwItemVnum item vnum
+		 * @param [in]	dwItemPrice item price
 		 */
 		void			SendMyShopPriceListCmd(DWORD dwItemVnum, DWORD dwItemPrice);
 
-		bool			m_bNoOpenedShop;	///< 이번 접속 후 개인상점을 연 적이 있는지의 여부(열었던 적이 없다면 true)
+		bool			m_bNoOpenedShop;	///< Whether you have opened a personal store since logging in this time ( If you've never opened it true)
 
 		bool			m_bItemLoaded;
 		int				m_iRefineAdditionalCell;
@@ -963,7 +963,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			SetGold(INT gold)	{ m_points.gold = gold;	}
 		bool			DropGold(INT gold);
 		INT				GetAllowedGold() const;
-		void			GiveGold(INT iAmount);	// 파티가 있으면 파티 분배, 로그 등의 처리
+		void			GiveGold(INT iAmount);	// Party distribution if there is a party , Processing of logs, etc.
 		// End of Money
 
 		////////////////////////////////////////////////////////////////////////////////////////
@@ -1029,9 +1029,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool				CanFight() const;
 
 		bool				CanBeginFight() const;
-		void				BeginFight(LPCHARACTER pkVictim); // pkVictimr과 싸우기 시작한다. (강제적임, 시작할 수 있나 체크하려면 CanBeginFight을 사용)
+		void				BeginFight(LPCHARACTER pkVictim); // pkVictimr starts fighting with . ( compulsory , To check if you can start CanBeginFight use )
 
-		bool				CounterAttack(LPCHARACTER pkChr); // 반격하기 (몬스터만 사용)
+		bool				CounterAttack(LPCHARACTER pkChr); // counterattack ( Use only monsters )
 
 		bool				IsStun() const;
 		void				Stun();
@@ -1061,7 +1061,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				UpdateAlignment(int iAmount);
 		int					GetAlignment() const;
 
-		//선악치 얻기 
+		// Getting good and bad 
 		int					GetRealAlignment() const;
 		void				ShowAlignment(bool bShow);
 
@@ -1110,7 +1110,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		DWORD				m_dwFlyTargetID;
 		std::vector<DWORD>	m_vec_dwFlyTargets;
-		TDamageMap			m_map_kDamage;	// 어떤 캐릭터가 나에게 얼마만큼의 데미지를 주었는가?
+		TDamageMap			m_map_kDamage;	// How much damage did a character inflict on me? ?
 //		AttackLog			m_kAttackLog;
 		DWORD				m_dwKillerPID;
 
@@ -1133,8 +1133,8 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		BYTE				GetDropMetinStonePct() const { return m_bDropMetinStonePct; }
 
 	protected:
-		LPCHARACTER			m_pkChrStone;		// 나를 스폰한 돌
-		CHARACTER_SET		m_set_pkChrSpawnedBy;	// 내가 스폰한 놈들
+		LPCHARACTER			m_pkChrStone;		// The stone that spawned me
+		CHARACTER_SET		m_set_pkChrSpawnedBy;	// The ones I sponsored
 		DWORD				m_dwDropMetinStone;
 		BYTE				m_bDropMetinStonePct;
 		// End of Stone
@@ -1192,7 +1192,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 	private:
 		bool				m_bDisableCooltime;
-		DWORD				m_dwLastSkillTime;	///< 마지막으로 skill 을 쓴 시간(millisecond).
+		DWORD				m_dwLastSkillTime;	///< finally skill time written (millisecond).
 		// End of Skill
 
 		// MOB_SKILL
@@ -1249,10 +1249,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		// AI related
 	public:
 		void			AssignTriggers(const TMobTable * table);
-		LPCHARACTER		GetVictim() const;	// 공격할 대상 리턴
+		LPCHARACTER		GetVictim() const;	// Return target to attack
 		void			SetVictim(LPCHARACTER pkVictim);
 		LPCHARACTER		GetNearestVictim(LPCHARACTER pkChr);
-		LPCHARACTER		GetProtege() const;	// 보호해야 할 대상 리턴
+		LPCHARACTER		GetProtege() const;	// Return to what needs to be protected
 
 		bool			Follow(LPCHARACTER pkChr, float fMinimumDistance = 150.0f);
 		bool			Return();
@@ -1276,8 +1276,8 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		////////////////////////////////////////////////////////////////////////////////////////
 		// Target
 	protected:
-		LPCHARACTER				m_pkChrTarget;		// 내 타겟
-		CHARACTER_SET	m_set_pkChrTargetedBy;	// 나를 타겟으로 가지고 있는 사람들
+		LPCHARACTER				m_pkChrTarget;		// my target
+		CHARACTER_SET	m_set_pkChrTargetedBy;	// People who have me as their target
 
 	public:
 		void				SetTarget(LPCHARACTER pkChrTarget);
@@ -1298,19 +1298,19 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				ChangeSafeboxSize(BYTE bSize);
 		void				CloseSafebox();
 
-		/// 창고 열기 요청
+		/// Request to open warehouse
 		/**
-		 * @param [in]	pszPassword 1자 이상 6자 이하의 창고 비밀번호
+		 * @param [in]	pszPassword 1 Now that's it 6 Warehouse password below
 		 *
-		 * DB 에 창고열기를 요청한다.
-		 * 창고는 중복으로 열지 못하며, 최근 창고를 닫은 시간으로 부터 10초 이내에는 열 지 못한다.
+		 * DB Request to open warehouse .
+		 * Warehouses cannot be opened multiple times. , From the time the warehouse was last closed 10 Can't open within seconds .
 		 */
 		void				ReqSafeboxLoad(const char* pszPassword);
 
-		/// 창고 열기 요청의 취소
+		/// Cancellation of warehouse opening request
 		/**
-		 * ReqSafeboxLoad 를 호출하고 CloseSafebox 하지 않았을 때 이 함수를 호출하면 창고를 열 수 있다.
-		 * 창고열기의 요청이 DB 서버에서 실패응답을 받았을 경우 이 함수를 사용해서 요청을 할 수 있게 해준다.
+		 * ReqSafeboxLoad and call CloseSafebox If you do not do so, you can open the warehouse by calling this function. .
+		 * Request to open warehouse DB If you receive a failure response from the server, you can use this function to make a request. .
 		 */
 		void				CancelSafeboxLoad( void ) { m_bOpeningSafebox = false; }
 
@@ -1328,7 +1328,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		CSafebox *			m_pkSafebox;
 		int					m_iSafeboxSize;
 		int					m_iSafeboxLoadTime;
-		bool				m_bOpeningSafebox;	///< 창고가 열기 요청 중이거나 열려있는가 여부, true 일 경우 열기요청이거나 열려있음.
+		bool				m_bOpeningSafebox;	///< Whether the warehouse is requesting to open or is open , true In this case, it is an open request or is open. .
 
 		CSafebox *			m_pkMall;
 		int					m_iMallLoadTime;
@@ -1362,7 +1362,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		void				HorseSummon(bool bSummon, bool bFromFar = false, DWORD dwVnum = 0, const char* name = 0);
 
-		LPCHARACTER			GetHorse() const			{ return m_chHorse; }	 // 현재 소환중인 말
+		LPCHARACTER			GetHorse() const			{ return m_chHorse; }	 // Horse currently being summoned
 		LPCHARACTER			GetRider() const; // rider on horse
 		void				SetRider(LPCHARACTER ch);
 
@@ -1424,7 +1424,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		////////////////////////////////////////////////////////////////////////////////////////
 		// Resists & Proofs
 	public:
-		bool				CannotMoveByAffect() const;	// 특정 효과에 의해 움직일 수 없는 상태인가?
+		bool				CannotMoveByAffect() const;	// Is it impossible to move due to a certain effect? ?
 		bool				IsImmune(DWORD dwImmuneFlag);
 		void				SetImmuneFlag(DWORD dw) { m_pointsInstant.dwImmuneFlag = dw; }
 
@@ -1464,7 +1464,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void				UpdateStateMachine(DWORD dwPulse);
 		void				SetNextStatePulse(int iPulseNext);
 
-		// 캐릭터 인스턴스 업데이트 함수. 기존엔 이상한 상속구조로 CFSM::Update 함수를 호출하거나 UpdateStateMachine 함수를 사용했는데, 별개의 업데이트 함수 추가함.
+		// Character instance update function . Previously, it had a strange inheritance structure. CFSM::Update call a function or UpdateStateMachine I used a function , Added separate update function .
 		void				UpdateCharacter(DWORD dwPulse);
 
 	protected:
@@ -1534,9 +1534,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		int				m_aiPremiumTimes[PREMIUM_MAX_NUM];
 
 		// CHANGE_ITEM_ATTRIBUTES
-		static const DWORD		msc_dwDefaultChangeItemAttrCycle;	///< 디폴트 아이템 속성변경 가능 주기
-		static const char		msc_szLastChangeItemAttrFlag[];		///< 최근 아이템 속성을 변경한 시간의 Quest Flag 이름
-		static const char		msc_szChangeItemAttrCycleFlag[];		///< 아이템 속성병경 가능 주기의 Quest Flag 이름
+		static const DWORD		msc_dwDefaultChangeItemAttrCycle;	///< Default item attribute change period
+		static const char		msc_szLastChangeItemAttrFlag[];		///< The time when the item properties were last changed. Quest Flag name
+		static const char		msc_szChangeItemAttrCycleFlag[];		///< Item attribute modifications possible Quest Flag name
 		// END_OF_CHANGE_ITEM_ATTRIBUTES
 
 		// NEW_HAIR_STYLE_ADD
@@ -1608,7 +1608,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		int		GetMyShopTime() const	{ return m_iMyShopTime; }
 		void	SetMyShopTime() { m_iMyShopTime = thecore_pulse(); }
 
-		// Hack 방지를 위한 체크.
+		// Hack Check for prevention .
 		bool	IsHack(bool bSendMsg = true, bool bCheckShopOwner = true, int limittime = g_nPortalLimitTime);
 
 		void Say(const std::string & s);
@@ -1697,7 +1697,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 
 		typedef std::map <BYTE, CBuffOnAttributes*> TMapBuffOnAttrs;
 		TMapBuffOnAttrs m_map_buff_on_attrs;
-		// 무적 : 원활한 테스트를 위하여.
+		// invincibility : For smooth testing .
 	public:
 		void SetArmada() { cannot_dead = true; }
 		void ResetArmada() { cannot_dead = false; }
@@ -1712,7 +1712,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool IsPet() { return m_bIsPet; }
 #endif
 
-	//최종 데미지 보정.
+	// Final damage correction .
 	private:
 		float m_fAttMul;
 		float m_fDamMul;
@@ -1725,7 +1725,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 	private:
 		bool IsValidItemPosition(TItemPos Pos) const;
 
-		//독일 선물 기능 패킷 임시 저장
+		// German gift function packet temporary storage
 	private:
 		unsigned int itemAward_vnum;
 		char		 itemAward_cmd[20];
@@ -1739,10 +1739,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		//void		 SetItemAward_flag(bool flag) { itemAward_flag = flag; }
 
 	public:
-		//용혼석
+		// dragon soul stone
 		
-		// 캐릭터의 affect, quest가 load 되기 전에 DragonSoul_Initialize를 호출하면 안된다.
-		// affect가 가장 마지막에 로드되어 LoadAffect에서 호출함.
+		// of character affect, quest go load before becoming DragonSoul_Initialize should not be called .
+		// affect is loaded last LoadAffect Called from .
 		void	DragonSoul_Initialize();
 
 		bool	DragonSoul_IsQualified() const;
@@ -1753,17 +1753,17 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool	DragonSoul_ActivateDeck(int deck_idx);
 
 		void	DragonSoul_DeactivateAll();
-		// 반드시 ClearItem 전에 불러야 한다.
-		// 왜냐하면....
-		// 용혼석 하나 하나를 deactivate할 때마다 덱에 active인 용혼석이 있는지 확인하고,
-		// active인 용혼석이 하나도 없다면, 캐릭터의 용혼석 affect와, 활성 상태를 제거한다.
+		// certainly ClearItem must be called before .
+		// because ....
+		// Each dragon soul stone deactivate In the deck every time active Check if there is a dragon soul stone. ,
+		// active If you don't have any dragon soul stones , Character's Dragon Soul Stone affect and , remove active state .
 		// 
-		// 하지만 ClearItem 시, 캐릭터가 착용하고 있는 모든 아이템을 unequip하는 바람에,
-		// 용혼석 Affect가 제거되고, 결국 로그인 시, 용혼석이 활성화되지 않는다.
-		// (Unequip할 때에는 로그아웃 상태인지, 아닌지 알 수 없다.)
-		// 용혼석만 deactivate시키고 캐릭터의 용혼석 덱 활성 상태는 건드리지 않는다.
+		// but ClearItem city , All items worn by the character unequip In the wind ,
+		// dragon soul stone Affect is removed and , When you finally log in , Dragon Soul Stone is not activated .
+		// (Unequip Are you logged out when doing this? , I don't know whether or not .)
+		// Only the dragon soul stone deactivate and does not affect the active status of the character's Dragon Soulstone deck. .
 		void	DragonSoul_CleanUp();
-		// 용혼석 강화창
+		// Dragon Soul Stone Reinforced Spear
 	public:
 		bool		DragonSoul_RefineWindow_Open(LPENTITY pEntity);
 		bool		DragonSoul_RefineWindow_Close();
@@ -1771,8 +1771,8 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		bool		DragonSoul_RefineWindow_CanRefine();
 
 	private:
-		// SyncPosition을 악용하여 타유저를 이상한 곳으로 보내는 핵 방어하기 위하여,
-		// SyncPosition이 일어날 때를 기록.
+		// SyncPosition In order to defend against nuclear weapons that abuse and send other users to strange places. ,
+		// SyncPosition record when this happens .
 		timeval		m_tvLastSyncTime;
 		int			m_iSyncHackCount;
 	public:

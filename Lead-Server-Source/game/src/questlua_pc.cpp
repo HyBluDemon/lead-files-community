@@ -238,7 +238,7 @@ namespace quest
 			return;
 		}
 		//PREVENT_PORTAL_AFTER_EXCHANGE
-		//±³È¯ ÈÄ ½Ã°£Ã¼Å©
+		// Check time after exchange
 		if ( iPulse - pkChr->GetExchangeTime()  < PASSES_PER_SEC(60) )
 		{
 			pkChr->ChatPacket( CHAT_TYPE_INFO, LC_TEXT("You cannot move to another area within 1 minute after the transaction.") );
@@ -453,7 +453,7 @@ namespace quest
 
 		DWORD dwVnum;
 
-		if (lua_isnumber(L,2)) // ¹øÈ£ÀÎ°æ¿ì ¹øÈ£·Î ÁØ´Ù.
+		if (lua_isnumber(L,2)) // If it is a number, give it as a number. .
 			dwVnum = (int) lua_tonumber(L, 2);
 		else if (!ITEM_MANAGER::instance().GetVnum(lua_tostring(L, 2), dwVnum))
 		{
@@ -493,7 +493,7 @@ namespace quest
 
 		DWORD dwVnum;
 
-		if (lua_isnumber(L, 1)) // ¹øÈ£ÀÎ°æ¿ì ¹øÈ£·Î ÁØ´Ù.
+		if (lua_isnumber(L, 1)) // If it is a number, give it as a number. .
 		{
 			dwVnum = (int) lua_tonumber(L, 1);
 		}
@@ -549,7 +549,7 @@ namespace quest
 
 		DWORD dwVnum;
 
-		if (lua_isnumber(L, 1)) // ¹øÈ£ÀÎ°æ¿ì ¹øÈ£·Î ÁØ´Ù.
+		if (lua_isnumber(L, 1)) // If it is a number, give it as a number. .
 		{
 			dwVnum = (int) lua_tonumber(L, 1);
 		}
@@ -810,7 +810,7 @@ namespace quest
 
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
-		if (val > 0) // Áõ°¡½ÃÅ°´Â °ÍÀÌ¹Ç·Î ¹«Á¶°Ç ¼º°ø ¸®ÅÏ
+		if (val > 0) // Since it increases, it returns success unconditionally.
 			ch->PointChange(POINT_SP, val);
 		else if (val < 0)
 		{
@@ -863,18 +863,18 @@ namespace quest
 			PC* pPC = CQuestManager::instance().GetCurrentPC();
 			LogManager::instance().QuestRewardLog(pPC->GetCurrentQuestName().c_str(), ch->GetPlayerID(), ch->GetLevel(), newLevel, 0);
 			
-			//Æ÷ÀÎÆ® : ½ºÅ³, ¼­ºê½ºÅ³, ½ºÅÈ
+			// point : skill , Sub skill , Stats
 			ch->PointChange(POINT_SKILL, newLevel - ch->GetLevel());
 			ch->PointChange(POINT_SUB_SKILL, newLevel < 10 ? 0 : newLevel - MAX(ch->GetLevel(), 9));
 			ch->PointChange(POINT_STAT, ((MINMAX(1, newLevel, 90) - ch->GetLevel()) * 3) + ch->GetPoint(POINT_LEVEL_STEP));
-			//·¹º§
+			// level
 			ch->PointChange(POINT_LEVEL, newLevel - ch->GetLevel(), false, true);
 			//HP, SP
 			ch->SetRandomHP((newLevel - 1) * number(JobInitialPoints[ch->GetJob()].hp_per_lv_begin, JobInitialPoints[ch->GetJob()].hp_per_lv_end));
 			ch->SetRandomSP((newLevel - 1) * number(JobInitialPoints[ch->GetJob()].sp_per_lv_begin, JobInitialPoints[ch->GetJob()].sp_per_lv_end));
 
 
-			// È¸º¹
+			// recovery
 			ch->PointChange(POINT_HP, ch->GetMaxHP() - ch->GetHP());
 			ch->PointChange(POINT_SP, ch->GetMaxSP() - ch->GetSP());
 			
@@ -937,8 +937,8 @@ namespace quest
 		return 1;
 	}
 
-	// 20050725.myevan.ÀºµÐÀÇ ¸ÁÅä »ç¿ëÁß È¥¼® ¼ö·Ã½Ã ¼±¾ÇÄ¡°¡ µÎ¹è ¼Ò¸ðµÇ´Â ¹ö±×°¡ ¹ß»ýÇØ
-	// ½ÇÁ¦ ¼±¾ÇÄ¡¸¦ ÀÌ¿ëÇØ °è»êÀ» ÇÏ°Ô ÇÑ´Ù.
+	// 20050725.myevan. While using the cloak of seclusion, a bug occurred where the values â€‹â€‹of good and evil were doubled during soul training.
+	// Calculate using actual good and bad values .
 	int pc_get_real_alignment(lua_State* L)
 	{
 		lua_pushnumber(L, CQuestManager::instance().GetCurrentCharacterPtr()->GetRealAlignment()/10);
@@ -1264,7 +1264,7 @@ namespace quest
 		ch->RemoveAffect(AFFECT_MOUNT);
 		ch->RemoveAffect(AFFECT_MOUNT_BONUS);
 
-		// ¸»ÀÌ ¼ÒÈ¯µÇ¾î µû¶ó´Ù´Ï´Â »óÅÂ¶ó¸é ¸»ºÎÅÍ ¾ø¾Ú
+		// If a horse is summoned and follows you around, get rid of the horse first.
 		if (ch->GetHorse())
 			ch->HorseSummon(false);
 
@@ -1532,7 +1532,7 @@ namespace quest
 
 		if (pct == 100 || number(1, 100) <= pct)
 		{
-			// °³·® ¼º°ø
+			// improvement success
 			lua_pushboolean(L, 1);
 
 			LPITEM pkNewItem = ITEM_MANAGER::instance().CreateItem(item->GetRefinedVnum(), 1, 0, false);
@@ -1569,7 +1569,7 @@ namespace quest
 		}
 		else
 		{
-			// °³·® ½ÇÆÐ
+			// improvement failed
 			lua_pushboolean(L, 0);
 		}
 
@@ -1834,14 +1834,14 @@ namespace quest
 		return 0;
 	}
 
-	//ÅÚ·¹Æ÷Æ® 
+	// teleport 
 	int pc_teleport ( lua_State * L )
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 		int x=0,y=0;	
 		if ( lua_isnumber(L, 1) )
 		{
-			// Áö¿ª¸í ¿öÇÁ
+			// Local name: Warp
 			const int TOWN_NUM = 10;
 			struct warp_by_town_name
 			{
@@ -2083,7 +2083,7 @@ teleport_area:
 			int	count = 0;
 			str_to_number(count, row[0]);
 
-			// ÀÌ¹Ì ÇØ´ç ÀÌ¸§À» °¡Áø Ä³¸¯ÅÍ°¡ ÀÖÀ½
+			// There already exists a character with that name
 			if ( count != 0 )
 			{
 				lua_pushnumber(L, 3);
@@ -2334,8 +2334,8 @@ teleport_area:
 
 		int idx = 1;
 
-		// ¿ëÈ¥¼® ½½·ÔÀº ÇÒ ÇÊ¿ä ¾øÀ» µí.
-		// ÀÌ ÇÔ¼ö´Â Å»¼®¼­¿ë ÇÔ¼öÀÎ µí ÇÏ´Ù.
+		// I don't think there's a need for the Dragon Soul Stone slot. .
+		// This function seems to be a function for declassification. .
 		for ( int i=0; i < INVENTORY_MAX_NUM + WEAR_MAX_NUM; i++ )
 		{
 			LPITEM pItem = pChar->GetInventoryItem(i);
@@ -2724,7 +2724,7 @@ teleport_area:
 		return 1;
 	}
 
-	int pc_get_informer_type(lua_State* L)	//µ¶ÀÏ ¼±¹° ±â´É
+	int pc_get_informer_type(lua_State* L)	// germany gift feature
 	{
 		LPCHARACTER pChar = CQuestManager::instance().GetCurrentCharacterPtr();
 
@@ -2966,17 +2966,17 @@ teleport_area:
 
 			{ "charge_cash",		pc_charge_cash		},
 			
-			{ "get_informer_type",	pc_get_informer_type	},	//µ¶ÀÏ ¼±¹° ±â´É
+			{ "get_informer_type",	pc_get_informer_type	},	// germany gift feature
 			{ "get_informer_item",  pc_get_informer_item	},
 
-			{ "give_award",			pc_give_award			},	//ÀÏº» °èÁ¤´ç ÇÑ¹ø¾¿ ±Ý±« Áö±Þ
-			{ "give_award_socket",	pc_give_award_socket	},	//¸ô ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛ Áö±Þ. ¼ÒÄÏ ¼³Á¤À» À§ÇÑ ÇÔ¼ö.
+			{ "give_award",			pc_give_award			},	// Gold bars paid once per Japanese account
+			{ "give_award_socket",	pc_give_award_socket	},	// Provide items to mall inventory . Function for configuring socket .
 
-			{ "get_killee_drop_pct",	pc_get_killee_drop_pct	}, /* mob_vnum.kill ÀÌº¥Æ®¿¡¼­ killee¿Í pc¿ÍÀÇ level Â÷ÀÌ, pcÀÇ ÇÁ¸®¹Ì¾ö µå¶ø·ü µîµîÀ» °í·ÁÇÑ ¾ÆÀÌÅÛ µå¶ø È®·ü.
-																    * return °ªÀº (ºÐÀÚ, ºÐ¸ð).
-																    * (¸»ÀÌ º¹ÀâÇÑµ¥, CreateDropItemÀÇ GetDropPctÀÇ iDeltaPercent, iRandRange¸¦ returnÇÑ´Ù°í º¸¸é µÊ.)
-																	* (ÀÌ ¸»ÀÌ ´õ ¾î·Á¿ï¶ó³ª ¤Ð¤Ð)
-																	* ÁÖÀÇ»çÇ× : kill event¿¡¼­¸¸ »ç¿ëÇÒ °Í!
+			{ "get_killee_drop_pct",	pc_get_killee_drop_pct	}, /* mob_vnum.kill at the event killee and pc with level difference , pc Item drop probability considering premium drop rate, etc. .
+																    * return The value is ( molecule , denominator ).
+																    * ( The words are complicated , CreateDropItem of GetDropPct of iDeltaPercent, iRandRange cast return You can think of it as doing it. .)
+																	* ( I wonder if this would be more difficult T_T )
+																	* caution : kill event For use only in !
 																	*/
 
 			{ NULL,			NULL			}

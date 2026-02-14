@@ -50,7 +50,7 @@ namespace quest
 			bool		RunState(QuestState& qs);
 
 			PC *		GetPC(unsigned int pc);
-			PC *		GetPCForce(unsigned int pc);	// 현재 PC를 바꾸지 않고 PC 포인터를 가져온다.
+			PC *		GetPCForce(unsigned int pc);	// today PC without changing PC get a pointer .
 
 			unsigned int	GetCurrentNPCRace();
 			const string & 	GetCurrentQuestName();
@@ -100,7 +100,7 @@ namespace quest
 			void		Letter(DWORD pc);
 			void		Letter(DWORD pc, DWORD quest_index, int state);
 			
-			void		ItemInformer(unsigned int pc, unsigned int vnum);	//독일선물기능
+			void		ItemInformer(unsigned int pc, unsigned int vnum);	// German gift function
 
 			//
 
@@ -248,7 +248,7 @@ namespace quest
 			static bool ExecuteQuestScript(PC& pc, DWORD quest_index, const int state, const char* code, const int code_size, vector<AArgScript*>* pChatScripts = NULL, bool bUseCache = true);
 		
 
-		// begin_other_pc_blcok, end_other_pc_block을 위한 객체들.
+		// begin_other_pc_blcok, end_other_pc_block Objects for .
 		public:
 			void		BeginOtherPCBlock(DWORD pid);
 			void		EndOtherPCBlock();

@@ -507,7 +507,7 @@ bool CClientManager::InitializeQuestItemTable()
 			continue;
 		}
 
-		tbl.bType = ITEM_QUEST; // quest_item_proto 테이블에 있는 것들은 모두 ITEM_QUEST 유형
+		tbl.bType = ITEM_QUEST; // quest_item_proto everything on the table ITEM_QUEST category
 		tbl.bSize = 1;
 
 		m_vec_itemTable.push_back(tbl);

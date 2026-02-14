@@ -304,12 +304,12 @@ namespace quest
 
 	int guild_change_master(lua_State* L)
 	{
-		// 리턴값
-		//	0 : 입력한 이름이 잘못되었음 ( 문자열이 아님 )
-		//	1 : 길드장이 아님
-		//	2 : 지정한 이름의 길드원이 없음
-		//	3 : 요청 성공
-		//	4 : 길드가 없음
+		// return value
+		//	0 : The name you entered is incorrect ( not a string )
+		//	1 : Not a guild leader
+		//	2 : There is no guild member with the specified name
+		//	3 : Request Success
+		//	4 : No guild
 
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
@@ -345,23 +345,23 @@ namespace quest
 
 	int guild_change_master_with_limit(lua_State* L)
 	{
-		// 인자
-		//  arg0 : 새 길드장 이름
-		//  arg1 : 새 길드장 레벨 제한
-		//  arg2 : resign_limit 제한 시간
-		//  arg3 : be_other_leader 제한 시간
-		//  arg4 : be_other_member 제한 시간
-		//  arg5 : 캐시템인가 아닌가
+		// factor
+		//  arg0 : New guild leader name
+		//  arg1 : New guild leader level limit
+		//  arg2 : resign_limit time limit
+		//  arg3 : be_other_leader time limit
+		//  arg4 : be_other_member time limit
+		//  arg5 : Is it a cash item or not?
 		//
-		// 리턴값
-		//	0 : 입력한 이름이 잘못되었음 ( 문자열이 아님 )
-		//	1 : 길드장이 아님
-		//	2 : 지정한 이름의 길드원이 없음
-		//	3 : 요청 성공
-		//	4 : 길드가 없음
-		//	5 : 지정한 이름이 온라인이 아님
-		//	6 : 지정한 캐릭터 레벨이 기준레벨보다 낮음
-		//	7 : 새 길드장이 be_other_leader 제한에 걸림
+		// return value
+		//	0 : The name you entered is incorrect ( not a string )
+		//	1 : Not a guild leader
+		//	2 : There is no guild member with the specified name
+		//	3 : Request Success
+		//	4 : No guild
+		//	5 : The name you specified is not online
+		//	6 : The specified character level is lower than the standard level.
+		//	7 : new guild leader be_other_leader stuck in limit
 
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 

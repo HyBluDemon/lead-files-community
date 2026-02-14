@@ -183,10 +183,10 @@ ACMD(do_effect);
 ACMD(do_hair);
 //gift notify quest command
 ACMD(do_gift);
-// 큐브관련
+// Cube related
 ACMD(do_inventory);
 ACMD(do_cube);
-// 공성전
+// siege
 ACMD(do_temp);
 
 ACMD(do_reset_subskill );
@@ -248,7 +248,7 @@ struct command_info cmd_info[] =
 	{ "item",		do_item,		0,			POS_DEAD,	GM_GOD		},
 
 	{ "mob",		do_mob,			0,			POS_DEAD,	GM_HIGH_WIZARD	},
-	{ "mob_ld",		do_mob_ld,			0,			POS_DEAD,	GM_HIGH_WIZARD	}, /* 몹의 위치와 방향을 설정해 소환 /mob_ld vnum x y dir */
+	{ "mob_ld",		do_mob_ld,			0,			POS_DEAD,	GM_HIGH_WIZARD	}, /* Summon mobs by setting their location and direction /mob_ld vnum x y dir */
 	{ "ma",		do_mob_aggresive,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "mc",		do_mob_coward,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "mm",		do_mob_map,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
@@ -492,7 +492,7 @@ struct command_info cmd_info[] =
 	{ "ds_list",				do_ds_list,				0,	POS_DEAD,	GM_PLAYER	},
 	{ "do_clear_affect", do_clear_affect, 	0, POS_DEAD,		GM_LOW_WIZARD},
 
-	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}  /* 반드시 이 것이 마지막이어야 한다. */
+	{ "\n",		NULL,			0,			POS_DEAD,	GM_IMPLEMENTOR	}  /* This must be the last . */
 };
 
 void interpreter_set_privilege(const char *cmd, int lvl)
@@ -515,7 +515,7 @@ void double_dollar(const char *src, size_t src_len, char *dest, size_t dest_len)
 	const char * tmp = src;
 	size_t cur_len = 0;
 
-	// \0 넣을 자리 확보
+	// \0 Secure a place to put it
 	dest_len -= 1;
 
 	while (src_len-- && *tmp)
@@ -550,7 +550,7 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 		return ;
 	}
 
-	char cmd[128 + 1];  // buffer overflow 문제가 생기지 않도록 일부러 길이를 짧게 잡음
+	char cmd[128 + 1];  // buffer overflow I deliberately kept the length short to avoid any problems.
 	char new_line[256 + 1];
 	const char * line;
 	int icmd;
@@ -567,7 +567,7 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 	{
 		if (cmd_info[icmd].command_pointer == do_cmd)
 		{
-			if (!strcmp(cmd_info[icmd].command, cmd)) // do_cmd는 모든 명령어를 쳐야 할 수 있다.
+			if (!strcmp(cmd_info[icmd].command, cmd)) // do_cmd You may need to type all commands .
 				break;
 		}
 		else if (!strncmp(cmd_info[icmd].command, cmd, cmdlen))
@@ -619,7 +619,7 @@ void interpret_command(LPCHARACTER ch, const char * argument, size_t len)
 		return;
 	}
 
-	if (strncmp("phase", cmd_info[icmd].command, 5) != 0) // 히든 명령어 처리 
+	if (strncmp("phase", cmd_info[icmd].command, 5) != 0) // Hidden command processing 
 		sys_log(0, "COMMAND: %s: %s", ch->GetName(), cmd_info[icmd].command);
 
 	((*cmd_info[icmd].command_pointer) (ch, line, icmd, cmd_info[icmd].subcmd));

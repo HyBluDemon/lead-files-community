@@ -200,7 +200,7 @@ bool CGroupNode::GetRow(const std::string & c_rstrRowKey, OUT const CGroupNode::
 	return true;
 }
 
-// 참고로, idx랑 txt에 쓰여진 순서랑 관계 없음.
+// For reference , idx with txt It has nothing to do with the order written in .
 bool CGroupNode::GetRow(int idx, OUT const CGroupNode::CGroupNodeRow ** ppRow) const
 {
 	if (idx >= m_map_rows.size())
@@ -223,7 +223,7 @@ bool CGroupNode::GetGroupRow(const std::string& stGroupName, const std::string& 
 		if (pChildGroup->GetRow(stRow, ppRow))
 			return true;
 	}
-	// default group을 살펴봄.
+	// default group Take a look at .
 	pChildGroup = GetChildNode("default");
 	if (NULL != pChildGroup)
 	{

@@ -170,7 +170,7 @@ void P2P_MANAGER::Login(LPDESC d, const TPacketGGLogin * p)
 	CGuildManager::instance().P2PLoginMember(pkCCI->dwPID);
 	CPartyManager::instance().P2PLogin(pkCCI->dwPID, pkCCI->szName);
 
-	// CCI가 생성시에만 메신저를 업데이트하면 된다.
+	// CCI You only need to update the messenger when it is created. .
 	if (UpdateP2P) {
 		std::string name(pkCCI->szName);
 	    MessengerManager::instance().P2PLogin(name);

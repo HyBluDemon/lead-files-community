@@ -140,12 +140,12 @@ DWORD CGuild::GetGuildWarMapIndex(DWORD dwOppGID)
 	return git->second.map_index;
 }
 
-bool CGuild::CanStartWar(BYTE bGuildWarType) // 타입에 따라 다른 조건이 생길 수도 있음
+bool CGuild::CanStartWar(BYTE bGuildWarType) // Different conditions may arise depending on the type.
 {
 	if (bGuildWarType >= GUILD_WAR_TYPE_MAX_NUM)
 		return false;
 
-	// 테스트시에는 인원수를 확인하지 않는다.
+	// The number of people is not checked during testing. .
 	if (test_server || quest::CQuestManager::instance().GetEventFlag("guild_war_test") != 0)
 		return GetLadderPoint() > 0;
 
@@ -317,7 +317,7 @@ void CGuild::RequestDeclareWar(DWORD dwOppGID, BYTE type)
 			return;
 		}
 
-		// 패킷 보내기 to another server
+		// send packet to another server
 		TPacketGuildWar p;
 		p.bType = type;
 		p.bWar = GUILD_WAR_SEND_DECLARE;
@@ -336,7 +336,7 @@ void CGuild::RequestDeclareWar(DWORD dwOppGID, BYTE type)
 
 				if (saved_type == GUILD_WAR_TYPE_FIELD)
 				{
-					// 선전포고 한것을 받아들였다.
+					// I accepted the declaration of war. .
 					TPacketGuildWar p;
 					p.bType = saved_type;
 					p.bWar = GUILD_WAR_ON_WAR;
@@ -441,14 +441,14 @@ void CGuild::StartWar(DWORD dwOppGID)
 
 bool CGuild::WaitStartWar(DWORD dwOppGID)
 {
-	//자기자신이면 
+	// If you are yourself 
 	if (dwOppGID == GetID())
 	{
 		sys_log(0 ,"GuildWar.WaitStartWar.DECLARE_WAR_SELF id(%u -> %u)", GetID(), dwOppGID);
 		return false;
 	}
 
-	//상대방 길드 TGuildWar 를 얻어온다.
+	// Opponent Guild TGuildWar gets .
 	itertype(m_EnemyGuild) it = m_EnemyGuild.find(dwOppGID);
 	if (it == m_EnemyGuild.end())
 	{
@@ -456,7 +456,7 @@ bool CGuild::WaitStartWar(DWORD dwOppGID)
 		return false;
 	}
 
-	//레퍼런스에 등록하고
+	// register for reference
 	TGuildWar & gw(it->second);
 
 	if (gw.state == GUILD_WAR_WAIT_START)
@@ -465,10 +465,10 @@ bool CGuild::WaitStartWar(DWORD dwOppGID)
 		return false;
 	}
 
-	//상태를 저장한다.
+	// save the state .
 	gw.state = GUILD_WAR_WAIT_START;
 
-	//상대편의 길드 클래스 포인터를 얻어오고
+	// Obtain the opponent's guild class pointer
 	CGuild* g = CGuildManager::instance().FindGuild(dwOppGID);
 	if (!g)
 	{
@@ -481,14 +481,14 @@ bool CGuild::WaitStartWar(DWORD dwOppGID)
 	// END_OF_GUILDWAR_INFO
 
 
-	// 필드형이면 맵생성 안함
+	// If it is a field type, the map is not created.
 	if (gw.type == GUILD_WAR_TYPE_FIELD)
 	{
 		sys_log(0 ,"GuildWar.WaitStartWar.FIELD_TYPE id(%u -> %u)", GetID(), dwOppGID);
 		return true;
 	}		
 
-	// 전쟁 서버 인지 확인
+	// Check if it is a war server
 	sys_log(0 ,"GuildWar.WaitStartWar.CheckWarServer id(%u -> %u), type(%d), map(%d)", 
 			GetID(), dwOppGID, gw.type, rkGuildWarInfo.lMapIndex);
 
@@ -505,7 +505,7 @@ bool CGuild::WaitStartWar(DWORD dwOppGID)
 	if (id1 > id2)
 		std::swap(id1, id2);
 
-	//워프 맵을 생성
+	// Create a warp map
 	DWORD lMapIndex = CWarMapManager::instance().CreateWarMap(rkGuildWarInfo, id1, id2);
 	if (!lMapIndex) 
 	{
@@ -516,10 +516,10 @@ bool CGuild::WaitStartWar(DWORD dwOppGID)
 
 	sys_log(0, "GuildWar.WaitStartWar.CreateMap id(%u vs %u), type(%u), map(%d) -> map_inst(%u)", id1, id2, gw.type, rkGuildWarInfo.lMapIndex, lMapIndex);
 
-	//길드전 정보에 맵인덱스를 세팅
+	// Set map index in guild war information
 	gw.map_index = lMapIndex;
 
-	//양쪽에 등록(?)
+	// registered on both sides (?)
 	SetGuildWarMapIndex(dwOppGID, lMapIndex);
 	g->SetGuildWarMapIndex(GetID(), lMapIndex);
 
@@ -546,7 +546,7 @@ void CGuild::RequestRefuseWar(DWORD dwOppGID)
 
 	if (it != m_EnemyGuild.end() && it->second.state == GUILD_WAR_RECV_DECLARE)
 	{
-		// 선전포고를 거절했다.
+		// refused to declare war .
 		TPacketGuildWar p;
 		p.bWar = GUILD_WAR_REFUSE;
 		p.dwGuildFrom = GetID();

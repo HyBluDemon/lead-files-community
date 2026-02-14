@@ -47,7 +47,7 @@ bool timed_event_cancel(LPCHARACTER ch)
 	}
 
 	/* RECALL_DELAY
-	   Â÷ÈÄ ÀüÅõ·Î ÀÎÇØ ±ÍÈ¯ºÎ µô·¹ÀÌ°¡ Ãë¼Ò µÇ¾î¾ß ÇÒ °æ¿ì ÁÖ¼® ÇØÁ¦
+	   Uncomment if the return delay must be canceled due to a future battle.
 	   if (ch->m_pk_RecallEvent)
 	   {
 	   event_cancel(&ch->m_pkRecallEvent);
@@ -60,11 +60,11 @@ bool timed_event_cancel(LPCHARACTER ch)
 
 bool battle_is_attackable(LPCHARACTER ch, LPCHARACTER victim)
 {
-	// »ó´ë¹æÀÌ Á×¾úÀ¸¸é Áß´ÜÇÑ´Ù.
+	// Stop when the opponent is dead .
 	if (victim->IsDead())
 		return false;
 
-	// ¾ÈÀüÁö´ë¸é Áß´Ü
+	// Stop in safe zone
 	{
 		SECTREE	*sectree = NULL;
 
@@ -78,7 +78,7 @@ bool battle_is_attackable(LPCHARACTER ch, LPCHARACTER victim)
 	}
 	
 
-	// ³»°¡ Á×¾úÀ¸¸é Áß´ÜÇÑ´Ù.
+	// Stop if I'm dead .
 	if (ch->IsStun() || ch->IsDead())
 		return false;
 
@@ -118,7 +118,7 @@ int battle_melee_attack(LPCHARACTER ch, LPCHARACTER victim)
 	if (test_server&&ch->IsPC())
 		sys_log(0, "battle_melee_attack : [%s] attack to [%s]", ch->GetName(), victim->GetName());
 
-	// °Å¸® Ã¼Å©
+	// distance check
 	int distance = DISTANCE_APPROX(ch->GetX() - victim->GetX(), ch->GetY() - victim->GetY());
 
 	if (!victim->IsBuilding())
@@ -127,12 +127,12 @@ int battle_melee_attack(LPCHARACTER ch, LPCHARACTER victim)
 	
 		if (false == ch->IsPC())
 		{
-			// ¸ó½ºÅÍÀÇ °æ¿ì ¸ó½ºÅÍ °ø°Ý °Å¸®¸¦ »ç¿ë
+			// For monsters, use the monster attack distance
 			max = (int) (ch->GetMobAttackRange() * 1.15f);
 		}
 		else
 		{
-			// PCÀÏ °æ¿ì »ó´ë°¡ melee ¸÷ÀÏ °æ¿ì ¸÷ÀÇ °ø°Ý °Å¸®°¡ ÃÖ´ë °ø°Ý °Å¸®
+			// PC In this case, the opponent melee If it is a mob, the mob's attack distance is the maximum attack distance.
 			if (false == victim->IsPC() && BATTLE_TYPE_MELEE == victim->GetMobBattleType())
 				max = MAX(300, (int) (victim->GetMobAttackRange() * 1.15f));
 		}
@@ -163,7 +163,7 @@ int battle_melee_attack(LPCHARACTER ch, LPCHARACTER victim)
 	return (ret);
 }
 
-// ½ÇÁ¦ GET_BATTLE_VICTIMÀ» NULL·Î ¸¸µé°í ÀÌº¥Æ®¸¦ Äµ½½ ½ÃÅ²´Ù.
+// actual GET_BATTLE_VICTIM second NULL and cancel the event. .
 void battle_end_ex(LPCHARACTER ch)
 {
 	if (ch->IsPosition(POS_FIGHTING))
@@ -232,11 +232,11 @@ float CalcAttackRating(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, bool bIgnor
 
 int CalcAttBonus(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, int iAtk)
 {
-	// PvP¿¡´Â Àû¿ëÇÏÁö¾ÊÀ½
+	// PvP Does not apply to
 	if (!pkVictim->IsPC())
 		iAtk += pkAttacker->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_ATTACK_BONUS);
 
-	// PvP¿¡´Â Àû¿ëÇÏÁö¾ÊÀ½
+	// PvP Does not apply to
 	if (!pkAttacker->IsPC())
 	{
 		int iReduceDamagePct = pkVictim->GetMarriageBonus(UNIQUE_ITEM_MARRIAGE_TRANSFER_DAMAGE);
@@ -321,9 +321,9 @@ int CalcAttBonus(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, int iAtk)
 		}
 	}
 
-	//[ mob -> PC ] ¿ø¼Ò ¼Ó¼º ¹æ¾î Àû¿ë
+	//[ mob -> PC ] Apply elemental attribute defense
 	//2013/01/17
-	//¸ó½ºÅÍ ¼Ó¼º°ø°Ý µ¥¹ÌÁöÀÇ 30%¿¡ ÇØ´çÇÏ´Â ¼öÄ¡¿¡¸¸ ÀúÇ×ÀÌ Àû¿ëµÊ.
+	// Monster attribute attack damage 30% Resistance is applied only to values â€‹â€‹corresponding to .
 	if (pkAttacker->IsNPC() && pkVictim->IsPC())
 	{
 		if (pkAttacker->IsRaceFlag(RACE_FLAG_ATT_ELEC))
@@ -547,7 +547,7 @@ int CalcArrowDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, LPITEM pkBow, 
 	if (!pkArrow)
 		return 0;
 
-	// Å¸°ÝÄ¡ °è»êºÎ
+	// Hit value calculator
 	int iDist = (int) (DISTANCE_SQRT(pkAttacker->GetX() - pkVictim->GetX(), pkAttacker->GetY() - pkVictim->GetY()));
 	//int iGap = (iDist / 100) - 5 - pkBow->GetValue(5) - pkAttacker->GetPoint(POINT_BOW_DISTANCE);
 	int iGap = (iDist / 100) - 5 - pkAttacker->GetPoint(POINT_BOW_DISTANCE);
@@ -607,7 +607,7 @@ int CalcArrowDamage(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, LPITEM pkBow, 
 
 void NormalAttackAffect(LPCHARACTER pkAttacker, LPCHARACTER pkVictim)
 {
-	// µ¶ °ø°ÝÀº Æ¯ÀÌÇÏ¹Ç·Î Æ¯¼ö Ã³¸®
+	// Poison attacks are unique, so they are treated specially.
 	if (pkAttacker->GetPoint(POINT_POISON_PCT) && !pkVictim->IsAffectFlag(AFF_POISON))
 	{
 		if (number(1, 100) <= pkAttacker->GetPoint(POINT_POISON_PCT))
@@ -635,7 +635,7 @@ int battle_hit(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, int & iRetDam)
 
 	NormalAttackAffect(pkAttacker, pkVictim);
 
-	// µ¥¹ÌÁö °è»ê
+	// Damage Calculation
 	//iDam = iDam * (100 - pkVictim->GetPoint(POINT_RESIST)) / 100;
 	LPITEM pkWeapon = pkAttacker->GetWear(WEAR_WEAPON);
 
@@ -668,7 +668,7 @@ int battle_hit(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, int & iRetDam)
 		}
 
 
-	//ÃÖÁ¾ÀûÀÎ µ¥¹ÌÁö º¸Á¤. (2011³â 2¿ù ÇöÀç ´ë¿Õ°Å¹Ì¿¡°Ô¸¸ Àû¿ë.)
+	// Final damage correction . (2011 year 2 As of March, only applies to giant spiders. .)
 	float attMul = pkAttacker->GetAttMul();
 	float tempIDam = iDam;
 	iDam = attMul * tempIDam + 0.5f;
@@ -688,19 +688,19 @@ DWORD GET_ATTACK_SPEED(LPCHARACTER ch)
         return 1000;
 
 	LPITEM item = ch->GetWear(WEAR_WEAPON);	
-	DWORD default_bonus = SPEEDHACK_LIMIT_BONUS * 3;    // À¯µÎ¸® °ø¼Ó(±âº» 80) (ÀÏ¹Ý À¯Àú°¡ speed hack ¿¡ °É¸®´Â °ÍÀ» ¸·±â À§ÇØ *3 Ãß°¡. 2013.09.11 CYH)
+	DWORD default_bonus = SPEEDHACK_LIMIT_BONUS * 3;    // Yoo Duriâ€™s attack speed ( basic 80) ( General users speed hack To prevent getting caught in *3 addition . 2013.09.11 CYH)
 	DWORD riding_bonus = 0;
 
 	if (ch->IsRiding())
 	{
-		// ¹º°¡¸¦ ÅÀÀ¸¸é Ãß°¡°ø¼Ó 50
+		// Additional attack speed when riding something 50
 		riding_bonus = 50;
 	}
 
 	DWORD ani_speed = ani_attack_speed(ch);
     DWORD real_speed = (ani_speed * 100) / (default_bonus + ch->GetPoint(POINT_ATT_SPEED) + riding_bonus);
 
-	// ´Ü°ËÀÇ °æ¿ì °ø¼Ó 2¹è
+	// In case of dagger, attack speed 2 ship
 	if (item && item->GetSubType() == WEAPON_DAGGER)
 		real_speed /= 2;
 

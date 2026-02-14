@@ -258,39 +258,39 @@ bool CHARACTER_GoToName(LPCHARACTER ch, BYTE empire, int mapIndex, const char* g
 
 /*
    = {
-   { "A1|øµæ»¿æº∫",		0, 1,  4693, 9642 },
-   { "A3|¿⁄æÁ«ˆ",		0, 3,  3608, 8776 },
+   { "A1| Yeongan-eupseong Fortress ",		0, 1,  4693, 9642 },
+   { "A3| Jayanghyeon ",		0, 3,  3608, 8776 },
 
-   { "B1|¡∂æ»¿æº∫",		0, 21,  557, 1579 },
-   { "B3|∫π¡§«ˆ",		0, 23, 1385, 2349 },
+   { "B1| Joan-eupseong Fortress ",		0, 21,  557, 1579 },
+   { "B3| Bok Jeong-hyeon ",		0, 23, 1385, 2349 },
 
-   { "C1|∆Úπ´¿æº∫",		0, 41, 9696, 2784 },
-   { "C3|π⁄∂Û«ˆ",		0, 43, 8731, 2426 },
+   { "C1| Pyeongmu-eupseong Fortress ",		0, 41, 9696, 2784 },
+   { "C3| Park Ra-hyeon ",		0, 43, 8731, 2426 },
 
 // Snow
-{ "Snow|º≠«—ªÍ",		1, 61, 4342, 2906 },
-{ "Snow|º≠«—ªÍ",		2, 61, 3752, 1749 },
-{ "Snow|º≠«—ªÍ",		3, 61, 4918, 1736 },
+{ "Snow| Seohansan Mountain ",		1, 61, 4342, 2906 },
+{ "Snow| Seohansan Mountain ",		2, 61, 3752, 1749 },
+{ "Snow| Seohansan Mountain ",		3, 61, 4918, 1736 },
 
 // Flame
-{ "Flame|µµø∞»≠¡ˆ|»≠ø∞",	1, 62, 5994, 7563 },
-{ "Flame|µµø∞»≠¡ˆ|»≠ø∞",	2, 62, 5978, 6222 },
-{ "Flame|µµø∞»≠¡ˆ|»≠ø∞",	3, 62, 7307, 6898 },
+{ "Flame| dyed paper | flame ",	1, 62, 5994, 7563 },
+{ "Flame| dyed paper | flame ",	2, 62, 5978, 6222 },
+{ "Flame| dyed paper | flame ",	3, 62, 7307, 6898 },
 
 // Desert
-{ "Desert|øµ∫ÒªÁ∏∑|ªÁ∏∑",	1, 63, 2178, 6272 },
-{ "Desert|øµ∫ÒªÁ∏∑|ªÁ∏∑",	2, 63, 2219, 5027 },
-{ "Desert|øµ∫ÒªÁ∏∑|ªÁ∏∑",	3, 63, 3440, 5025 },
+{ "Desert| Yeongbi Desert | desert ",	1, 63, 2178, 6272 },
+{ "Desert| Yeongbi Desert | desert ",	2, 63, 2219, 5027 },
+{ "Desert| Yeongbi Desert | desert ",	3, 63, 3440, 5025 },
 
-// π–±≥ªÁø¯
-{ "Milgyo|π–±≥ªÁø¯",	1, 65, 5536, 1436 },
-{ "Milgyo|π–±≥ªÁø¯",	2, 65, 5536, 1436 },
-{ "Milgyo|π–±≥ªÁø¯",	3, 65, 5536, 1436 },
+// esoteric temple
+{ "Milgyo| esoteric temple ",	1, 65, 5536, 1436 },
+{ "Milgyo| esoteric temple ",	2, 65, 5536, 1436 },
+{ "Milgyo| esoteric temple ",	3, 65, 5536, 1436 },
 
-// ªÁ±Õ≈∏øˆ¿‘±∏
-{ "ªÁ±Õ≈∏øˆ¿‘±∏",		1, 65, 5905, 1108 },
-{ "ªÁ±Õ≈∏øˆ¿‘±∏",		2, 65, 5905, 1108 },
-{ "ªÁ±Õ≈∏øˆ¿‘±∏",		3, 65, 5905, 1108 },
+// Sasa Tower entrance
+{ " Sasa Tower entrance ",		1, 65, 5905, 1108 },
+{ " Sasa Tower entrance ",		2, 65, 5905, 1108 },
+{ " Sasa Tower entrance ",		3, 65, 5905, 1108 },
 
 { NULL,			0,  0,    0,    0 },
 };
@@ -834,7 +834,7 @@ struct FuncPurge
 
 		int iDist = DISTANCE_APPROX(pkChr->GetX() - m_pkGM->GetX(), pkChr->GetY() - m_pkGM->GetY());
 
-		if (!m_bAll && iDist >= 1000)	// 10πÃ≈Õ ¿ÃªÛø° ¿÷¥¬ ∞ÕµÈ¿∫ purge «œ¡ˆ æ ¥¬¥Ÿ.
+		if (!m_bAll && iDist >= 1000)	// 10 Anything over a meter purge don't do it .
 			return;
 
 		sys_log(0, "PURGE: %s %d", pkChr->GetName(), iDist);
@@ -1780,7 +1780,7 @@ LPCHARACTER chHori, chForge, chLib, chTemple, chTraining, chTree, chPortal, chBa
 
 ACMD(do_b1)
 {
-	//»£∏Æ∫¥ 478 579
+	// gourd 478 579
 	chHori = CHARACTER_MANAGER::instance().SpawnMobRange(14017, ch->GetMapIndex(), 304222, 742858, 304222, 742858, true, false);
 	chHori->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_BUILDING_CONSTRUCTION_SMALL, 65535, 0, true);
 	chHori->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
@@ -1827,25 +1827,25 @@ ACMD(do_b2)
 
 ACMD(do_b3)
 {
-	// ∆˜¡ˆ 492 547
+	// forge 492 547
 	chForge = CHARACTER_MANAGER::instance().SpawnMobRange(14003, ch->GetMapIndex(), 307500, 746300, 307500, 746300, true, false);
 	chForge->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//≥Ù¿∫≈æ 509 589 -> µµº≠∞¸
+	// high tower 509 589 -> library
 	chLib = CHARACTER_MANAGER::instance().SpawnMobRange(14007, ch->GetMapIndex(), 307900, 744500, 307900, 744500, true, false);
 	chLib->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//øÂ¡∂ 513 606 -> »˚¿«Ω≈¿¸
+	// bath 513 606 -> temple of power
 	chTemple = CHARACTER_MANAGER::instance().SpawnMobRange(14004, ch->GetMapIndex(), 307700, 741600, 307700, 741600, true, false);
 	chTemple->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//±«≈ı¿Â 490 625
+	// boxing ring 490 625
 	chTraining= CHARACTER_MANAGER::instance().SpawnMobRange(14010, ch->GetMapIndex(), 307100, 739500, 307100, 739500, true, false);
 	chTraining->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//≥™π´ 466 614
+	// tree 466 614
 	chTree= CHARACTER_MANAGER::instance().SpawnMobRange(14013, ch->GetMapIndex(), 300800, 741600, 300800, 741600, true, false);
 	chTree->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//∆˜≈ª 439 615
+	// portal 439 615
 	chPortal= CHARACTER_MANAGER::instance().SpawnMobRange(14001, ch->GetMapIndex(), 300900, 744500, 300900, 744500, true, false);
 	chPortal->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	// ±∏ΩΩ 436 600
+	// bead 436 600
 	chBall = CHARACTER_MANAGER::instance().SpawnMobRange(14012, ch->GetMapIndex(), 302500, 746600, 302500, 746600, true, false);
 	chBall->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
 }
@@ -2265,7 +2265,7 @@ struct FuncWeaken
 
 		int iDist = DISTANCE_APPROX(pkChr->GetX() - m_pkGM->GetX(), pkChr->GetY() - m_pkGM->GetY());
 
-		if (!m_bAll && iDist >= 1000)	// 10πÃ≈Õ ¿ÃªÛø° ¿÷¥¬ ∞ÕµÈ¿∫ purge «œ¡ˆ æ ¥¬¥Ÿ.
+		if (!m_bAll && iDist >= 1000)	// 10 Anything over a meter purge don't do it .
 			return;
 
 		if (pkChr->IsNPC())
@@ -2547,7 +2547,7 @@ ACMD(do_priv_empire)
 	if (duration < 0)
 		goto USAGE;
 
-	// Ω√∞£ ¥‹¿ß∑Œ ∫Ø∞Ê
+	// change by hour
 	duration = duration * (60*60);
 
 	sys_log(0, "_give_empire_privileage(empire=%d, type=%d, value=%d, duration=%d) by command", 
@@ -2564,8 +2564,8 @@ USAGE:
 }
 
 /**
- * @version 05/06/08	Bang2ni - ±ÊµÂ ∫∏≥ Ω∫ ƒ˘Ω∫∆Æ ¡¯«‡ æ»µ«¥¬ πÆ¡¶ ºˆ¡§.(Ω∫≈©∏≥∆Æ∞° ¿€º∫æ»µ .)
- * 			          quest/priv_guild.quest ∑Œ ∫Œ≈Õ Ω∫≈©∏≥∆Æ ¿–æÓø¿∞‘ ºˆ¡§µ 
+ * @version 05/06/08	Bang2ni - Fixed an issue where guild bonus quests could not be completed .( Script not written .)
+ * 			          quest/priv_guild.quest Modified to read script from
  */
 ACMD(do_priv_guild)
 {
@@ -2698,7 +2698,7 @@ ACMD(do_xmas)
 // BLOCK_CHAT
 ACMD(do_block_chat_list)
 {
-	// GM¿Ã æ∆¥œ∞≈≥™ block_chat_privilege∞° æ¯¥¬ ªÁ∂˜¿∫ ∏Ì∑…æÓ ªÁøÎ ∫“∞°
+	// GM Either this or block_chat_privilege People without a command cannot use the command.
 	if (!ch || (ch->GetGMLevel() < GM_HIGH_WIZARD && ch->GetQuestFlag("chat_privilege.block") <= 0))
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("There is no such command"));
@@ -2764,7 +2764,7 @@ ACMD(do_vote_block_chat)
 
 ACMD(do_block_chat)
 {
-	// GM¿Ã æ∆¥œ∞≈≥™ block_chat_privilege∞° æ¯¥¬ ªÁ∂˜¿∫ ∏Ì∑…æÓ ªÁøÎ ∫“∞°
+	// GM Either this or block_chat_privilege People without a command cannot use the command.
 	if (ch && (ch->GetGMLevel() < GM_HIGH_WIZARD && ch->GetQuestFlag("chat_privilege.block") <= 0))
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("There is no such command"));
@@ -2843,8 +2843,8 @@ ACMD(do_build)
 
 	CLand * pkLand = CManager::instance().FindLand(ch->GetMapIndex(), ch->GetX(), ch->GetY());
 
-	// NOTE: ¡∂∞« √º≈©µÈ¿∫ ≈¨∂Û¿Ãæ∆ÆøÕ º≠πˆ∞° «‘≤≤ «œ±‚ ∂ßπÆø° πÆ¡¶∞° ¿÷¿ª ∂ß¥¬
-	//       ∏ﬁºº¡ˆ∏¶ ¿¸º€«œ¡ˆ æ ∞Ì ø°∑Ø∏¶ √‚∑¬«—¥Ÿ.
+	// NOTE: Condition checks are performed jointly by the client and server, so when there is a problem,
+	//       Prints an error without sending a message .
 	if (!pkLand)
 	{
 		sys_err("%s trying to build on not buildable area.", ch->GetName());
@@ -2857,17 +2857,17 @@ ACMD(do_build)
 		return;
 	}
 
-	// ∞«º≥ ±««— √º≈©
+	// Construction permission check
 	if (GMLevel == GM_PLAYER)
 	{
-		// «√∑π¿ÃæÓ∞° ¡˝¿ª ¡ˆ¿ª ∂ß¥¬ ∂•¿Ã ≥ª≤´¡ˆ »Æ¿Œ«ÿæﬂ «—¥Ÿ.
+		// When players build a house, they must make sure the land is theirs. .
 		if ((!ch->GetGuild() || ch->GetGuild()->GetID() != pkLand->GetOwner()))
 		{
 			sys_err("%s trying to build on not owned land.", ch->GetName());
 			return;
 		}
 
-		// ≥ª∞° ±Ê∏∂¿Œ∞°?
+		// Am I Gilma? ?
 		if (ch->GetGuild()->GetMasterPID() != ch->GetPlayerID())
 		{
 			sys_err("%s trying to build while not the guild master.", ch->GetName());
@@ -2913,13 +2913,13 @@ ACMD(do_build)
 					}
 				}
 
-				// ∞«π∞ ¡æº”º∫ √º≈© (¿Ã ∞«π∞¿Ã ¡ˆæÓ¡Æ ¿÷æÓæﬂ«‘)
+				// Building dependency check ( This building must be built )
 				if (t->dwDependOnGroupVnum)
 				{
 					//		const TObjectProto * dependent = CManager::instance().GetObjectProto(dwVnum);
 					//		if (dependent)
 					{
-						// ¡ˆæÓ¡Æ¿÷¥¬∞°?
+						// Is it built? ?
 						if (!pkLand->FindObjectByGroup(t->dwDependOnGroupVnum))
 						{
 							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The buildings required for construction have not been built."));
@@ -2930,8 +2930,8 @@ ACMD(do_build)
 
 				if (test_server || GMLevel == GM_PLAYER)
 				{
-					// GM¿Ã æ∆¥“∞ÊøÏ∏∏ (≈◊º∑ø°º≠¥¬ GMµµ º“∏)
-					// ∞«º≥ ∫ÒøÎ √º≈©
+					// GM Only if this is not the case ( In Tesup GM also consumed )
+					// Construction cost check
 					if (t->dwPrice > BUILDING_MAX_PRICE)
 					{
 						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The construction task failed beyond the building cost information."));
@@ -2944,7 +2944,7 @@ ACMD(do_build)
 						return;
 					}
 
-					// æ∆¿Ã≈€ ¿⁄¿Á ∞≥ºˆ √º≈©
+					// Check item material count
 
 					int i;
 					for (i = 0; i < OBJECT_MATERIAL_MAX_NUM; ++i)
@@ -2966,7 +2966,7 @@ ACMD(do_build)
 				float x_rot = atof(arg4);
 				float y_rot = atof(arg5);
 				float z_rot = atof(arg6);
-				// 20050811.myevan.∞«π∞ »∏¿¸ ±‚¥… ∫¿¿Œ «ÿ¡¶
+				// 20050811.myevan. Unseal building rotation function
 				/*
 				   if (x_rot != 0.0f || y_rot != 0.0f || z_rot != 0.0f)
 				   {
@@ -2996,12 +2996,12 @@ ACMD(do_build)
 				}
 
 				if (test_server || GMLevel == GM_PLAYER)
-					// ∞«º≥ ¿Á∑· º“∏«œ±‚ (≈◊º∑ø°º≠¥¬ GMµµ º“∏)
+					// Consuming construction materials ( In Tesup GM also consumed )
 				{
-					// ∞«º≥ ∫ÒøÎ º“∏
+					// Consumption of construction costs
 					ch->PointChange(POINT_GOLD, -t->dwPrice);
 
-					// æ∆¿Ã≈€ ¿⁄¿Á ªÁøÎ«œ±‚ 
+					// Using item materials 
 					{
 						int i;
 						for (i = 0; i < OBJECT_MATERIAL_MAX_NUM; ++i)
@@ -3080,8 +3080,8 @@ ACMD(do_build)
 			break;
 
 		case 'W' :
-			// ¥„¿Â ººøÏ±‚
-			// build (w)all ¥„¿Âπ¯»£ ¥„¿Â≈©±‚ ¥ÎπÆµø ¥ÎπÆº≠ ¥ÎπÆ≥≤ ¥ÎπÆ∫œ
+			// building a fence
+			// build (w)all Fence number Fence size Daemun-dong Daemun-seo Daemun-nam Daemun-buk
 
 			if (GMLevel >  GM_PLAYER) 
 			{
@@ -3115,8 +3115,8 @@ ACMD(do_build)
 			break;
 
 		case 'E' :
-			// ¥„¿Â ¡ˆøÏ±‚
-			// build (e)rase ¥„¿Âº¬ID
+			// clearing the fence
+			// build (e)rase set of fences ID
 			if (GMLevel > GM_PLAYER) 
 			{
 				one_argument(line, arg1, sizeof(arg1));
@@ -3489,28 +3489,28 @@ ACMD(do_stat_plus_amount)
 	
 	switch (subcmd)
 	{
-		case POINT_HT : // √º∑¬
+		case POINT_HT : // stamina
 			if (nPoint + ch->GetPoint(POINT_HT) > 90)
 			{
 				nPoint = 90 - ch->GetPoint(POINT_HT);
 			}
 			break;
 
-		case POINT_IQ : // ¡ˆ¥…
+		case POINT_IQ : // intelligence
 			if (nPoint + ch->GetPoint(POINT_IQ) > 90)
 			{
 				nPoint = 90 - ch->GetPoint(POINT_IQ);
 			}
 			break;
 			
-		case POINT_ST : // ±Ÿ∑¬
+		case POINT_ST : // muscular strength
 			if (nPoint + ch->GetPoint(POINT_ST) > 90)
 			{
 				nPoint = 90 - ch->GetPoint(POINT_ST);
 			}
 			break;
 			
-		case POINT_DX : // πŒ√∏
+		case POINT_DX : // agility
 			if (nPoint + ch->GetPoint(POINT_DX) > 90)
 			{
 				nPoint = 90 - ch->GetPoint(POINT_DX);
@@ -4084,8 +4084,8 @@ ACMD (do_attr_full_set)
 	case JOB_SURA:
 	case JOB_SHAMAN:
 		{
-			// π´ªÁ ∏ˆªß º¬∆√.
-			// ¿Ã∞Õ∏∏ ≥™øÕ ¿÷æÓº≠ ¿”Ω√∑Œ ∏µÁ ¡˜±∫ ¥Ÿ ¿Ã∑± º”º∫ µ˚∏ß.
+			// Musa‚Äôs body setting .
+			// This is the only one listed, so temporarily all occupations follow these attributes. .
 			item = ch->GetWear(WEAR_HEAD);
 			if (item != NULL)
 			{

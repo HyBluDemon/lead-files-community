@@ -13,12 +13,12 @@ struct SGuildMaster
 
 typedef struct SGuildMember
 {
-	DWORD pid; // player 테이블의 id; primary key
-	BYTE grade; // 길드상의 플레이어의 계급 1 to 15 (1이 짱)
+	DWORD pid; // player of the table id; primary key
+	BYTE grade; // Player's rank in the guild 1 to 15 (1 Lee Jjang )
 	BYTE is_general;
 	BYTE job;
 	BYTE level;
-	DWORD offer_exp; // 공헌한 경험치
+	DWORD offer_exp; // Experience contributed
 	BYTE _dummy;
 
 	std::string name;
@@ -43,7 +43,7 @@ typedef struct SGuildMemberPacketData
 
 typedef struct SGuildGrade
 {
-	char grade_name[GUILD_GRADE_NAME_MAX_LEN+1]; // 8+1 길드장, 길드원 등의 이름
+	char grade_name[GUILD_GRADE_NAME_MAX_LEN+1]; // 8+1 guild leader , Names of guild members, etc.
 	BYTE auth_flag;
 } TGuildGrade;
 
@@ -218,7 +218,7 @@ class CGuild
 		bool		ChargeSP(LPCHARACTER ch, int iSP);
 
 		void		Chat(const char* c_pszText); 
-		void		P2PChat(const char* c_pszText); // 길드 채팅
+		void		P2PChat(const char* c_pszText); // guild chat
 
 		void		SkillUsableChange(DWORD dwSkillVnum, bool bUsable);
 		void		AdvanceLevel(int iLevel);
@@ -228,7 +228,7 @@ class CGuild
 		void		RequestWithdrawMoney(LPCHARACTER ch, int iGold);
 
 		void		RecvMoneyChange(int iGold);
-		void		RecvWithdrawMoneyGive(int iChangeGold); // bGive==1 이면 길드장에게 주는 걸 시도하고 성공실패를 디비에게 보낸다
+		void		RecvWithdrawMoneyGive(int iChangeGold); // bGive==1 Then, try giving it to the guild leader and send a success/failure report to DB.
 
 		int		GetGuildMoney() const	{ return m_data.gold; }
 
@@ -239,7 +239,7 @@ class CGuild
 		int		GetGuildWarState(DWORD guild_id);
 		bool		CanStartWar(BYTE bGuildWarType);
 		DWORD		GetWarStartTime(DWORD guild_id);
-		bool		UnderWar(DWORD guild_id); // 전쟁중인가?
+		bool		UnderWar(DWORD guild_id); // Are we at war? ?
 		DWORD		UnderAnyWar(BYTE bType = GUILD_WAR_TYPE_MAX_NUM);
 
 		// War map relative
@@ -282,26 +282,26 @@ class CGuild
 		bool		HasLand();
 
 		// GUILD_JOIN_BUG_FIX
-		/// character 에게 길드가입 초대를 한다.
+		/// character Invite to join the guild .
 		/**
-		 * @param	pchInviter 초대한 character.
-		 * @param	pchInvitee 초대할 character.
+		 * @param	pchInviter invited character.
+		 * @param	pchInvitee to invite character.
 		 *
-		 * 초대하거나 받을수 없는 상태라면 해당하는 채팅 메세지를 전송한다.
+		 * If you cannot invite or receive an invitation, send the corresponding chat message. .
 		 */
 		void		Invite( LPCHARACTER pchInviter, LPCHARACTER pchInvitee );
 
-		/// 길드초대에 대한 상대 character 의 수락을 처리한다.
+		/// Opponent for guild invitation character Process acceptance of .
 		/**
-		 * @param	pchInvitee 초대받은 character
+		 * @param	pchInvitee invited character
 		 *
-		 * 길드에 가입가능한 상태가 아니라면 해당하는 채팅 메세지를 전송한다.
+		 * If you are not eligible to join the guild, send the corresponding chat message. .
 		 */
 		void		InviteAccept( LPCHARACTER pchInvitee );
 
-		/// 길드초대에 대한 상대 character 의 거부를 처리한다.
+		/// Opponent for guild invitation character handle rejection of .
 		/**
-		 * @param	dwPID 초대받은 character 의 PID
+		 * @param	dwPID invited character of PID
 		 */
 		void		InviteDeny( DWORD dwPID );
 		// END_OF_GUILD_JOIN_BUG_FIX
@@ -339,27 +339,27 @@ class CGuild
 		bool	abSkillUsable[GUILD_SKILL_COUNT];
 
 		// GUILD_JOIN_BUG_FIX
-		/// 길드 가입을 할 수 없을 경우의 에러코드.
+		/// Error code when you cannot join a guild .
 		enum GuildJoinErrCode {
-			GERR_NONE			= 0,	///< 처리성공
-			GERR_WITHDRAWPENALTY,		///< 탈퇴후 가입가능한 시간이 지나지 않음
-			GERR_COMMISSIONPENALTY,		///< 해산후 가입가능한 시간이 지나지 않음
-			GERR_ALREADYJOIN,			///< 길드가입 대상 캐릭터가 이미 길드에 가입해 있음
-			GERR_GUILDISFULL,			///< 길드인원 제한 초과
-			GERR_GUILD_IS_IN_WAR,		///< 길드가 현재 전쟁중
-			GERR_INVITE_LIMIT,			///< 길드원 가입 제한 상태
-			GERR_MAX				///< Error code 최고치. 이 앞에 Error code 를 추가한다.
+			GERR_NONE			= 0,	///< Processing success
+			GERR_WITHDRAWPENALTY,		///< The time available to join after withdrawal has not passed.
+			GERR_COMMISSIONPENALTY,		///< The time available to join after dissolution has not passed.
+			GERR_ALREADYJOIN,			///< The character to join the guild has already joined the guild.
+			GERR_GUILDISFULL,			///< Guild member limit exceeded
+			GERR_GUILD_IS_IN_WAR,		///< The guild is currently at war
+			GERR_INVITE_LIMIT,			///< Guild member membership restricted status
+			GERR_MAX				///< Error code highest . in front of this Error code add .
 		};
 
-		/// 길드에 가입 가능한 조건을 검사한다.
+		/// Check the conditions for joining a guild .
 		/**
-		 * @param [in]	pchInvitee 초대받는 character
+		 * @param [in]	pchInvitee invited character
 		 * @return	GuildJoinErrCode
 		 */
 		GuildJoinErrCode	VerifyGuildJoinableCondition( const LPCHARACTER pchInvitee );
 
 		typedef std::map< DWORD, LPEVENT >	EventMap;
-		EventMap	m_GuildInviteEventMap;	///< 길드 초청 Event map. key: 초대받은 캐릭터의 PID
+		EventMap	m_GuildInviteEventMap;	///< Guild Invitation Event map. key: of invited characters PID
 		// END_OF_GUILD_JOIN_BUG_FIX
 };
 

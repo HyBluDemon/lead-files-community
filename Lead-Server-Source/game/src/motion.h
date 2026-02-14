@@ -18,40 +18,40 @@ enum EMotionMode
 
 enum EPublicMotion
 {
-	MOTION_NONE,                // 0 없음
-	MOTION_WAIT,                // 1 대기          (00.msa)
-	MOTION_WALK,                // 2 걷기          (02.msa)
-	MOTION_RUN,                 // 3 뛰기          (03.msa)
-	MOTION_CHANGE_WEAPON,       // 4 무기바꾸기
-	MOTION_DAMAGE,              // 5 정면맞기      (30.msa)
-	MOTION_DAMAGE_FLYING,       // 6 정면날아가기  (32.msa)
-	MOTION_STAND_UP,            // 7 정면일어나기  (33.msa)
-	MOTION_DAMAGE_BACK,         // 8 후면맞기      (34.msa)
-	MOTION_DAMAGE_FLYING_BACK,  // 9 후면날아가기  (35.msa)
-	MOTION_STAND_UP_BACK,       // 10 후면일어나기 (26.msa)
-	MOTION_DEAD,                // 11 죽기         (31.msa)
-	MOTION_DEAD_BACK,           // 12 후면죽기     (37.msa)
-	MOTION_NORMAL_ATTACK,		// 13 기본 공격
-	MOTION_COMBO_ATTACK_1,		// 14 콤보 공격
-	MOTION_COMBO_ATTACK_2,      // 15 콤보 공격
-	MOTION_COMBO_ATTACK_3,      // 16 콤보 공격
-	MOTION_COMBO_ATTACK_4,      // 17 콤보 공격
-	MOTION_COMBO_ATTACK_5,      // 18 콤보 공격
-	MOTION_COMBO_ATTACK_6,      // 19 콤보 공격
-	MOTION_COMBO_ATTACK_7,      // 20 콤보 공격
-	MOTION_COMBO_ATTACK_8,      // 21 콤보 공격
-	MOTION_INTRO_WAIT,          // 22 선택화면 대기
-	MOTION_INTRO_SELECTED,      // 23 선택화면 선택
-	MOTION_INTRO_NOT_SELECTED,  // 24 선택화면 비선택
-	MOTION_SPAWN,               // 25 소환
-	MOTION_FISHING_THROW,       // 26 낚시 던지기
-	MOTION_FISHING_WAIT,        // 27 낚시 대기
-	MOTION_FISHING_STOP,        // 28 낚시 그만두기
-	MOTION_FISHING_REACT,       // 29 낚시 반응
-	MOTION_FISHING_CATCH,       // 30 낚시 잡기
-	MOTION_FISHING_FAIL,        // 31 낚시 실패
-	MOTION_STOP,                // 32 말 멈추기
-	MOTION_SPECIAL_1,           // 33 몬스터 스킬
+	MOTION_NONE,                // 0 doesn't exist
+	MOTION_WAIT,                // 1 atmosphere          (00.msa)
+	MOTION_WALK,                // 2 walking          (02.msa)
+	MOTION_RUN,                 // 3 jump          (03.msa)
+	MOTION_CHANGE_WEAPON,       // 4 Change Weapon
+	MOTION_DAMAGE,              // 5 hit head on      (30.msa)
+	MOTION_DAMAGE_FLYING,       // 6 fly straight ahead  (32.msa)
+	MOTION_STAND_UP,            // 7 Stand up front  (33.msa)
+	MOTION_DAMAGE_BACK,         // 8 hit from behind      (34.msa)
+	MOTION_DAMAGE_FLYING_BACK,  // 9 fly backwards  (35.msa)
+	MOTION_STAND_UP_BACK,       // 10 Stand up rear (26.msa)
+	MOTION_DEAD,                // 11 die         (31.msa)
+	MOTION_DEAD_BACK,           // 12 Rear death     (37.msa)
+	MOTION_NORMAL_ATTACK,		// 13 basic attack
+	MOTION_COMBO_ATTACK_1,		// 14 combo attack
+	MOTION_COMBO_ATTACK_2,      // 15 combo attack
+	MOTION_COMBO_ATTACK_3,      // 16 combo attack
+	MOTION_COMBO_ATTACK_4,      // 17 combo attack
+	MOTION_COMBO_ATTACK_5,      // 18 combo attack
+	MOTION_COMBO_ATTACK_6,      // 19 combo attack
+	MOTION_COMBO_ATTACK_7,      // 20 combo attack
+	MOTION_COMBO_ATTACK_8,      // 21 combo attack
+	MOTION_INTRO_WAIT,          // 22 Wait for selection screen
+	MOTION_INTRO_SELECTED,      // 23 Select selection screen
+	MOTION_INTRO_NOT_SELECTED,  // 24 No selection screen
+	MOTION_SPAWN,               // 25 recall
+	MOTION_FISHING_THROW,       // 26 fishing throw
+	MOTION_FISHING_WAIT,        // 27 waiting for fishing
+	MOTION_FISHING_STOP,        // 28 quit fishing
+	MOTION_FISHING_REACT,       // 29 fishing reaction
+	MOTION_FISHING_CATCH,       // 30 catch fishing
+	MOTION_FISHING_FAIL,        // 31 fishing failure
+	MOTION_STOP,                // 32 stop talking
+	MOTION_SPECIAL_1,           // 33 monster skills
 	MOTION_SPECIAL_2,           // 34 
 	MOTION_SPECIAL_3,			// 35
 	MOTION_SPECIAL_4,			// 36

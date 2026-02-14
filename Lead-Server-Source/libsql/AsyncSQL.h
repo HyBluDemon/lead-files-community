@@ -99,8 +99,8 @@ typedef struct _SQLMsg
 	int				iID;
 	std::string			stQuery;
 
-	std::vector<SQLResult *>	vec_pkResult;	// result 벡터
-	unsigned int		uiResultPos;	// 현재 result 위치
+	std::vector<SQLResult *>	vec_pkResult;	// result vector
+	unsigned int		uiResultPos;	// today result location
 
 	void *			pvUserData;
 	bool			bReturn;

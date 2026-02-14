@@ -35,7 +35,7 @@ class CExchange
 		bool		CheckSpace();
 
 	private:
-		CExchange *	m_pCompany;	// 상대방의 CExchange 포인터
+		CExchange *	m_pCompany;	// of the other party CExchange pointer
 
 		LPCHARACTER	m_pOwner;
 

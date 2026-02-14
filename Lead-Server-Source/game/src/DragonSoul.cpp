@@ -31,7 +31,7 @@ int Gamble(std::vector<float>& vec_probs)
 	return -1;
 }
 
-// °¡ÁßÄ¡ Å×ÀÌºí(prob_lst)À» ¹Þ¾Æ random_set.size()°³ÀÇ index¸¦ ¼±ÅÃÇÏ¿© random_setÀ» return
+// weight table (prob_lst) take it random_set.size() doggy index By selecting random_set second return
 bool MakeDistinctRandomNumberSet(std::list <float> prob_lst, OUT std::vector<int>& random_set)
 {
 	int size = prob_lst.size();
@@ -67,11 +67,11 @@ bool MakeDistinctRandomNumberSet(std::list <float> prob_lst, OUT std::vector<int
 	return true;
 }
 
-/* ¿ëÈ¥¼® Vnum¿¡ ´ëÇÑ comment	
- * ITEM VNUMÀ» 10¸¸ ÀÚ¸®ºÎÅÍ, FEDCBA¶ó°í ÇÑ´Ù¸é
- * FE : ¿ëÈ¥¼® Á¾·ù.	D : µî±Þ
- * C : ´Ü°è			B : °­È­		
- * A : ¿©¹úÀÇ ¹øÈ£µé... 	
+/* dragon soul stone Vnum for comment	
+ * ITEM VNUM second 10 From 10,000 digits , FEDCBA If you say
+ * FE : Dragon Soul Stone Type .	D : rating
+ * C : step			B : enforce		
+ * A : extra numbers ... 	
  */
 
 BYTE GetType(DWORD dwVnum)
@@ -169,7 +169,7 @@ bool DSManager::RefreshItemAttributes(LPITEM pDS)
 		return false;
 	}
 
-	// add_min°ú add_max´Â ´õ¹Ì·Î ÀÐÀ½.
+	// add_min class add_max is read as a dummy .
 	int basic_apply_num, add_min, add_max;
 	if (!m_pTable->GetApplyNumSettings(ds_type, grade_idx, basic_apply_num, add_min, add_max))
 	{
@@ -315,7 +315,7 @@ int DSManager::GetDuration(const LPITEM pItem) const
 	return pItem->GetDuration();
 }
 
-// ¿ëÈ¥¼®À» ¹Þ¾Æ¼­ ¿ë½ÉÀ» ÃßÃâÇÏ´Â ÇÔ¼ö
+// Function to receive dragon soul and extract dragon heart
 bool DSManager::ExtractDragonHeart(LPCHARACTER ch, LPITEM pItem, LPITEM pExtractor)
 {
 	if (NULL == ch || NULL == pItem)
@@ -397,7 +397,7 @@ bool DSManager::ExtractDragonHeart(LPCHARACTER ch, LPITEM pItem, LPITEM pExtract
 	}
 }
 
-// Æ¯Á¤ ¿ëÈ¥¼®À» ÀåºñÃ¢¿¡¼­ Á¦°ÅÇÒ ¶§¿¡ ¼º°ø ¿©ºÎ¸¦ °áÁ¤ÇÏ°í, ½ÇÆÐ½Ã ºÎ»ê¹°À» ÁÖ´Â ÇÔ¼ö.
+// Determines success when removing a specific Dragon Soul Stone from the equipment window. , Function that gives byproducts in case of failure .
 bool DSManager::PullOut(LPCHARACTER ch, TItemPos DestCell, LPITEM& pItem, LPITEM pExtractor)
 {
 	if (NULL == ch || NULL == pItem)
@@ -406,7 +406,7 @@ bool DSManager::PullOut(LPCHARACTER ch, TItemPos DestCell, LPITEM& pItem, LPITEM
 		return false;
 	}
 
-	// ¸ñÇ¥ À§Ä¡°¡ validÇÑÁö °Ë»ç ÈÄ, validÇÏÁö ¾Ê´Ù¸é ÀÓÀÇÀÇ ºó °ø°£À» Ã£´Â´Ù.
+	// target location valid After Hanji inspection , valid If not, it searches for a random empty space. .
 	if (!IsValidCellForThisItem(pItem, DestCell))
 	{
 		int iEmptyCell = ch->GetEmptyDragonSoulInventory(pItem);
@@ -430,14 +430,14 @@ bool DSManager::PullOut(LPCHARACTER ch, TItemPos DestCell, LPITEM& pItem, LPITEM
 	int iBonus = 0;
 	float fProb;
 	float fDice;
-	// ¿ëÈ¥¼® ÃßÃâ ¼º°ø ¿©ºÎ °áÁ¤.
+	// Determination of success or failure of Dragon Soul Stone extraction .
 	{
 		DWORD dwVnum = pItem->GetVnum(); 
 
 		BYTE ds_type, grade_idx, step_idx, strength_idx;
 		GetDragonSoulInfo(pItem->GetVnum(), ds_type, grade_idx, step_idx, strength_idx);
 
-		// ÃßÃâ Á¤º¸°¡ ¾ø´Ù¸é ÀÏ´Ü ¹«Á¶°Ç ¼º°øÇÏ´Â °ÍÀÌ¶ó »ý°¢ÇÏÀÚ.
+		// If there is no information to extract, let's assume that success is guaranteed. .
 		if (!m_pTable->GetDragonSoulExtValues(ds_type, grade_idx, fProb, dwByProduct))
 		{
 			pItem->AddToCharacter(ch, DestCell);
@@ -454,7 +454,7 @@ bool DSManager::PullOut(LPCHARACTER ch, TItemPos DestCell, LPITEM& pItem, LPITEM
 		bSuccess = fDice <= (fProb * (100 + iBonus) / 100.f);
 	}
 
-	// Ä³¸¯ÅÍÀÇ ¿ëÈ¥¼® ÃßÃâ ¹× Ãß°¡ È¤Àº Á¦°Å. ºÎ»ê¹° Á¦°ø.
+	// Extracting and adding or removing a characterâ€™s Dragon Soul Stone . By-product provision .
 	{
 		char buf[128];
 
@@ -519,8 +519,8 @@ bool DSManager::DoRefineGrade(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL
 		return false;
 	}
 
-	// È¤½Ã³ª ¸ð¸¦ Áßº¹µÇ´Â item pointer ¾ø¾Ö±â À§ÇØ¼­ set »ç¿ë
-	// ÀÌ»óÇÑ ÆÐÅ¶À» º¸³¾ °æ¿ì, Áßº¹µÈ TItemPos°¡ ÀÖÀ» ¼öµµ ÀÖ°í, Àß¸øµÈ TItemPos°¡ ÀÖÀ» ¼öµµ ÀÖ´Ù.
+	// There may be duplicates item pointer to get rid of set use
+	// When sending strange packets , duplicated TItemPos There may be , erroneous TItemPos There may be .
 	std::set <LPITEM> set_items;
 	for (int i = 0; i < DRAGON_SOUL_REFINE_GRID_SIZE; i++)
 	{
@@ -529,7 +529,7 @@ bool DSManager::DoRefineGrade(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL
 		LPITEM pItem = ch->GetItem(aItemPoses[i]);
 		if (NULL != pItem)
 		{
-			// ¿ëÈ¥¼®ÀÌ ¾Æ´Ñ ¾ÆÀÌÅÛÀÌ °³·®Ã¢¿¡ ÀÖÀ» ¼ö ¾ø´Ù.
+			// Items other than Dragon Soul Stones cannot be in the improvement window. .
 			if (!pItem->IsDragonSoul())
 			{
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This item is not required for improving the clarity level."));
@@ -557,7 +557,7 @@ bool DSManager::DoRefineGrade(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL
 	BYTE ds_type, grade_idx, step_idx, strength_idx;
 	int result_grade;
 
-	// °¡Àå Ã³À½ °ÍÀ» °­È­ÀÇ ±âÁØÀ¸·Î »ï´Â´Ù.
+	// The first thing is used as a standard for reinforcement. .
 	std::set <LPITEM>::iterator it = set_items.begin();
 	{
 		LPITEM pItem = *it;
@@ -576,8 +576,8 @@ bool DSManager::DoRefineGrade(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL
 	{
 		LPITEM pItem = *it;
 
-		// Å¬¶ó ui¿¡¼­ ÀåÂøÇÑ ¾ÆÀÌÅÛÀº °³·®Ã¢¿¡ ¿Ã¸± ¼ö ¾øµµ·Ï ¸·¾Ò±â ¶§¹®¿¡,
-		// º°µµÀÇ ¾Ë¸² Ã³¸®´Â ¾ÈÇÔ.
+		// Clara ui Because items equipped in are prevented from being uploaded to the improvement window, ,
+		// No separate notification processing .
 		if (pItem->IsEquipped())
 		{
 			return false;
@@ -592,7 +592,7 @@ bool DSManager::DoRefineGrade(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL
 		}
 	}
 
-	// Å¬¶ó¿¡¼­ ÇÑ¹ø °¹¼ö Ã¼Å©¸¦ ÇÏ±â ¶§¹®¿¡ count != need_count¶ó¸é invalid Å¬¶óÀÏ °¡´É¼ºÀÌ Å©´Ù.
+	// Because the number is checked once in CLA. count != need_count ramen invalid It's very likely that it's Clary. .
 	if (count != need_count)
 	{
 		sys_err ("Possiblity of invalid client. Name %s", ch->GetName());
@@ -679,15 +679,15 @@ bool DSManager::DoRefineStep(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL_
 		return false;
 	}
 
-	// È¤½Ã³ª ¸ð¸¦ Áßº¹µÇ´Â item pointer ¾ø¾Ö±â À§ÇØ¼­ set »ç¿ë
-	// ÀÌ»óÇÑ ÆÐÅ¶À» º¸³¾ °æ¿ì, Áßº¹µÈ TItemPos°¡ ÀÖÀ» ¼öµµ ÀÖ°í, Àß¸øµÈ TItemPos°¡ ÀÖÀ» ¼öµµ ÀÖ´Ù.
+	// There may be duplicates item pointer to get rid of set use
+	// When sending strange packets , duplicated TItemPos There may be , erroneous TItemPos There may be .
 	std::set <LPITEM> set_items;
 	for (int i = 0; i < DRAGON_SOUL_REFINE_GRID_SIZE; i++)
 	{
 		LPITEM pItem = ch->GetItem(aItemPoses[i]);
 		if (NULL != pItem)
 		{
-			// ¿ëÈ¥¼®ÀÌ ¾Æ´Ñ ¾ÆÀÌÅÛÀÌ °³·®Ã¢¿¡ ÀÖÀ» ¼ö ¾ø´Ù.
+			// Items other than Dragon Soul Stones cannot be in the improvement window. .
 			if (!pItem->IsDragonSoul())
 			{
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You do not own the materials required to strengthen the Dragon Stone."));
@@ -713,7 +713,7 @@ bool DSManager::DoRefineStep(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL_
 	BYTE ds_type, grade_idx, step_idx, strength_idx;
 	int result_step;
 
-	// °¡Àå Ã³À½ °ÍÀ» °­È­ÀÇ ±âÁØÀ¸·Î »ï´Â´Ù.
+	// The first thing is used as a standard for reinforcement. .
 	std::set <LPITEM>::iterator it = set_items.begin(); 
 	{
 		LPITEM pItem = *it;
@@ -730,8 +730,8 @@ bool DSManager::DoRefineStep(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL_
 	while(++it != set_items.end())
 	{
 		LPITEM pItem = *it;
-		// Å¬¶ó ui¿¡¼­ ÀåÂøÇÑ ¾ÆÀÌÅÛÀº °³·®Ã¢¿¡ ¿Ã¸± ¼ö ¾øµµ·Ï ¸·¾Ò±â ¶§¹®¿¡,
-		// º°µµÀÇ ¾Ë¸² Ã³¸®´Â ¾ÈÇÔ.
+		// Clara ui Because items equipped in are prevented from being uploaded to the improvement window, ,
+		// No separate notification processing .
 		if (pItem->IsEquipped())
 		{
 			return false;
@@ -744,7 +744,7 @@ bool DSManager::DoRefineStep(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_SOUL_
 		}
 	}
 
-	// Å¬¶ó¿¡¼­ ÇÑ¹ø °¹¼ö Ã¼Å©¸¦ ÇÏ±â ¶§¹®¿¡ count != need_count¶ó¸é invalid Å¬¶óÀÏ °¡´É¼ºÀÌ Å©´Ù.
+	// Because the number is checked once in CLA. count != need_count ramen invalid It's very likely that it's Clary. .
 	if (count != need_count)
 	{
 		sys_err ("Possiblity of invalid client. Name %s", ch->GetName());
@@ -840,8 +840,8 @@ bool DSManager::DoRefineStrength(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_S
 		return false;
 	}
 
-	// È¤½Ã³ª ¸ð¸¦ Áßº¹µÇ´Â item pointer ¾ø¾Ö±â À§ÇØ¼­ set »ç¿ë
-	// ÀÌ»óÇÑ ÆÐÅ¶À» º¸³¾ °æ¿ì, Áßº¹µÈ TItemPos°¡ ÀÖÀ» ¼öµµ ÀÖ°í, Àß¸øµÈ TItemPos°¡ ÀÖÀ» ¼öµµ ÀÖ´Ù.
+	// There may be duplicates item pointer to get rid of set use
+	// When sending strange packets , duplicated TItemPos There may be , erroneous TItemPos There may be .
 	std::set <LPITEM> set_items;
 	for (int i = 0; i < DRAGON_SOUL_REFINE_GRID_SIZE; i++)
 	{
@@ -863,15 +863,15 @@ bool DSManager::DoRefineStrength(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_S
 	for (std::set <LPITEM>::iterator it = set_items.begin(); it != set_items.end(); it++)
 	{
 		LPITEM pItem = *it;
-		// Å¬¶ó ui¿¡¼­ ÀåÂøÇÑ ¾ÆÀÌÅÛÀº °³·®Ã¢¿¡ ¿Ã¸± ¼ö ¾øµµ·Ï ¸·¾Ò±â ¶§¹®¿¡,
-		// º°µµÀÇ ¾Ë¸² Ã³¸®´Â ¾ÈÇÔ.
+		// Clara ui Because items equipped in are prevented from being uploaded to the improvement window, ,
+		// No separate notification processing .
 		if (pItem->IsEquipped())
 		{
 			return false;
 		}
 
-		// ¿ëÈ¥¼®°ú °­È­¼®¸¸ÀÌ °³·®Ã¢¿¡ ÀÖÀ» ¼ö ÀÖ´Ù.
-		// ±×¸®°í ÇÏ³ª¾¿¸¸ ÀÖ¾î¾ßÇÑ´Ù.
+		// Only dragon soul stones and reinforcement stones can be in the improvement window. .
+		// And there should only be one .
 		if (pItem->IsDragonSoul())
 		{
 			if (pDragonSoul != NULL)
@@ -912,14 +912,14 @@ bool DSManager::DoRefineStrength(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_S
 		GetDragonSoulInfo(pDragonSoul->GetVnum(), bType, bGrade, bStep, bStrength);
 
 		float fWeight = 0.f;
-		// °¡ÁßÄ¡ °ªÀÌ ¾ø´Ù¸é °­È­ÇÒ ¼ö ¾ø´Â ¿ëÈ¥¼®
+		// Dragon Soul Stone that cannot be strengthened if it has no weight value.
 		if (!m_pTable->GetWeight(bType, bGrade, bStep, bStrength + 1, fWeight))
 		{
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This Dragon Stone cannot be used for strengthening."));
 			SendRefineResultPacket(ch, DS_SUB_HEADER_REFINE_FAIL_MAX_REFINE, TItemPos(pDragonSoul->GetWindow(), pDragonSoul->GetCell()));
 			return false;
 		}
-		// °­È­ÇßÀ» ¶§ °¡ÁßÄ¡°¡ 0ÀÌ¶ó¸é ´õ ÀÌ»ó °­È­µÇ¼­´Â ¾ÈµÈ´Ù.
+		// When strengthened, the weight 0 If so, it should not be strengthened any further. .
 		if (fWeight < FLT_EPSILON)
 		{
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This Dragon Stone cannot be used for strengthening."));
@@ -988,7 +988,7 @@ bool DSManager::DoRefineStrength(LPCHARACTER ch, TItemPos (&aItemPoses)[DRAGON_S
 
 		char buf[128];
 		sprintf(buf, "STRENGTH : %d -> %d", bStrength, bStrength - 1);
-		// strength°­È­´Â ½ÇÆÐ½Ã ±úÁú ¼öµµ ÀÖ¾î, ¿øº» ¾ÆÀÌÅÛÀ» ¹ÙÅÁÀ¸·Î ·Î±×¸¦ ³²±è.
+		// strength Reinforcement can be broken if it fails , Leave a log based on the original item .
 		LogManager::instance().ItemLog(ch, pDragonSoul, "DS_STRENGTH_REFINE_FAIL", buf);
 
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Strengthening failed."));
@@ -1029,12 +1029,12 @@ int DSManager::LeftTime(LPITEM pItem) const
 	if (pItem == NULL)
 		return false;
 
-	// ÀÏ´ÜÀº timer based on wearÀÎ ¿ëÈ¥¼®¸¸ ½Ã°£ ´Ù µÇ¾îµµ ¾È ¾ø¾îÁø´Ù.
+	// For now timer based on wear Only the dragon soul stone does not disappear even if time runs out. .
 	if (pItem->GetProto()->cLimitTimerBasedOnWearIndex >= 0)
 	{
 		return pItem->GetSocket(ITEM_SOCKET_REMAIN_SEC);
 	}
-	// ´Ù¸¥ limit typeÀÎ ¿ëÈ¥¼®µéÀº ½Ã°£ µÇ¸é ¸ðµÎ »ç¶óÁö±â ¶§¹®¿¡ ¿©±â µé¾î¿Â ¾ÆÀÌÅÛÀº ÀÏ´Ü ½Ã°£ÀÌ ³²¾Ò´Ù°í ÆÇ´Ü.
+	// different limit type Since all Dragon Soul Stones disappear over time, the items entered here are judged to have some time left. .
 	else
 	{
 		return INT_MAX;
@@ -1046,12 +1046,12 @@ bool DSManager::IsTimeLeftDragonSoul(LPITEM pItem) const
 	if (pItem == NULL)
 		return false;
 
-	// ÀÏ´ÜÀº timer based on wearÀÎ ¿ëÈ¥¼®¸¸ ½Ã°£ ´Ù µÇ¾îµµ ¾È ¾ø¾îÁø´Ù.
+	// For now timer based on wear Only the dragon soul stone does not disappear even if time runs out. .
 	if (pItem->GetProto()->cLimitTimerBasedOnWearIndex >= 0)
 	{
 		return pItem->GetSocket(ITEM_SOCKET_REMAIN_SEC) > 0;
 	}
-	// ´Ù¸¥ limit typeÀÎ ¿ëÈ¥¼®µéÀº ½Ã°£ µÇ¸é ¸ðµÎ »ç¶óÁö±â ¶§¹®¿¡ ¿©±â µé¾î¿Â ¾ÆÀÌÅÛÀº ÀÏ´Ü ½Ã°£ÀÌ ³²¾Ò´Ù°í ÆÇ´Ü.
+	// different limit type Since all Dragon Soul Stones disappear over time, the items entered here are judged to have some time left. .
 	else
 	{
 		return true;

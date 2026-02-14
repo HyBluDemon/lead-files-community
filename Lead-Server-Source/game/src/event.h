@@ -1,8 +1,8 @@
 /*
  *    Filename: event.h
- * Description: 이벤트 관련 (timed event)
+ * Description: Event related (timed event)
  *
- *      Author: 김한주 (aka. 비엽, Cronan), 송영진 (aka. myevan, 빗자루)
+ *      Author: Hanjoo Kim (aka. Rain leaves , Cronan), Youngjin Song (aka. myevan, broomstick )
  */
 #ifndef __INC_LIBTHECORE_EVENT_H__
 #define __INC_LIBTHECORE_EVENT_H__
@@ -58,10 +58,10 @@ extern int		event_count();
 
 #define event_create(func, info, when) event_create_ex(func, info, when)
 extern LPEVENT	event_create_ex(TEVENTFUNC func, event_info_data* info, long when);
-extern void		event_cancel(LPEVENT * event);			// 이벤트 취소
-extern long		event_processing_time(LPEVENT event);	// 수행 시간 리턴
-extern long		event_time(LPEVENT event);			// 남은 시간 리턴
-extern void		event_reset_time(LPEVENT event, long when);	// 실행 시간 재 설정
+extern void		event_cancel(LPEVENT * event);			// Event cancellation
+extern long		event_processing_time(LPEVENT event);	// Return execution time
+extern long		event_time(LPEVENT event);			// Return remaining time
+extern void		event_reset_time(LPEVENT event, long when);	// Reset run time
 extern void		event_set_verbose(int level);
 
 extern event_info_data* FindEventInfo(DWORD dwID);

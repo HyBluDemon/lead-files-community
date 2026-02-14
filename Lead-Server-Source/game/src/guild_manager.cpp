@@ -508,7 +508,7 @@ void CGuildManager::RequestWarOver(DWORD dwGuild1, DWORD dwGuild2, DWORD dwGuild
 	TPacketGuildWar p;
 
 	p.bWar = GUILD_WAR_OVER;
-	// 길드전이 끝나도 보상은 없다.
+	// There is no reward even after the guild war ends. .
 	//p.lWarPrice = lReward;
 	p.lWarPrice = 0;
 	p.bType = dwGuildWinner == 0 ? 1 : 0; // bType == 1 means draw for this packet.
@@ -953,7 +953,7 @@ void CGuildManager::ChangeMaster(DWORD dwGID)
 		iter->second->Load(dwGID);
 	}
 
-	// 업데이트된 정보 보내주기
+	// Send us updated information
 	DBManager::instance().FuncQuery(std::bind(&CGuild::SendGuildDataUpdateToAllMember, iter->second, std::placeholders::_1),
 			"SELECT 1");
 

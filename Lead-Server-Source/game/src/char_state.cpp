@@ -63,7 +63,7 @@ namespace
 						!pkChr->IsAffectFlag(AFF_WAR_FLAG2) &&
 						!pkChr->IsAffectFlag(AFF_WAR_FLAG3))
 				{
-					// 우리편 깃발일 경우
+					// If it's our flag
 					if ((DWORD) m_pkChr->GetPoint(POINT_STAT) == pkChr->GetGuild()->GetID())
 					{
 						CWarMap * pMap = pkChr->GetWarMap();
@@ -72,8 +72,8 @@ namespace
 						if (!pMap || !pMap->GetTeamIndex(pkChr->GetGuild()->GetID(), idx))
 							return;
 
-						// 우리편 기지에 깃발이 없을 때만 깃발을 뽑는다. 안그러면 기지에 있는 깃발을
-						// 가만히 두고 싶은데도 뽑힐수가 있으므로..
+						// The flag is drawn only when there is no flag on our side's base. . Otherwise, the flag at the base
+						// Even if you want to leave it alone, you can get picked on. ..
 						if (!pMap->IsFlagOnBase(idx))
 						{
 							m_pkChrFind = pkChr;
@@ -82,7 +82,7 @@ namespace
 					}
 					else
 					{
-						// 상대편 깃발인 경우 무조건 뽑는다.
+						// If it is the opponent's flag, it is unconditionally drawn. .
 						m_pkChrFind = pkChr;
 						m_iMinDistance = iDist;
 					}
@@ -186,7 +186,7 @@ namespace
 
 				LPCHARACTER pkChr = (LPCHARACTER) ent;
 
-				// 일단 PC 공격안함
+				// first PC No attack
 				if (pkChr->IsPC())
 					return;
 
@@ -202,7 +202,7 @@ namespace
 						pkChr->IsAffectFlag(AFF_REVIVE_INVISIBLE))
 					return;
 
-				// 왜구는 패스
+				// The Japanese pass
 				if (pkChr->GetRaceNum() == 5001)
 					return;
 
@@ -285,7 +285,7 @@ void CHARACTER::CowardEscape()
 	for (int iDistIdx = 2; iDistIdx >= 0; --iDistIdx)
 		for (int iTryCount = 0; iTryCount < 8; ++iTryCount)
 		{
-			SetRotation(number(0, 359));        // 방향은 랜덤으로 설정
+			SetRotation(number(0, 359));        // Direction is set randomly
 
 			float fx, fy;
 			float fDist = number(iDist[iDistIdx], iDist[iDistIdx+1]);
@@ -367,7 +367,7 @@ void CHARACTER::StateIdle()
 	}
 	else if (IsWarp() || IsGoto())
 	{
-		// 워프는 이벤트로 처리
+		// Warp is processed as an event
 		m_dwStateDuration = 60 * passes_per_sec;
 		return;
 	}
@@ -375,7 +375,7 @@ void CHARACTER::StateIdle()
 	if (IsPC())
 		return;
 
-	// NPC 처리
+	// NPC treatment
 	if (!IsMonster())
 	{
 		__StateIdle_NPC();
@@ -506,7 +506,7 @@ void CHARACTER::__StateIdle_NPC()
 	MonsterChat(MONSTER_CHAT_WAIT);
 	m_dwStateDuration = PASSES_PER_SEC(5);
 
-	// 펫 시스템의 Idle 처리는 기존 거의 모든 종류의 캐릭터들이 공유해서 사용하는 상태머신이 아닌 CPetActor::Update에서 처리함.
+	// of the pet system Idle Processing is not a state machine that is shared and used by almost all types of existing characters. CPetActor::Update Processed by .
 	if (IsPet())
 		return;
 	else if (IsGuardNPC())
@@ -531,21 +531,21 @@ void CHARACTER::__StateIdle_NPC()
 	}
 	else
 	{
-		if (GetRaceNum() == xmas::MOB_SANTA_VNUM) // 산타
+		if (GetRaceNum() == xmas::MOB_SANTA_VNUM) // santa
 		{
 			if (get_dword_time() > m_dwPlayStartTime)
 			{
-				int	next_warp_time = 2 * 1000;	// 2초
+				int	next_warp_time = 2 * 1000;	// 2 candle
 
 				m_dwPlayStartTime = get_dword_time() + next_warp_time;
 
-				// 시간이 넘었으니 워프합시다.
+				// Time has passed, let's warp. .
 				/*
-				 * 산타용
+				 * For Santa
 				const int WARP_MAP_INDEX_NUM = 4;
 				static const long c_lWarpMapIndexs[WARP_MAP_INDEX_NUM] = {61, 62, 63, 64};
 				*/
-				// 신선자 노해용
+				// Shinseonja Noh Hae-yong
 				const int WARP_MAP_INDEX_NUM = 7;
 				static const long c_lWarpMapIndexs[WARP_MAP_INDEX_NUM] = { 61, 62, 63, 64, 3, 23, 43 };
 				long lNextMapIndex;
@@ -553,7 +553,7 @@ void CHARACTER::__StateIdle_NPC()
 
 				if (map_allow_find(lNextMapIndex))
 				{
-					// 이곳입니다.
+					// It's here .
 					M2_DESTROY_CHARACTER(this);
 					int iNextSpawnDelay = 50 * 60;
 
@@ -561,7 +561,7 @@ void CHARACTER::__StateIdle_NPC()
 				}
 				else
 				{
-					// 다른 서버 입니다.
+					// It's a different server .
 					TPacketGGXmasWarpSanta p;
 					p.bHeader   = HEADER_GG_XMAS_WARP_SANTA;
 					p.bChannel  = g_bChannel;
@@ -575,7 +575,7 @@ void CHARACTER::__StateIdle_NPC()
 		if (!IS_SET(m_pointsInstant.dwAIFlag, AIFLAG_NOMOVE))
 		{
 			//
-			// 이 곳 저 곳 이동한다.
+			// move from place to place .
 			// 
 			LPCHARACTER pkChrProtege = GetProtege();
 
@@ -590,14 +590,14 @@ void CHARACTER::__StateIdle_NPC()
 
 			if (!number(0, 6))
 			{
-				SetRotation(number(0, 359));        // 방향은 랜덤으로 설정
+				SetRotation(number(0, 359));        // Direction is set randomly
 
 				float fx, fy;
 				float fDist = number(200, 400);
 
 				GetDeltaByDegree(GetRotation(), fDist, &fx, &fy);
 
-				// 느슨한 못감 속성 체크; 최종 위치와 중간 위치가 갈수없다면 가지 않는다.
+				// Check loose nail properties ; If the final position and the intermediate position cannot be reached, do not go. .
 				if (!(SECTREE_MANAGER::instance().IsMovablePosition(GetMapIndex(), GetX() + (int) fx, GetY() + (int) fy) 
 					&& SECTREE_MANAGER::instance().IsMovablePosition(GetMapIndex(), GetX() + (int) fx / 2, GetY() + (int) fy / 2)))
 					return;
@@ -623,7 +623,7 @@ void CHARACTER::__StateIdle_Monster()
 
 	if (IsCoward())
 	{
-		// 겁쟁이 몬스터는 도망만 다닙니다.
+		// Cowardly monsters just run away .
 		if (!IsDead())
 			CowardEscape();
 
@@ -649,16 +649,16 @@ void CHARACTER::__StateIdle_Monster()
 
 	if (!victim || victim->IsBuilding())
 	{
-		// 돌 보호 처리
+		// stone protection treatment
 		if (m_pkChrStone)
 		{
 			victim = m_pkChrStone->GetNearestVictim(m_pkChrStone);
 		}
-		// 선공 몬스터 처리
+		// Dealing with first-attack monsters
 		else if (!no_wander && IsAggressive())
 		{
 			if (GetMapIndex() == 61 && quest::CQuestManager::instance().GetEventFlag("xmas_tree"));
-			// 서한산에서 나무가 있으면 선공하지않는다.
+			// If there are trees in Seohan Mountain, you will not attack first. .
 			else
 				victim = FindVictim(this, m_pkMobData->m_table.wAggressiveSight);
 		}
@@ -679,7 +679,7 @@ void CHARACTER::__StateIdle_Monster()
 
 	LPCHARACTER pkChrProtege = GetProtege();
 
-	// 보호할 것(돌, 파티장)에게로 부터 멀다면 따라간다.
+	// to protect ( rock , party hall ) If you are far from me, I will follow you. .
 	if (pkChrProtege)
 	{
 		if (DISTANCE_APPROX(GetX() - pkChrProtege->GetX(), GetY() - pkChrProtege->GetY()) > 1000)
@@ -693,26 +693,26 @@ void CHARACTER::__StateIdle_Monster()
 	}
 
 	//
-	// 그냥 왔다리 갔다리 한다.
+	// Just go back and forth .
 	//
 	if (!no_wander && !IS_SET(m_pointsInstant.dwAIFlag, AIFLAG_NOMOVE))
 	{
 		if (!number(0, 6))
 		{
-			SetRotation(number(0, 359));        // 방향은 랜덤으로 설정
+			SetRotation(number(0, 359));        // Direction is set randomly
 
 			float fx, fy;
 			float fDist = number(300, 700);
 
 			GetDeltaByDegree(GetRotation(), fDist, &fx, &fy);
 
-			// 느슨한 못감 속성 체크; 최종 위치와 중간 위치가 갈수없다면 가지 않는다.
+			// Check loose nail properties ; If the final position and the intermediate position cannot be reached, do not go. .
 			if (!(SECTREE_MANAGER::instance().IsMovablePosition(GetMapIndex(), GetX() + (int) fx, GetY() + (int) fy) 
 						&& SECTREE_MANAGER::instance().IsMovablePosition(GetMapIndex(), GetX() + (int) fx/2, GetY() + (int) fy/2)))
 				return;
 
-			// NOTE: 몬스터가 IDLE 상태에서 주변을 서성거릴 때, 현재 무조건 뛰어가게 되어 있음. (절대로 걷지 않음)
-			// 그래픽 팀에서 몬스터가 걷는 모습도 보고싶다고 해서 임시로 특정확률로 걷거나 뛰게 함. (게임의 전반적인 느낌이 틀려지기 때문에 일단 테스트 모드에서만 작동)
+			// NOTE: The monster IDLE When wandering around in a state , Right now I have to run anyway. . ( never walks )
+			// The graphics team said they wanted to see the monster walking, so they temporarily made it walk or run with a certain probability. . ( It only works in test mode for now as it will change the overall feel of the game. )
 			if (g_test_server)
 			{
 				if (number(0, 100) < 60)
@@ -741,13 +741,13 @@ bool __CHARACTER_GotoNearTarget(LPCHARACTER self, LPCHARACTER victim)
 	{
 		case BATTLE_TYPE_RANGE:
 		case BATTLE_TYPE_MAGIC:
-			// 마법사나 궁수는 공격 거리의 80%까지 가서 공격을 시작한다.
+			// Wizards and archers have an attack range of 80% Go all the way and start attacking. .
 			if (self->Follow(victim, self->GetMobAttackRange() * 8 / 10))
 				return true;
 			break;
 
 		default:
-			// 나머지는 90%?
+			// the rest 90%?
 			if (self->Follow(victim, self->GetMobAttackRange() * 9 / 10))
 				return true;
 	}
@@ -777,7 +777,7 @@ void CHARACTER::StateMove()
 			LPCHARACTER victim = GetExchange()->GetCompany()->GetOwner();
 			int iDist = DISTANCE_APPROX(GetX() - victim->GetX(), GetY() - victim->GetY());
 
-			// 거리 체크
+			// distance check
 			if (iDist >= EXCHANGE_MAX_DISTANCE)
 			{
 				GetExchange()->Cancel();
@@ -785,17 +785,17 @@ void CHARACTER::StateMove()
 		}
 	}
 
-	// 스테미나가 0 이상이어야 한다.
+	// stamina 0 must be more than .
 	if (IsPC())
 	{
 		if (IsWalking() && GetStamina() < GetMaxStamina())
 		{
-			// 5초 후 부터 스테미너 증가
+			// 5 Stamina increases after a second
 			if (get_dword_time() - GetWalkStartTime() > 5000)
 				PointChange(POINT_STAMINA, GetMaxStamina() / 1);
 		}
 
-		// 전투 중이면서 뛰는 중이면
+		// If you are running while fighting
 		if (!IsWalking() && !IsRiding())
 		{
 			if ((get_dword_time() - GetLastAttackTime()) < 20000)
@@ -815,7 +815,7 @@ void CHARACTER::StateMove()
 
 				if (GetStamina() <= 0)
 				{
-					// 스테미나가 모자라 걸어야함
+					// I don't have enough stamina so I have to walk.
 					SetStamina(0);
 					SetNowWalking(true);
 					StopStaminaConsume();
@@ -837,7 +837,7 @@ void CHARACTER::StateMove()
 
 			if (g_test_server)
 			{
-				// 몬스터가 적을 쫓아가는 것이면 무조건 뛰어간다.
+				// If a monster is chasing an enemy, it will definitely run. .
 				SetNowWalking(false);
 			}
 		}
@@ -846,10 +846,10 @@ void CHARACTER::StateMove()
 		{
 			LPCHARACTER victim = GetVictim();
 
-			// 거대 거북
+			// giant turtle
 			if (GetRaceNum() == 2191 && number(1, 20) == 1 && get_dword_time() - m_pkMobInst->m_dwLastWarpTime > 1000)
 			{
-				// 워프 테스트
+				// warp test
 				float fx, fy;
 				GetDeltaByDegree(victim->GetRotation(), 400, &fx, &fy);
 				long new_x = victim->GetX() + (long)fx;
@@ -863,7 +863,7 @@ void CHARACTER::StateMove()
 				return;
 			}
 
-			// TODO 방향전환을 해서 덜 바보가 되자!
+			// TODO Let's change direction and be less stupid !
 			if (number(0, 3) == 0)
 			{
 				if (__CHARACTER_GotoNearTarget(this, victim))
@@ -1004,7 +1004,7 @@ void CHARACTER::StateBattle()
 	{
 		if (!GetParty())
 		{
-			// 서몬해서 채워둘 파티를 만들어 둡니다.
+			// Summon it and create a party to fill it. .
 			CPartyManager::instance().CreateParty(this);
 		}
 
@@ -1014,7 +1014,7 @@ void CHARACTER::StateBattle()
 		if (bPct && pParty->CountMemberByVnum(GetSummonVnum()) < SUMMON_MONSTER_COUNT)
 		{
 			MonsterLog("Minion Monster Summoned!");
-			// 모자라는 녀석을 불러내 채웁시다.
+			// Let's fill in the gaps by calling out those who are lacking. .
 			int sx = GetX() - 300;
 			int sy = GetY() - 300;
 			int ex = GetX() + 300;
@@ -1057,7 +1057,7 @@ void CHARACTER::StateBattle()
 
 	if (2493 == m_pkMobData->m_table.dwVnum)
 	{
-		// 수룡(2493) 특수 처리
+		// water dragon (2493) special processing
 		m_dwStateDuration = BlueDragon_StateBattle(this);
 		return;
 	}
@@ -1065,7 +1065,7 @@ void CHARACTER::StateBattle()
 	DWORD dwCurTime = get_dword_time();
 	DWORD dwDuration = CalculateDuration(GetLimitPoint(POINT_ATT_SPEED), 2000);
 
-	if ((dwCurTime - m_dwLastAttackTime) < dwDuration) // 2초 마다 공격해야 한다.
+	if ((dwCurTime - m_dwLastAttackTime) < dwDuration) // 2 Must attack every second .
 	{
 		m_dwStateDuration = MAX(1, (passes_per_sec * (dwDuration - (dwCurTime - m_dwLastAttackTime)) / 1000));
 		return;
@@ -1082,7 +1082,7 @@ void CHARACTER::StateBattle()
 				SetGodSpeed(true);
 
 	//
-	// 몹 스킬 처리
+	// Mob skill handling
 	//
 	if (HasMobSkill())
 	{
@@ -1108,11 +1108,11 @@ void CHARACTER::StateBattle()
 		}
 	}
 
-	if (!Attack(victim))    // 공격 실패라면? 왜 실패했지? TODO
+	if (!Attack(victim))    // If the attack fails ? why did i fail ? TODO
 		m_dwStateDuration = passes_per_sec / 2;
 	else
 	{
-		// 적을 바라보게 만든다.
+		// Makes you look at the enemy .
 		SetRotationToXY(victim->GetX(), victim->GetY());
 
 		SendMovePacket(FUNC_ATTACK, 0, GetX(), GetY(), 0, dwCurTime);
@@ -1165,15 +1165,15 @@ void CHARACTER::StateFlagBase()
 
 void CHARACTER::StateHorse()
 {
-	float	START_FOLLOW_DISTANCE = 400.0f;		// 이 거리 이상 떨어지면 쫓아가기 시작함
-	float	START_RUN_DISTANCE = 700.0f;		// 이 거리 이상 떨어지면 뛰어서 쫓아감.
-	int		MIN_APPROACH = 150;					// 최소 접근 거리
-	int		MAX_APPROACH = 300;					// 최대 접근 거리	
+	float	START_FOLLOW_DISTANCE = 400.0f;		// If it goes further than this distance, it starts chasing you.
+	float	START_RUN_DISTANCE = 700.0f;		// If it falls further than this distance, run and chase after it. .
+	int		MIN_APPROACH = 150;					// minimum approach distance
+	int		MAX_APPROACH = 300;					// maximum approach distance	
 
-	DWORD	STATE_DURATION = (DWORD)PASSES_PER_SEC(0.5);	// 상태 지속 시간
+	DWORD	STATE_DURATION = (DWORD)PASSES_PER_SEC(0.5);	// Status Duration
 
-	bool bDoMoveAlone = true;					// 캐릭터와 가까이 있을 때 혼자 여기저기 움직일건지 여부 -_-;
-	bool bRun = true;							// 뛰어야 하나?
+	bool bDoMoveAlone = true;					// Whether the character will move around on his own when close to him -_-;
+	bool bRun = true;							// Should I run? ?
 
 	if (IsDead())
 		return;
@@ -1182,7 +1182,7 @@ void CHARACTER::StateHorse()
 
 	LPCHARACTER victim = GetRider();
 
-	// ! 아님 // 대상이 없는 경우 소환자가 직접 나를 클리어할 것임
+	// ! Not // If there is no target, the summoner will clear me directly.
 	if (!victim)
 	{
 		M2_DESTROY_CHARACTER(this);
@@ -1196,7 +1196,7 @@ void CHARACTER::StateHorse()
 	if (fDist >= START_FOLLOW_DISTANCE)
 	{
 		if (fDist > START_RUN_DISTANCE)
-			SetNowWalking(!bRun);		// NOTE: 함수 이름보고 멈추는건줄 알았는데 SetNowWalking(false) 하면 뛰는거임.. -_-;
+			SetNowWalking(!bRun);		// NOTE: I thought it was stopping when I saw the function name. SetNowWalking(false) If you do that, you run. .. -_-;
 
 		Follow(victim, number(MIN_APPROACH, MAX_APPROACH));
 
@@ -1207,14 +1207,14 @@ void CHARACTER::StateHorse()
 		// wondering-.-
 		m_dwLastAttackTime = get_dword_time() + number(5000, 12000);
 
-		SetRotation(number(0, 359));        // 방향은 랜덤으로 설정
+		SetRotation(number(0, 359));        // Direction is set randomly
 
 		float fx, fy;
 		float fDist = number(200, 400);
 
 		GetDeltaByDegree(GetRotation(), fDist, &fx, &fy);
 
-		// 느슨한 못감 속성 체크; 최종 위치와 중간 위치가 갈수없다면 가지 않는다.
+		// Check loose nail properties ; If the final position and the intermediate position cannot be reached, do not go. .
 		if (!(SECTREE_MANAGER::instance().IsMovablePosition(GetMapIndex(), GetX() + (int) fx, GetY() + (int) fy) 
 					&& SECTREE_MANAGER::instance().IsMovablePosition(GetMapIndex(), GetX() + (int) fx/2, GetY() + (int) fy/2)))
 			return;

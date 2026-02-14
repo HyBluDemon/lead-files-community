@@ -43,14 +43,14 @@ class CLoginKey
 };
 
 
-// sequence 버그 찾기용 데이타
+// sequence Data for finding bugs
 struct seq_t
 {
 	BYTE	hdr;
 	BYTE	seq;
 };
 typedef std::vector<seq_t>	seq_vector_t;
-// sequence 버그 찾기용 데이타
+// sequence Data for finding bugs
 
 class DESC
 {
@@ -111,7 +111,7 @@ class DESC
 
 		void			Log(const char * format, ...);
 
-		// 핸드쉐이크 (시간 동기화)
+		// handshake ( time synchronization )
 		void			StartHandshake(DWORD _dw);
 		void			SendHandshake(DWORD dwCurTime, long lNewDelta);
 		bool			HandshakeProcess(DWORD dwTime, long lDelta, bool bInfiniteRetry=false);
@@ -125,7 +125,7 @@ class DESC
 		const DWORD *	GetEncryptionKey() const { return &m_adwEncryptionKey[0]; }
 		const DWORD *	GetDecryptionKey() const { return &m_adwDecryptionKey[0]; }
 
-		// 제국
+		// empire
 		BYTE			GetEmpire();
 
 		// for p2p
@@ -134,7 +134,7 @@ class DESC
 		void			DisconnectOfSameLogin();
 
 		void			SetAdminMode();
-		bool			IsAdminMode();		// Handshake 에서 어드민 명령을 쓸수있나?
+		bool			IsAdminMode();		// Handshake Can I use admin commands in ?
 
 		void			SetPong(bool b);
 		bool			IsPong();
@@ -200,7 +200,7 @@ class DESC
 		WORD			m_wP2PPort;
 		BYTE			m_bP2PChannel;
 
-		bool			m_bAdminMode; // Handshake 에서 어드민 명령을 쓸수있나?
+		bool			m_bAdminMode; // Handshake Can I use admin commands in ?
 		bool			m_bPong;
 
 		int			m_iCurrentSequence;
@@ -243,7 +243,7 @@ class DESC
 		void RawPacket(const void * c_pvData, int iSize);
 		void ChatPacket(BYTE type, const char * format, ...);
 
-		/* 시퀀스 버그 찾기용 코드 */
+		/* Code for finding sequence bugs */
 	public:
 		seq_vector_t	m_seq_vector;
 		void			push_seq (BYTE hdr, BYTE seq);

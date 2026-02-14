@@ -48,7 +48,7 @@ bool CMemoryTextFileLoader::SplitLine(DWORD dwLine, std::vector<std::string>* ps
 
 		pstTokenVector->push_back(c_rstLine.substr(beginPos, endPos - beginPos));
 
-		// 추가 코드. 맨뒤에 탭이 있는 경우를 체크한다. - [levites]
+		// additional code . Check if there is a tab at the end . - [levites]
 		if (int(c_rstLine.find_first_not_of(c_szDelimeter, basePos)) < 0)
 			break;
 	} while (basePos < c_rstLine.length());

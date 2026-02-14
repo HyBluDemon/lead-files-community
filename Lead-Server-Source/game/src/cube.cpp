@@ -40,11 +40,11 @@ static bool s_isInitializedCubeMaterialInformation = false;
 /*--------------------------------------------------------*/
 enum ECubeResultCategory
 {
-	CUBE_CATEGORY_POTION,				// 약초, 진액 등등..  (포션으로 특정할 수 없으니 사용 안 함. 약초같은건 다 걍 기타)
-	CUBE_CATEGORY_WEAPON,				// 무기
-	CUBE_CATEGORY_ARMOR,				// 방어구
-	CUBE_CATEGORY_ACCESSORY,			// 장신구
-	CUBE_CATEGORY_ETC,				// 기타 등등...
+	CUBE_CATEGORY_POTION,				// medicinal herbs , slime, etc. ..  ( Do not use it as it cannot be identified as a potion. . Herbs and such are all just guitars. )
+	CUBE_CATEGORY_WEAPON,				// weapon
+	CUBE_CATEGORY_ARMOR,				// armor
+	CUBE_CATEGORY_ACCESSORY,			// accessories
+	CUBE_CATEGORY_ETC,				// And so on ...
 };
 
 typedef std::vector<CUBE_VALUE>	TCubeValueVector;
@@ -56,12 +56,12 @@ struct SCubeMaterialInfo
 		bHaveComplicateMaterial = false;
 	};
 
-	CUBE_VALUE			reward;							// 보상이 뭐냐
-	TCubeValueVector	material;						// 재료들은 뭐냐
-	DWORD				gold;							// 돈은 얼마드냐
-	TCubeValueVector	complicateMaterial;				// 복잡한-_- 재료들
+	CUBE_VALUE			reward;							// What is the reward?
+	TCubeValueVector	material;						// What are the ingredients?
+	DWORD				gold;							// How much money does it cost?
+	TCubeValueVector	complicateMaterial;				// complicated -_- ingredients
 
-	// .. 클라이언트에서 재료를 보여주기 위하여 약속한 포맷
+	// .. The format promised by the client to display the material.
 	// 72723,1&72724,2&72730,1
 	// 52001,1|52002,1|52003,1&72723,1&72724,5
 	//	=> ( 52001,1 or 52002,1 or 52003,1 ) and 72723,1 and 72724,5
@@ -78,13 +78,13 @@ struct SItemNameAndLevel
 };
 
 
-// 자료구조나 이런거 병신인건 이해좀... 누구땜에 영혼이 없는 상태에서 만들었씀
+// Please understand that data structures and such are stupid. ... Someone made it without a soul.
 typedef std::vector<SCubeMaterialInfo>								TCubeResultList;
-typedef boost::unordered_map<DWORD, TCubeResultList>				TCubeMapByNPC;				// 각각의 NPC별로 어떤 걸 만들 수 있고 재료가 뭔지...
-typedef boost::unordered_map<DWORD, std::string>					TCubeResultInfoTextByNPC;	// 각각의 NPC별로 만들 수 있는 목록을 정해진 포맷으로 정리한 정보
+typedef boost::unordered_map<DWORD, TCubeResultList>				TCubeMapByNPC;				// each NPC What can you make and what are the ingredients? ...
+typedef boost::unordered_map<DWORD, std::string>					TCubeResultInfoTextByNPC;	// each NPC Information that organizes lists that can be made in a given format
 
 TCubeMapByNPC cube_info_map;
-TCubeResultInfoTextByNPC cube_result_info_map_by_npc;				// 네이밍 존나 병신같다 ㅋㅋㅋ
+TCubeResultInfoTextByNPC cube_result_info_map_by_npc;				// The naming is so fucking stupid haha.
 
 class CCubeMaterialInfoHelper
 {
@@ -95,7 +95,7 @@ public:
 /*--------------------------------------------------------*/
 /*                  STATIC FUNCTIONS                      */ 
 /*--------------------------------------------------------*/
- // 필요한 아이템 개수를 가지고있는가?
+ // Do you have the required number of items? ?
 static bool FN_check_item_count (LPITEM *items, DWORD item_vnum, int need_count)
 {
 	int	count = 0;
@@ -114,7 +114,7 @@ static bool FN_check_item_count (LPITEM *items, DWORD item_vnum, int need_count)
 	return (count>=need_count);
 }
 
-// 큐브내의 재료를 지운다.
+// Delete the material in the cube .
 static void FN_remove_material (LPITEM *items, DWORD item_vnum, int need_count)
 {
 	int		count	= 0;
@@ -173,7 +173,7 @@ static bool FN_check_valid_npc( WORD vnum )
 	return false;
 }
 
-// 큐브데이타가 올바르게 초기화 되었는지 체크한다.
+// Check whether the cube data has been initialized correctly. .
 static bool FN_check_cube_data (CUBE_DATA *cube_data)
 {
 	DWORD	i = 0;
@@ -207,10 +207,10 @@ CUBE_DATA::CUBE_DATA()
 	this->gold = 0;
 }
 
-// 필요한 재료의 수량을 만족하는지 체크한다.
+// Check whether the required quantity of materials is met. .
 bool CUBE_DATA::can_make_item (LPITEM *items, WORD npc_vnum)
 {
-	// 필요한 재료, 수량을 만족하는지 체크한다.
+	// materials needed , Check if the quantity is satisfied .
 	DWORD	i, end_index;
 	DWORD	need_vnum;
 	int		need_count;
@@ -238,7 +238,7 @@ bool CUBE_DATA::can_make_item (LPITEM *items, WORD npc_vnum)
 	return true;
 }
 
-// 큐브를 돌렸을때 나오는 아이템의 종류를 결정함
+// Determines the type of item that appears when the cube is turned.
 CUBE_VALUE* CUBE_DATA::reward_value ()
 {
 	int		end_index		= 0;
@@ -251,7 +251,7 @@ CUBE_VALUE* CUBE_DATA::reward_value ()
 	return &this->reward[reward_index];
 }
 
-// 큐브에 들어있는 재료를 지운다
+// Delete the ingredients in the cube
 void CUBE_DATA::remove_material (LPCHARACTER ch)
 {
 	DWORD	i, end_index;
@@ -284,7 +284,7 @@ void Cube_clean_item (LPCHARACTER ch)
 	}
 }
 
-// 큐브창 열기
+// Open cube window
 void Cube_open (LPCHARACTER ch)
 {
 	if (false == s_isInitializedCubeMaterialInformation)
@@ -338,7 +338,7 @@ void Cube_open (LPCHARACTER ch)
 	ch->ChatPacket(CHAT_TYPE_COMMAND, "cube open %d", npc->GetRaceNum());
 }
 
-// 큐브 캔슬
+// cube cancel
 void Cube_close (LPCHARACTER ch)
 {
 	RETURN_IF_CUBE_IS_NOT_OPENED(ch);
@@ -450,7 +450,7 @@ bool Cube_load (const char *file)
 		}
 		else TOKEN("gold")
 		{
-			// 제조에 필요한 금액
+			// Amount Required for Manufacturing
 			cube_data->gold = value1;
 		}
 		else TOKEN("end")
@@ -528,10 +528,10 @@ static bool FN_update_cube_status(LPCHARACTER ch)
 // return new item
 bool Cube_make (LPCHARACTER ch)
 {
-	// 주어진 아이템을 필요로하는 조합을 찾는다. (큐브데이타로 칭함)
-	// 큐브 데이타가 있다면 아이템의 재료를 체크한다.
-	// 새로운 아이템을 만든다.
-	// 새로운 아이템 지급
+	// Find combinations that require a given item . ( Also called Cube Data )
+	// If there is cube data, check the item's material. .
+	// Create a new item .
+	// New item provided
 
 	LPCHARACTER	npc;
 	int			percent_number = 0;
@@ -562,23 +562,23 @@ bool Cube_make (LPCHARACTER ch)
 
 	if (ch->GetGold() < cube_proto->gold)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough Yang or not enough space in the inventory."));	// 이 텍스트는 이미 널리 쓰이는거라 추가번역 필요 없음
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough Yang or not enough space in the inventory."));	// This text is already widely used so no further translation is needed.
 		return false;
 	}
 
 	CUBE_VALUE	*reward_value = cube_proto->reward_value();
 
-	// 사용되었던 재료아이템 삭제
+	// Delete used material items
 	cube_proto->remove_material (ch);
 	
-	// 제조시 필요한 골드 차감
+	// Deduction of gold required for manufacturing
 	if (0 < cube_proto->gold)
 		ch->PointChange(POINT_GOLD, -(cube_proto->gold), false);
 
 	percent_number = number(1,100);
 	if ( percent_number<=cube_proto->percent)
 	{
-		// 성공
+		// success
 		ch->ChatPacket(CHAT_TYPE_COMMAND, "cube success %d %d", reward_value->vnum, reward_value->count);
 		new_item = ch->AutoGiveItem(reward_value->vnum, reward_value->count);
 
@@ -588,8 +588,8 @@ bool Cube_make (LPCHARACTER ch)
 	}
 	else
 	{
-		// 실패
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Manufacturing failed."));	// 2012.11.12 새로 추가된 메세지 (locale_string.txt 에 추가해야 함)
+		// failure
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Manufacturing failed."));	// 2012.11.12 Newly added message (locale_string.txt Must be added to )
 		ch->ChatPacket(CHAT_TYPE_COMMAND, "cube fail");
 		LogManager::instance().CubeLog(ch->GetPlayerID(), ch->GetX(), ch->GetY(),
 				reward_value->vnum, 0, 0, 0);
@@ -600,7 +600,7 @@ bool Cube_make (LPCHARACTER ch)
 }
 
 
-// 큐브에 있는 아이템들을 표시
+// Display items in cube
 void Cube_show_list (LPCHARACTER ch)
 {
 	LPITEM	*cube_item;
@@ -621,13 +621,13 @@ void Cube_show_list (LPCHARACTER ch)
 }
 
 
-// 인벤토리에 있는 아이템을 큐브에 등록
+// Register items in inventory to cube
 void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index)
 {
-	// 아이템이 있는가?
-	// 큐브내의 빈자리 찾기
-	// 큐브세팅
-	// 메시지 전송
+	// Is there an item? ?
+	// Find empty space in cube
+	// Cube setting
+	// send message
 	LPITEM	item;
 	LPITEM	*cube_item;
 
@@ -644,7 +644,7 @@ void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index)
 
 	cube_item = ch->GetCubeItem();
 
-	// 이미 다른위치에 등록되었던 아이템이면 기존 indext삭제
+	// If the item has already been registered in another location, the existing location indext delete
 	for (int i=0; i<CUBE_MAX_NUM; ++i)
 	{
 		if (item==cube_item[i])
@@ -660,14 +660,14 @@ void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index)
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("cube[%d]: inventory[%d]: %s added"),
 									cube_index, inven_index, item->GetName());
 
-	// 현재 상자에 올라온 아이템들로 무엇을 만들 수 있는지 클라이언트에 정보 전달
-	// 을 하고싶었으나 그냥 필요한 골드가 얼마인지 전달
+	// Provide information to the client about what can be made with the items currently in the box
+	// I wanted to do it, but I just told them how much gold I needed.
 	FN_update_cube_status(ch);
 
 	return;
 }
 
-// 큐브에있는 아이템을 제거
+// Remove items from cube
 void Cube_delete_item (LPCHARACTER ch, int cube_index)
 {
 	LPITEM	item;
@@ -688,14 +688,14 @@ void Cube_delete_item (LPCHARACTER ch, int cube_index)
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("cube[%d]: cube[%d]: %s deleted"),
 				cube_index, item->GetCell(), item->GetName());
 
-	// 현재 상자에 올라온 아이템들로 무엇을 만들 수 있는지 클라이언트에 정보 전달
-	// 을 하고싶었으나 그냥 필요한 골드가 얼마인지 전달
+	// Provide information to the client about what can be made with the items currently in the box
+	// I wanted to do it, but I just told them how much gold I needed.
 	FN_update_cube_status(ch);
 
 	return;
 }
 
-// 아이템 이름을 통해서 순수 이름과 강화레벨을 분리하는 함수 (무쌍검+5 -> 무쌍검, 5)
+// Function to separate pure name and reinforcement level through item name ( peerless sword +5 -> peerless sword , 5)
 SItemNameAndLevel SplitItemNameAndLevelFromName(const std::string& name)
 {
 	int level = 0;
@@ -729,7 +729,7 @@ bool FIsLessCubeValue(const CUBE_VALUE& a, const CUBE_VALUE& b)
 
 void Cube_MakeCubeInformationText()
 {
-	// 이제 정리된 큐브 결과 및 재료들의 정보로 클라이언트에 보내 줄 정보로 변환함.
+	// Now, the organized cube results and material information are converted into information to be sent to the client. .
 	for (TCubeMapByNPC::iterator iter = cube_info_map.begin(); cube_info_map.end() != iter; ++iter)
 	{
 		const DWORD& npcVNUM = iter->first;
@@ -741,13 +741,13 @@ void Cube_MakeCubeInformationText()
 			std::string& infoText = materialInfo.infoText;
 
 			
-			// 이놈이 나쁜놈이야
+			// This guy is a bad guy
 			if (0 < materialInfo.complicateMaterial.size())
 			{
 				std::sort(materialInfo.complicateMaterial.begin(), materialInfo.complicateMaterial.end(), FIsLessCubeValue);
 				std::sort(materialInfo.material.begin(), materialInfo.material.end(), FIsLessCubeValue);
 
-				//// 중복되는 재료들을 지움
+				//// Delete duplicate materials
 				for (TCubeValueVector::iterator iter = materialInfo.complicateMaterial.begin(); materialInfo.complicateMaterial.end() != iter; ++iter)
 				{
 					for (TCubeValueVector::iterator targetIter = materialInfo.material.begin(); materialInfo.material.end() != targetIter; ++targetIter)
@@ -762,7 +762,7 @@ void Cube_MakeCubeInformationText()
 					}
 				}
 
-				// 72723,1 or 72725,1 or ... 이런 식의 약속된 포맷을 지키는 텍스트를 생성
+				// 72723,1 or 72725,1 or ... Generate text that keeps the promised format like this
 				for (TCubeValueVector::iterator iter = materialInfo.complicateMaterial.begin(); materialInfo.complicateMaterial.end() != iter; ++iter)
 				{
 					char tempBuffer[128];
@@ -777,7 +777,7 @@ void Cube_MakeCubeInformationText()
 					infoText.push_back('&');
 			}
 
-			// 중복되지 않는 일반 재료들도 포맷 생성
+			// Generate formats for non-overlapping common materials as well
 			for (TCubeValueVector::iterator iter = materialInfo.material.begin(); materialInfo.material.end() != iter; ++iter)
 			{
 				char tempBuffer[128];
@@ -787,7 +787,7 @@ void Cube_MakeCubeInformationText()
 
 			infoText.erase(infoText.size() - 1);
 
-			// 만들 때 골드가 필요하다면 골드정보 추가
+			// If gold is needed when making it, add gold information
 			if (0 < materialInfo.gold)
 			{
 				char temp[128];
@@ -808,7 +808,7 @@ bool Cube_InformationInitialize()
 
 		const std::vector<CUBE_VALUE>& rewards = cubeData->reward;
 
-		// 하드코딩 ㅈㅅ
+		// Hard coding
 		if (1 != rewards.size())
 		{
 			sys_err("[CubeInfo] WARNING! Does not support multiple rewards (count: %d)", rewards.size());			
@@ -836,13 +836,13 @@ bool Cube_InformationInitialize()
 		{
 			SCubeMaterialInfo& existInfo = *iter;
 
-			// 이미 중복되는 보상이 등록되어 있다면 아예 다른 조합으로 만드는 것인지, 
-			// 거의 같은 조합인데 특정 부분만 틀린 것인지 구분함.
-			// 예를들면 특정 부분만 틀린 아이템들은 아래처럼 하나로 묶어서 하나의 결과로 보여주기 위함임:
-			// 용신지검:
-			//		무쌍검+5 ~ +9 x 1
-			//		붉은 칼자루 조각 x1
-			//		녹색 검장식 조각 x1
+			// If overlapping rewards are already registered, is it possible to create a completely different combination? , 
+			// It's almost the same combination, but I can tell if only a specific part is wrong. .
+			// For example, items that are incorrect in certain parts are grouped together as shown below and displayed as one result. :
+			// Yongsin District Prosecutors' Office :
+			//		peerless sword +5 ~ +9 x 1
+			//		red sword hilt fragment x1
+			//		green sword ornament x1
 			if (reward.vnum == existInfo.reward.vnum)
 			{
 				for (TCubeValueVector::iterator existMaterialIter = existInfo.material.begin(); existInfo.material.end() != existMaterialIter; ++existMaterialIter)
@@ -857,8 +857,8 @@ bool Cube_InformationInitialize()
 
 					if (0 < existItemInfo.level)
 					{
-						// 지금 추가하는 큐브 결과물의 재료와, 기존에 등록되어있던 큐브 결과물의 재료 중 
-						// 중복되는 부분이 있는지 검색한다
+						// The ingredients of the resulting cube that we are adding now and , Among the materials of previously registered cube results 
+						// Search for duplicates
 						for (TCubeValueVector::iterator currentMaterialIter = materialInfo.material.begin(); materialInfo.material.end() != currentMaterialIter; ++currentMaterialIter)
 						{
 							TItemTable* currentMaterialProto = ITEM_MANAGER::Instance().GetTable(currentMaterialIter->vnum);
@@ -874,7 +874,7 @@ bool Cube_InformationInitialize()
 
 								//currentMaterialIter = materialInfo.material.erase(currentMaterialIter);
 
-								// TODO: 중복되는 아이템 두 개 이상 검출해야 될 수도 있음
+								// TODO: It may be necessary to detect two or more overlapping items
 								break;
 							}
 						} // for currentMaterialIter
@@ -894,7 +894,7 @@ bool Cube_InformationInitialize()
 	return true;
 }
 
-// 클라이언트에서 서버로 : 현재 NPC가 만들 수 있는 아이템들의 정보(목록)를 요청
+// From client to server : today NPC Information on items that can be made ( inventory ) request
 void Cube_request_result_list(LPCHARACTER ch)
 {
 	RETURN_IF_CUBE_IS_NOT_OPENED(ch);
@@ -908,7 +908,7 @@ void Cube_request_result_list(LPCHARACTER ch)
 
 	std::string& resultText = cube_result_info_map_by_npc[npcVNUM];
 
-	// 해당 NPC가 만들 수 있는 목록이 정리된 게 없다면 캐시를 생성
+	// corresponding NPC If there is no organized list that can be created, create a cache
 	if (resultText.length() == 0)
 	{
 		resultText.clear();
@@ -927,7 +927,7 @@ void Cube_request_result_list(LPCHARACTER ch)
 
 		resultText.erase(resultText.size() - 1);
 
-		// 채팅 패킷의 한계를 넘어가면 에러 남김... 기획자 분들 께 조정해달라고 요청하거나, 나중에 다른 방식으로 바꾸거나...
+		// An error is left if the chat packet limit is exceeded. ... Ask the planners to adjust or , change it to another method later ...
 		if (resultText.size() - 20 >= CHAT_MAX_LEN)
 		{
 			sys_err("[CubeInfo] Too long cube result list text. (NPC: %d, length: %d)", npcVNUM, resultText.size());
@@ -937,7 +937,7 @@ void Cube_request_result_list(LPCHARACTER ch)
 
 	}
 
-	// 현재 NPC가 만들 수 있는 아이템들의 목록을 아래 포맷으로 전송한다.
+	// today NPC Send the list of items that can be made in the format below. .
 	// (Server -> Client) /cube r_list npcVNUM resultCount vnum1,count1/vnum2,count2,/vnum3,count3/...
 	// (Server -> Client) /cube r_list 20383 4 123,1/125,1/128,1/130,5
 	

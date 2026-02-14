@@ -166,7 +166,7 @@ LPSECTREE SECTREE_MANAGER::Get(DWORD dwIndex, DWORD x, DWORD y)
 }
 
 // -----------------------------------------------------------------------------
-// Setting.txt ·Î ºÎÅÍ SECTREE ¸¸µé±â
+// Setting.txt from SECTREE making
 // -----------------------------------------------------------------------------
 int SECTREE_MANAGER::LoadSettingFile(long lMapIndex, const char * c_pszSettingFileName, TMapSetting & r_setting)
 {
@@ -301,10 +301,10 @@ void SECTREE_MANAGER::LoadDungeon(int iIndex, const char * c_pszFileName)
 }
 
 // Fix me
-// ÇöÀç Town.txt¿¡¼­ x, y¸¦ ±×³É ¹Þ°í, ±×°É ÀÌ ÄÚµå ³»¿¡¼­ base ÁÂÇ¥¸¦ ´õÇØÁÖ±â ¶§¹®¿¡
-// ´Ù¸¥ ¸Ê¿¡ ÀÖ´Â Å¸¿îÀ¸·Î Àý´ë ÀÌµ¿ÇÒ ¼ö ¾ø°Ô µÇ¾îÀÖ´Ù.
-// ¾Õ¿¡ mapÀÌ¶ó°Å³ª, ±âÅ¸ ´Ù¸¥ ½Äº°ÀÚ°¡ ÀÖÀ¸¸é,
-// ´Ù¸¥ ¸ÊÀÇ Å¸¿îÀ¸·Îµµ ÀÌµ¿ÇÒ ¼ö ÀÖ°Ô ÇÏÀÚ.
+// today Town.txt at x, y Just get , within this code base Because it adds coordinates
+// You can never move to a town on another map. .
+// in front map Or , If there are any other identifiers ,
+// Let's make it possible to move to towns on other maps .
 // by rtsummit
 bool SECTREE_MANAGER::LoadMapRegion(const char * c_pszFileName, TMapSetting & r_setting, const char * c_pszMapName)
 {
@@ -413,7 +413,7 @@ bool SECTREE_MANAGER::LoadAttribute(LPSECTREE_MAP pkMapSectree, const char * c_p
 	for (int y = 0; y < iHeight; ++y)
 		for (int x = 0; x < iWidth; ++x)
 		{
-			// UNION À¸·Î ÁÂÇ¥¸¦ ÇÕÃÄ¸¸µç DWORD°ªÀ» ¾ÆÀÌµð·Î »ç¿ëÇÑ´Ù.
+			// UNION Created by combining the coordinates with DWORD Use the value as the ID .
 			SECTREEID id;
 			id.coord.x = (r_setting.iBaseX / SECTREE_SIZE) + x;
 			id.coord.y = (r_setting.iBaseY / SECTREE_SIZE) + y;
@@ -488,7 +488,7 @@ bool SECTREE_MANAGER::GetRecallPositionByEmpire(int iMapIndex, BYTE bEmpire, PIX
 {
 	std::vector<TMapRegion>::iterator it = m_vec_mapRegion.begin();
 
-	// 10000À» ³Ñ´Â ¸ÊÀº ÀÎ½ºÅÏ½º ´øÀü¿¡¸¸ ÇÑÁ¤µÇ¾îÀÖ´Ù.
+	// 10000 Maps exceeding are limited to instance dungeons. .
 	if (iMapIndex >= 10000)
 	{
 		iMapIndex /= 10000;
@@ -622,7 +622,7 @@ const TMapRegion * SECTREE_MANAGER::FindRegionByPartialName(const char* szMapNam
 		//if (rRegion.index == lMapIndex)
 		//return &rRegion;
 		if (rRegion.strMapName.find(szMapName))
-			return &rRegion; // Ä³½Ì ÇØ¼­ ºü¸£°Ô ÇÏÀÚ
+			return &rRegion; // Letâ€™s make it faster by caching
 	}
 
 	return NULL;
@@ -717,7 +717,7 @@ int SECTREE_MANAGER::Build(const char * c_pszListFileName, const char* c_pszMapB
 		if (true == test_server)
 			sys_log ( 0,"[BUILD] Build %s %s %d ",c_pszMapBasePath, szMapName, iIndex );
 
-		// ¸ÕÀú ÀÌ ¼­¹ö¿¡¼­ ÀÌ ¸ÊÀÇ ¸ó½ºÅÍ¸¦ ½ºÆùÇØ¾ß ÇÏ´Â°¡ È®ÀÎ ÇÑ´Ù.
+		// First, check whether the monsters for this map need to be spawned on this server. .
 		if (map_allow_find(iIndex))
 		{
 			LPSECTREE_MAP pkMapSectree = BuildSectreeFromSetting(setting);
@@ -919,7 +919,7 @@ bool SECTREE_MANAGER::GetRandomLocation(long lMapIndex, PIXEL_POSITION & r_pos, 
 
 long SECTREE_MANAGER::CreatePrivateMap(long lMapIndex)
 {
-	if (lMapIndex >= 10000) // 10000¹ø ÀÌ»óÀÇ ¸ÊÀº ¾ø´Ù. (È¤Àº ÀÌ¹Ì private ÀÌ´Ù)
+	if (lMapIndex >= 10000) // 10000 There are no more maps . ( Or already private am )
 		return 0;
 
 	LPSECTREE_MAP pkMapSectree = GetMap(lMapIndex);
@@ -1030,7 +1030,7 @@ struct FDestroyPrivateMapEntity
 
 void SECTREE_MANAGER::DestroyPrivateMap(long lMapIndex)
 {
-	if (lMapIndex < 10000) // private map Àº ÀÎµ¦½º°¡ 10000 ÀÌ»ó ÀÌ´Ù.
+	if (lMapIndex < 10000) // private map The index is 10000 It's over .
 		return;
 
 	LPSECTREE_MAP pkMapSectree = GetMap(lMapIndex);
@@ -1038,11 +1038,11 @@ void SECTREE_MANAGER::DestroyPrivateMap(long lMapIndex)
 	if (!pkMapSectree)
 		return;
 
-	// ÀÌ ¸Ê À§¿¡ ÇöÀç Á¸ÀçÇÏ´Â °ÍµéÀ» ÀüºÎ ¾ø¾Ø´Ù.
+	// Removes everything currently on this map. .
 	// WARNING:
-	// ÀÌ ¸Ê¿¡ ÀÖÁö¸¸ ¾î¶² Sectree¿¡µµ Á¸ÀçÇÏÁö ¾ÊÀ» ¼ö ÀÖÀ½
-	// µû¶ó¼­ ¿©±â¼­ delete ÇÒ ¼ö ¾øÀ¸¹Ç·Î Æ÷ÀÎÅÍ°¡ ±úÁú ¼ö ÀÖÀ¸´Ï
-	// º°µµ Ã³¸®¸¦ ÇØ¾ßÇÔ
+	// It's on this map, but what Sectree It may also not exist in
+	// So here delete Since you cannot do this, the pointer may be broken.
+	// Must be processed separately
 	FDestroyPrivateMapEntity f;
 	pkMapSectree->for_each(f);
 
@@ -1058,7 +1058,7 @@ TAreaMap& SECTREE_MANAGER::GetDungeonArea(long lMapIndex)
 
 	if (it == m_map_pkArea.end())
 	{
-		return m_map_pkArea[-1]; // ÀÓ½Ã·Î ºó Area¸¦ ¸®ÅÏ
+		return m_map_pkArea[-1]; // temporarily empty Area return
 	}
 	return it->second;
 }
@@ -1081,7 +1081,7 @@ void SECTREE_MANAGER::SendNPCPosition(LPCHARACTER ch)
 
 	TNPCPosition np;
 
-	// TODO m_mapNPCPosition[lMapIndex] ¸¦ º¸³»ÁÖ¼¼¿ä
+	// TODO m_mapNPCPosition[lMapIndex] please send
 	itertype(m_mapNPCPosition[lMapIndex]) it;
 
 	for (it = m_mapNPCPosition[lMapIndex].begin(); it != m_mapNPCPosition[lMapIndex].end(); ++it)
@@ -1317,7 +1317,7 @@ bool SECTREE_MANAGER::ForAttrRegion(long lMapIndex, long lStartX, long lStartY, 
 	}
 
 	//
-	// ¿µ¿ªÀÇ ÁÂÇ¥¸¦ Cell ÀÇ Å©±â¿¡ ¸ÂÃç È®ÀåÇÑ´Ù.
+	// coordinates of the area Cell Expand to fit the size of .
 	//
 
 	lStartX	-= lStartX % CELL_SIZE;
@@ -1326,7 +1326,7 @@ bool SECTREE_MANAGER::ForAttrRegion(long lMapIndex, long lStartX, long lStartY, 
 	lEndY	+= lEndY % CELL_SIZE;
 
 	//
-	// Cell ÁÂÇ¥¸¦ ±¸ÇÑ´Ù.
+	// Cell Find the coordinates .
 	// 
 
 	long lCX = lStartX / CELL_SIZE;

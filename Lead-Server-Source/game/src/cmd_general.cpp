@@ -47,7 +47,7 @@ ACMD(do_user_horse_ride)
 
 	if (ch->IsHorseRiding() == false)
 	{
-		// ¸»ÀÌ ¾Æ´Ñ ´Ù¸¥Å»°ÍÀ» Å¸°íÀÖ´Ù.
+		// Riding a vehicle other than a horse .
 		if (ch->GetMountVnum())
 		{
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You're already riding. Get off first."));
@@ -87,7 +87,7 @@ ACMD(do_user_horse_back)
 
 ACMD(do_user_horse_feed)
 {
-	// °³ÀÎ»óÁ¡À» ¿¬ »óÅÂ¿¡¼­´Â ¸» ¸ÔÀÌ¸¦ ÁÙ ¼ö ¾ø´Ù.
+	// You cannot feed horses while your personal shop is open. .
 	if (ch->GetMyShop())
 		return;
 
@@ -395,7 +395,7 @@ ACMD(do_mount)
 	   char			arg1[256];
 	   struct action_mount_param	param;
 
-	// ÀÌ¹Ì Å¸°í ÀÖÀ¸¸é
+	// If you are already riding
 	if (ch->GetMountingChr())
 	{
 	char arg2[256];
@@ -499,13 +499,13 @@ ACMD(do_restart)
 	}
 
 	//PREVENT_HACK
-	//DESC : Ã¢°í, ±³È¯ Ã¢ ÈÄ Æ÷Å»À» »ç¿ëÇÏ´Â ¹ö±×¿¡ ÀÌ¿ëµÉ¼ö ÀÖ¾î¼­
-	//		ÄðÅ¸ÀÓÀ» Ãß°¡ 
+	//DESC : storage , This can be used for bugs that use the portal after the exchange window.
+	//		Add cool time 
 	if (subcmd == SCMD_RESTART_TOWN)
 	{
 		if (ch->IsHack())
 		{
-			//±æµå¸Ê, ¼ºÁö¸Ê¿¡¼­´Â Ã¼Å© ÇÏÁö ¾Ê´Â´Ù.
+			// guild map , It is not checked on the sacred site map. .
 			if ((!ch->GetWarMap() || ch->GetWarMap()->GetType() == GUILD_WAR_TYPE_FLAG))
 			{
 				ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("A new start is not possible at the moment. Please wait %d seconds."), iTimeToDead - (180 - g_nPortalLimitTime));
@@ -819,7 +819,7 @@ ACMD(do_skillup)
 }
 
 //
-// @version	05/06/20 Bang2ni - Ä¿¸Çµå Ã³¸® Delegate to CHARACTER class
+// @version	05/06/20 Bang2ni - Command processing Delegate to CHARACTER class
 //
 ACMD(do_safebox_close)
 {
@@ -827,7 +827,7 @@ ACMD(do_safebox_close)
 }
 
 //
-// @version	05/06/20 Bang2ni - Ä¿¸Çµå Ã³¸® Delegate to CHARACTER class
+// @version	05/06/20 Bang2ni - Command processing Delegate to CHARACTER class
 //
 ACMD(do_safebox_password)
 {
@@ -883,7 +883,7 @@ ACMD(do_mall_password)
 		return;
 	}
 
-	if (iPulse - ch->GetMallLoadTime() < passes_per_sec * 10) // 10ÃÊ¿¡ ÇÑ¹ø¸¸ ¿äÃ» °¡´É
+	if (iPulse - ch->GetMallLoadTime() < passes_per_sec * 10) // 10 Can only be requested once per second
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Storeroom] You have to wait 10 seconds before you can open the Storeroom again."));
 		return;
@@ -965,20 +965,20 @@ ACMD(do_set_run_mode)
 
 ACMD(do_war)
 {
-	//³» ±æµå Á¤º¸¸¦ ¾ò¾î¿À°í
+	// Get my guild information
 	CGuild * g = ch->GetGuild();
 
 	if (!g)
 		return;
 
-	//ÀüÀïÁßÀÎÁö Ã¼Å©ÇÑ¹ø!
+	// Check if there is a war !
 	if (g->UnderAnyWar())
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Guild] Your guild is already participating in another war."));
 		return;
 	}
 
-	//ÆÄ¶ó¸ÞÅÍ¸¦ µÎ¹è·Î ³ª´©°í
+	// Divide the parameters by two
 	char arg1[256], arg2[256];
 	int type = GUILD_WAR_TYPE_FIELD;
 	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
@@ -994,17 +994,17 @@ ACMD(do_war)
 			type = GUILD_WAR_TYPE_FIELD;
 	}
 
-	//±æµåÀÇ ¸¶½ºÅÍ ¾ÆÀÌµð¸¦ ¾ò¾î¿ÂµÚ
+	// After obtaining the guildâ€™s master ID
 	DWORD gm_pid = g->GetMasterPID();
 
-	//¸¶½ºÅÍÀÎÁö Ã¼Å©(±æÀüÀº ±æµåÀå¸¸ÀÌ °¡´É)
+	// Check if it is master ( Only guild leaders can participate in guild battles. )
 	if (gm_pid != ch->GetPlayerID())
 	{
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Guild] No one is entitled to a guild war."));
 		return;
 	}
 
-	//»ó´ë ±æµå¸¦ ¾ò¾î¿À°í
+	// Get the opposing guild
 	CGuild * opp_g = CGuildManager::instance().FindGuildByName(arg1);
 
 	if (!opp_g)
@@ -1013,7 +1013,7 @@ ACMD(do_war)
 		return;
 	}
 
-	//»ó´ë±æµå¿ÍÀÇ »óÅÂ Ã¼Å©
+	// Check status with opponent guild
 	switch (g->GetGuildWarState(opp_g->GetID()))
 	{
 		case GUILD_WAR_NONE:
@@ -1076,7 +1076,7 @@ ACMD(do_war)
 
 	if (!g->CanStartWar(type))
 	{
-		// ±æµåÀüÀ» ÇÒ ¼ö ÀÖ´Â Á¶°ÇÀ» ¸¸Á·ÇÏÁö¾Ê´Â´Ù.
+		// I do not meet the conditions for guild warfare. .
 		if (g->GetLadderPoint() == 0)
 		{
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Guild] The guild level is too low."));
@@ -1094,7 +1094,7 @@ ACMD(do_war)
 		return;
 	}
 
-	// ÇÊµåÀü Ã¼Å©¸¸ ÇÏ°í ¼¼¼¼ÇÑ Ã¼Å©´Â »ó´ë¹æÀÌ ½Â³«ÇÒ¶§ ÇÑ´Ù.
+	// Only check before field, and do detailed check when the opponent agrees. .
 	if (!opp_g->CanStartWar(GUILD_WAR_TYPE_FIELD))
 	{
 		if (opp_g->GetLadderPoint() == 0)
@@ -1680,11 +1680,11 @@ ACMD(do_cube)
 	const std::string& strArg1 = std::string(arg1);
 
 	// r_info (request information)
-	// /cube r_info     ==> (Client -> Server) ÇöÀç NPC°¡ ¸¸µé ¼ö ÀÖ´Â ·¹½ÃÇÇ ¿äÃ»
+	// /cube r_info     ==> (Client -> Server) today NPC Request a recipe that can be made by
 	//					    (Server -> Client) /cube r_list npcVNUM resultCOUNT 123,1/125,1/128,1/130,5
 	//
-	// /cube r_info 3   ==> (Client -> Server) ÇöÀç NPC°¡ ¸¸µé¼ö ÀÖ´Â ·¹½ÃÇÇ Áß 3¹øÂ° ¾ÆÀÌÅÛÀ» ¸¸µå´Â µ¥ ÇÊ¿äÇÑ Á¤º¸¸¦ ¿äÃ»
-	// /cube r_info 3 5 ==> (Client -> Server) ÇöÀç NPC°¡ ¸¸µé¼ö ÀÖ´Â ·¹½ÃÇÇ Áß 3¹øÂ° ¾ÆÀÌÅÛºÎÅÍ ÀÌÈÄ 5°³ÀÇ ¾ÆÀÌÅÛÀ» ¸¸µå´Â µ¥ ÇÊ¿äÇÑ Àç·á Á¤º¸¸¦ ¿äÃ»
+	// /cube r_info 3   ==> (Client -> Server) today NPC Among the recipes you can make 3 Request information needed to create the second item
+	// /cube r_info 3 5 ==> (Client -> Server) today NPC Among the recipes you can make 3 From the first item onwards 5 Request information on materials needed to craft items
 	//					   (Server -> Client) /cube m_info startIndex count 125,1|126,2|127,2|123,5&555,5&555,4/120000@125,1|126,2|127,2|123,5&555,5&555,4/120000
 	//
 	if (strArg1 == "r_info")
@@ -1759,7 +1759,7 @@ ACMD(do_cube)
 	}
 }
 
-// ÁÖ»çÀ§
+// dice
 ACMD(do_dice) 
 {
 	char arg1[256], arg2[256];
@@ -1800,7 +1800,7 @@ ACMD(do_ride)
     if (ch->IsDead() || ch->IsStun())
 	return;
 
-    // ³»¸®±â
+    // get off
     {
 	if (ch->IsHorseRiding())
 	{
@@ -1817,7 +1817,7 @@ ACMD(do_ride)
 	}
     }
 
-    // Å¸±â
+    // ride
     {
 	if (ch->GetHorse() != NULL)
 	{
@@ -1832,7 +1832,7 @@ ACMD(do_ride)
 	    if (NULL == item)
 		continue;
 
-	    // À¯´ÏÅ© Å»°Í ¾ÆÀÌÅÛ
+	    // Unique vehicle item
 		if (item->IsRideItem())
 		{
 			if (NULL==ch->GetWear(WEAR_UNIQUE1) || NULL==ch->GetWear(WEAR_UNIQUE2))

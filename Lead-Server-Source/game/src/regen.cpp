@@ -34,7 +34,7 @@ enum ERegenModes
 	MODE_VNUM
 };
 
-static bool get_word(FILE *fp, char *buf) // 워드단위로 받는다.
+static bool get_word(FILE *fp, char *buf) // Received in word units .
 {
 	int i = 0;
 	int c;
@@ -182,7 +182,7 @@ static bool read_line(FILE *fp, LPREGEN regen)
 			case MODE_Z_SECTION:
 				str_to_number(regen->z_section, szTmp);
 
-				// 익셉션 이면 나가주자.
+				// If it's an exception, let's get out. .
 				if (regen->type == REGEN_TYPE_EXCEPTION)
 					return true;
 
@@ -510,7 +510,7 @@ bool regen_do(const char* filename, long lMapIndex, int base_x, int base_y, LPDU
 				// before the call to CHARACTER::SetRegen()
 			}
 
-			// 처음엔 무조건 리젠 해준다.
+			// At first, it will be regenerated unconditionally. .
 			regen_spawn_dungeon(regen, pDungeon, bOnce);
 
 		}
@@ -586,7 +586,7 @@ bool regen_load_in_file(const char* filename, long lMapIndex, int base_x, int ba
 				}
 			}
 
-			// 처음엔 무조건 리젠 해준다.
+			// At first, it will be regenerated unconditionally. .
 			regen_spawn(regen, true);
 		}
 	}
@@ -696,11 +696,11 @@ bool regen_load(const char* filename, long lMapIndex, int base_x, int base_y)
 			}
 
 			//NO_REGEN
-			// Desc: 	regen.txt (외 리젠관련 텍스트 ) 에서 리젠 시간을 0으로 세팅할시 
-			// 			리젠을 하지 안한다.
+			// Desc: 	regen.txt ( Other regen related text ) Regen time at 0 When set to 
+			// 			Do not regen .
 			if (regen->time != 0)
 			{
-				// 처음엔 무조건 리젠 해준다.
+				// At first, it will be regenerated unconditionally. .
 				regen_spawn(regen, false);
 
 				regen_event_info* info = AllocEventInfo<regen_event_info>();
@@ -765,14 +765,14 @@ void regen_reset(int x, int y)
 		if (!regen->event)
 			continue;
 
-		// 좌표가 있으면 좌표 내에 있는 리젠 리스트만 리젠 시킨다.
+		// If there are coordinates, only the regen list within the coordinates is regenerated. .
 		if (x != 0 || y != 0)
 		{
 			if (x >= regen->sx && x <= regen->ex)
 				if (y >= regen->sy && y <= regen->ey)
 					event_reset_time(regen->event, 1);
 		}
-		// 없으면 전부 리젠
+		// If not, everything regenerates
 		else
 			event_reset_time(regen->event, 1);
 	}

@@ -9,20 +9,20 @@ public:
 	CBuffOnAttributes(LPCHARACTER pOwner, BYTE m_point_type, std::vector <BYTE>* vec_buff_targets);
 	~CBuffOnAttributes();
 
-	// ÀåÂø Áß ÀÌ¸é¼­, m_p_vec_buff_wear_targets¿¡ ÇØ´çÇÏ´Â ¾ÆÀÌÅÛÀÎ °æ¿ì, ÇØ´ç ¾ÆÀÌÅÛÀ¸·Î ÀÎÇØ ºÙÀº È¿°ú¸¦ Á¦°Å.
+	// While being installed , m_p_vec_buff_wear_targets If the item corresponds to , Removes effects from the item .
 	void RemoveBuffFromItem(LPITEM pItem);
-	// m_p_vec_buff_wear_targets¿¡ ÇØ´çÇÏ´Â ¾ÆÀÌÅÛÀÎ °æ¿ì, ÇØ´ç ¾ÆÀÌÅÛÀÇ attribute¿¡ ´ëÇÑ È¿°ú Ãß°¡.
+	// m_p_vec_buff_wear_targets If the item corresponds to , of the item attribute Add effects for .
 	void AddBuffFromItem(LPITEM pItem);
-	// m_bBuffValue¸¦ ¹Ù²Ù°í, ¹öÇÁÀÇ °ªµµ ¹Ù²Ş.
+	// m_bBuffValue change , The value of the buff also changes .
 	void ChangeBuffValue(BYTE bNewValue);
-	// CHRACTRE::ComputePoints¿¡¼­ ¼Ó¼ºÄ¡¸¦ ÃÊ±âÈ­ÇÏ°í ´Ù½Ã °è»êÇÏ¹Ç·Î, 
-	// ¹öÇÁ ¼Ó¼ºÄ¡µéÀ» °­Á¦ÀûÀ¸·Î owner¿¡°Ô ÁÜ.
+	// CHRACTRE::ComputePoints Because attribute values â€‹â€‹are initialized and recalculated, , 
+	// Forcing buff attribute values owner give to .
 	void GiveAllAttributes();
 
-	// m_p_vec_buff_wear_targets¿¡ ÇØ´çÇÏ´Â ¸ğµç ¾ÆÀÌÅÛÀÇ attribute¸¦ typeº°·Î ÇÕ»êÇÏ°í,
-	// ±× attributeµéÀÇ (m_bBuffValue)% ¸¸Å­À» ¹öÇÁ·Î ÁÜ.
+	// m_p_vec_buff_wear_targets All items corresponding to attribute cast type Add up not much ,
+	// that attribute field (m_bBuffValue)% Gives a buff equal to the amount .
 	bool On(BYTE bValue);
-	// ¹öÇÁ Á¦°Å ÈÄ, ÃÊ±âÈ­
+	// After removing the buff , reset
 	void Off();
 
 	void Initialize();
@@ -32,9 +32,9 @@ private:
 	BYTE m_bBuffValue;
 	std::vector <BYTE>* m_p_vec_buff_wear_targets;
 	
-	// apply_type, apply_value Æä¾îÀÇ ¸Ê
+	// apply_type, apply_value map of the fair
 	typedef std::map <BYTE, int> TMapAttr;
-	// m_p_vec_buff_wear_targets¿¡ ÇØ´çÇÏ´Â ¸ğµç ¾ÆÀÌÅÛÀÇ attribute¸¦ typeº°·Î ÇÕ»êÇÏ¿© °¡Áö°í ÀÖÀ½.
+	// m_p_vec_buff_wear_targets All items corresponding to attribute cast type I have it all together .
 	TMapAttr m_map_additional_attrs;
 
 };

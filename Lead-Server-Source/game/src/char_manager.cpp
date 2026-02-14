@@ -102,7 +102,7 @@ void CHARACTER_MANAGER::DestroyCharacter(LPCHARACTER ch)
 		return; // prevent duplicated destrunction
 	}
 
-	// 던전에 소속된 몬스터는 던전에서도 삭제하도록.
+	// Monsters belonging to the dungeon should also be deleted from the dungeon. .
 	if (ch->IsNPC() && !ch->IsPet() && ch->GetRider() == NULL)
 	{
 		if (ch->GetDungeon())
@@ -219,7 +219,7 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRandomPosition(DWORD dwVnum, long lMapInd
 		}
 	}
 
-	// 해태를 스폰할지 말지를 결정할 수 있게 함
+	// Allows you to decide whether to spawn Haitai or not
 	{
 		if (dwVnum == 5002 && !quest::CQuestManager::instance().GetEventFlag("newyear_mob"))
 		{
@@ -228,7 +228,7 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRandomPosition(DWORD dwVnum, long lMapInd
 		}
 	}
 
-	// 광복절 이벤트 
+	// Liberation Day Event 
 	{
 		if (dwVnum == 5004 && !quest::CQuestManager::instance().GetEventFlag("independence_day"))
 		{
@@ -428,7 +428,7 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRange(DWORD dwVnum, long lMapIndex, int s
 	if (!pkMob)
 		return NULL;
 
-	if (pkMob->m_table.bType == CHAR_TYPE_STONE)	// 돌은 무조건 SPAWN 모션이 있다.
+	if (pkMob->m_table.bType == CHAR_TYPE_STONE)	// Stones are always SPAWN There is motion .
 		bSpawnMotion = true;
 
 	int i = 16;
@@ -492,7 +492,7 @@ bool CHARACTER_MANAGER::SpawnMoveGroup(DWORD dwVnum, long lMapIndex, int sx, int
 
 		if (!tch)
 		{
-			if (i == 0)	// 못만든 몬스터가 대장일 경우에는 그냥 실패
+			if (i == 0)	// If the monster you couldn't create is the leader, you simply fail.
 				return false;
 
 			continue;
@@ -576,7 +576,7 @@ LPCHARACTER CHARACTER_MANAGER::SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, 
 
 		if (!tch)
 		{
-			if (i == 0)	// 못만든 몬스터가 대장일 경우에는 그냥 실패
+			if (i == 0)	// If the monster you couldn't create is the leader, you simply fail.
 				return NULL;
 
 			continue;
@@ -629,11 +629,11 @@ void CHARACTER_MANAGER::Update(int iPulse)
 
 	BeginPendingDestroy();
 
-	// PC 캐릭터 업데이트
+	// PC Character Updates
 	{
 		if (!m_map_pkPCChr.empty())
 		{
-			// 컨테이너 복사
+			// Copy Container
 			CHARACTER_VECTOR v;
 			v.reserve(m_map_pkPCChr.size());
 
@@ -654,7 +654,7 @@ void CHARACTER_MANAGER::Update(int iPulse)
 //		for_each_pc(bind2nd(mem_fun(&CHARACTER::UpdateCharacter), iPulse));
 	}
 
-	// 몬스터 업데이트
+	// monster update
 	{
 		if (!m_set_pkChrState.empty())
 		{
@@ -667,7 +667,7 @@ void CHARACTER_MANAGER::Update(int iPulse)
 		}
 	}
 
-	// 산타 따로 업데이트
+	// Santa update separately
 	{
 		CharacterVectorInteractor i;
 
@@ -678,7 +678,7 @@ void CHARACTER_MANAGER::Update(int iPulse)
 		}
 	}
 
-	// 1시간에 한번씩 몹 사냥 개수 기록 
+	// 1 Record the number of mobs hunted once per hour 
 	if (0 == (iPulse % PASSES_PER_SEC(3600)))
 	{
 		for (itertype(m_map_dwMobKillCount) it = m_map_dwMobKillCount.begin(); it != m_map_dwMobKillCount.end(); ++it)
@@ -687,11 +687,11 @@ void CHARACTER_MANAGER::Update(int iPulse)
 		m_map_dwMobKillCount.clear();
 	}
 
-	// 테스트 서버에서는 60초마다 캐릭터 개수를 센다
+	// On the test server 60 Count the number of characters per second
 	if (test_server && 0 == (iPulse % PASSES_PER_SEC(60)))
 		sys_log(0, "CHARACTER COUNT vid %zu pid %zu", m_map_pkChrByVID.size(), m_map_pkChrByPID.size());
 
-	// 지연된 DestroyCharacter 하기
+	// delayed DestroyCharacter do
 	FlushPendingDestroy();
 }
 
@@ -808,7 +808,7 @@ void CHARACTER_MANAGER::RegisterRaceNumMap(LPCHARACTER ch)
 {
 	DWORD dwVnum = ch->GetRaceNum();
 
-	if (m_set_dwRegisteredRaceNum.find(dwVnum) != m_set_dwRegisteredRaceNum.end()) // 등록된 번호 이면
+	if (m_set_dwRegisteredRaceNum.find(dwVnum) != m_set_dwRegisteredRaceNum.end()) // If it is a registered number
 	{
 		sys_log(0, "RegisterRaceNumMap %s %u", ch->GetName(), dwVnum);
 		m_map_pkChrByRaceNum[dwVnum].insert(ch);
@@ -832,7 +832,7 @@ bool CHARACTER_MANAGER::GetCharactersByRaceNum(DWORD dwRaceNum, CharacterVectorI
 	if (it == m_map_pkChrByRaceNum.end())
 		return false;
 
-	// 컨테이너 복사
+	// Copy Container
 	i = it->second;
 	return true;
 }
@@ -970,8 +970,8 @@ void CHARACTER_MANAGER::SendScriptToMap(long lMapIndex, const std::string & s)
 
 bool CHARACTER_MANAGER::BeginPendingDestroy()
 {
-	// Begin 이 후에 Begin을 또 하는 경우에 Flush 하지 않는 기능 지원을 위해
-	// 이미 시작되어있으면 false 리턴 처리
+	// Begin after this Begin If you do it again Flush To support functions that do not
+	// If it has already started false return processing
 	if (m_bUsePendingDestroy)
 		return false;
 
@@ -983,7 +983,7 @@ void CHARACTER_MANAGER::FlushPendingDestroy()
 {
 	using namespace std;
 
-	m_bUsePendingDestroy = false; // 플래그를 먼저 설정해야 실제 Destroy 처리가 됨
+	m_bUsePendingDestroy = false; // You have to set the flag first to actually Destroy Processed
 
 	if (!m_set_pkChrPendingDestroy.empty())
 	{

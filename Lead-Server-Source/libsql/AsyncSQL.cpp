@@ -517,7 +517,7 @@ class cProfiler
 
 void CAsyncSQL::ChildLoop()
 {
-	cProfiler profiler(500000); // 0.5초
+	cProfiler profiler(500000); // 0.5 candle
 
 	while (!m_bEnd)
 	{
@@ -534,7 +534,7 @@ void CAsyncSQL::ChildLoop()
 
 		while (count--)
 		{
-			//시간 체크 시작 
+			// Start checking time 
 			profiler.Start();
 
 			if (!PeekQueryFromCopyQueue(&p))
@@ -579,7 +579,7 @@ void CAsyncSQL::ChildLoop()
 
 			profiler.Stop();
 			
-			// 0.5초 이상 걸렸으면 로그에 남기기
+			// 0.5 If it takes more than a second, leave it in the log.
 			if (!profiler.IsOk())
 				sys_log(0, "[QUERY : LONG INTERVAL(OverSec %ld.%ld)] : %s", 
 						profiler.GetResultSec(), profiler.GetResultUSec(), p->stQuery.c_str());
@@ -681,9 +681,9 @@ size_t CAsyncSQL::EscapeString(char* dst, size_t dstSize, const char *src, size_
 
 	if (dstSize < srcSize * 2 + 1)
 	{
-		// \0이 안붙어있을 때를 대비해서 256 바이트만 복사해서 로그로 출력
+		// \0 In case it doesn't stick 256 Copy only bytes and output to log
 		char tmp[256];
-		size_t tmpLen = sizeof(tmp) > srcSize ? srcSize : sizeof(tmp); // 둘 중에 작은 크기
+		size_t tmpLen = sizeof(tmp) > srcSize ? srcSize : sizeof(tmp); // the smaller of the two
 		strlcpy(tmp, src, tmpLen);
 
 		sys_err("FATAL ERROR!! not enough buffer size (dstSize %u srcSize %u src%s: %s)",

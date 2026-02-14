@@ -73,11 +73,11 @@ ACMD(do_emotion_allow)
 
 bool CHARACTER_CanEmotion(CHARACTER& rch)
 {
-	// 결혼식 맵에서는 사용할 수 있다.
+	// Can be used on wedding maps .
 	if (marriage::WeddingManager::instance().IsWeddingMap(rch.GetMapIndex()))
 		return true;
 
-	// 열정의 가면 착용시 사용할 수 있다.
+	// Can be used when wearing the Mask of Passion .
 	if (rch.IsEquipUniqueItem(UNIQUE_ITEM_EMOTION_MASK))
 		return true;
 
@@ -211,7 +211,7 @@ ACMD(do_emotion)
 	if (len < 0 || len >= (int) sizeof(chatbuf))
 		len = sizeof(chatbuf) - 1;
 
-	++len;  // \0 문자 포함
+	++len;  // \0 contains letters
 
 	TPacketGCChat pack_chat;
 	pack_chat.header = HEADER_GC_CHAT;

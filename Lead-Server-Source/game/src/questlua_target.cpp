@@ -69,7 +69,7 @@ namespace quest
 		return 0;
 	}
 
-	// 현재 퀘스트에 등록된 타겟을 삭제 한다.
+	// Deletes the target registered in the current quest. .
 	int target_delete(lua_State* L)
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
@@ -86,7 +86,7 @@ namespace quest
 		return 0;
 	}
 
-	// 현재 퀘스트 인덱스로 되어있는 타겟을 모두 삭제한다.
+	// Deletes all targets currently in the quest index. .
 	int target_clear(lua_State* L)
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();

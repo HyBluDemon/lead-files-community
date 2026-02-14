@@ -48,7 +48,7 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 		BYTE bHeader = (BYTE) *(c_pData);
 		const char * c_pszName;
 
-		if (bHeader == 0) // 암호화 처리가 있으므로 0번 헤더는 스킵한다.
+		if (bHeader == 0) // Because there is encryption processing 0 This header is skipped .
 			iPacketLen = 1;
 		else if (!m_pPacketInfo->Get(bHeader, &iPacketLen, &c_pszName))
 		{
@@ -211,20 +211,20 @@ ACMD(do_block_chat);
 
 int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 {
-	if (bHeader == 10) // 엔터는 무시
+	if (bHeader == 10) // Ignore enter
 		return 0;
 
 	if (bHeader == HEADER_CG_MARK_LOGIN)
 	{
 		if (!guild_mark_server)
 		{
-			// 끊어버려! - 마크 서버가 아닌데 마크를 요청하려고?
+			// Hang up ! - I am trying to request a mark even though it is not a mark server. ?
 			sys_err("Guild Mark login requested but i'm not a mark server!");
 			d->SetPhase(PHASE_CLOSE);
 			return 0;
 		}
 
-		// 무조건 인증 --;
+		// Unconditional authentication --;
 		sys_log(0, "MARK_SERVER: Login");
 		d->SetPhase(PHASE_LOGIN);
 		return 0;

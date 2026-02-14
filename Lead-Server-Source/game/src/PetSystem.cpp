@@ -18,13 +18,13 @@ EVENTINFO(petsystem_event_info)
 	CPetSystem* pPetSystem;
 };
 
-// PetSystemÀ» update ÇØÁÖ´Â event.
-// PetSystemÀº CHRACTER_MANAGER¿¡¼­ ±âÁ¸ FSMÀ¸·Î update ÇØÁÖ´Â ±âÁ¸ chracters¿Í ´Ş¸®,
-// OwnerÀÇ STATE¸¦ update ÇÒ ¶§ _UpdateFollowAI ÇÔ¼ö·Î update ÇØÁØ´Ù.
-// ±×·±µ¥ ownerÀÇ state¸¦ update¸¦ CHRACTER_MANAGER¿¡¼­ ÇØÁÖ±â ¶§¹®¿¡,
-// petsystemÀ» updateÇÏ´Ù°¡ petÀ» unsummonÇÏ´Â ºÎºĞ¿¡¼­ ¹®Á¦°¡ »ı°å´Ù.
-// (CHRACTER_MANAGER¿¡¼­ update ÇÏ¸é chracter destroy°¡ pendingµÇ¾î, CPetSystem¿¡¼­´Â dangling Æ÷ÀÎÅÍ¸¦ °¡Áö°í ÀÖ°Ô µÈ´Ù.)
-// µû¶ó¼­ PetSystem¸¸ ¾÷µ¥ÀÌÆ® ÇØÁÖ´Â event¸¦ ¹ß»ı½ÃÅ´.
+// PetSystem second update Hae-joo event.
+// PetSystem silver CHRACTER_MANAGER from existing FSM by update Existing to do chracters Unlike ,
+// Owner of STATE cast update When to do _UpdateFollowAI as a function update I will do it .
+// however owner of state cast update cast CHRACTER_MANAGER Because it is done by ,
+// petsystem second update While doing it pet second unsummon There was a problem in the part where .
+// (CHRACTER_MANAGER at update underneath chracter destroy go pending become , CPetSystem In dangling have a pointer .)
+// thus PetSystem It only updates event causes .
 EVENTFUNC(petsystem_update_event)
 {
 	petsystem_event_info* info = dynamic_cast<petsystem_event_info*>( event->info );
@@ -41,12 +41,12 @@ EVENTFUNC(petsystem_update_event)
 
 	
 	pPetSystem->Update(0);
-	// 0.25ÃÊ¸¶´Ù °»½Å.
+	// 0.25 Update every second .
 	return PASSES_PER_SEC(1) / 4;
 }
 
-/// NOTE: 1Ä³¸¯ÅÍ°¡ ¸î°³ÀÇ ÆêÀ» °¡Áú ¼ö ÀÖ´ÂÁö Á¦ÇÑ... Ä³¸¯ÅÍ¸¶´Ù °³¼ö¸¦ ´Ù¸£°Ô ÇÒ°Å¶ó¸é º¯¼ö·Î ³Öµî°¡... À½..
-/// °¡Áú ¼ö ÀÖ´Â °³¼ö¿Í µ¿½Ã¿¡ ¼ÒÈ¯ÇÒ ¼ö ÀÖ´Â °³¼ö°¡ Æ²¸± ¼ö ÀÖ´Âµ¥ ÀÌ·±°Ç ±âÈ¹ ¾øÀ¸´Ï ÀÏ´Ü ¹«½Ã
+/// NOTE: 1 Limit how many pets a character can have ... If you want to change the number for each character, put it as a variable. ... hmm ..
+/// The number you can have and the number you can summon at the same time may be different, but there is no plan for this, so just ignore it.
 const float PET_COUNT_LIMIT = 3;
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ void CPetActor::Unsummon()
 {
 	if (true == this->IsSummoned())
 	{
-		// ¹öÇÁ »èÁ¦
+		// Remove buff
 		this->ClearBuff();
 		this->SetSummonItem(NULL);
 		if (NULL != m_pkOwner)
@@ -175,14 +175,14 @@ DWORD CPetActor::Summon(const char* petName, LPITEM pSummonItem, bool bSpawnFar)
 //	m_pkOwner->DetailLog();
 //	m_pkChar->DetailLog();
 
-	//ÆêÀÇ ±¹°¡¸¦ ÁÖÀÎÀÇ ±¹°¡·Î ¼³Á¤ÇÔ.
+	// Set the pet's country to the owner's country. .
 	m_pkChar->SetEmpire(m_pkOwner->GetEmpire());
 
 	m_dwVID = m_pkChar->GetVID();
 
 	this->SetName(petName);
 
-	// SetSummonItem(pSummonItem)¸¦ ºÎ¸¥ ÈÄ¿¡ ComputePoints¸¦ ºÎ¸£¸é ¹öÇÁ Àû¿ëµÊ.
+	// SetSummonItem(pSummonItem) After calling ComputePoints The buff is applied when you call . .
 	this->SetSummonItem(pSummonItem);
 	m_pkOwner->ComputePoints();
 	m_pkChar->Show(m_pkOwner->GetMapIndex(), x, y, z);
@@ -197,11 +197,11 @@ bool CPetActor::_UpdatAloneActionAI(float fMinDist, float fMaxDist)
 	float dest_x = GetOwner()->GetX() + fDist * cos(r);
 	float dest_y = GetOwner()->GetY() + fDist * sin(r);
 
-	//m_pkChar->SetRotation(number(0, 359));        // ¹æÇâÀº ·£´ıÀ¸·Î ¼³Á¤
+	//m_pkChar->SetRotation(number(0, 359));        // Direction is set randomly
 
 	//GetDeltaByDegree(m_pkChar->GetRotation(), fDist, &fx, &fy);
 
-	// ´À½¼ÇÑ ¸ø°¨ ¼Ó¼º Ã¼Å©; ÃÖÁ¾ À§Ä¡¿Í Áß°£ À§Ä¡°¡ °¥¼ö¾ø´Ù¸é °¡Áö ¾Ê´Â´Ù.
+	// Check loose nail properties ; If the final position and the intermediate position cannot be reached, do not go. .
 	//if (!(SECTREE_MANAGER::instance().IsMovablePosition(m_pkChar->GetMapIndex(), m_pkChar->GetX() + (int) fx, m_pkChar->GetY() + (int) fy) 
 	//			&& SECTREE_MANAGER::instance().IsMovablePosition(m_pkChar->GetMapIndex(), m_pkChar->GetX() + (int) fx/2, m_pkChar->GetY() + (int) fy/2)))
 	//	return true;
@@ -218,7 +218,7 @@ bool CPetActor::_UpdatAloneActionAI(float fMinDist, float fMaxDist)
 	return true;
 }
 
-// char_state.cpp StateHorseÇÔ¼ö ±×³É C&P -_-;
+// char_state.cpp StateHorse function just C&P -_-;
 bool CPetActor::_UpdateFollowAI()
 {
 	if (0 == m_pkChar->m_pkMobData)
@@ -227,9 +227,9 @@ bool CPetActor::_UpdateFollowAI()
 		return false;
 	}
 	
-	// NOTE: Ä³¸¯ÅÍ(Æê)ÀÇ ¿ø·¡ ÀÌµ¿ ¼Óµµ¸¦ ¾Ë¾Æ¾ß ÇÏ´Âµ¥, ÇØ´ç °ª(m_pkChar->m_pkMobData->m_table.sMovingSpeed)À» Á÷Á¢ÀûÀ¸·Î Á¢±ÙÇØ¼­ ¾Ë¾Æ³¾ ¼öµµ ÀÖÁö¸¸
-	// m_pkChar->m_pkMobData °ªÀÌ invalidÇÑ °æ¿ì°¡ ÀÚÁÖ ¹ß»ıÇÔ. ÇöÀç ½Ã°£°ü°è»ó ¿øÀÎÀº ´ÙÀ½¿¡ ÆÄ¾ÇÇÏ°í ÀÏ´ÜÀº m_pkChar->m_pkMobData °ªÀ» ¾Æ¿¹ »ç¿ëÇÏÁö ¾Êµµ·Ï ÇÔ.
-	// ¿©±â¼­ ¸Å¹ø °Ë»çÇÏ´Â ÀÌÀ¯´Â ÃÖÃÊ ÃÊ±âÈ­ ÇÒ ¶§ Á¤»ó °ªÀ» Á¦´ë·Î ¸ø¾ò¾î¿À´Â °æ¿ìµµ ÀÖÀ½.. -_-;; ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ¤Ğ
+	// NOTE: character ( pet ) I need to know the original moving speed of , corresponding value (m_pkChar->m_pkMobData->m_table.sMovingSpeed) You can find out by approaching directly, but
+	// m_pkChar->m_pkMobData value invalid One case occurs frequently . Due to the current time constraints, we will determine the cause later and m_pkChar->m_pkMobData Avoid using values â€‹â€‹at all .
+	// The reason why it is checked every time here is that normal values â€‹â€‹may not be obtained properly when initializing. .. -_-;; T_T
 	if (0 == m_originalMoveSpeed)
 	{
 		const CMob* mobData = CMobManager::Instance().Get(m_dwVnum);
@@ -237,14 +237,14 @@ bool CPetActor::_UpdateFollowAI()
 		if (0 != mobData)
 			m_originalMoveSpeed = mobData->m_table.sMovingSpeed;
 	}
-	float	START_FOLLOW_DISTANCE = 300.0f;		// ÀÌ °Å¸® ÀÌ»ó ¶³¾îÁö¸é ÂÑ¾Æ°¡±â ½ÃÀÛÇÔ
-	float	START_RUN_DISTANCE = 900.0f;		// ÀÌ °Å¸® ÀÌ»ó ¶³¾îÁö¸é ¶Ù¾î¼­ ÂÑ¾Æ°¨.
+	float	START_FOLLOW_DISTANCE = 300.0f;		// If it goes further than this distance, it starts chasing you.
+	float	START_RUN_DISTANCE = 900.0f;		// If it falls further than this distance, run and chase after it. .
 
-	float	RESPAWN_DISTANCE = 4500.f;			// ÀÌ °Å¸® ÀÌ»ó ¸Ö¾îÁö¸é ÁÖÀÎ ¿·À¸·Î ¼ÒÈ¯ÇÔ.
-	int		APPROACH = 200;						// Á¢±Ù °Å¸®
+	float	RESPAWN_DISTANCE = 4500.f;			// If it goes further than this distance, it will be summoned next to its owner. .
+	int		APPROACH = 200;						// approach distance
 
-	bool bDoMoveAlone = true;					// Ä³¸¯ÅÍ¿Í °¡±îÀÌ ÀÖÀ» ¶§ È¥ÀÚ ¿©±âÀú±â ¿òÁ÷ÀÏ°ÇÁö ¿©ºÎ -_-;
-	bool bRun = false;							// ¶Ù¾î¾ß ÇÏ³ª?
+	bool bDoMoveAlone = true;					// Whether the character will move around on his own when close to him -_-;
+	bool bRun = false;							// Should I run? ?
 
 	DWORD currentTime = get_dword_time();
 
@@ -272,7 +272,7 @@ bool CPetActor::_UpdateFollowAI()
 			bRun = true;
 		}
 
-		m_pkChar->SetNowWalking(!bRun);		// NOTE: ÇÔ¼ö ÀÌ¸§º¸°í ¸ØÃß´Â°ÇÁÙ ¾Ë¾Ò´Âµ¥ SetNowWalking(false) ÇÏ¸é ¶Ù´Â°ÅÀÓ.. -_-;
+		m_pkChar->SetNowWalking(!bRun);		// NOTE: I thought it was stopping when I saw the function name. SetNowWalking(false) If you do that, you run. .. -_-;
 		
 		Follow(APPROACH);
 
@@ -288,7 +288,7 @@ bool CPetActor::_UpdateFollowAI()
 	//		m_dwLastActionTime = currentTime;
 	//	}
 	//}
-	// Follow ÁßÀÌÁö¸¸ ÁÖÀÎ°ú ÀÏÁ¤ °Å¸® ÀÌ³»·Î °¡±î¿öÁ³´Ù¸é ¸ØÃã
+	// Follow It is running but stops when it gets within a certain distance from the owner.
 	else 
 		m_pkChar->SendMovePacket(FUNC_WAIT, 0, 0, 0, 0);
 	//else if (currentTime - m_dwLastActionTime > number(5000, 12000))
@@ -303,8 +303,8 @@ bool CPetActor::Update(DWORD deltaTime)
 {
 	bool bResult = true;
 
-	// Æê ÁÖÀÎÀÌ Á×¾ú°Å³ª, ¼ÒÈ¯µÈ ÆêÀÇ »óÅÂ°¡ ÀÌ»óÇÏ´Ù¸é ÆêÀ» ¾ø¾Ú. (NOTE: °¡²û°¡´Ù ÀÌ·± Àú·± ÀÌÀ¯·Î ¼ÒÈ¯µÈ ÆêÀÌ DEAD »óÅÂ¿¡ ºüÁö´Â °æ¿ì°¡ ÀÖÀ½-_-;)
-	// ÆêÀ» ¼ÒÈ¯ÇÑ ¾ÆÀÌÅÛÀÌ ¾ø°Å³ª, ³»°¡ °¡Áø »óÅÂ°¡ ¾Æ´Ï¶ó¸é ÆêÀ» ¾ø¾Ú.
+	// The pet owner died , If the summoned pet is in an abnormal condition, remove the pet. . (NOTE: Occasionally, a pet will be summoned for one reason or another. DEAD There are times when you fall into a state -_-;)
+	// There is no item that summoned the pet , If I don't have it, I get rid of the pet. .
 	if (m_pkOwner->IsDead() || (IsSummoned() && m_pkChar->IsDead()) 
 		|| NULL == ITEM_MANAGER::instance().FindByVID(this->GetSummonItemVID())
 		|| ITEM_MANAGER::instance().FindByVID(this->GetSummonItemVID())->GetOwner() != this->GetOwner()
@@ -320,10 +320,10 @@ bool CPetActor::Update(DWORD deltaTime)
 	return bResult;
 }
 
-//NOTE : ÁÖÀÇ!!! MinDistance¸¦ Å©°Ô ÀâÀ¸¸é ±× º¯À§¸¸Å­ÀÇ º¯È­µ¿¾ÈÀº followÇÏÁö ¾Ê´Â´Ù,
+//NOTE : caution !!! MinDistance If you make it large, the change equivalent to the displacement is follow don't do it ,
 bool CPetActor::Follow(float fMinDistance)
 {
-	// °¡·Á´Â À§Ä¡¸¦ ¹Ù¶óºÁ¾ß ÇÑ´Ù.
+	// You have to look at where you want to go .
 	if( !m_pkOwner || !m_pkChar) 
 		return false;
 
@@ -367,7 +367,7 @@ void CPetActor::SetSummonItem (LPITEM pItem)
 
 void CPetActor::GiveBuff()
 {
-	// ÆÄÈ² Æê ¹öÇÁ´Â ´øÀü¿¡¼­¸¸ ¹ß»ıÇÔ.
+	// The blue pet buff only occurs in dungeons. .
 	if (34004 == m_dwVnum || 34009 == m_dwVnum)
 	{
 		if (NULL == m_pkOwner->GetDungeon())
@@ -432,15 +432,15 @@ void CPetSystem::Destroy()
 	m_petActorMap.clear();
 }
 
-/// Æê ½Ã½ºÅÛ ¾÷µ¥ÀÌÆ®. µî·ÏµÈ ÆêµéÀÇ AI Ã³¸® µîÀ» ÇÔ.
+/// Pet system update . of registered pets AI Processing, etc. .
 bool CPetSystem::Update(DWORD deltaTime)
 {
 	bool bResult = true;
 
 	DWORD currentTime = get_dword_time();
 
-	// CHARACTER_MANAGER¿¡¼­ Ä³¸¯ÅÍ·ù UpdateÇÒ ¶§ ¸Å°³º¯¼ö·Î ÁÖ´Â (Pulse¶ó°í µÇ¾îÀÖ´Â)°ªÀÌ ÀÌÀü ÇÁ·¹ÀÓ°úÀÇ ½Ã°£Â÷ÀÌÀÎÁÙ ¾Ë¾Ò´Âµ¥
-	// ÀüÇô ´Ù¸¥ °ªÀÌ¶ó¼­-_-; ¿©±â¿¡ ÀÔ·ÂÀ¸·Î µé¾î¿À´Â deltaTimeÀº ÀÇ¹Ì°¡ ¾øÀ½¤Ğ¤Ğ	
+	// CHARACTER_MANAGER Characters from Update Given as a parameter when doing (Pulse It says ) I thought the value was the time difference from the previous frame.
+	// Because itâ€™s a completely different value -_-; Entered here as input deltaTime has no meaning T_T	
 	
 	if (m_dwUpdatePeriod > currentTime - m_dwLastUpdateTime)
 		return true;
@@ -473,7 +473,7 @@ bool CPetSystem::Update(DWORD deltaTime)
 	return bResult;
 }
 
-/// °ü¸® ¸ñ·Ï¿¡¼­ ÆêÀ» Áö¿ò
+/// Delete a pet from the management list
 void CPetSystem::DeletePet(DWORD mobVnum)
 {
 	TPetActorMap::iterator iter = m_petActorMap.find(mobVnum);
@@ -494,7 +494,7 @@ void CPetSystem::DeletePet(DWORD mobVnum)
 	m_petActorMap.erase(iter);	
 }
 
-/// °ü¸® ¸ñ·Ï¿¡¼­ ÆêÀ» Áö¿ò
+/// Delete a pet from the management list
 void CPetSystem::DeletePet(CPetActor* petActor)
 {
 	for (TPetActorMap::iterator iter = m_petActorMap.begin(); iter != m_petActorMap.end(); ++iter)
@@ -542,7 +542,7 @@ CPetActor* CPetSystem::Summon(DWORD mobVnum, LPITEM pSummonItem, const char* pet
 {
 	CPetActor* petActor = this->GetByVnum(mobVnum);
 
-	// µî·ÏµÈ ÆêÀÌ ¾Æ´Ï¶ó¸é »õ·Î »ı¼º ÈÄ °ü¸® ¸ñ·Ï¿¡ µî·ÏÇÔ.
+	// If it is not a registered pet, create a new pet and register it in the management list. .
 	if (0 == petActor)
 	{
 		petActor = M2_NEW CPetActor(m_pkOwner, mobVnum, options);
@@ -557,7 +557,7 @@ CPetActor* CPetSystem::Summon(DWORD mobVnum, LPITEM pSummonItem, const char* pet
 
 		info->pPetSystem = this;
 
-		m_pkPetSystemUpdateEvent = event_create(petsystem_update_event, info, PASSES_PER_SEC(1) / 4);	// 0.25ÃÊ	
+		m_pkPetSystemUpdateEvent = event_create(petsystem_update_event, info, PASSES_PER_SEC(1) / 4);	// 0.25 candle	
 	}
 
 	return petActor;
@@ -589,7 +589,7 @@ CPetActor* CPetSystem::GetByVID(DWORD vid) const
 	return bFound ? petActor : 0;
 }
 
-/// µî·Ï µÈ Æê Áß¿¡¼­ ÁÖ¾îÁø ¸÷ VNUMÀ» °¡Áø ¾×ÅÍ¸¦ ¹İÈ¯ÇÏ´Â ÇÔ¼ö.
+/// A given mob among registered pets VNUM A function that returns an actor with .
 CPetActor* CPetSystem::GetByVnum(DWORD vnum) const
 {
 	CPetActor* petActor = 0;

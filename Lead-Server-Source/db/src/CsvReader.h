@@ -12,28 +12,28 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class cCsvAlias
-/// \brief CSV 파일을 수정했을 때 발생하는 인덱스 문제를 줄이기 위한 
-/// 별명 객체.
+/// \brief CSV To reduce index problems that occur when files are modified 
+/// alias object .
 ///
-/// 예를 들어 0번 컬럼이 A에 관한 내용을 포함하고, 1번 컬럼이 B에 관한 내용을 
-/// 포함하고 있었는데...
+/// for example 0 This column is A Includes information about , 1 This column is B About 
+/// It was included ...
 ///
 /// <pre>
 /// int a = row.AsInt(0);
 /// int b = row.AsInt(1);
 /// </pre>
 ///
-/// 그 사이에 C에 관한 내용을 포함하는 컬럼이 끼어든 경우, 하드코딩되어 있는 
-/// 1번을 찾아서 고쳐야 하는데, 상당히 에러가 발생하기 쉬운 작업이다. 
+/// Meanwhile C When a column containing content about , hard coded 
+/// 1 I need to find the number and fix it. , This is a fairly error-prone task. . 
 ///
 /// <pre>
 /// int a = row.AsInt(0);
 /// int c = row.AsInt(1);
-/// int b = row.AsInt(2); <-- 이 부분을 일일이 신경써야 한다.
+/// int b = row.AsInt(2); <-- You need to pay attention to this part one by one .
 /// </pre>
 /// 
-/// 이 부분을 문자열로 처리하면 유지보수에 들어가는 수고를 약간이나마 줄일 수 
-/// 있다.
+/// If you process this part as a string, you can slightly reduce the maintenance effort. 
+/// there is .
 ////////////////////////////////////////////////////////////////////////////////
 
 class cCsvAlias
@@ -47,51 +47,51 @@ private:
     typedef std::map<size_t, std::string> INDEX2NAME_MAP;
 #endif
 
-    NAME2INDEX_MAP m_Name2Index;  ///< 셀 인덱스 대신으로 사용하기 위한 이름들
-    INDEX2NAME_MAP m_Index2Name;  ///< 잘못된 alias를 검사하기 위한 추가적인 맵
+    NAME2INDEX_MAP m_Name2Index;  ///< Names to use instead of cell indices
+    INDEX2NAME_MAP m_Index2Name;  ///< erroneous alias Additional maps to check
 
 
 public:
-    /// \brief 생성자
+    /// \brief constructor
     cCsvAlias() {} 
 
-    /// \brief 소멸자
+    /// \brief destructor
     virtual ~cCsvAlias() {}
 
 
 public:
-    /// \brief 셀을 액세스할 때, 숫자 대신 사용할 이름을 등록한다.
+    /// \brief When accessing a cell , Register a name to use instead of a number .
     void AddAlias(const char* name, size_t index);
 
-    /// \brief 모든 데이터를 삭제한다.
+    /// \brief Delete all data .
     void Destroy();
 
-    /// \brief 숫자 인덱스를 이름으로 변환한다.
+    /// \brief Convert numeric index to name .
     const char* operator [] (size_t index) const;
 
-    /// \brief 이름을 숫자 인덱스로 변환한다.
+    /// \brief Convert name to numeric index .
     size_t operator [] (const char* name) const;
 
 
 private:
-    /// \brief 복사 생성자 금지
+    /// \brief No copy constructors
     cCsvAlias(const cCsvAlias&) {}
 
-    /// \brief 대입 연산자 금지
+    /// \brief Assignment operator prohibited
     const cCsvAlias& operator = (const cCsvAlias&) { return *this; }
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class cCsvRow 
-/// \brief CSV 파일의 한 행을 캡슐화한 클래스
+/// \brief CSV A class that encapsulates one line of a file
 ///
-/// CSV의 기본 포맷은 엑셀에서 보이는 하나의 셀을 ',' 문자로 구분한 것이다.
-/// 하지만, 셀 안에 특수 문자로 쓰이는 ',' 문자나 '"' 문자가 들어갈 경우, 
-/// 모양이 약간 이상하게 변한다. 다음은 그 변화의 예이다.
+/// CSV The default format is one visible cell in Excel. ',' Separated by letters .
+/// but , Special characters used in cells ',' Text or '"' When text is entered , 
+/// The shape changes slightly strangely . Here is an example of the change: .
 /// 
 /// <pre>
-/// 엑셀에서 보이는 모양 | 실제 CSV 파일에 들어가있는 모양
+/// What it looks like in Excel | actual CSV What appears in the file
 /// ---------------------+----------------------------------------------------
 /// ItemPrice            | ItemPrice
 /// Item,Price           | "Item,Price"
@@ -101,9 +101,9 @@ private:
 /// Item",Price          | "Item"",Price"
 /// </pre>
 /// 
-/// 이 예로서 다음과 같은 사항을 알 수 있다.
-/// - 셀 내부에 ',' 또는 '"' 문자가 들어갈 경우, 셀 좌우에 '"' 문자가 생긴다.
-/// - 셀 내부의 '"' 문자는 2개로 치환된다.
+/// As an example, you can see the following: .
+/// - inside the cell ',' or '"' When text is entered , on the left and right of the cell '"' A character appears .
+/// - inside the cell '"' The text is 2 replaced by a dog .
 ///
 /// \sa cCsvFile
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,51 +111,51 @@ private:
 class cCsvRow : public std::vector<std::string>
 {
 public:
-    /// \brief 기본 생성자
+    /// \brief default constructor
     cCsvRow() {}
 
-    /// \brief 소멸자
+    /// \brief destructor
     ~cCsvRow() {}
 
 
 public:
-    /// \brief 해당 셀의 데이터를 int 형으로 반환한다.
+    /// \brief data in that cell int return as type .
     int AsInt(size_t index) const { return atoi(at(index).c_str()); }
 
-    /// \brief 해당 셀의 데이터를 double 형으로 반환한다.
+    /// \brief data in that cell double return as type .
     double AsDouble(size_t index) const { return atof(at(index).c_str()); }
 
-    /// \brief 해당 셀의 데이터를 문자열로 반환한다.
+    /// \brief Returns the data of the cell as a string .
     const char* AsString(size_t index) const { return at(index).c_str(); }
 
-    /// \brief 해당하는 이름의 셀 데이터를 int 형으로 반환한다.
+    /// \brief Cell data with the corresponding name int return as type .
     int AsInt(const char* name, const cCsvAlias& alias) const {
         return atoi( at(alias[name]).c_str() ); 
     }
 
-    /// \brief 해당하는 이름의 셀 데이터를 int 형으로 반환한다.
+    /// \brief Cell data with the corresponding name int return as type .
     double AsDouble(const char* name, const cCsvAlias& alias) const {
         return atof( at(alias[name]).c_str() ); 
     }
 
-    /// \brief 해당하는 이름의 셀 데이터를 문자열로 반환한다.
+    /// \brief Returns cell data with the corresponding name as a string. .
     const char* AsString(const char* name, const cCsvAlias& alias) const { 
         return at(alias[name]).c_str(); 
     }
 
 
 private:
-    /// \brief 복사 생성자 금지
+    /// \brief No copy constructors
     cCsvRow(const cCsvRow&) {}
 
-    /// \brief 대입 연산자 금지
+    /// \brief Assignment operator prohibited
     const cCsvRow& operator = (const cCsvRow&) { return *this; }
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class cCsvFile
-/// \brief CSV(Comma Seperated Values) 파일을 read/write하기 위한 클래스
+/// \brief CSV(Comma Seperated Values) file read/write class to do
 ///
 /// <b>sample</b>
 /// <pre>
@@ -179,8 +179,8 @@ private:
 /// file.save("test.csv", false);
 /// </pre>
 ///
-/// \todo 파일에서만 읽어들일 것이 아니라, 메모리 소스로부터 읽는 함수도 
-/// 있어야 할 듯 하다.
+/// \todo Don't just read from a file , Functions that read from a memory source 
+/// It seems like it should be there .
 ////////////////////////////////////////////////////////////////////////////////
 
 class cCsvFile
@@ -188,55 +188,55 @@ class cCsvFile
 private:
     typedef std::vector<cCsvRow*> ROWS;
 
-    ROWS m_Rows; ///< 행 컬렉션
+    ROWS m_Rows; ///< row collection
 
 
 public:
-    /// \brief 생성자
+    /// \brief constructor
     cCsvFile() {}
 
-    /// \brief 소멸자
+    /// \brief destructor
     virtual ~cCsvFile() { Destroy(); }
 
 
 public:
-    /// \brief 지정된 이름의 CSV 파일을 로드한다.
+    /// \brief of the given name CSV load the file .
     bool Load(const char* fileName, const char seperator=',', const char quote='"');
 
-    /// \brief 가지고 있는 내용을 CSV 파일에다 저장한다.
+    /// \brief What you have CSV Save to file .
     bool Save(const char* fileName, bool append=false, char seperator=',', char quote='"') const;
 
-    /// \brief 모든 데이터를 메모리에서 삭제한다.
+    /// \brief Delete all data from memory .
     void Destroy();
 
-    /// \brief 해당하는 인덱스의 행을 반환한다.
+    /// \brief Returns the row at the corresponding index .
     cCsvRow* operator [] (size_t index);
 
-    /// \brief 해당하는 인덱스의 행을 반환한다.
+    /// \brief Returns the row at the corresponding index .
     const cCsvRow* operator [] (size_t index) const;
 
-    /// \brief 행의 갯수를 반환한다.
+    /// \brief Returns the number of rows .
     size_t GetRowCount() const { return m_Rows.size(); }
 
 
 private:
-    /// \brief 복사 생성자 금지
+    /// \brief No copy constructors
     cCsvFile(const cCsvFile&) {}
 
-    /// \brief 대입 연산자 금지
+    /// \brief Assignment operator prohibited
     const cCsvFile& operator = (const cCsvFile&) { return *this; }
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class cCsvTable
-/// \brief CSV 파일을 이용해 테이블 데이터를 로드하는 경우가 많은데, 이 클래스는 
-/// 그 작업을 좀 더 쉽게 하기 위해 만든 유틸리티 클래스다.
+/// \brief CSV Table data is often loaded using a file. , This class is 
+/// This is a utility class created to make that task easier. .
 ///
-/// CSV 파일을 로드하는 경우, 숫자를 이용해 셀을 액세스해야 하는데, CSV 
-/// 파일의 포맷이 바뀌는 경우, 이 숫자들을 변경해줘야한다. 이 작업이 꽤 
-/// 신경 집중을 요구하는 데다가, 에러가 발생하기 쉽다. 그러므로 숫자로 
-/// 액세스하기보다는 문자열로 액세스하는 것이 약간 느리지만 낫다고 할 수 있다.
+/// CSV When loading a file , I need to access cells using numbers. , CSV 
+/// When the file format changes , These numbers need to be changed . This works quite well 
+/// It requires concentration and , Error prone . Therefore, in numbers 
+/// Although it is slightly slower, it is better to access it as a string rather than accessing it. .
 ///
 /// <b>sample</b>
 /// <pre>
@@ -259,63 +259,63 @@ private:
 class cCsvTable
 {
 public :
-    cCsvFile  m_File;   ///< CSV 파일 객체
+    cCsvFile  m_File;   ///< CSV file object
 private:
-    cCsvAlias m_Alias;  ///< 문자열을 셀 인덱스로 변환하기 위한 객체
-    int       m_CurRow; ///< 현재 횡단 중인 행 번호
+    cCsvAlias m_Alias;  ///< Object for converting string to cell index
+    int       m_CurRow; ///< Row number currently being traversed
 
 
 public:
-    /// \brief 생성자
+    /// \brief constructor
     cCsvTable();
 
-    /// \brief 소멸자
+    /// \brief destructor
     virtual ~cCsvTable();
 
 
 public:
-    /// \brief 지정된 이름의 CSV 파일을 로드한다.
+    /// \brief of the given name CSV load the file .
     bool Load(const char* fileName, const char seperator=',', const char quote='"');
 
-    /// \brief 셀을 액세스할 때, 숫자 대신 사용할 이름을 등록한다.
+    /// \brief When accessing a cell , Register a name to use instead of a number .
     void AddAlias(const char* name, size_t index) { m_Alias.AddAlias(name, index); }
 
-    /// \brief 다음 행으로 넘어간다.
+    /// \brief Go to next line .
     bool Next();
 
-    /// \brief 현재 행의 셀 숫자를 반환한다.
+    /// \brief Returns the cell number of the current row .
     size_t ColCount() const;
 
-    /// \brief 인덱스를 이용해 int 형으로 셀값을 반환한다.
+    /// \brief using the index int Returns cell value as type .
     int AsInt(size_t index) const;
 
-    /// \brief 인덱스를 이용해 double 형으로 셀값을 반환한다.
+    /// \brief using the index double Returns cell value as type .
     double AsDouble(size_t index) const;
 
-    /// \brief 인덱스를 이용해 std::string 형으로 셀값을 반환한다.
+    /// \brief using the index std::string Returns cell value as type .
     const char* AsStringByIndex(size_t index) const;
 
-    /// \brief 셀 이름을 이용해 int 형으로 셀값을 반환한다.
+    /// \brief using cell name int Returns cell value as type .
     int AsInt(const char* name) const { return AsInt(m_Alias[name]); }
 
-    /// \brief 셀 이름을 이용해 double 형으로 셀값을 반환한다.
+    /// \brief using cell name double Returns cell value as type .
     double AsDouble(const char* name) const { return AsDouble(m_Alias[name]); }
 
-    /// \brief 셀 이름을 이용해 std::string 형으로 셀값을 반환한다.
+    /// \brief using cell name std::string Returns cell value as type .
     const char* AsString(const char* name) const { return AsStringByIndex(m_Alias[name]); }
 
-    /// \brief alias를 포함해 모든 데이터를 삭제한다.
+    /// \brief alias Delete all data including .
     void Destroy();
 
 
 private:
-    /// \brief 현재 행을 반환한다.
+    /// \brief returns the current row .
     const cCsvRow* const CurRow() const;
 
-    /// \brief 복사 생성자 금지
+    /// \brief No copy constructors
     cCsvTable(const cCsvTable&) {}
 
-    /// \brief 대입 연산자 금지
+    /// \brief Assignment operator prohibited
     const cCsvTable& operator = (const cCsvTable&) { return *this; }
 };
 

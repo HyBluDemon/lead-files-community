@@ -1,9 +1,9 @@
 #ifndef __INC_ITEM_MANAGER__
 #define __INC_ITEM_MANAGER__
 
-// special_item_group.txt¿¡¼­ Á¤ÀÇÇÏ´Â ¼Ó¼º ±×·ì
-// type attr·Î ¼±¾ğÇÒ ¼ö ÀÖ´Ù.
-// ÀÌ ¼Ó¼º ±×·ìÀ» ÀÌ¿ëÇÒ ¼ö ÀÖ´Â °ÍÀº special_item_group.txt¿¡¼­ Special typeÀ¸·Î Á¤ÀÇµÈ ±×·ì¿¡ ¼ÓÇÑ UNIQUE ITEMÀÌ´Ù.
+// special_item_group.txt Attribute group defined by
+// type attr can be declared as .
+// This attribute group can be used special_item_group.txt at Special type belonging to a group defined as UNIQUE ITEM am .
 class CSpecialAttrGroup
 {
 public:
@@ -39,10 +39,10 @@ public:
 		MOB_GROUP,
 	};
 
-	// QUEST Å¸ÀÔÀº Äù½ºÆ® ½ºÅ©¸³Æ®¿¡¼­ vnum.sig_use¸¦ »ç¿ëÇÒ ¼ö ÀÖ´Â ±×·ìÀÌ´Ù.
-	//		´Ü, ÀÌ ±×·ì¿¡ µé¾î°¡±â À§ÇØ¼­´Â ITEM ÀÚÃ¼ÀÇ TYPEÀÌ QUEST¿©¾ß ÇÑ´Ù.
-	// SPECIAL Å¸ÀÔÀº idx, item_vnum, attr_vnumÀ» ÀÔ·ÂÇÑ´Ù. attr_vnumÀº À§¿¡ CSpecialAttrGroupÀÇ VnumÀÌ´Ù.
-	//		ÀÌ ±×·ì¿¡ µé¾îÀÖ´Â ¾ÆÀÌÅÛÀº °°ÀÌ Âø¿ëÇÒ ¼ö ¾ø´Ù.
+	// QUEST The type is in the quest script. vnum.sig_use This is a group that can use .
+	//		step , To join this group ITEM own TYPE this QUEST must be .
+	// SPECIAL The type is idx, item_vnum, attr_vnum Enter . attr_vnum on silver CSpecialAttrGroup of Vnum am .
+	//		Items in this group cannot be worn together. .
 	enum ESIGType { NORMAL, PCT, QUEST, SPECIAL };
 
 	struct CSpecialItemInfo
@@ -327,23 +327,23 @@ class ITEM_MANAGER : public singleton<ITEM_MANAGER>
 
 		bool                    Initialize(TItemTable * table, int size);
 		void			Destroy();
-		void			Update();	// ¸Å ·çÇÁ¸¶´Ù ºÎ¸¥´Ù.
+		void			Update();	// Called every loop .
 		void			GracefulShutdown();
 
 		DWORD			GetNewID();
-		bool			SetMaxItemID(TItemIDRangeTable range); // ÃÖ´ë °íÀ¯ ¾ÆÀÌµğ¸¦ ÁöÁ¤
+		bool			SetMaxItemID(TItemIDRangeTable range); // Specifies the maximum unique ID
 		bool			SetMaxSpareItemID(TItemIDRangeTable range);
 
-		// DelayedSave: ¾î¶°ÇÑ ·çÆ¾ ³»¿¡¼­ ÀúÀåÀ» ÇØ¾ß ÇÒ ÁşÀ» ¸¹ÀÌ ÇÏ¸é ÀúÀå
-		// Äõ¸®°¡ ³Ê¹« ¸¹¾ÆÁö¹Ç·Î "ÀúÀåÀ» ÇÑ´Ù" ¶ó°í Ç¥½Ã¸¸ ÇØµÎ°í Àá±ñ
-		// (¿¹: 1 frame) ÈÄ¿¡ ÀúÀå½ÃÅ²´Ù.
+		// DelayedSave: If you do a lot of things that need to be saved within a routine, save it.
+		// Because there are too many queries " Save it " Just mark it and wait a moment.
+		// ( yes : 1 frame) Save it later .
 		void			DelayedSave(LPITEM item);
-		void			FlushDelayedSave(LPITEM item); // Delayed ¸®½ºÆ®¿¡ ÀÖ´Ù¸é Áö¿ì°í ÀúÀåÇÑ´Ù. ²÷±è Ã³¸®½Ã »ç¿ë µÊ.
+		void			FlushDelayedSave(LPITEM item); // Delayed If it is on the list, delete it and save it. . Used when handling disconnection .
 		void			SaveSingleItem(LPITEM item);
 
 		LPITEM                  CreateItem(DWORD vnum, DWORD count = 1, DWORD dwID = 0, bool bTryMagic = false, int iRarePct = -1, bool bSkipSave = false);
 		void DestroyItem(LPITEM item);
-		void			RemoveItem(LPITEM item, const char * c_pszReason=NULL); // »ç¿ëÀÚ·Î ºÎÅÍ ¾ÆÀÌÅÛÀ» Á¦°Å
+		void			RemoveItem(LPITEM item, const char * c_pszReason=NULL); // Remove item from user
 
 		LPITEM			Find(DWORD id);
 		LPITEM                  FindByVID(DWORD vid);
@@ -364,7 +364,7 @@ class ITEM_MANAGER : public singleton<ITEM_MANAGER>
 
 		DWORD			GetRefineFromVnum(DWORD dwVnum);
 
-		static void		CopyAllAttrTo(LPITEM pkOldItem, LPITEM pkNewItem);		// pkNewItemÀ¸·Î ¸ğµç ¼Ó¼º°ú ¼ÒÄÏ °ªµéÀ» ¸ñ»çÇÏ´Â ÇÔ¼ö.
+		static void		CopyAllAttrTo(LPITEM pkOldItem, LPITEM pkNewItem);		// pkNewItem A function that returns all properties and socket values â€‹â€‹to .
 
 
 		const CSpecialItemGroup* GetSpecialItemGroup(DWORD dwVnum);
@@ -393,8 +393,8 @@ class ITEM_MANAGER : public singleton<ITEM_MANAGER>
 		std::map<DWORD, DWORD>		m_map_ItemRefineFrom;
 		int				m_iTopOfTable;
 
-		ITEM_VID_MAP			m_VIDMap;			///< m_dwVIDCount ÀÇ °ª´ÜÀ§·Î ¾ÆÀÌÅÛÀ» ÀúÀåÇÑ´Ù.
-		DWORD				m_dwVIDCount;			///< ÀÌ³à¼® VID°¡ ¾Æ´Ï¶ó ±×³É ÇÁ·Î¼¼½º ´ÜÀ§ À¯´ÏÅ© ¹øÈ£´Ù.
+		ITEM_VID_MAP			m_VIDMap;			///< m_dwVIDCount Store items in value units. .
+		DWORD				m_dwVIDCount;			///< This guy VID It's not, it's just a process-level unique number. .
 		DWORD				m_dwCurrentID;
 		TItemIDRangeTable	m_ItemIDRange;
 		TItemIDRangeTable	m_ItemIDSpareRange;

@@ -111,7 +111,7 @@ namespace quest
 			bool		IsLoaded() const	{ return m_bLoaded; }
 			void		SetLoaded()	{ m_bLoaded = true; }
 			void		Build();
-			// DB에 저장
+			// DB Save to
 			void		Save();
 
 			bool		HasReward() { return !m_vRewardData.empty() || m_bIsGivenReward; }
@@ -165,7 +165,7 @@ namespace quest
 			TTimerMap		m_TimerMap;
 
 			int			m_iSendToClient;
-			bool		m_bLoaded; // 로드는 한번만 한다.
+			bool		m_bLoaded; // Load only once .
 
 			int			m_iLastState;
 

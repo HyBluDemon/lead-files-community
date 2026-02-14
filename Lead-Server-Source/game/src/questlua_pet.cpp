@@ -41,13 +41,13 @@ namespace quest
 			return 1;
 		}
 
-		// 소환수의 vnum
+		// of the summoned beast vnum
 		DWORD mobVnum= lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 0;
 
-		// 소환수의 이름
+		// Summoner's name
 		const char* petName = lua_isstring(L, 2) ? lua_tostring(L, 2) : 0;
 
-		// 소환하면 멀리서부터 달려오는지 여부
+		// Does it come running from afar when summoned?
 		bool bFromFar = lua_isboolean(L, 3) ? lua_toboolean(L, 3) : false;
 
 		CPetActor* pet = petSystem->Summon(mobVnum, pItem, petName, bFromFar);
@@ -69,7 +69,7 @@ namespace quest
 		if (0 == petSystem)
 			return 0;
 
-		// 소환수의 vnum
+		// of the summoned beast vnum
 		DWORD mobVnum= lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 0;
 
 		petSystem->Unsummon(mobVnum);
@@ -101,7 +101,7 @@ namespace quest
 		if (0 == petSystem)
 			return 0;
 
-		// 소환수의 vnum
+		// of the summoned beast vnum
 		DWORD mobVnum= lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 0;
 
 		CPetActor* petActor = petSystem->GetByVnum(mobVnum);
