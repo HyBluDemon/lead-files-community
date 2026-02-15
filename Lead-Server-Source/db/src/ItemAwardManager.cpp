@@ -54,19 +54,19 @@ void ItemAwardManager::Load(SQLMsg * pMsg)
 		if (row[col])
 		{
 			strlcpy(kData->szWhy, row[col], sizeof(kData->szWhy));
-			//게임 중에 why콜룸에 변동이 생기면				
-			char* whyStr = kData->szWhy;	//why 콜룸 읽기
-			char cmdStr[100] = "";	//why콜룸에서 읽은 값을 임시 문자열에 복사해둠
-			strcpy(cmdStr,whyStr);	//명령어 얻는 과정에서 토큰쓰면 원본도 토큰화 되기 때문
+			// during the game why If there is a change in the call room				
+			char* whyStr = kData->szWhy;	//why call room reading
+			char cmdStr[100] = "";	//why The value read from the call room is copied to a temporary string.
+			strcpy(cmdStr,whyStr);	// This is because if a token is used in the process of obtaining a command, the original is also tokenized.
 			char command[20] = "";
-			strcpy(command,CClientManager::instance().GetCommand(cmdStr));	// command 얻기
+			strcpy(command,CClientManager::instance().GetCommand(cmdStr));	// command get
 			//sys_err("%d,  %s",pItemAward->dwID,command);
-			if( !(strcmp(command,"GIFT") ))	// command 가 GIFT이면
+			if( !(strcmp(command,"GIFT") ))	// command go GIFT This side
 			{
 				TPacketItemAwardInfromer giftData;
-				strcpy(giftData.login, kData->szLogin);	//로그인 아이디 복사
-				strcpy(giftData.command, command);					//명령어 복사
-				giftData.vnum = kData->dwVnum;				//아이템 vnum도 복사
+				strcpy(giftData.login, kData->szLogin);	// Copy Login ID
+				strcpy(giftData.command, command);					// Copy command
+				giftData.vnum = kData->dwVnum;				// item vnum also copy
 				CClientManager::instance().ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER,&giftData,sizeof(TPacketItemAwardInfromer));
 			}
 		}

@@ -3,7 +3,7 @@
 
 #include "char.h"
 
-enum EBattleTypes       // 상대방 기준
+enum EBattleTypes       // Based on the counterparty
 {
 	BATTLE_NONE,
 	BATTLE_DAMAGE,
@@ -28,7 +28,7 @@ extern int	battle_count_attackers(LPCHARACTER ch);
 
 extern void	NormalAttackAffect(LPCHARACTER pkAttacker, LPCHARACTER pkVictim);
 
-// 특성 공격
+// Characteristic Attack
 inline void AttackAffect(LPCHARACTER pkAttacker,
 		LPCHARACTER pkVictim,
 		BYTE att_point,

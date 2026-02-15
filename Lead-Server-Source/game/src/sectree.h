@@ -132,7 +132,7 @@ class SECTREE
 
 			while (it_tree != m_neighbor_list.end())
 			{
-				//첫번째를 찾으면 바로 리턴
+				// Returns as soon as the first one is found
 				if ( (*(it_tree++))->for_each_entity_for_find_victim(func) )
 					return;
 			}
@@ -143,7 +143,7 @@ class SECTREE
 
 			while (it != m_set_entity.end())
 			{
-				//정상적으로 찾으면 바로 리턴
+				// If found properly, it returns immediately.
 				if ( func(*it++) )
 					return true;
 			}
@@ -176,9 +176,9 @@ class SECTREE
 		DWORD				GetAttribute(long x, long y);
 		bool				IsAttr(long x, long y, DWORD dwFlag);
 
-		void				CloneAttribute(LPSECTREE tree); // private map 처리시 사용
+		void				CloneAttribute(LPSECTREE tree); // private map Used when processing
 
-		int				GetEventAttribute(long x, long y); // 20050313 현재는 사용하지 않음
+		int				GetEventAttribute(long x, long y); // 20050313 Currently not in use
 
 		void				SetAttribute(DWORD x, DWORD y, DWORD dwAttr);
 		void				RemoveAttribute(DWORD x, DWORD y, DWORD dwAttr);

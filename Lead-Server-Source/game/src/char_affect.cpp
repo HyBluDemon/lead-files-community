@@ -84,13 +84,13 @@ EVENTFUNC(affect_event)
 	if (!ch->UpdateAffect())
 		return 0;
 	else
-		return passes_per_sec; // 1초
+		return passes_per_sec; // 1 candle
 }
 
 bool CHARACTER::UpdateAffect()
 {
-	// affect_event 에서 처리할 일은 아니지만, 1초짜리 이벤트에서 처리하는 것이
-	// 이것 뿐이라 여기서 물약 처리를 한다.
+	// affect_event It's not something to handle, but , 1 Processing in second-long events is
+	// This is all, so I'll process the potion here. .
 	if (GetPoint(POINT_HP_RECOVERY) > 0)
 	{
 		if (GetMaxHP() <= GetHP())
@@ -140,7 +140,7 @@ bool CHARACTER::UpdateAffect()
 	AutoRecoveryItemProcess( AFFECT_AUTO_HP_RECOVERY );
 	AutoRecoveryItemProcess( AFFECT_AUTO_SP_RECOVERY );
 
-	// 스테미나 회복
+	// stamina recovery
 	if (GetMaxStamina() > GetStamina())
 	{
 		int iSec = (get_dword_time() - GetStopTime()) / 3000;
@@ -149,7 +149,7 @@ bool CHARACTER::UpdateAffect()
 	}
 
 
-	// ProcessAffect는 affect가 없으면 true를 리턴한다.
+	// ProcessAffect Is affect If there is no true returns .
 	if (ProcessAffect())
 		if (GetPoint(POINT_HP_RECOVERY) == 0 && GetPoint(POINT_SP_RECOVERY) == 0 && GetStamina() == GetMaxStamina())
 		{
@@ -220,7 +220,7 @@ int CHARACTER::ProcessAffect()
 	CAffect	*pkAff	= NULL;
 
 	//
-	// 프리미엄 처리
+	// Premium processing
 	//
 	for (int i = 0; i <= PREMIUM_MAX_NUM; ++i)
 	{
@@ -294,8 +294,8 @@ int CHARACTER::ProcessAffect()
 		}
 
 		// AFFECT_DURATION_BUG_FIX
-		// 무한 효과 아이템도 시간을 줄인다.
-		// 시간을 매우 크게 잡기 때문에 상관 없을 것이라 생각됨.
+		// Infinite effect items also reduce time .
+		// I don't think it will matter since it takes up a lot of time. .
 		if ( --pkAff->lDuration <= 0 )
 		{
 			bEnd = true;
@@ -466,7 +466,7 @@ void CHARACTER::LoadAffect(DWORD dwCount, TPacketAffectElement * pElements)
 
 	for (DWORD i = 0; i < dwCount; ++i, ++pElements)
 	{
-		// 무영진은 로드하지않는다.
+		// Muyoungjin does not load .
 		if (pElements->dwType == SKILL_MUYEONG)
 			continue;
 
@@ -523,7 +523,7 @@ void CHARACTER::LoadAffect(DWORD dwCount, TPacketAffectElement * pElements)
 
 	m_bIsLoadedAffect = true;
 
-	// 용혼석 셋팅 로드 및 초기화
+	// Load and reset Dragon Soul Stone settings
 	DragonSoul_Initialize();
 }
 
@@ -561,10 +561,10 @@ bool CHARACTER::AddAffect(DWORD dwType, BYTE bApplyOn, long lApplyValue, DWORD d
 		}
 	}
 
-	// 이미 있는 효과를 덮어 쓰는 처리
+	// Overwriting an existing effect
 	if (pkAff && bOverride)
 	{
-		ComputeAffect(pkAff, false); // 일단 효과를 삭제하고
+		ComputeAffect(pkAff, false); // First delete the effect
 
 		if (GetDesc())
 			SendAffectRemovePacket(GetDesc(), GetPlayerID(), pkAff->dwType, pkAff->bApplyOn);
@@ -572,9 +572,9 @@ bool CHARACTER::AddAffect(DWORD dwType, BYTE bApplyOn, long lApplyValue, DWORD d
 	else
 	{
 		//
-		// 새 에펙를 추가
+		// Add new effects
 		//
-		// NOTE: 따라서 같은 type 으로도 여러 에펙트를 붙을 수 있다.
+		// NOTE: Therefore the same type You can also add various effects with .
 		// 
 		pkAff = CAffect::Acquire();
 		m_list_pkAffect.push_back(pkAff);
@@ -677,15 +677,15 @@ bool CHARACTER::RemoveAffect(CAffect * pkAff)
 
 	ComputeAffect(pkAff, false);
 
-	// 백기 버그 수정.
-	// 백기 버그는 버프 스킬 시전->둔갑->백기 사용(AFFECT_REVIVE_INVISIBLE) 후 바로 공격 할 경우에 발생한다.
-	// 원인은 둔갑을 시전하는 시점에, 버프 스킬 효과를 무시하고 둔갑 효과만 적용되게 되어있는데,
-	// 백기 사용 후 바로 공격하면 RemoveAffect가 불리게 되고, ComputePoints하면서 둔갑 효과 + 버프 스킬 효과가 된다.
-	// ComputePoints에서 둔갑 상태면 버프 스킬 효과 안 먹히도록 하면 되긴 하는데,
-	// ComputePoints는 광범위하게 사용되고 있어서 큰 변화를 주는 것이 꺼려진다.(어떤 side effect가 발생할지 알기 힘들다.)
-	// 따라서 AFFECT_REVIVE_INVISIBLE가 RemoveAffect로 삭제되는 경우만 수정한다.
-	// 시간이 다 되어 백기 효과가 풀리는 경우는 버그가 발생하지 않으므로 그와 똑같이 함.
-	//		(ProcessAffect를 보면 시간이 다 되어서 Affect가 삭제되는 경우, ComputePoints를 부르지 않는다.)
+	// White flag bug fix .
+	// White flag bug casts buff skills -> disguise -> use of white flag (AFFECT_REVIVE_INVISIBLE) Occurs when attacking immediately after .
+	// The reason is at the time of casting the transformation. , The buff skill effect is ignored and only the disguise effect is applied. ,
+	// If you attack immediately after using the white flag, RemoveAffect is called , ComputePoints Transformation effect while doing + Buff skill effect becomes effective .
+	// ComputePoints If you are transformed, you can prevent the buff skill effect from taking effect. ,
+	// ComputePoints is in widespread use, so I am reluctant to make major changes. .( which side effect It is difficult to know whether this will occur .)
+	// thus AFFECT_REVIVE_INVISIBLE go RemoveAffect Modify only if deleted with .
+	// If the white flag effect is lifted when time runs out, the bug does not occur, so do the same. .
+	//		(ProcessAffect If you look at it, time is running out Affect When is deleted , ComputePoints do not call .)
 	if (AFFECT_REVIVE_INVISIBLE != pkAff->dwType)
 	{
 		ComputePoints();
@@ -791,41 +791,41 @@ bool CHARACTER::IsGoodAffect(BYTE bAffectType) const
 void CHARACTER::RemoveBadAffect()
 {
 	sys_log(0, "RemoveBadAffect %s", GetName());
-	// 독
+	// poison
 	RemovePoison();
 	RemoveFire();
 
-	// 스턴           : Value%로 상대방을 5초간 머리 위에 별이 돌아간다. (때리면 1/2 확률로 풀림)               AFF_STUN
+	// stun           : Value% to the other party 5 A star turns overhead for a second . ( If you hit me 1/2 solved with probability )               AFF_STUN
 	RemoveAffect(AFFECT_STUN);
 
-	// 슬로우         : Value%로 상대방의 공속/이속 모두 느려진다. 수련도에 따라 달라짐 기술로 사용 한 경우에   AFF_SLOW
+	// slow         : Value% The opponent's attack speed / Everything slows down . When used as a technique, it varies depending on the level of training.   AFF_SLOW
 	RemoveAffect(AFFECT_SLOW);
 
-	// 투속마령
+	// Tusokmaryeong
 	RemoveAffect(SKILL_TUSOK);
 
-	// 저주
+	// curse
 	//RemoveAffect(SKILL_CURSE);
 
-	// 파법술
+	// Pabeopjutsu
 	//RemoveAffect(SKILL_PABUP);
 
-	// 기절           : Value%로 상대방을 기절시킨다. 2초                                                       AFF_FAINT
+	// fainting           : Value% Stuns the opponent with . 2 candle                                                       AFF_FAINT
 	//RemoveAffect(AFFECT_FAINT);
 
-	// 다리묶임       : Value%로 상대방의 이동속도를 떨어트린다. 5초간 -40                                      AFF_WEB
+	// legs tied       : Value% Reduces the opponent's movement speed with . 5 seconds -40                                      AFF_WEB
 	//RemoveAffect(AFFECT_WEB);
 
-	// 잠들기         : Value%로 상대방을 10초간 잠재운다. (때리면 풀림)                                        AFF_SLEEP
+	// falling asleep         : Value% to the other party 10 Put it to sleep for a second . ( If you hit it, it will come loose )                                        AFF_SLEEP
 	//RemoveAffect(AFFECT_SLEEP);
 
-	// 저주           : Value%로 상대방의 공등/방등 모두 떨어트린다. 수련도에 따라 달라짐 기술로 사용 한 경우에 AFF_CURSE
+	// curse           : Value% Equal to the other party / Drop all the lights . When used as a technique, it varies depending on the level of training. AFF_CURSE
 	//RemoveAffect(AFFECT_CURSE);
 
-	// 마비           : Value%로 상대방을 4초간 마비시킨다.                                                     AFF_PARA
+	// paralysis           : Value% to the other party 4 paralyzes for a second .                                                     AFF_PARA
 	//RemoveAffect(AFFECT_PARALYZE);
 
-	// 부동박부       : 무당 기술
+	// floating nail       : shaman skills
 	//RemoveAffect(SKILL_BUDONG);
 }
 

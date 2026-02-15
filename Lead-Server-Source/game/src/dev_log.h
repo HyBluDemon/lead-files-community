@@ -2,7 +2,7 @@
  * date        : 2006.09.07
  * file        : dev_log.h
  * author      : mhh
- * description : 개발자용 로그함수 테스트 서버에서만 기록된다.
+ * description : Log function for developers is recorded only on the test server. .
  *				example)
  *				dev_log(LOG_DEB0, "My Name is %s", name);
  */

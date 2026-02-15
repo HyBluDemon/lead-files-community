@@ -242,7 +242,7 @@
 
 	void CGuildManager::Update()
 	{
-		ProcessReserveWar(); // 예약 전쟁 처리
+		ProcessReserveWar(); // Reservation War Processing
 
 		uint32_t now = CClientManager::instance().GetCurrentTime();
 
@@ -462,7 +462,7 @@ void CGuildManager::RemoveWar(DWORD GID1, DWORD GID2)
 }
 
 //
-// 길드전 비정상 종료 및 필드전 종료
+// Abnormal termination of guild battles and termination of field battles
 //
 void CGuildManager::WarEnd(DWORD GID1, DWORD GID2, bool bForceDraw)
 {
@@ -493,7 +493,7 @@ void CGuildManager::WarEnd(DWORD GID1, DWORD GID2, bool bForceDraw)
 
 	bool bDraw = false;
 
-	if (!bForceDraw) // 강제 무승부가 아닐 경우에는 점수를 체크한다.
+	if (!bForceDraw) // If it is not a forced draw, the score is checked. .
 	{
 		if (pData->iScore[0] > pData->iScore[1])
 		{
@@ -508,7 +508,7 @@ void CGuildManager::WarEnd(DWORD GID1, DWORD GID2, bool bForceDraw)
 		else
 			bDraw = true;
 	}
-	else // 강제 무승부일 경우에는 무조건 무승부
+	else // In case of a forced draw, it is an unconditional draw.
 		bDraw = true;
 
 	if (bDraw)
@@ -516,14 +516,14 @@ void CGuildManager::WarEnd(DWORD GID1, DWORD GID2, bool bForceDraw)
 	else
 		ProcessWinLose(win_guild, lose_guild);
 
-	// DB 서버에서 자체적으로 끝낼 때도 있기 때문에 따로 패킷을 보내줘야 한다.
+	// DB Sometimes the server terminates on its own, so a separate packet must be sent. .
 	CClientManager::instance().for_each_peer(FSendPeerWar(0, GUILD_WAR_END, GID1, GID2));
 
 	RemoveWar(GID1, GID2);
 }
 
 //
-// 길드전 정상 종료
+// Guild War ends normally
 // 
 void CGuildManager::RecvWarOver(DWORD dwGuildWinner, DWORD dwGuildLoser, bool bDraw, long lWarPrice)
 {
@@ -571,7 +571,7 @@ void CGuildManager::RecvWarOver(DWORD dwGuildWinner, DWORD dwGuildLoser, bool bD
 void CGuildManager::RecvWarEnd(DWORD GID1, DWORD GID2)
 {
 	sys_log(0, "GuildWar: RecvWarEnded : %u vs %u", GID1, GID2);
-	WarEnd(GID1, GID2, true); // 무조건 비정상 종료 시켜야 한다.
+	WarEnd(GID1, GID2, true); // It must be terminated abnormally. .
 }
 
 void CGuildManager::StartWar(BYTE bType, DWORD GID1, DWORD GID2, CGuildWarReserve * pkReserve)
@@ -745,7 +745,7 @@ void CGuildManager::ChangeLadderPoint(DWORD GID, int change)
 	sys_log(0, "GuildManager::ChangeLadderPoint %u %d", GID, r.ladder_point);
 	sys_log(0, "%s", buf);
 
-	// Packet 보내기
+	// Packet send
 	TPacketGuildLadder p;
 
 	p.dwGuild = GID;
@@ -808,7 +808,7 @@ void CGuildManager::WithdrawMoney(CPeer* peer, DWORD dwGuild, INT iGold)
 		return;
 	}
 
-	// 돈이있으니 출금하고 올려준다
+	// Since I have money, I withdraw it and upload it.
 	if (it->second.gold >= iGold)
 	{
 		it->second.gold -= iGold;
@@ -839,7 +839,7 @@ void CGuildManager::WithdrawMoneyReply(DWORD dwGuild, BYTE bGiveSuccess, INT iGo
 }
 
 //
-// 예약 길드전(관전자가 배팅할 수 있다)
+// Reservation Guild War ( Spectators can bet )
 //
 const int c_aiScoreByLevel[GUILD_MAX_LEVEL+1] =
 {
@@ -869,7 +869,7 @@ const int c_aiScoreByLevel[GUILD_MAX_LEVEL+1] =
 const int c_aiScoreByRanking[GUILD_RANK_MAX_NUM+1] =
 {
 	0,
-	55000,	// 1위
+	55000,	// 1 stomach
 	50000,
 	45000,
 	40000,
@@ -878,7 +878,7 @@ const int c_aiScoreByRanking[GUILD_RANK_MAX_NUM+1] =
 	28000,
 	24000,
 	21000,
-	18000,	// 10위
+	18000,	// 10 stomach
 	15000,
 	12000,
 	10000,
@@ -888,7 +888,7 @@ const int c_aiScoreByRanking[GUILD_RANK_MAX_NUM+1] =
 	3000,
 	2000,
 	1000,
-	500		// 20위
+	500		// 20 stomach
 };
 
 void CGuildManager::BootReserveWar()
@@ -932,8 +932,8 @@ void CGuildManager::BootReserveWar()
 
 			char buf[512];
 			snprintf(buf, sizeof(buf), "GuildWar: BootReserveWar : step %d id %u GID1 %u GID2 %u", i, t.dwID, t.dwGuildFrom, t.dwGuildTo);
-			// i == 0 이면 길드전 도중 DB가 튕긴 것이므로 무승부 처리한다.
-			// 또는, 5분 이하 남은 예약 길드전도 무승부 처리한다. (각자의 배팅액을 돌려준다)
+			// i == 0 During the guild war behind the scenes DB Since it bounced, it is a draw. .
+			// or , 5 Reserved guild matches with less than a minute left will be treated as draws. . ( Each person's bet is returned. )
 			//if (i == 0 || (int) t.dwTime - CClientManager::instance().GetCurrentTime() < 60 * 5)
 			if (i == 0 || (int) t.dwTime - CClientManager::instance().GetCurrentTime() < 0)
 			{
@@ -1010,7 +1010,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 
 	int lvp, rkp, alv, mc;
 
-	// 파워 계산
+	// Power Calculation
 	TGuild & k1 = TouchGuild(GID1);
 
 	lvp = c_aiScoreByLevel[MIN(GUILD_MAX_LEVEL, k1.level)];
@@ -1026,7 +1026,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 	t.lPowerFrom = (long) polyPower.Eval();
 	sys_log(0, "GuildWar: %u lvp %d rkp %d alv %d mc %d power %d", GID1, lvp, rkp, alv, mc, t.lPowerFrom);
 
-	// 파워 계산
+	// Power Calculation
 	TGuild & k2 = TouchGuild(GID2);
 
 	lvp = c_aiScoreByLevel[MIN(GUILD_MAX_LEVEL, k2.level)];
@@ -1042,7 +1042,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 	t.lPowerTo = (long) polyPower.Eval();
 	sys_log(0, "GuildWar: %u lvp %d rkp %d alv %d mc %d power %d", GID2, lvp, rkp, alv, mc, t.lPowerTo);
 
-	// 핸디캡 계산
+	// handicap calculation
 	if (t.lPowerTo > t.lPowerFrom)
 	{
 		polyHandicap.SetVar("pA", t.lPowerTo);
@@ -1057,7 +1057,7 @@ bool CGuildManager::ReserveWar(TPacketGuildWar * p)
 	t.lHandicap = (long) polyHandicap.Eval();
 	sys_log(0, "GuildWar: handicap %d", t.lHandicap);
 
-	// 쿼리
+	// query
 	char szQuery[512];
 
 	snprintf(szQuery, sizeof(szQuery),
@@ -1094,7 +1094,7 @@ void CGuildManager::ProcessReserveWar()
 		CGuildWarReserve * pk = it2->second;
 		TGuildWarReserve & r = pk->GetDataRef();
 
-		if (!r.bStarted && r.dwTime - 1800 <= dwCurTime) // 30분 전부터 알린다.
+		if (!r.bStarted && r.dwTime - 1800 <= dwCurTime) // 30 Let us know a minute in advance .
 		{
 			int iMin = (int) ceil((int)(r.dwTime - dwCurTime) / 60.0);
 
@@ -1236,7 +1236,7 @@ void CGuildWarReserve::Initialize()
 
 void CGuildWarReserve::OnSetup(CPeer * peer)
 {
-	if (m_data.bStarted) // 이미 시작된 것은 보내지 않는다.
+	if (m_data.bStarted) // Do not send anything that has already been started .
 		return;
 
 	FSendPeerWar(m_data.bType, GUILD_WAR_RESERVE, m_data.dwGuildFrom, m_data.dwGuildTo) (peer);
@@ -1322,8 +1322,8 @@ bool CGuildWarReserve::Bet(const char * pszLogin, DWORD dwGold, DWORD dwGuild)
 }
 
 //
-// 무승부 처리: 대부분 승부가 나야 정상이지만, 서버 문제 등 특정 상황일 경우에는
-//              무승부 처리가 있어야 한다.
+// Draw processing : In most cases, it is normal to win, but , In certain situations such as server problems,
+//              There must be a draw .
 //
 void CGuildWarReserve::Draw() 
 {
@@ -1455,7 +1455,7 @@ void CGuildWarReserve::End(int iScoreFrom, int iScoreTo)
 
 			double ratio = (double) it->second.second / dwWinnerBet;
 
-			// 10% 세금 공제 후 분배
+			// 10% Distribution after tax deduction
 			sys_log(0, "WAR_REWARD: %s %u ratio %f", it->first.c_str(), it->second.second, ratio);
 
 			DWORD dwGold = (DWORD) (dwTotalBet * ratio * 0.9);

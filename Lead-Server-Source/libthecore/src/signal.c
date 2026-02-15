@@ -1,8 +1,8 @@
 /*
  *    Filename: signal.c
- * Description: 시그널 관련 함수.
+ * Description: Signal-related functions .
  *
- *      Author: 비엽 aka. Cronan
+ *      Author: Rain leaves aka. Cronan
  */
 #define __LIBTHECORE__
 #include "stdafx.h"

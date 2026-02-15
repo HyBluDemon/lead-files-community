@@ -30,14 +30,14 @@ static Pixel * LoadOldGuildMarkImageFile()
 
 bool GuildMarkConvert(const std::vector<DWORD> & vecGuildID)
 {
-	// 폴더 생성
+	// Create folder
 #ifndef __WIN32__
 	mkdir("mark", S_IRWXU);
 #else
 	_mkdir("mark");
 #endif
 
-	// 인덱스 파일이 있나? 
+	// Is there an index file? ? 
 #ifndef __WIN32__
 	if (0 != access(OLD_MARK_INDEX_FILENAME, F_OK))
 #else
@@ -45,13 +45,13 @@ bool GuildMarkConvert(const std::vector<DWORD> & vecGuildID)
 #endif
 		return true;
 
-	// 인덱스 파일 열기
+	// Open index file
 	FILE* fp = fopen(OLD_MARK_INDEX_FILENAME, "r");
 
 	if (NULL == fp)
 		return false;
 
-	// 이미지 파일 열기
+	// Open image file
 	Pixel * oldImagePtr = LoadOldGuildMarkImageFile();
 
 	if (NULL == oldImagePtr)
@@ -61,8 +61,8 @@ bool GuildMarkConvert(const std::vector<DWORD> & vecGuildID)
 	}
 
 	/*
-	// guild_mark.tga가 실제 targa 파일이 아니고, 512 * 512 * 4 크기의 raw 파일이다.
-	// 눈으로 확인하기 위해 실제 targa 파일로 만든다.
+	// guild_mark.tga is real targa not a file , 512 * 512 * 4 of size raw It's a file .
+	// In order to see it with your own eyes, targa make it into a file .
 	CGuildMarkImage * pkImage = new CGuildMarkImage;
 	pkImage->Build("guild_mark_real.tga");
 	pkImage->Load("guild_mark_real.tga");
@@ -86,7 +86,7 @@ bool GuildMarkConvert(const std::vector<DWORD> & vecGuildID)
 			continue;
 		}
 
-		// mark id -> 이미지에서의 위치 찾기
+		// mark id -> Find location in image
 		uint row = mark_id / 32;
 		uint col = mark_id % 32;
 
@@ -102,7 +102,7 @@ bool GuildMarkConvert(const std::vector<DWORD> & vecGuildID)
 		Pixel * src = oldImagePtr + sy * 512 + sx;
 		Pixel * dst = mark;
 
-		// 옛날 이미지에서 마크 한개 복사
+		// Copy one mark from an old image
 		for (int y = 0; y != SGuildMark::HEIGHT; ++y)
 		{
 			for (int x = 0; x != SGuildMark::WIDTH; ++x)
@@ -111,7 +111,7 @@ bool GuildMarkConvert(const std::vector<DWORD> & vecGuildID)
 			src += 512;
 		}
 
-		// 새 길드 마크 시스템에 넣는다.
+		// Added to the new guild mark system .
 		CGuildMarkManager::instance().SaveMark(guild_id, (BYTE *) mark);
 		line[0] = '\0';
 	}
@@ -119,7 +119,7 @@ bool GuildMarkConvert(const std::vector<DWORD> & vecGuildID)
 	free(oldImagePtr);
 	fclose(fp);
 
-	// 컨버트는 한번만 하면되므로 파일을 옮겨준다.
+	// Conversion only needs to be done once, so move the file. .
 #ifndef __WIN32__
 	system("mv -f guild_mark.idx guild_mark.idx.removable");
 	system("mv -f guild_mark.tga guild_mark.tga.removable");

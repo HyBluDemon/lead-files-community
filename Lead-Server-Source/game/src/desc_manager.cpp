@@ -55,7 +55,7 @@ int IsValidIP(struct valid_ip* ip_table, const char *host)
 DESC_MANAGER::DESC_MANAGER() : m_bDestroyed(false)
 {
 	Initialize();
-	//NOTE : Destroy 끝에서 Initialize 를 부르는건 또 무슨 짓이냐..-_-; 정말 
+	//NOTE : Destroy at the end Initialize What are you doing by calling ? ..-_-; really 
 
 	m_pPackageCrypt = new CClientPackageCryptInfo;
 }
@@ -168,7 +168,7 @@ LPDESC DESC_MANAGER::AcceptDesc(LPFDWATCH fdw, socket_t s)
 		}
 	}
 
-	if (!IsValidIP(admin_ip, host)) // admin_ip 에 등록된 IP 는 최대 사용자 수에 구애받지 않는다.
+	if (!IsValidIP(admin_ip, host)) // admin_ip registered in IP is not limited by the maximum number of users. .
 	{
 		if (m_iSocketsConnected >= MAX_ALLOW_USER)
 		{

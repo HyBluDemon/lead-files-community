@@ -21,13 +21,13 @@ namespace quest
 	class NPC
 	{
 		public:
-			// 인자가 없는 스크립트들
+			// Scripts without arguments
 			// first: state number
 			typedef map<int, AStateScriptType> AQuestScriptType;
 			// first: quest number
 			typedef map<unsigned int, AQuestScriptType> QuestMapType;
 
-			// 인자가 있는 스크립트들
+			// Scripts with arguments
 			// first: state number
 			typedef map<int, vector<AArgScript> > AArgQuestScriptType;
 			// first: quest number
@@ -69,7 +69,7 @@ namespace quest
 			bool	OnChat(PC& pc);
 			bool	HasChat();
 
-			bool	OnItemInformer(PC& pc,unsigned int vnum);	// 독일 선물 기능 테스트
+			bool	OnItemInformer(PC& pc,unsigned int vnum);	// German Futures Functional Test
 
 			bool	OnTarget(PC& pc, DWORD dwQuestIndex, const char * c_pszTargetName, const char * c_pszVerb, bool & bRet);
 			bool	OnUnmount(PC& pc);

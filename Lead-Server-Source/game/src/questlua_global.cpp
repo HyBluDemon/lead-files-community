@@ -795,7 +795,7 @@ namespace quest
 		return 1;
 	}
 
-	// 새로운 state를 만든다.
+	// new state makes .
 	int _set_quest_state(lua_State* L)
 	{
 		if (!lua_isstring(L, 1) || !lua_isstring(L, 2))
@@ -1029,7 +1029,7 @@ namespace quest
 		return 0;
 	}
 
-	//주의: 몹 리젠이 안되는 맵에서만 사용
+	// caution : Only used on maps where mob regeneration is not possible
 	int _regen_in_map( lua_State * L )
 	{
 		int iMapIndex = static_cast<int>(lua_tonumber(L, 1));

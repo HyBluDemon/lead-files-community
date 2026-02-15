@@ -20,7 +20,7 @@ void CItemAddonManager::ApplyAddonTo(int iAddonType, LPITEM pItem)
 		return;
 	}
 
-	// TODO 일단 하드코딩으로 평타 스킬 수치 변경만 경우만 적용받게한다.
+	// TODO First, it is hard-coded so that it only applies when the average skill value is changed. .
 
 	int iSkillBonus = MINMAX(-30, (int) (gauss_random(0, 5) + 0.5f), 30);
 	int iNormalHitBonus = 0;

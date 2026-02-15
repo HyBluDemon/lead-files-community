@@ -2,7 +2,7 @@
 #define __INC_METIN_II_DB_QID_H__
 
 /**
- * @version	05/06/10 Bang2ni - 아이템 가격정보 쿼리 추가(QID_ITEMPRICE_XXX)
+ * @version	05/06/10 Bang2ni - Add item price information query (QID_ITEMPRICE_XXX)
  */
 enum QID
 {
@@ -28,10 +28,10 @@ enum QID
     QID_GUILD_RANKING,			// 20
 
 	// MYSHOP_PRICE_LIST
-    QID_ITEMPRICE_SAVE,			///< 21, 아이템 가격정보 저장 쿼리
-    QID_ITEMPRICE_DESTROY,		///< 22, 아이템 가격정보 삭제 쿼리
-    QID_ITEMPRICE_LOAD_FOR_UPDATE,	///< 23, 가격정보 업데이트를 위한 아이템 가격정보 로드 쿼리
-    QID_ITEMPRICE_LOAD,			///< 24, 아이템 가격정보 로드 쿼리
+    QID_ITEMPRICE_SAVE,			///< 21, Item price information storage query
+    QID_ITEMPRICE_DESTROY,		///< 22, Query to delete item price information
+    QID_ITEMPRICE_LOAD_FOR_UPDATE,	///< 23, Item price information load query to update price information
+    QID_ITEMPRICE_LOAD,			///< 24, Query to load item price information
 	// END_OF_MYSHOP_PRICE_LIST
 };
 

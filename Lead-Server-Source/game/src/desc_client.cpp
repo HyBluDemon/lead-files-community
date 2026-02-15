@@ -74,7 +74,7 @@ bool CLIENT_DESC::Connect(int iPhaseWhenSucceed)
 	if (iPhaseWhenSucceed != 0)
 		m_iPhaseWhenSucceed = iPhaseWhenSucceed;
 
-	if (get_global_time() - m_LastTryToConnectTime < 3)	// 3초
+	if (get_global_time() - m_LastTryToConnectTime < 3)	// 3 candle
 		return false;
 
 	m_LastTryToConnectTime = get_global_time();
@@ -195,7 +195,7 @@ void CLIENT_DESC::SetPhase(int iPhase)
 
 					sys_log(0, "DB_SETUP current user %d size %d", p.dwLoginCount, buf.size());
 
-					// 파티를 처리할 수 있게 됨.
+					// Can handle parties .
 					CPartyManager::instance().EnablePCParty();
 					//CPartyManager::instance().SendPartyToDB();
 				}
@@ -276,7 +276,7 @@ void CLIENT_DESC::Update(DWORD t)
 void CLIENT_DESC::UpdateChannelStatus(DWORD t, bool fForce)
 {
 	enum {
-		CHANNELSTATUS_UPDATE_PERIOD = 5*60*1000,	// 5분마다
+		CHANNELSTATUS_UPDATE_PERIOD = 5*60*1000,	// 5 every minute
 	};
 	if (fForce || m_tLastChannelStatusUpdateTime+CHANNELSTATUS_UPDATE_PERIOD < t) {
 		int iTotal; 

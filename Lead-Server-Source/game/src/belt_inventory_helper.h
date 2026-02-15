@@ -13,7 +13,7 @@ public:
 	{
 		static TGradeUnit beltGradeByLevelTable[] = 
 		{
-			0,			// 벨트+0
+			0,			// belt +0
 			1,			// +1
 			1,			// +2
 			2,			// +3
@@ -34,20 +34,20 @@ public:
 		return beltGradeByLevelTable[level];
 	}
 
-	// 현재 벨트 레벨을 기준으로, 어떤 셀들을 이용할 수 있는지 리턴
+	// Based on current belt level , Returns which cells are available
 	static const TGradeUnit* GetAvailableRuleTableByGrade()
 	{
 		/**
-			벨트는 총 +0 ~ +9 레벨을 가질 수 있으며, 레벨에 따라 7단계 등급으로 구분되어 인벤토리가 활성 화 된다.
-			벨트 레벨에 따른 사용 가능한 셀은 아래 그림과 같음. 현재 등급 >= 활성가능 등급이면 사용 가능.
-			(단, 현재 레벨이 0이면 무조건 사용 불가, 괄호 안의 숫자는 등급)
+			belt is gun +0 ~ +9 can have levels , according to level 7 The inventory is activated by classifying it into stages. .
+			The available cells according to belt level are as shown below. . current rating >= Can be used if the level is activated .
+			( step , Current level 0 If so, it cannot be used at all , Numbers in parentheses are grades )
 			
 				2(1)  4(2)  6(4)  8(6)
 				5(3)  5(3)  6(4)  8(6)
 				7(5)  7(5)  7(5)  8(6)
 				9(7)  9(7)  9(7)  9(7)
 
-			벨트 인벤토리의 크기는 4x4 (16칸)
+			The size of the belt inventory is 4x4 (16 Cannes )
 		*/
 
 		static TGradeUnit availableRuleByGrade[BELT_INVENTORY_SLOT_COUNT] = {
@@ -62,14 +62,14 @@ public:
 
 	static bool IsAvailableCell(WORD cell, int beltGrade /*int beltLevel*/)
 	{
-		// 기획 또 바뀜.. 아놔...
+		// Plan changed again .. Oh my ...
 		//const TGradeUnit beltGrade = GetBeltGradeByRefineLevel(beltLevel);		
 		const TGradeUnit* ruleTable = GetAvailableRuleTableByGrade();
 
 		return ruleTable[cell] <= beltGrade;
 	}
 
-	/// pc의 벨트 인벤토리에 아이템이 하나라도 존재하는 지 검사하는 함수.
+	/// pc A function that checks whether at least one item exists in the belt inventory of .
 	static bool IsExistItemInBeltInventory(LPCHARACTER pc)
 	{
 		for (WORD i = BELT_INVENTORY_SLOT_START; i < BELT_INVENTORY_SLOT_END; ++i)
@@ -83,7 +83,7 @@ public:
 		return false;
 	}
 
-	/// item이 벨트 인벤토리에 들어갈 수 있는 타입인지 검사하는 함수. (이 규칙은 기획자가 결정함)
+	/// item A function to check whether this type of belt can fit into the inventory. . ( These rules are determined by the planner )
 	static bool CanMoveIntoBeltInventory(LPITEM item)
 	{
 		bool canMove = false;

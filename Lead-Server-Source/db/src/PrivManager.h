@@ -23,7 +23,7 @@ struct TPrivEmpireData
 };
 
 /**
- * @version 05/06/08	Bang2ni - 지속시간 추가
+ * @version 05/06/08	Bang2ni - Add duration
  */
 struct TPrivGuildData
 {
@@ -33,7 +33,7 @@ struct TPrivGuildData
     DWORD guild_id;
 
 	// ADD_GUILD_PRIV_TIME
-    uint32_t end_time_sec;	///< 지속시간
+    uint32_t end_time_sec;	///< duration
 
     TPrivGuildData(BYTE type, int value, DWORD guild_id, uint32_t _end_time_sec)
 	: type(type), value(value), bRemoved(false), guild_id(guild_id), end_time_sec(_end_time_sec )
@@ -53,7 +53,7 @@ struct TPrivCharData
 };
 
 /**
- * @version 05/06/08	Bang2ni - Guild privilege 관련 함수 지속 시간 추가
+ * @version 05/06/08	Bang2ni - Guild privilege Add related function duration
  */
 class CPrivManager : public singleton<CPrivManager>
 {

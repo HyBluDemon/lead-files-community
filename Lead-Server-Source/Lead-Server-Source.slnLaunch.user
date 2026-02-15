@@ -3,7 +3,7 @@
     "Name": "m2server",
     "Projects": [
       {
-        "Path": "db\\src\\db.2008.vcxproj",
+        "Path": "db\\src\\db.vcxproj",
         "Action": "Start"
       },
       {

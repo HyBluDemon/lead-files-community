@@ -34,6 +34,7 @@ __pycache__/
 
 # Ignore build executables
 /db/db_d.*
+/auth/auth_d.*
 /game/game_d.*
 /qc/qc.exe
 

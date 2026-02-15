@@ -1,8 +1,8 @@
 /*
  *    Filename: queue.c
- * Description: 钮 贸府
+ * Description: Queue processing
  *
- *      Author: 辫茄林 (aka. 厚勘, Cronan), 价康柳 (aka. myevan, 壶磊风)
+ *      Author: Hanjoo Kim (aka. Rain leaves , Cronan), Youngjin Song (aka. myevan, broomstick )
  */
 #include "stdafx.h"
 

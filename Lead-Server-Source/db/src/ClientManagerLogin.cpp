@@ -230,7 +230,7 @@ TAccountTable * CreateAccountTableFromRes(MYSQL_RES * res)
 	TAccountTable * pkTab = new TAccountTable;
 	memset(pkTab, 0, sizeof(TAccountTable));
 
-	// 첫번째 컬럼 것만 참고 한다 (JOIN QUERY를 위한 것 임)
+	// Please refer to only the first column (JOIN QUERY It's for )
 	strlcpy(input_pwd, row[col++], sizeof(input_pwd));
 	str_to_number(pkTab->id, row[col++]);
 	strlcpy(pkTab->login, row[col++], sizeof(pkTab->login));
@@ -354,7 +354,7 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 
 	if (info->account_index == 0)
 	{
-		// 계정이 없네?
+		// I don't have an account ?
 		if (msg->Get()->uiNumRows == 0)
 		{
 			sys_log(0, "RESULT_LOGIN: no account");
@@ -396,14 +396,14 @@ void CClientManager::RESULT_LOGIN(CPeer * peer, SQLMsg * msg)
 	}
 	else
 	{
-		if (!info->pAccountTable) // 이럴리는 없겠지만;;
+		if (!info->pAccountTable) // It can't be like this ;;
 		{
 			peer->EncodeReturn(HEADER_DG_LOGIN_WRONG_PASSWD, info->dwHandle);
 			delete info;
 			return;
 		}
 
-		// 다른 컨넥션이 이미 로그인 해버렸다면.. 이미 접속했다고 보내야 한다.
+		// If another connection has already logged in .. It should be sent that it is already connected. .
 		if (!InsertLogonAccount(info->pAccountTable->login, peer->GetHandle(), info->ip))
 		{
 			sys_log(0, "RESULT_LOGIN: already logon %s", info->pAccountTable->login);

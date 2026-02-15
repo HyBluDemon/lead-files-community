@@ -112,7 +112,7 @@ void CObject::EncodeInsertPacket(LPENTITY entity)
 	pack.z              = GetZ();
 	pack.wRaceNum       = m_data.dwVnum;
 
-	// 빌딩 회전 정보(벽일때는 문 위치)를 변환
+	// Building Rotation Information ( Door location when on a wall ) convert
 	pack.dwAffectFlag[0] = unsigned(m_data.xRot);
 	pack.dwAffectFlag[1] = unsigned(m_data.yRot);
 
@@ -298,7 +298,7 @@ void CObject::RegenNPC()
 
 	m_chNPC->SetGuild(pGuild);
 
-	// 힘의 신전일 경우 길드 레벨을 길마에게 저장해놓는다
+	// If it is a temple of power, save the guild level to Gilma.
 	if ( m_pProto->dwVnum == 14061 || m_pProto->dwVnum == 14062 || m_pProto->dwVnum == 14063 )
 	{
 		quest::PC* pPC = quest::CQuestManager::instance().GetPC(pGuild->GetMasterPID());
@@ -693,10 +693,10 @@ TObjectProto * CManager::GetObjectProto(DWORD dwVnum)
 
 bool CManager::LoadLand(TLand * pTable) // from DB
 {
-	// MapAllow에 없는 맵의 땅일지라도 load를 해야한다.
-	//	건물(object)이 어느 길드에 속해 있는지 알기 위해서는 건물이 세위진 땅이 어느 길드 소속인지 알아한다.
-	//	만약 땅을 load해 놓지 않으면 길드 건물이 어느 길드에 소속된 건지 알지 못해서
-	//	길드 건물에 의한 길드 버프를 받지 못한다.
+	// MapAllow Even if it is a land that is not in the map load should do .
+	//	building (object) In order to find out which guild it belongs to, you need to find out which guild the land on which the building is built belongs to. .
+	//	If the land load If you don't do this, you won't know which guild the guild building belongs to.
+	//	Cannot receive guild buffs from guild buildings .
 	//if (!map_allow_find(pTable->lMapIndex))
 	//	return false;
 
@@ -1096,7 +1096,7 @@ bool CLand::RequestCreateWall(long nMapIndex, float rot)
 	int wall_half_w = 1000;
 	int wall_half_h = 1362;
 
-	if (rot == 0.0f) 		// 남쪽 문
+	if (rot == 0.0f) 		// south gate
 	{
 		int door_x = wall_x;
 		int door_y = wall_y + wall_half_h;
@@ -1105,7 +1105,7 @@ bool CLand::RequestCreateWall(long nMapIndex, float rot)
 		RequestCreateObject(WALL_LEFT_VNUM,	nMapIndex, wall_x - wall_half_w, wall_y, door_x, door_y,   0.0f, WALL_ANOTHER_CHECKING_ENABLE);
 		RequestCreateObject(WALL_RIGHT_VNUM,	nMapIndex, wall_x + wall_half_w, wall_y, door_x, door_y,   0.0f, WALL_ANOTHER_CHECKING_ENABLE);
 	}	
-	else if (rot == 180.0f)		// 북쪽 문
+	else if (rot == 180.0f)		// north gate
 	{
 		int door_x = wall_x;
 		int door_y = wall_y - wall_half_h;
@@ -1114,7 +1114,7 @@ bool CLand::RequestCreateWall(long nMapIndex, float rot)
 		RequestCreateObject(WALL_LEFT_VNUM,	nMapIndex, wall_x - wall_half_w, wall_y, door_x, door_y,   0.0f, WALL_ANOTHER_CHECKING_ENABLE);
 		RequestCreateObject(WALL_RIGHT_VNUM,	nMapIndex, wall_x + wall_half_w, wall_y, door_x, door_y,   0.0f, WALL_ANOTHER_CHECKING_ENABLE);
 	}
-	else if (rot == 90.0f)		// 동쪽 문 
+	else if (rot == 90.0f)		// east gate 
 	{
 		int door_x = wall_x + wall_half_h;
 		int door_y = wall_y;
@@ -1123,7 +1123,7 @@ bool CLand::RequestCreateWall(long nMapIndex, float rot)
 		RequestCreateObject(WALL_LEFT_VNUM,	nMapIndex, wall_x, wall_y - wall_half_w, door_x, door_y,  90.0f, WALL_ANOTHER_CHECKING_ENABLE);
 		RequestCreateObject(WALL_RIGHT_VNUM,	nMapIndex, wall_x, wall_y + wall_half_w, door_x, door_y,  90.0f, WALL_ANOTHER_CHECKING_ENABLE);
 	}
-	else if (rot == 270.0f)		// 서쪽 문 
+	else if (rot == 270.0f)		// west gate 
 	{
 		int door_x = wall_x - wall_half_h;
 		int door_y = wall_y;

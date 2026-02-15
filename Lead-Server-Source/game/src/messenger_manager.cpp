@@ -239,11 +239,11 @@ void MessengerManager::RemoveAllList(keyA account)
 {
 	std::set<keyT>	company(m_Relation[account]);
 
-	/* SQL Data 삭제 */
+	/* SQL Data delete */
 	DBManager::instance().Query("DELETE FROM messenger_list%s WHERE account='%s' OR companion='%s'",
 			get_table_postfix(), account.c_str(), account.c_str());
 
-	/* 내가 가지고있는 리스트 삭제 */
+	/* Delete the list I have */
 	for (std::set<keyT>::iterator iter = company.begin();
 			iter != company.end();
 			iter++ )
@@ -251,7 +251,7 @@ void MessengerManager::RemoveAllList(keyA account)
 		this->RemoveFromList(account, *iter);
 	}
 
-	/* 복사한 데이타 삭제 */
+	/* Delete copied data */
 	for (std::set<keyT>::iterator iter = company.begin();
 			iter != company.end();
 			)

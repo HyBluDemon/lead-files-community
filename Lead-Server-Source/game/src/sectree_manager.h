@@ -165,16 +165,16 @@ class SECTREE_MANAGER : public singleton<SECTREE_MANAGER>
 		size_t		GetMonsterCountInMap(long lMapIndex);
 		size_t		GetMonsterCountInMap(long lMpaIndex, DWORD dwVnum);
 
-		/// 영역에 대해 Sectree 의 Attribute 에 대해 특정한 처리를 수행한다.
+		/// About the area Sectree of Attribute Perform specific processing on .
 		/**
-		 * @param [in]	lMapIndex 적용할 Map index
-		 * @param [in]	lStartX 사각형 영역의 가장 왼쪽 좌표
-		 * @param [in]	lStartY 사각형 영역의 가장 위쪽 좌표
-		 * @param [in]	lEndX 사각형 영역의 가장 오른쪽 좌표
-		 * @param [in]	lEndY 사각형 영역의 가장 아랫쪽 좌표
-		 * @param [in]	lRotate 영역에 대해 회전할 각
-		 * @param [in]	dwAttr 적용할 Attribute
-		 * @param [in]	mode Attribute 에 대해 처리할 type
+		 * @param [in]	lMapIndex apply Map index
+		 * @param [in]	lStartX Leftmost coordinate of the rectangular area
+		 * @param [in]	lStartY Top coordinate of rectangular area
+		 * @param [in]	lEndX Rightmost coordinate of the rectangular area
+		 * @param [in]	lEndY Bottom coordinate of rectangular area
+		 * @param [in]	lRotate Angle to rotate about the area
+		 * @param [in]	dwAttr apply Attribute
+		 * @param [in]	mode Attribute to deal with type
 		 */
 		bool		ForAttrRegion(long lMapIndex, long lStartX, long lStartY, long lEndX, long lEndY, long lRotate, DWORD dwAttr, EAttrRegionMode mode);
 
@@ -182,39 +182,39 @@ class SECTREE_MANAGER : public singleton<SECTREE_MANAGER>
 
 	private:
 
-		/// 직각의 사각형 영역에 대해 Sectree 의 Attribute 에 대해 특정한 처리를 수행한다.
+		/// For a rectangular area Sectree of Attribute Perform specific processing on .
 		/**
-		 * @param [in]	lMapIndex 적용할 Map index
-		 * @param [in]	lCX 사각형 영역의 가장 왼쪽 Cell 의 좌표
-		 * @param [in]	lCY 사각형 영역의 가장 위쪽 Cell 의 좌표
-		 * @param [in]	lCW 사각형 영역의 Cell 단위 폭
-		 * @param [in]	lCH 사각형 영역의 Cell 단위 높이
-		 * @param [in]	lRotate 회전할 각(직각)
-		 * @param [in]	dwAttr 적용할 Attribute
-		 * @param [in]	mode Attribute 에 대해 처리할 type
+		 * @param [in]	lMapIndex apply Map index
+		 * @param [in]	lCX leftmost part of the rectangular area Cell coordinates of
+		 * @param [in]	lCY top of rectangular area Cell coordinates of
+		 * @param [in]	lCW square area Cell unit width
+		 * @param [in]	lCH square area Cell unit height
+		 * @param [in]	lRotate angle to rotate ( right angle )
+		 * @param [in]	dwAttr apply Attribute
+		 * @param [in]	mode Attribute to deal with type
 		 */
 		bool		ForAttrRegionRightAngle( long lMapIndex, long lCX, long lCY, long lCW, long lCH, long lRotate, DWORD dwAttr, EAttrRegionMode mode );
 
-		/// 직각 이외의 사각형 영역에 대해 Sectree 의 Attribute 에 대해 특정한 처리를 수행한다.
+		/// For rectangular areas other than right angles Sectree of Attribute Perform specific processing on .
 		/**
-		 * @param [in]	lMapIndex 적용할 Map index
-		 * @param [in]	lCX 사각형 영역의 가장 왼쪽 Cell 의 좌표
-		 * @param [in]	lCY 사각형 영역의 가장 위쪽 Cell 의 좌표
-		 * @param [in]	lCW 사각형 영역의 Cell 단위 폭
-		 * @param [in]	lCH 사각형 영역의 Cell 단위 높이
-		 * @param [in]	lRotate 회전할 각(직각 이외의 각)
-		 * @param [in]	dwAttr 적용할 Attribute
-		 * @param [in]	mode Attribute 에 대해 처리할 type
+		 * @param [in]	lMapIndex apply Map index
+		 * @param [in]	lCX leftmost part of the rectangular area Cell coordinates of
+		 * @param [in]	lCY top of rectangular area Cell coordinates of
+		 * @param [in]	lCW square area Cell unit width
+		 * @param [in]	lCH square area Cell unit height
+		 * @param [in]	lRotate angle to rotate ( angles other than right angles )
+		 * @param [in]	dwAttr apply Attribute
+		 * @param [in]	mode Attribute to deal with type
 		 */
 		bool		ForAttrRegionFreeAngle( long lMapIndex, long lCX, long lCY, long lCW, long lCH, long lRotate, DWORD dwAttr, EAttrRegionMode mode );
 
-		/// 한 Cell 의 Attribute 에 대해 특정한 처리를 수행한다.
+		/// one Cell of Attribute Perform specific processing on .
 		/**
-		 * @param [in]	lMapIndex 적용할 Map index
-		 * @param [in]	lCX 적용할 Cell 의 X 좌표
-		 * @param [in]	lCY 적용할 Cell 의 Y 좌표
-		 * @param [in]	dwAttr 적용할 Attribute
-		 * @param [in]	mode Attribute 에 대해 처리할 type
+		 * @param [in]	lMapIndex apply Map index
+		 * @param [in]	lCX apply Cell of X coordinate
+		 * @param [in]	lCY apply Cell of Y coordinate
+		 * @param [in]	dwAttr apply Attribute
+		 * @param [in]	mode Attribute to deal with type
 		 */
 		bool		ForAttrRegionCell( long lMapIndex, long lCX, long lCY, DWORD dwAttr, EAttrRegionMode mode );
 

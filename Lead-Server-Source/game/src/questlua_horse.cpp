@@ -68,10 +68,10 @@ namespace quest
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
-		// 소환하면 멀리서부터 달려오는지 여부
+		// Does it come running from afar when summoned?
 		bool bFromFar = lua_isboolean(L, 1) ? lua_toboolean(L, 1) : false;
 
-		// 소환수의 vnum
+		// of the summoned beast vnum
 		DWORD horseVnum= lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
 
 		const char* name = lua_isstring(L, 3) ? lua_tostring(L, 3) : 0;
@@ -219,10 +219,10 @@ namespace quest
 
 	int horse_set_name(lua_State* L)
 	{
-		// 리턴값
-		// 0 : 소유한 말이 없다
-		// 1 : 잘못된 이름이다
-		// 2 : 이름 바꾸기 성공
+		// return value
+		// 0 : I don't own any horses
+		// 1 : It's a wrong name
+		// 2 : rename success
 
 		if ( lua_isstring(L, -1) != true ) return 0;
 

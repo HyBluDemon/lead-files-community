@@ -6,7 +6,7 @@
 #include "affect.h"
 #include "locale_service.h"
 
-// 독
+// poison
 const int poison_damage_rate[MOB_RANK_MAX_NUM] = 
 {
 	80, 50, 40, 30, 25, 1
@@ -132,7 +132,7 @@ EVENTFUNC(fire_event)
 
 /*
 
-   LEVEL에 의한..
+   LEVEL by ..
 
    +8   0%
    +7   5%
@@ -181,7 +181,7 @@ void CHARACTER::AttackedByPoison(LPCHARACTER pkAttacker)
 	if (m_pkPoisonEvent)
 		return;
 
-	if (m_bHasPoisoned && !IsPC()) // 몬스터는 독이 한번만 걸린다.
+	if (m_bHasPoisoned && !IsPC()) // Monsters are poisoned only once. .
 		return;
 
 	if (pkAttacker && pkAttacker->GetLevel() < GetLevel())
@@ -198,7 +198,7 @@ void CHARACTER::AttackedByPoison(LPCHARACTER pkAttacker)
 	/*if (IsImmune(IMMUNE_POISON))
 	  return;*/
 
-	// 독 내성 굴림 실패, 독에 걸렸다!
+	// Poison saving throw failed , poisoned !
 	m_bHasPoisoned = true;
 
 	AddAffect(AFFECT_POISON, POINT_NONE, 0, AFF_POISON, POISON_LENGTH + 1, 0, true);

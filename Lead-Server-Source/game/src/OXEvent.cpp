@@ -312,11 +312,11 @@ bool COXEventManager::CheckAnswer(bool answer)
 				int len = snprintf(chatbuf, sizeof(chatbuf), 
 						"%s %u %u", number(0, 1) == 1 ? "cheer1" : "cheer2", (DWORD)pkChar->GetVID(), 0);
 
-				// 리턴값이 sizeof(chatbuf) 이상일 경우 truncate되었다는 뜻..
+				// return value sizeof(chatbuf) In case of more than truncate It means that it has been done ..
 				if (len < 0 || len >= (int) sizeof(chatbuf))
 					len = sizeof(chatbuf) - 1;
 
-				// \0 문자 포함
+				// \0 contains letters
 				++len;
 
 				TPacketGCChat pack_chat;

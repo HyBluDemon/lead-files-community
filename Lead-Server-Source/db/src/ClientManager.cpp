@@ -159,7 +159,7 @@ void CClientManager::MainLoop()
 
 	sys_log(0, "ClientManager pointer is %p", this);
 
-	// 메인루프
+	// main loop
 	while (!m_bShutdowned)
 	{
 		while ((tmp = CDBManager::instance().PopResult()))
@@ -175,7 +175,7 @@ void CClientManager::MainLoop()
 	}
 
 	//
-	// 메인루프 종료처리
+	// Main loop termination processing
 	//
 	sys_log(0, "MainLoop exited, Starting cache flushing");
 
@@ -183,7 +183,7 @@ void CClientManager::MainLoop()
 
 	itertype(m_map_playerCache) it = m_map_playerCache.begin();
 
-	//플레이어 테이블 캐쉬 플러쉬	
+	// Player table cash flush	
 	while (it != m_map_playerCache.end())
 	{
 		CPlayerTableCache * c = (it++)->second;
@@ -195,7 +195,7 @@ void CClientManager::MainLoop()
 
 	
 	itertype(m_map_itemCache) it2 = m_map_itemCache.begin();
-	//아이템 플러쉬
+	// item flush
 	while (it2 != m_map_itemCache.end())
 	{
 		CItemCache * c = (it2++)->second;
@@ -207,7 +207,7 @@ void CClientManager::MainLoop()
 
 	// MYSHOP_PRICE_LIST
 	//
-	// 개인상점 아이템 가격 리스트 Flush
+	// Personal store item price list Flush
 	//
 	for (itertype(m_mapItemPriceListCache) itPriceList = m_mapItemPriceListCache.begin(); itPriceList != m_mapItemPriceListCache.end(); ++itPriceList)
 	{
@@ -227,7 +227,7 @@ void CClientManager::Quit()
 
 void CClientManager::QUERY_BOOT(CPeer* peer, TPacketGDBoot * p)
 {
-	const BYTE bPacketVersion = 6; // BOOT 패킷이 바뀔때마다 번호를 올리도록 한다.
+	const BYTE bPacketVersion = 6; // BOOT Increase the number every time a packet changes. .
 
 	std::vector<tAdminInfo> vAdmin;
 	std::vector<std::string> vHost;
@@ -454,9 +454,9 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 	ClientHandleInfo * pi = (ClientHandleInfo *) qi->pvData;
 	DWORD dwHandle = pi->dwHandle;
 
-	// 여기에서 사용하는 account_index는 쿼리 순서를 말한다.
-	// 첫번째 패스워드 알아내기 위해 하는 쿼리가 0
-	// 두번째 실제 데이터를 얻어놓는 쿼리가 1
+	// used here account_index refers to the query order .
+	// The query to find the first password is 0
+	// The second query that obtains actual data is 1
 
 	if (pi->account_index == 0)
 	{
@@ -481,7 +481,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 		{
 			MYSQL_ROW row = mysql_fetch_row(res->pSQLResult);
 
-			// 비밀번호가 틀리면..
+			// If the password is incorrect ..
 			if (((!row[2] || !*row[2]) && strcmp("000000", szSafeboxPassword)) ||
 				((row[2] && *row[2]) && strcmp(row[2], szSafeboxPassword)))
 			{
@@ -547,8 +547,8 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 		}
 
 
-		// 쿼리에 에러가 있었으므로 응답할 경우 창고가 비어있는 것 처럼
-		// 보이기 때문에 창고가 아얘 안열리는게 나음
+		// There was an error in the query, so when responding, it appears as if the warehouse is empty.
+		// It's better if the warehouse doesn't open at all because it's visible.
 		if (!msg->Get()->pSQLResult)
 		{
 			sys_err("null safebox result");
@@ -657,8 +657,8 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 						{
 							case 72723: case 72724: case 72725: case 72726:
 							case 72727: case 72728: case 72729: case 72730:
-							// 무시무시하지만 이전에 하던 걸 고치기는 무섭고...
-							// 그래서 그냥 하드 코딩. 선물 상자용 자동물약 아이템들.
+							// It's scary, but it's scary to change what was done before. ...
+							// So just hardcode . Auto potion items for gift boxes .
 							case 76004: case 76005: case 76021: case 76022:
 							case 79012: case 79013:
 								if (pItemAward->dwSocket2 == 0)
@@ -770,7 +770,7 @@ void CClientManager::RESULT_SAFEBOX_LOAD(CPeer * pkPeer, SQLMsg * msg)
 void CClientManager::QUERY_SAFEBOX_CHANGE_SIZE(CPeer * pkPeer, DWORD dwHandle, TSafeboxChangeSizePacket * p)
 {
 	ClientHandleInfo * pi = new ClientHandleInfo(dwHandle);
-	pi->account_index = p->bSize;	// account_index를 사이즈로 임시로 사용
+	pi->account_index = p->bSize;	// account_index Temporarily use as size
 
 	char szQuery[QUERY_MAX_LEN];
 
@@ -858,7 +858,7 @@ void CClientManager::RESULT_PRICELIST_LOAD(CPeer* peer, SQLMsg* pMsg)
 	TItemPricelistReqInfo* pReqInfo = (TItemPricelistReqInfo*)static_cast<CQueryInfo*>(pMsg->pvUserData)->pvData;
 
 	//
-	// DB 에서 로드한 정보를 Cache 에 저장
+	// DB Information loaded from Cache Save to
 	//
 
 	TItemPriceListTable table;
@@ -877,7 +877,7 @@ void CClientManager::RESULT_PRICELIST_LOAD(CPeer* peer, SQLMsg* pMsg)
 	PutItemPriceListCache(&table);
 
 	//
-	// 로드한 데이터를 Game server 에 전송
+	// the loaded data Game server transfer to
 	//
 
 	TPacketMyshopPricelistHeader header;
@@ -901,7 +901,7 @@ void CClientManager::RESULT_PRICELIST_LOAD_FOR_UPDATE(SQLMsg* pMsg)
 	TItemPriceListTable* pUpdateTable = (TItemPriceListTable*)static_cast<CQueryInfo*>(pMsg->pvUserData)->pvData;
 
 	//
-	// DB 에서 로드한 정보를 Cache 에 저장
+	// DB Information loaded from Cache Save to
 	//
 
 	TItemPriceListTable table;
@@ -963,18 +963,18 @@ void CClientManager::QUERY_EMPIRE_SELECT(CPeer * pkPeer, DWORD dwHandle, TEmpire
 			UINT g_start_map[4] =
 			{
 				0,  // reserved
-				1,  // 신수국
-				21, // 천조국
-				41  // 진노국
+				1,  // sour hydrangea
+				21, // Cheonjo-guk
+				41  // Jinnoguk
 			};
 
 			// FIXME share with game
 			DWORD g_start_position[4][2]=
 			{
 				{      0,      0 },
-				{ 469300, 964200 }, // 신수국
-				{  55700, 157900 }, // 천조국
-				{ 969600, 278400 }  // 진노국
+				{ 469300, 964200 }, // sour hydrangea
+				{  55700, 157900 }, // Cheonjo-guk
+				{ 969600, 278400 }  // Jinnoguk
 			};
 
 			for (int i = 0; i < 3; ++i)
@@ -1024,7 +1024,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	peer->SetMaps(p->alMaps);
 
 	//
-	// 어떤 맵이 어떤 서버에 있는지 보내기
+	// Send which map is on which server
 	//
 	TMapLocation kMapLocations;
 
@@ -1131,7 +1131,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	peer->Encode(&vec_kMapLocations[0], sizeof(TMapLocation) * vec_kMapLocations.size());
 
 	//
-	// 셋업 : 접속한 피어에 다른 피어들이 접속하게 만든다. (P2P 컨넥션 생성)
+	// Setup : Allows other peers to connect to the connected peer. . (P2P Create connection )
 	// 
 	sys_log(0, "SETUP: channel %u listen %u p2p %u count %u", peer->GetChannel(), p->wListenPort, p->wP2PPort, bMapCount);
 
@@ -1147,7 +1147,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 		if (tmp == peer)
 			continue;
 
-		// 채널이 0이라면 아직 SETUP 패킷이 오지 않은 피어 또는 auth라고 간주할 수 있음
+		// the channel 0 If not yet SETUP A peer that did not receive a packet or auth It can be considered that
 		if (0 == tmp->GetChannel())
 			continue;
 
@@ -1156,7 +1156,7 @@ void CClientManager::QUERY_SETUP(CPeer * peer, DWORD dwHandle, const char * c_pD
 	}
 
 	//
-	// 로그인 및 빌링정보 보내기
+	// Log in and send billing information
 	//
 	TPacketLoginOnSetup * pck = (TPacketLoginOnSetup *) c_pData;;
 
@@ -1340,7 +1340,7 @@ void CClientManager::PutItemCache(TPlayerItem * pNew, bool bSkipQuery)
 
 	c = GetItemCache(pNew->id);
 	
-	// 아이템 새로 생성
+	// Create a new item
 	if (!c)
 	{
 		if (g_log)
@@ -1349,15 +1349,15 @@ void CClientManager::PutItemCache(TPlayerItem * pNew, bool bSkipQuery)
 		c = new CItemCache;
 		m_map_itemCache.insert(TItemCacheMap::value_type(pNew->id, c));
 	}
-	// 있을시
+	// If there is
 	else
 	{
 		if (g_log)
 			sys_log(0, "ITEM_CACHE: PutItemCache ==> Have Cache");
-		// 소유자가 틀리면
+		// If the owner is wrong
 		if (pNew->owner != c->Get()->owner)
 		{
-			// 이미 이 아이템을 가지고 있었던 유저로 부터 아이템을 삭제한다.
+			// Deletes an item from a user who already had this item .
 			TItemCacheSetPtrMap::iterator it = m_map_pkItemCacheSetPtr.find(c->Get()->owner);
 
 			if (it != m_map_pkItemCacheSetPtr.end())
@@ -1369,7 +1369,7 @@ void CClientManager::PutItemCache(TPlayerItem * pNew, bool bSkipQuery)
 		}
 	}
 
-	// 새로운 정보 업데이트 
+	// New information update 
 	c->Put(pNew, bSkipQuery);
 	
 	TItemCacheSetPtrMap::iterator it = m_map_pkItemCacheSetPtr.find(c->Get()->owner);
@@ -1384,8 +1384,8 @@ void CClientManager::PutItemCache(TPlayerItem * pNew, bool bSkipQuery)
 	}
 	else
 	{
-		// 현재 소유자가 없으므로 바로 저장해야 다음 접속이 올 때 SQL에 쿼리하여
-		// 받을 수 있으므로 바로 저장한다.
+		// Since there is no current owner, you must save it immediately when the next connection comes. SQL By querying
+		// You can receive it, so save it right away. .
 		if (g_log)
 			sys_log(0, "ITEM_CACHE: direct save %u id %u", c->Get()->owner, c->Get()->id);
 		else
@@ -1445,7 +1445,7 @@ void CClientManager::UpdatePlayerCache()
 
 			c->Flush();
 
-			// Item Cache도 업데이트
+			// Item Cache also update
 			UpdateItemCacheSet(c->Get()->id);
 		}
 		else if (c->CheckFlushTimeout())
@@ -1471,7 +1471,7 @@ void CClientManager::UpdateItemCache()
 	{
 		CItemCache * c = (it++)->second;
 
-		// 아이템은 Flush만 한다.
+		// The item is Flush Just do it .
 		if (c->CheckFlushTimeout())
 		{
 			if (g_test_server)
@@ -1518,7 +1518,7 @@ void CClientManager::QUERY_ITEM_DESTROY(CPeer * pkPeer, const char * c_pData)
 		if (g_log)
 			sys_log(0, "HEADER_GD_ITEM_DESTROY: PID %u ID %u", dwPID, dwID);
 
-		if (dwPID == 0) // 아무도 가진 사람이 없었다면, 비동기 쿼리
+		if (dwPID == 0) // If no one had it , asynchronous query
 			CDBManager::instance().AsyncQuery(szQuery);
 		else
 			CDBManager::instance().ReturnQuery(szQuery, QID_ITEM_DESTROY, pkPeer->GetHandle(), NULL);
@@ -1596,7 +1596,7 @@ void CClientManager::QUERY_RELOAD_PROTO()
 
 // ADD_GUILD_PRIV_TIME
 /**
- * @version	05/06/08 Bang2ni - 지속시간 추가
+ * @version	05/06/08 Bang2ni - Add duration
  */
 void CClientManager::AddGuildPriv(TPacketGiveGuildPriv* p)
 {
@@ -1902,8 +1902,8 @@ void CClientManager::WeddingEnd(TPacketWeddingEnd * p)
 }
 
 //
-// 캐시에 가격정보가 있으면 캐시를 업데이트 하고 캐시에 가격정보가 없다면
-// 우선 기존의 데이터를 로드한 뒤에 기존의 정보로 캐시를 만들고 새로 받은 가격정보를 업데이트 한다.
+// If there is price information in the cache, update the cache. If there is no price information in the cache,
+// First, load the existing data, create a cache with the existing information, and update the newly received price information. .
 //
 void CClientManager::MyshopPricelistUpdate(const TPacketMyshopPricelistHeader* pPacket)
 {
@@ -1944,7 +1944,7 @@ void CClientManager::MyshopPricelistUpdate(const TPacketMyshopPricelistHeader* p
 }
 
 // MYSHOP_PRICE_LIST
-// 캐시된 가격정보가 있으면 캐시를 읽어 바로 전송하고 캐시에 정보가 없으면 DB 에 쿼리를 한다.
+// If there is cached price information, read the cache and transmit immediately. If there is no information in the cache, DB query on .
 //
 void CClientManager::MyshopPricelistRequest(CPeer* peer, DWORD dwHandle, DWORD dwPlayerID)
 {
@@ -2420,9 +2420,9 @@ CPeer * CClientManager::GetAnyPeer()
 	return m_peerList.front();
 }
 
-// DB 매니저로 부터 받은 결과를 처리한다.
+// DB Process results received from manager .
 //
-// @version	05/06/10 Bang2ni - 가격정보 관련 쿼리(QID_ITEMPRICE_XXX) 추가
+// @version	05/06/10 Bang2ni - Queries related to price information (QID_ITEMPRICE_XXX) addition
 int CClientManager::AnalyzeQueryResult(SQLMsg * msg)
 {
 	CQueryInfo * qi = (CQueryInfo *) msg->pvUserData;
@@ -2535,7 +2535,7 @@ void UsageLog()
 	char        *time_s;
 	struct tm   lt;
 
-	int         avg = g_dwUsageAvg / 3600; // 60 초 * 60 분
+	int         avg = g_dwUsageAvg / 3600; // 60 candle * 60 minute
 
 	fp = fopen("usage.txt", "a+");
 
@@ -2568,7 +2568,7 @@ int CClientManager::Process()
 		++thecore_heart->pulse;
 
 		/*
-		//30분마다 변경
+		//30 changes every minute
 		if (((thecore_pulse() % (60 * 30 * 10)) == 0))
 		{
 			g_iPlayerCacheFlushSeconds = MAX(60, rand() % 180);
@@ -2646,11 +2646,11 @@ int CClientManager::Process()
 			m_iCacheFlushCount = 0;
 
 
-			//플레이어 플러쉬
+			// player flush
 			UpdatePlayerCache();
-			//아이템 플러쉬
+			// item flush
 			UpdateItemCache();
-			//로그아웃시 처리- 캐쉬셋 플러쉬
+			// Processing upon logout - Cash set flush
 			UpdateLogoutPlayer();
 
 			// MYSHOP_PRICE_LIST
@@ -2720,13 +2720,13 @@ int CClientManager::Process()
 			/////////////////////////////////////////////////////////////////
 		}
 
-		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 60)))	// 60초에 한번
+		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 60)))	// 60 once a second
 		{
-			// 유니크 아이템을 위한 시간을 보낸다.
+			// Spend time on unique items .
 			CClientManager::instance().SendTime();
 		}
 
-		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 3600)))	// 한시간에 한번
+		if (!(thecore_heart->pulse % (thecore_heart->passes_per_sec * 3600)))	// once an hour
 		{
 			CMoneyLog::instance().Save();
 		}
@@ -2736,7 +2736,7 @@ int CClientManager::Process()
 	int idx;
 	CPeer * peer;
 
-	for (idx = 0; idx < num_events; ++idx) // 인풋
+	for (idx = 0; idx < num_events; ++idx) // input
 	{
 		peer = (CPeer *) fdwatch_get_client_data(m_fdWatcher, idx);
 
@@ -2815,7 +2815,7 @@ int CClientManager::Process()
 
 DWORD CClientManager::GetUserCount()
 {
-	// 단순히 로그인 카운트를 센다.. --;
+	// Simply count the login count .. --;
 	return m_map_kLogonAccount.size();
 }
 
@@ -2875,7 +2875,7 @@ bool CClientManager::InitializeNowItemID()
 {
 	DWORD dwMin, dwMax;
 
-	//아이템 ID를 초기화 한다.
+	// item ID Initialize .
 	if (!CConfig::instance().GetTwoValue("ITEM_ID_RANGE", &dwMin, &dwMax))
 	{
 		sys_err("conf.txt: Cannot find ITEM_ID_RANGE [start_item_id] [end_item_id]");
@@ -3285,7 +3285,7 @@ bool CClientManager::InitializeLocalization()
 
 bool CClientManager::__GetAdminInfo(const char *szIP, std::vector<tAdminInfo> & rAdminVec)
 {
-	//szIP == NULL 일경우  모든서버에 운영자 권한을 갖는다.
+	//szIP == NULL In this case, you have administrator privileges on all servers. .
 	char szQuery[512];
 	snprintf(szQuery, sizeof(szQuery),
 			"SELECT mID,mAccount,mName,mContactIP,mServerIP,mAuthority FROM gmlist WHERE mServerIP='ALL' or mServerIP='%s'",
@@ -3452,7 +3452,7 @@ void CClientManager::SendSpareItemIDRange(CPeer* peer)
 }
 
 //
-// Login Key만 맵에서 지운다.
+// Login Key Just delete it from the map .
 // 
 void CClientManager::DeleteLoginKey(TPacketDC *data)
 {

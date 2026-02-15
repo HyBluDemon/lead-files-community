@@ -34,7 +34,7 @@ void CPartyManager::DeleteAllParty()
 	}
 }
 
-bool CPartyManager::SetParty(LPCHARACTER ch)	// PC만 사용해야 한다!!
+bool CPartyManager::SetParty(LPCHARACTER ch)	// PC should only be used !!
 {
 	TPartyMap::iterator it = m_map_pkParty.find(ch->GetPlayerID());
 
@@ -295,7 +295,7 @@ void CParty::Destroy()
 {
 	sys_log(2, "Party::Destroy");
 
-	// PC가 만든 파티면 파티매니저에 맵에서 PID를 삭제해야 한다.
+	// PC If the party is created by PID should be deleted .
 	if (m_bPCParty)
 	{
 		for (TMemberMap::iterator it = m_memberMap.begin(); it != m_memberMap.end(); ++it)
@@ -327,7 +327,7 @@ void CParty::Destroy()
 			}
 			else
 			{
-				// NPC일 경우 일정 시간 후 전투 중이 아닐 때 사라지게 하는 이벤트를 시작시킨다.
+				// NPC In some cases, an event is started that causes the player to disappear when not in battle after a certain period of time. .
 				rMember.pCharacter->SetLastAttacked(dwTime);
 				rMember.pCharacter->StartDestroyWhenIdleEvent();
 			}
@@ -458,7 +458,7 @@ void CParty::Join(DWORD dwPID)
 		TPacketPartyAdd p;
 		p.dwLeaderPID = GetLeaderPID();
 		p.dwPID = dwPID;
-		p.bState = PARTY_ROLE_NORMAL; // #0000790: [M2EU] CZ 크래쉬 증가: 초기화 중요! 
+		p.bState = PARTY_ROLE_NORMAL; // #0000790: [M2EU] CZ increase in crashes : Initialization is important ! 
 		db_clientdesc->DBPacket(HEADER_GD_PARTY_ADD, 0, &p, sizeof(p));
 	}
 }
@@ -504,11 +504,11 @@ void CParty::P2PQuit(DWORD dwPID)
 	if (m_bPCParty)
 		CPartyManager::instance().SetPartyMember(dwPID, NULL);
 
-	// 리더가 나가면 파티는 해산되어야 한다.
+	// If the leader leaves, the party must disband. .
 	if (bRole == PARTY_ROLE_LEADER)
 		CPartyManager::instance().DeleteParty(this);
 
-	// 이 아래는 코드를 추가하지 말 것!!! 위 DeleteParty 하면 this는 없다.
+	// Do not add code below this !!! stomach DeleteParty underneath this There is no .
 }
 
 void CParty::Quit(DWORD dwPID)
@@ -546,7 +546,7 @@ void CParty::Link(LPCHARACTER pkChr)
 		return;
 	}
 
-	// 플레이어 파티일 경우 업데이트 이벤트 생성
+	// If it is a player party, create an update event
 	if (m_bPCParty && !m_eventUpdate)
 	{
 		party_update_event_info* info = AllocEventInfo<party_update_event_info>();
@@ -644,7 +644,7 @@ void CParty::Unlink(LPCHARACTER pkChr)
 	if (pkChr->IsPC())
 	{
 		SendPartyUnlinkOneToAll(pkChr);
-		//SendPartyUnlinkAllToOne(pkChr); // 끊기는 것이므로 구지 Unlink 패킷을 보낼 필요 없다.
+		//SendPartyUnlinkAllToOne(pkChr); // It's a mess because it's cut off. Unlink No need to send packets .
 
 		if (it->second.bRole == PARTY_ROLE_LEADER)
 		{
@@ -652,7 +652,7 @@ void CParty::Unlink(LPCHARACTER pkChr)
 
 			if (it->second.pCharacter->GetDungeon())
 			{
-				// TODO: 던젼에 있으면 나머지도 나간다
+				// TODO: If you are in the dungeon, the rest will also leave.
 				FExitDungeon f;
 				ForEachNearMember(f);
 			}
@@ -900,9 +900,9 @@ void CParty::SendMessage(LPCHARACTER ch, BYTE bMsg, DWORD dwArg1, DWORD dwArg2)
 			}
 			break;
 
-		case PM_ATTACKED_BY:	// 공격 받았음, 리더에게 도움을 요청
+		case PM_ATTACKED_BY:	// was attacked , Ask your leader for help
 			{
-				// 리더가 없을 때
+				// When there is no leader
 				LPCHARACTER pkChrVictim = ch->GetVictim();
 
 				if (!pkChrVictim)
@@ -1069,7 +1069,7 @@ void CParty::RemoveBonusForOne(DWORD pid)
 
 void CParty::HealParty()
 {
-	// XXX DELETEME 클라이언트 완료될때까지
+	// XXX DELETEME until the client completes
 	{
 		return;
 	}
@@ -1360,7 +1360,7 @@ void CParty::Update()
 
 	bool bLongTimeExpBonusChanged = false;
 
-	// 파티 결성 후 충분한 시간이 지나면 경험치 보너스를 받는다.
+	// After sufficient time has passed after forming a party, you will receive an experience bonus. .
 	if (!m_iLongTimeExpBonus && (get_dword_time() - m_dwPartyStartTime > PARTY_ENOUGH_MINUTE_FOR_EXP_BONUS * 60 * 1000 / (g_iUseLocale?1:2)))
 	{
 		bLongTimeExpBonusChanged = true;
@@ -1405,9 +1405,9 @@ void CParty::Update()
 		if (!m_bCanUsePartyHeal && m_iLeadership >= 18)
 			m_dwPartyHealTime = get_dword_time();
 
-		m_bCanUsePartyHeal = m_iLeadership >= 18; // 통솔력 18 이상은 힐을 사용할 수 있음.
+		m_bCanUsePartyHeal = m_iLeadership >= 18; // leadership 18 Heal can be used above .
 
-		// 통솔력 40이상은 파티 힐 쿨타임이 적다.
+		// leadership 40 Party heal cooldown time is short. .
 		DWORD PartyHealCoolTime = (m_iLeadership >= 40) ? PARTY_HEAL_COOLTIME_SHORT * 60 * 1000 : PARTY_HEAL_COOLTIME_LONG * 60 * 1000;
 
 		if (m_bCanUsePartyHeal)
@@ -1417,7 +1417,7 @@ void CParty::Update()
 				m_bPartyHealReady = true;
 
 				// send heal ready
-				if (0) // XXX  DELETEME 클라이언트 완료될때까지
+				if (0) // XXX  DELETEME until the client completes
 					if (GetLeaderCharacter())
 						GetLeaderCharacter()->ChatPacket(CHAT_TYPE_COMMAND, "PartyHealReady");
 			}
@@ -1689,7 +1689,7 @@ int CParty::ComputePartyBonusExpPercent()
 	if (leader && (leader->IsEquipUniqueItem(UNIQUE_ITEM_PARTY_BONUS_EXP) || leader->IsEquipUniqueItem(UNIQUE_ITEM_PARTY_BONUS_EXP_MALL)
 		|| leader->IsEquipUniqueItem(UNIQUE_ITEM_PARTY_BONUS_EXP_GIFT) || leader->IsEquipUniqueGroup(10010)))
 	{
-		// 중국측 육도 적용을 확인해야한다.
+		// Application of Chinese land islands must be confirmed. .
 		if (g_iUseLocale)
 		{
 			iBonusPartyExpFromItem = 30;

@@ -11,14 +11,14 @@
 
 namespace
 {
-    /// 파싱용 state 열거값
+    /// For parsing state enumerated value
     enum ParseState
     {
-        STATE_NORMAL = 0, ///< 일반 상태
-        STATE_QUOTE       ///< 따옴표 뒤의 상태
+        STATE_NORMAL = 0, ///< general state
+        STATE_QUOTE       ///< Status after quotation marks
     };
 
-    /// 문자열 좌우의 공백을 제거해서 반환한다.
+    /// Returns a string by removing spaces on the left and right sides. .
     std::string Trim(std::string str)
     {
         str = str.erase(str.find_last_not_of(" \t\r\n") + 1);
@@ -26,7 +26,7 @@ namespace
         return str;
     }
 
-    /// \brief 주어진 문장에 있는 알파벳을 모두 소문자로 바꾼다.
+    /// \brief Change all letters in a given sentence to lowercase .
     std::string Lower(std::string original)
     {
         std::transform(original.begin(), original.end(), original.begin(), tolower);
@@ -35,9 +35,9 @@ namespace
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 셀을 액세스할 때, 숫자 대신 사용할 이름을 등록한다.
-/// \param name 셀 이름
-/// \param index 셀 인덱스
+/// \brief When accessing a cell , Register a name to use instead of a number .
+/// \param name cell name
+/// \param index cell index
 ////////////////////////////////////////////////////////////////////////////////
 void cCsvAlias::AddAlias(const char* name, size_t index)
 {
@@ -51,7 +51,7 @@ void cCsvAlias::AddAlias(const char* name, size_t index)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 모든 데이터를 삭제한다.
+/// \brief Delete all data .
 ////////////////////////////////////////////////////////////////////////////////
 void cCsvAlias::Destroy()
 {
@@ -60,9 +60,9 @@ void cCsvAlias::Destroy()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 숫자 인덱스를 이름으로 변환한다.
-/// \param index 숫자 인덱스
-/// \return const char* 이름
+/// \brief Convert numeric index to name .
+/// \param index numeric index
+/// \return const char* name
 ////////////////////////////////////////////////////////////////////////////////
 const char* cCsvAlias::operator [] (size_t index) const
 {
@@ -78,9 +78,9 @@ const char* cCsvAlias::operator [] (size_t index) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 이름을 숫자 인덱스로 변환한다.
-/// \param name 이름
-/// \return size_t 숫자 인덱스
+/// \brief Convert name to numeric index .
+/// \param name name
+/// \return size_t numeric index
 ////////////////////////////////////////////////////////////////////////////////
 size_t cCsvAlias::operator [] (const char* name) const
 {
@@ -96,11 +96,11 @@ size_t cCsvAlias::operator [] (const char* name) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 지정된 이름의 CSV 파일을 로드한다.
-/// \param fileName CSV 파일 이름
-/// \param seperator 필드 분리자로 사용할 글자. 기본값은 ','이다.
-/// \param quote 따옴표로 사용할 글자. 기본값은 '"'이다.
-/// \return bool 무사히 로드했다면 true, 아니라면 false
+/// \brief of the given name CSV load the file .
+/// \param fileName CSV file name
+/// \param seperator Character to use as field separator . The default is ',' am .
+/// \param quote Characters to use for quotation marks . The default is '"' am .
+/// \return bool If you loaded it safely true, If not false
 ////////////////////////////////////////////////////////////////////////////////
 bool cCsvFile::Load(const char* fileName, const char seperator, const char quote)
 {
@@ -109,7 +109,7 @@ bool cCsvFile::Load(const char* fileName, const char seperator, const char quote
     std::ifstream file(fileName, std::ios::in);
     if (!file) return false;
 
-    Destroy(); // 기존의 데이터를 삭제
+    Destroy(); // Delete existing data
 
     cCsvRow* row = NULL;
     ParseState state = STATE_NORMAL;
@@ -124,33 +124,33 @@ bool cCsvFile::Load(const char* fileName, const char seperator, const char quote
         std::string line(Trim(buf));
         if (line.empty() || (state == STATE_NORMAL && line[0] == '#')) continue;
         
-        std::string text  = std::string(line) + "  "; // 파싱 lookahead 때문에 붙여준다.
+        std::string text  = std::string(line) + "  "; // farthing lookahead That's why I'm adding it .
         size_t cur = 0;
 
         while (cur < text.size())
         {
-            // 현재 모드가 QUOTE 모드일 때,
+            // The current mode is QUOTE When in mode ,
             if (state == STATE_QUOTE)
             {
-                // '"' 문자의 종류는 두 가지이다.
-                // 1. 셀 내부에 특수 문자가 있을 경우 이를 알리는 셀 좌우의 것
-                // 2. 셀 내부의 '"' 문자가 '"' 2개로 치환된 것
-                // 이 중 첫번째 경우의 좌측에 있는 것은 CSV 파일이 정상적이라면, 
-                // 무조건 STATE_NORMAL에 걸리게 되어있다.
-                // 그러므로 여기서 걸리는 것은 1번의 우측 경우나, 2번 경우 뿐이다.
-                // 2번의 경우에는 무조건 '"' 문자가 2개씩 나타난다. 하지만 1번의
-                // 우측 경우에는 아니다. 이를 바탕으로 해서 코드를 짜면...
+                // '"' There are two types of characters .
+                // 1. The ones on the left and right of the cell that notify you if there are special characters inside the cell.
+                // 2. inside the cell '"' character '"' 2 replaced by dog
+                // Of these, the one on the left in the first case is CSV If the file is normal , 
+                // unconditionally STATE_NORMAL is caught in .
+                // Therefore, what is at stake here is 1 In the case of the right side of , 2 It's just a case of earning .
+                // 2 In this case, unconditionally '"' character 2 They appear one by one . but 1 number of times
+                // Not on the right . If you write code based on this, ...
                 if (text[cur] == quote)
                 {
-                    // 다음 문자가 '"' 문자라면, 즉 연속된 '"' 문자라면 
-                    // 이는 셀 내부의 '"' 문자가 치환된 것이다.
+                    // The next character is '"' If it's a text , i.e. continuous '"' If it's a text 
+                    // This is inside the cell '"' characters have been replaced .
                     if (text[cur+1] == quote)
                     {
                         token += quote;
                         ++cur;
                     }
-                    // 다음 문자가 '"' 문자가 아니라면 
-                    // 현재의 '"'문자는 셀의 끝을 알리는 문자라고 할 수 있다.
+                    // The next character is '"' Unless it's a text 
+                    // present '"' This character can be said to signal the end of a cell. .
                     else
                     {
                         state = STATE_NORMAL;
@@ -161,25 +161,25 @@ bool cCsvFile::Load(const char* fileName, const char seperator, const char quote
                     token += text[cur];
                 }
             }
-            // 현재 모드가 NORMAL 모드일 때,
+            // The current mode is NORMAL When in mode ,
             else if (state == STATE_NORMAL)
             {
                 if (row == NULL)
                     row = new cCsvRow();
 
-                // ',' 문자를 만났다면 셀의 끝의 의미한다.
-                // 토큰으로서 셀 리스트에다가 집어넣고, 토큰을 초기화한다.
+                // ',' If you encounter a character, it means the end of the cell. .
+                // Put it in the cell list as a token , Initialize the token .
                 if (text[cur] == seperator)
                 {
                     row->push_back(token);
                     token.clear();
                 }
-                // '"' 문자를 만났다면, QUOTE 모드로 전환한다.
+                // '"' If you encounter a text message , QUOTE switch to mode .
                 else if (text[cur] == quote)
                 {
                     state = STATE_QUOTE;
                 }
-                // 다른 일반 문자라면 현재 토큰에다가 덧붙인다.
+                // If it is another regular character, it is appended to the current token. .
                 else
                 {
                     token += text[cur];
@@ -189,8 +189,8 @@ bool cCsvFile::Load(const char* fileName, const char seperator, const char quote
             ++cur;
         }
 
-        // 마지막 셀은 끝에 ',' 문자가 없기 때문에 여기서 추가해줘야한다.
-        // 단, 처음에 파싱 lookahead 때문에 붙인 스페이스 문자 두 개를 뗀다.
+        // The last cell is at the end ',' Since there are no characters, you need to add them here. .
+        // step , parse first lookahead That's why I removed the two space characters. .
         if (state == STATE_NORMAL)
         {
             Assert(row != NULL);
@@ -209,49 +209,49 @@ bool cCsvFile::Load(const char* fileName, const char seperator, const char quote
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 가지고 있는 내용을 CSV 파일에다 저장한다.
-/// \param fileName CSV 파일 이름
-/// \param append true일 경우, 기존의 파일에다 덧붙인다. false인 경우에는 
-/// 기존의 파일 내용을 삭제하고, 새로 쓴다.
-/// \param seperator 필드 분리자로 사용할 글자. 기본값은 ','이다.
-/// \param quote 따옴표로 사용할 글자. 기본값은 '"'이다.
-/// \return bool 무사히 저장했다면 true, 에러가 생긴 경우에는 false
+/// \brief What you have CSV Save to file .
+/// \param fileName CSV file name
+/// \param append true In case of , Append to existing file . false In case 
+/// Delete the existing file contents , write a new one .
+/// \param seperator Character to use as field separator . The default is ',' am .
+/// \param quote Characters to use for quotation marks . The default is '"' am .
+/// \return bool If you saved it safely true, If an error occurs false
 ////////////////////////////////////////////////////////////////////////////////
 bool cCsvFile::Save(const char* fileName, bool append, char seperator, char quote) const
 {
     Assert(seperator != quote);
 
-    // 출력 모드에 따라 파일을 적당한 플래그로 생성한다.
+    // Creates a file with appropriate flags according to the output mode. .
     std::ofstream file;
     if (append) { file.open(fileName, std::ios::out | std::ios::app); }
     else { file.open(fileName, std::ios::out | std::ios::trunc); }
 
-    // 파일을 열지 못했다면, false를 리턴한다.
+    // If you can't open the file , false returns .
     if (!file) return false;
 
     char special_chars[5] = { seperator, quote, '\r', '\n', 0 };
     char quote_escape_string[3] = { quote, quote, 0 };
 
-    // 모든 행을 횡단하면서...
+    // traversing every row ...
     for (size_t i=0; i<m_Rows.size(); i++)
     {
         const cCsvRow& row = *((*this)[i]);
 
         std::string line;
 
-        // 행 안의 모든 토큰을 횡단하면서...
+        // Traversing all tokens in a row ...
         for (size_t j=0; j<row.size(); j++)
         {
             const std::string& token = row[j];
 
-            // 일반적인('"' 또는 ','를 포함하지 않은) 
-            // 토큰이라면 그냥 저장하면 된다.
+            // general ('"' or ',' does not contain ) 
+            // If it's a token, just save it. .
             if (token.find_first_of(special_chars) == std::string::npos)
             {
                 line += token;
             }
-            // 특수문자를 포함한 토큰이라면 문자열 좌우에 '"'를 붙여주고,
-            // 문자열 내부의 '"'를 두 개로 만들어줘야한다.
+            // If a token contains special characters, place them on the left and right sides of the string. '"' Attach ,
+            // inside the string '"' should be made into two .
             else
             {
                 line += quote;
@@ -265,11 +265,11 @@ bool cCsvFile::Save(const char* fileName, bool append, char seperator, char quot
                 line += quote;
             }
 
-            // 마지막 셀이 아니라면 ','를 토큰의 뒤에다 붙여줘야한다.
+            // unless it is the last cell ',' must be added to the end of the token. .
             if (j != row.size() - 1) { line += seperator; }
         }
 
-        // 라인을 출력한다.
+        // output a line .
         file << line << std::endl;
     }
 
@@ -277,7 +277,7 @@ bool cCsvFile::Save(const char* fileName, bool append, char seperator, char quot
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 모든 데이터를 메모리에서 삭제한다.
+/// \brief Delete all data from memory .
 ////////////////////////////////////////////////////////////////////////////////
 void cCsvFile::Destroy()
 {
@@ -288,9 +288,9 @@ void cCsvFile::Destroy()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 해당하는 인덱스의 행을 반환한다.
-/// \param index 인덱스
-/// \return cCsvRow* 해당 행
+/// \brief Returns the row at the corresponding index .
+/// \param index index
+/// \return cCsvRow* the row
 ////////////////////////////////////////////////////////////////////////////////
 cCsvRow* cCsvFile::operator [] (size_t index)
 {
@@ -299,9 +299,9 @@ cCsvRow* cCsvFile::operator [] (size_t index)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 해당하는 인덱스의 행을 반환한다.
-/// \param index 인덱스
-/// \return const cCsvRow* 해당 행
+/// \brief Returns the row at the corresponding index .
+/// \param index index
+/// \return const cCsvRow* the row
 ////////////////////////////////////////////////////////////////////////////////
 const cCsvRow* cCsvFile::operator [] (size_t index) const
 {
@@ -310,7 +310,7 @@ const cCsvRow* cCsvFile::operator [] (size_t index) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 생성자
+/// \brief constructor
 ////////////////////////////////////////////////////////////////////////////////
 cCsvTable::cCsvTable()
 : m_CurRow(-1)
@@ -318,18 +318,18 @@ cCsvTable::cCsvTable()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 소멸자
+/// \brief destructor
 ////////////////////////////////////////////////////////////////////////////////
 cCsvTable::~cCsvTable()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 지정된 이름의 CSV 파일을 로드한다.
-/// \param fileName CSV 파일 이름
-/// \param seperator 필드 분리자로 사용할 글자. 기본값은 ','이다.
-/// \param quote 따옴표로 사용할 글자. 기본값은 '"'이다.
-/// \return bool 무사히 로드했다면 true, 아니라면 false
+/// \brief of the given name CSV load the file .
+/// \param fileName CSV file name
+/// \param seperator Character to use as field separator . The default is ',' am .
+/// \param quote Characters to use for quotation marks . The default is '"' am .
+/// \return bool If you loaded it safely true, If not false
 ////////////////////////////////////////////////////////////////////////////////
 bool cCsvTable::Load(const char* fileName, const char seperator, const char quote)
 {
@@ -338,19 +338,19 @@ bool cCsvTable::Load(const char* fileName, const char seperator, const char quot
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 다음 행으로 넘어간다.
-/// \return bool 다음 행으로 무사히 넘어간 경우 true를 반환하고, 더 이상
-/// 넘어갈 행이 존재하지 않는 경우에는 false를 반환한다.
+/// \brief Go to next line .
+/// \return bool If you have safely moved on to the next line true and return , no more
+/// If there is no row to skip false returns .
 ////////////////////////////////////////////////////////////////////////////////
 bool cCsvTable::Next()
 {
-    // 20억번 정도 호출하면 오버플로가 일어날텐데...괜찮겠지?
+    // 20 If you call it about a billion times, an overflow will occur. ... It'll be okay ?
     return ++m_CurRow < (int)m_File.GetRowCount() ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 현재 행의 셀 숫자를 반환한다.
-/// \return size_t 현재 행의 셀 숫자
+/// \brief Returns the cell number of the current row .
+/// \return size_t Cell number in current row
 ////////////////////////////////////////////////////////////////////////////////
 size_t cCsvTable::ColCount() const
 {
@@ -358,9 +358,9 @@ size_t cCsvTable::ColCount() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 인덱스를 이용해 int 형으로 셀 값을 반환한다.
-/// \param index 셀 인덱스
-/// \return int 셀 값
+/// \brief using the index int Returns cell value as type .
+/// \param index cell index
+/// \return int cell value
 ////////////////////////////////////////////////////////////////////////////////
 int cCsvTable::AsInt(size_t index) const
 {
@@ -371,9 +371,9 @@ int cCsvTable::AsInt(size_t index) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 인덱스를 이용해 double 형으로 셀 값을 반환한다.
-/// \param index 셀 인덱스
-/// \return double 셀 값
+/// \brief using the index double Returns cell value as type .
+/// \param index cell index
+/// \return double cell value
 ////////////////////////////////////////////////////////////////////////////////
 double cCsvTable::AsDouble(size_t index) const
 {
@@ -384,9 +384,9 @@ double cCsvTable::AsDouble(size_t index) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 인덱스를 이용해 std::string 형으로 셀 값을 반환한다.
-/// \param index 셀 인덱스
-/// \return const char* 셀 값
+/// \brief using the index std::string Returns cell value as type .
+/// \param index cell index
+/// \return const char* cell value
 ////////////////////////////////////////////////////////////////////////////////
 const char* cCsvTable::AsStringByIndex(size_t index) const
 {
@@ -397,7 +397,7 @@ const char* cCsvTable::AsStringByIndex(size_t index) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief alias를 포함해 모든 데이터를 삭제한다.
+/// \brief alias Delete all data including .
 ////////////////////////////////////////////////////////////////////////////////
 void cCsvTable::Destroy()
 {
@@ -407,10 +407,10 @@ void cCsvTable::Destroy()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief 현재 행을 반환한다.
-/// \return const cCsvRow* 액세스가 가능한 현재 행이 존재하는 경우에는 그 행의
-/// 포인터를 반환하고, 더 이상 액세스 가능한 행이 없는 경우에는 NULL을 
-/// 반환한다.
+/// \brief returns the current row .
+/// \return const cCsvRow* If there is a current accessible row,
+/// returns a pointer , If there are no more accessible rows NULL second 
+/// return .
 ////////////////////////////////////////////////////////////////////////////////
 const cCsvRow* const cCsvTable::CurRow() const
 {

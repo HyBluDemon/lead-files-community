@@ -1,8 +1,8 @@
 /*
  *    Filename: socket.c
- * Description: 소켓 관련 함수 헤더.
+ * Description: Socket-related function headers .
  *
- *      Author: 비엽 (server), myevan (Client)
+ *      Author: Rain leaves (server), myevan (Client)
  */
 #ifndef __INC_LIBTHECORE_SOCKET_H__
 #define __INC_LIBTHECORE_SOCKET_H__

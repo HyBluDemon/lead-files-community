@@ -28,7 +28,7 @@ class CEntity
 		void			ViewCleanup();
 		void			ViewInsert(LPENTITY entity, bool recursive = true);
 		void			ViewRemove(LPENTITY entity, bool recursive = true);
-		void			ViewReencode();	// 주위 Entity에 패킷을 다시 보낸다.
+		void			ViewReencode();	// surroundings Entity resend the packet to .
 
 		int				GetViewAge() const	{ return m_iViewAge;	}
 

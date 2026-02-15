@@ -1130,7 +1130,7 @@ struct FExitDungeonToStartPosition
 			{
 				PIXEL_POSITION posWarp;
 
-				// 현재 맵 인덱스를 넣는 것이 아니라 시작하는 맵 인덱스를 넣는다.
+				// Enter the starting map index rather than the current map index. .
 				if (SECTREE_MANAGER::instance().GetRecallPositionByEmpire(g_start_map[ch->GetEmpire()], ch->GetEmpire(), posWarp))
 					ch->WarpSet(posWarp.x, posWarp.y);
 				else
@@ -1280,7 +1280,7 @@ void CDungeon::JumpToEliminateLocation()
 	}
 	else
 	{
-		// 일반 맵으로 워프
+		// Warp to normal map
 		LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
 
 		if (!pMap)

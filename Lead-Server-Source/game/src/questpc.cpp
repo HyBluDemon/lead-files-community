@@ -311,10 +311,10 @@ namespace quest
 		{
 			LPCHARACTER npc = CQuestManager::instance().GetCurrentNPCCharacterPtr();
 			LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-			// npc 있었던 경우
+			// npc If there was
 			if (npc && !npc->IsPC())
 			{
-				// 그 엔피씨가 나에게 락인 경우
+				// If that NPC is a rock to me
 				if (ch->GetPlayerID() == npc->GetQuestNPCID())
 				{
 					npc->SetQuestNPCID(0);

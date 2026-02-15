@@ -62,7 +62,7 @@ void CHARACTER::SetSkillNextReadTime(DWORD dwVnum, uint32_t time)
 
 bool TSkillUseInfo::HitOnce(DWORD dwVnum)
 {
-	// 쓰지도않았으면 때리지도 못한다.
+	// If you don't use it, you can't hit it. .
 	if (!bUsed)
 		return false;
 
@@ -97,7 +97,7 @@ bool TSkillUseInfo::UseSkill(bool isGrandMaster, DWORD vid, DWORD dwCooltime, in
 	this->isGrandMaster = isGrandMaster;
 	DWORD dwCur = get_dword_time();
 
-	// 아직 쿨타임이 끝나지 않았다.
+	// Cooldown is not over yet .
 	if (bUsed && dwNextSkillUsableTime > dwCur)
 	{
 		sys_log(0, "cooltime is not over delta %u", dwNextSkillUsableTime - dwCur);
@@ -281,7 +281,7 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 	   {
 	   if (FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
 	   {
-	// 주안술서 사용중에는 시간 제한 무시
+	// Ignore the time limit while using the magic spell.
 	RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
 	ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have escaped the evil ghost curse with the help of an Exorcism Scroll."));
 	}
@@ -294,7 +294,7 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 	}
 	 */
 
-	// bType이 0이면 처음부터 책으로 수련 가능
+	// bType this 0 You can train with books from the beginning
 	if (pkSk->dwType == 0)
 	{
 		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You cannot train this skill up to Grand Master level."));
@@ -415,7 +415,7 @@ bool CHARACTER::LearnSkillByBook(DWORD dwSkillVnum, BYTE bProb)
 		{
 			if (FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
 			{
-				// 주안술서 사용중에는 시간 제한 무시
+				// Ignore the time limit while using the magic spell.
 				RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
 				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have escaped the evil ghost curse with the help of an Exorcism Scroll."));
 			}
@@ -589,7 +589,7 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 	if (!IsLearnableSkill(dwVnum))
 		return;
 
-	// 그랜드 마스터는 퀘스트로만 수행가능
+	// Grand Master can only perform quests
 	if (pkSk->dwType != 0)
 	{
 		switch (GetSkillMasterType(pkSk->dwVnum))
@@ -606,7 +606,7 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 
 	if (bMethod == SKILL_UP_BY_POINT)
 	{
-		// 마스터가 아닌 상태에서만 수련가능
+		// Training is possible only when you are not a master.
 		if (GetSkillMasterType(pkSk->dwVnum) != SKILL_NORMAL)
 			return;
 
@@ -615,7 +615,7 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 	}
 	else if (bMethod == SKILL_UP_BY_BOOK)
 	{
-		if (pkSk->dwType != 0) // 직업에 속하지 않았거나 포인트로 올릴수 없는 스킬은 처음부터 책으로 배울 수 있다.
+		if (pkSk->dwType != 0) // Skills that do not belong to your job or cannot be upgraded with points can be learned from books from the beginning. .
 			if (GetSkillMasterType(pkSk->dwVnum) != SKILL_MASTER)
 				return;
 	}
@@ -669,11 +669,11 @@ void CHARACTER::SkillLevelUp(DWORD dwVnum, BYTE bMethod)
 
 	if (pkSk->dwType != 0)
 	{
-		// 갑자기 그레이드 업하는 코딩
+		// Coding that suddenly upgrades
 		switch (GetSkillMasterType(pkSk->dwVnum))
 		{
 			case SKILL_NORMAL:
-				// 번섭은 스킬 업그레이드 17~20 사이 랜덤 마스터 수련
+				// Bunseop is a skill upgrade 17~20 Sai Random Master Training
 				if (GetSkillLevel(pkSk->dwVnum) >= 17)
 				{
 					if (GetQuestFlag("reset_scroll.force_to_master_skill") > 0)
@@ -731,7 +731,7 @@ void CHARACTER::ResetSkill()
 	if (NULL == m_pSkillLevels)
 		return;
 
-	// 보조 스킬은 리셋시키지 않는다
+	// Auxiliary skills do not reset
 	std::vector<std::pair<DWORD, TPlayerSkill> > vec;
 	size_t count = sizeof(s_adwSubSkillVnums) / sizeof(s_adwSubSkillVnums[0]);
 
@@ -862,7 +862,7 @@ EVENTFUNC(ChainLightningEvent)
 
 	sys_log(1, "chainlighting event %s", pkChr->GetName());
 
-	if (pkChrVictim->GetParty()) // 파티 먼저
+	if (pkChrVictim->GetParty()) // party first
 	{
 		pkTarget = pkChrVictim->GetParty()->GetNextOwnership(NULL, pkChrVictim->GetX(), pkChrVictim->GetY());
 		if (pkTarget == pkChrVictim || !number(0, 2) || pkChr->GetChainLightingExcept().find(pkTarget) != pkChr->GetChainLightingExcept().end())
@@ -961,7 +961,7 @@ struct FuncSplashDamage
 		}
 
 		if (m_pkChr->IsPC())
-			// 길드 스킬은 쿨타임 처리를 하지 않는다.
+			// Guild skills do not have cooldown processing. .
 			if (!(m_pkSk->dwVnum >= GUILD_SKILL_START && m_pkSk->dwVnum <= GUILD_SKILL_END))
 				if (!m_bDisableCooltime && m_pInfo && !m_pInfo->HitOnce(m_pkSk->dwVnum) && m_pkSk->dwVnum != SKILL_MUYEONG)
 				{
@@ -1031,7 +1031,7 @@ struct FuncSplashDamage
 		m_pkSk->SetPointVar("chain", m_pkChr->GetChainLightningIndex());
 		m_pkChr->IncChainLightningIndex();
 
-		bool bUnderEunhyung = m_pkChr->GetAffectedEunhyung() > 0; // 이건 왜 여기서 하지??
+		bool bUnderEunhyung = m_pkChr->GetAffectedEunhyung() > 0; // why are you doing this here ??
 
 		m_pkSk->SetPointVar("ek", m_pkChr->GetAffectedEunhyung()*1./100);
 		//m_pkChr->ClearAffectedEunhyung();
@@ -1086,11 +1086,11 @@ struct FuncSplashDamage
 
 		if (m_pkChr->IsPC() && m_pkChr->m_SkillUseInfo[m_pkSk->dwVnum].GetMainTargetVID() != (DWORD) pkChrVictim->GetVID())
 		{
-			// 데미지 감소
+			// Damage reduction
 			iDam = (int) (iDam * m_pkSk->kSplashAroundDamageAdjustPoly.Eval());
 		}
 
-		// TODO 스킬에 따른 데미지 타입 기록해야한다.
+		// TODO Damage type according to skill must be recorded .
 		EDamageType dt = DAMAGE_TYPE_NONE;
 
 		switch (m_pkSk->bSkillAttrType)
@@ -1113,7 +1113,7 @@ struct FuncSplashDamage
 
 							case WEAPON_TWO_HANDED:
 								iDam = iDam * (100 - pkChrVictim->GetPoint(POINT_RESIST_TWOHAND)) / 100;
-								// 양손검 페널티 10%
+								// Two-handed sword penalty 10%
 								//iDam = iDam * 95 / 100;
 
 								break;
@@ -1138,8 +1138,8 @@ struct FuncSplashDamage
 
 			case SKILL_ATTR_TYPE_RANGE:
 				dt = DAMAGE_TYPE_RANGE;
-				// 으아아아악
-				// 예전에 적용안했던 버그가 있어서 방어력 계산을 다시하면 유저가 난리남
+				// Ahhhhh
+				// There was a bug that wasn't applied before, so if the defense was calculated again, users would get upset.
 				//iDam -= pkChrVictim->GetPoint(POINT_DEF_GRADE);
 				iDam = iDam * (100 - pkChrVictim->GetPoint(POINT_RESIST_BOW)) / 100;
 				break;
@@ -1147,8 +1147,8 @@ struct FuncSplashDamage
 			case SKILL_ATTR_TYPE_MAGIC:
 				dt = DAMAGE_TYPE_MAGIC;
 				iDam = CalcAttBonus(m_pkChr, pkChrVictim, iDam);
-				// 으아아아악
-				// 예전에 적용안했던 버그가 있어서 방어력 계산을 다시하면 유저가 난리남
+				// Ahhhhh
+				// There was a bug that wasn't applied before, so if the defense was calculated again, users would get upset.
 				//iDam -= pkChrVictim->GetPoint(POINT_MAGIC_DEF_GRADE);
 				iDam = iDam * (100 - pkChrVictim->GetPoint(POINT_RESIST_MAGIC)) / 100;
 				break;
@@ -1159,13 +1159,13 @@ struct FuncSplashDamage
 		}
 
 		//
-		// 20091109 독일 스킬 속성 요청 작업
-		// 기존 스킬 테이블에 SKILL_FLAG_WIND, SKILL_FLAG_ELEC, SKILL_FLAG_FIRE를 가진 스킬이
-		// 전혀 없었으므로 몬스터의 RESIST_WIND, RESIST_ELEC, RESIST_FIRE도 사용되지 않고 있었다.
+		// 20091109 German Skill Attribute Request Action
+		// to the existing skill table. SKILL_FLAG_WIND, SKILL_FLAG_ELEC, SKILL_FLAG_FIRE A skill with
+		// Because there was no monster at all RESIST_WIND, RESIST_ELEC, RESIST_FIRE was also not being used .
 		//
-		// PvP와 PvE밸런스 분리를 위해 의도적으로 NPC만 적용하도록 했으며 기존 밸런스와 차이점을
-		// 느끼지 못하기 위해 mob_proto의 RESIST_MAGIC을 RESIST_WIND, RESIST_ELEC, RESIST_FIRE로
-		// 복사하였다.
+		// PvP and PvE Intentionally to separate the balance NPC It was applied only and the difference from the existing balance was
+		// To not feel it mob_proto of RESIST_MAGIC second RESIST_WIND, RESIST_ELEC, RESIST_FIRE as
+		// copied .
 		//
 		if (pkChrVictim->IsNPC())
 		{
@@ -1471,7 +1471,7 @@ EVENTFUNC(skill_gwihwan_event)
 	{
 		PIXEL_POSITION pos;
 
-		// 성공
+		// success
 		if (SECTREE_MANAGER::instance().GetRecallPositionByEmpire(ch->GetMapIndex(), ch->GetEmpire(), pos))
 		{
 			sys_log(1, "Recall: %s %d %d -> %d %d", ch->GetName(), ch->GetX(), ch->GetY(), pos.x, pos.y);
@@ -1485,7 +1485,7 @@ EVENTFUNC(skill_gwihwan_event)
 	}
 	else
 	{
-		//실패
+		// failure
 		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Teleportation has failed."));
 	}
 	return 0;
@@ -1513,11 +1513,11 @@ int CHARACTER::ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTar
 				GetName(), dwVnum, posTarget.x, posTarget.y, bSkillLevel); 
 	}
 
-	// 나에게 쓰는 스킬은 내 위치를 쓴다.
+	// Skills used on me use my location. .
 	//if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 	//	posTarget = GetXYZ();
 
-	// 스플래쉬가 아닌 스킬은 주위이면 이상하다
+	// Skills other than Splash are strange when used nearby.
 	if (!IS_SET(pkSk->dwFlag, SKILL_FLAG_SPLASH))
 		return BATTLE_NONE;
 
@@ -1616,7 +1616,7 @@ int CHARACTER::ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTar
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_ATTACK | SKILL_FLAG_USE_MELEE_DAMAGE | SKILL_FLAG_USE_MAGIC_DAMAGE))
 	{
 		//
-		// 공격 스킬일 경우
+		// In case of attack skill
 		//
 		bool bAdded = false;
 
@@ -1643,7 +1643,7 @@ int CHARACTER::ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTar
 			int iDur = (int) pkSk->kDurationPoly.Eval();
 
 			if (IsPC())
-				if (!(dwVnum >= GUILD_SKILL_START && dwVnum <= GUILD_SKILL_END)) // 길드 스킬은 쿨타임 처리를 하지 않는다.
+				if (!(dwVnum >= GUILD_SKILL_START && dwVnum <= GUILD_SKILL_END)) // Guild skills do not have cooldown processing. .
 					if (!m_bDisableCooltime && !m_SkillUseInfo[dwVnum].HitOnce(dwVnum) && dwVnum != SKILL_MUYEONG)
 					{
 						//if (dwVnum == SKILL_CHAIN) sys_log(0, "CHAIN skill cannot hit %s", GetName());
@@ -1734,7 +1734,7 @@ int CHARACTER::ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTar
 		if (iDur > 0)
 		{
 			iDur += GetPoint(POINT_PARTY_BUFFER_BONUS);
-			// AffectFlag가 없거나, toggle 하는 것이 아니라면..
+			// AffectFlag There is no , toggle Unless you're doing it ..
 			pkSk->kDurationSPCostPoly.SetVar("k", k/*bSkillLevel*/);
 
 			AddAffect(pkSk->dwVnum,
@@ -1789,13 +1789,13 @@ int CHARACTER::ComputeSkillAtPosition(DWORD dwVnum, const PIXEL_POSITION& posTar
 	}
 }
 
-// bSkillLevel 인자가 0이 아닐 경우에는 m_abSkillLevels를 사용하지 않고 강제로
-// bSkillLevel로 계산한다.
+// bSkillLevel Son of man 0 If not m_abSkillLevels To force it without using
+// bSkillLevel Calculate with .
 int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel)
 {
 	const bool bCanUseHorseSkill = CanUseHorseSkill();
 
-	// 말을 타고있지만 스킬은 사용할 수 없는 상태라면 return
+	// If you are riding a horse but cannot use skills return
 	if (false == bCanUseHorseSkill && true == IsRiding())
 		return BATTLE_NONE;
 
@@ -1817,7 +1817,7 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 		return BATTLE_NONE;
 	
 
-	// 상대방에게 쓰는 것이 아니면 나에게 써야 한다.
+	// If you are not writing to the other person, you must write to yourself. .
 	if (IS_SET(pkSk->dwFlag, SKILL_FLAG_SELFONLY))
 		pkVictim = this;
 
@@ -1990,7 +1990,7 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 			
 
 			if (IsPC())
-				if (!(dwVnum >= GUILD_SKILL_START && dwVnum <= GUILD_SKILL_END)) // 길드 스킬은 쿨타임 처리를 하지 않는다.
+				if (!(dwVnum >= GUILD_SKILL_START && dwVnum <= GUILD_SKILL_END)) // Guild skills do not have cooldown processing. .
 					if (!m_bDisableCooltime && !m_SkillUseInfo[dwVnum].HitOnce(dwVnum) && dwVnum != SKILL_MUYEONG)
 					{
 						return BATTLE_NONE;
@@ -2103,7 +2103,7 @@ int CHARACTER::ComputeSkill(DWORD dwVnum, LPCHARACTER pkVictim, BYTE bSkillLevel
 		if (iDur > 0)
 		{
 			iDur += GetPoint(POINT_PARTY_BUFFER_BONUS);
-			// AffectFlag가 없거나, toggle 하는 것이 아니라면..
+			// AffectFlag There is no , toggle Unless you're doing it ..
 			pkSk->kDurationSPCostPoly.SetVar("k", k/*bSkillLevel*/);
 
 			if (pkSk->bPointOn2 != POINT_NONE)
@@ -2276,7 +2276,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		return true;
 	}
 
-	// 말을 타고있지만 스킬은 사용할 수 없는 상태라면 return false
+	// If you are riding a horse but cannot use skills return false
 	if (false == bCanUseHorseSkill && true == IsRiding())
 		return false;
 
@@ -2322,7 +2322,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 			}
 
 			m_SkillUseInfo[dwVnum].SetMainTargetVID(pkVictim->GetVID());
-			// DASH 상태의 탄환격은 공격기술
+			// DASH Status bullet attack is an attack technique
 			ComputeSkill(dwVnum, pkVictim);
 			RemoveAffect(dwVnum);
 			return true;
@@ -2340,7 +2340,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 		return true;
 	}
 
-	// Toggle 할 때는 SP를 쓰지 않음 (SelfOnly로 구분)
+	// Toggle When doing SP do not use (SelfOnly Separated by )
 	if ((0 != pkSk->dwAffectFlag || pkSk->dwVnum == SKILL_MUYEONG) && (pkSk->dwFlag & SKILL_FLAG_TOGGLE) && RemoveAffect(pkSk->dwVnum))
 	{
 		return true;
@@ -2354,7 +2354,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 	pkSk->SetPointVar("k", k);
 	pkSk->kSplashAroundDamageAdjustPoly.SetVar("k", k);
 
-	// 쿨타임 체크
+	// Cool time check
 	pkSk->kCooldownPoly.SetVar("k", k);
 	int iCooltime = (int) pkSk->kCooldownPoly.Eval();
 	int lMaxHit = pkSk->lMaxHit ? pkSk->lMaxHit : -1;
@@ -2418,7 +2418,7 @@ bool CHARACTER::UseSkill(DWORD dwVnum, LPCHARACTER pkVictim, bool bUseGrandMaste
 
 	if (pkSk->dwVnum == SKILL_MUYEONG || pkSk->IsChargeSkill() && !IsAffectFlag(AFF_TANHWAN_DASH) && !pkVictim)
 	{
-		// 처음 사용하는 무영진은 자신에게 Affect를 붙인다.
+		// Muyoungjin, who is using it for the first time, gives it to herself. Affect Attach .
 		pkVictim = this;
 	}
 
@@ -2491,7 +2491,7 @@ int CHARACTER::GetSkillMasterType(DWORD dwVnum) const
 
 int CHARACTER::GetSkillPower(DWORD dwVnum, BYTE bLevel) const
 {
-	// 인어반지 아이템
+	// Mermaid ring item
 	if (dwVnum >= SKILL_LANGUAGE1 && dwVnum <= SKILL_LANGUAGE3 && IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_LANGUAGE))
 	{
 		return 100;
@@ -2597,16 +2597,16 @@ void CHARACTER::SkillLearnWaitMoreTimeMessage(DWORD ms)
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I am burning inside, but it is calming down my body. My Chi has to stabilise."));
 	else if (ms < 5 * 60)
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("A little slow, but steady... Without stopping!"));
-	else if (ms < 10 * 60) // 10분
+	else if (ms < 10 * 60) // 10 minute
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Yes, that feels great. My body is full of Chi."));
-	else if (ms < 30 * 60) // 30분
+	else if (ms < 30 * 60) // 30 minute
 	{
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I have read it! Now the Chi will spread through my body."));
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("The training is completed."));
 	}
-	else if (ms < 1 * 3600) // 1시간
+	else if (ms < 1 * 3600) // 1 hour
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("I am on the last page of the book. The training is nearly finished!"));
-	else if (ms < 2 * 3600) // 2시간
+	else if (ms < 2 * 3600) // 2 hour
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Nearly finished! Just a little bit more to go!"));
 	else if (ms < 3 * 3600)
 		ChatPacket(CHAT_TYPE_TALKING, LC_TEXT("%s"), LC_TEXT("Eureka! I have nearly finished reading it!"));
@@ -2988,10 +2988,10 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 
 	static DWORD s_anMotion2SkillVnumList[MOTION_MAX_NUM][SKILL_LIST_MAX_COUNT] =
 	{
-		// 스킬수   무사스킬ID  자객스킬ID  수라스킬ID  무당스킬ID
+		// Number of skills: Musa skill ID  Assassin skill ID  Sura Skill ID  Shaman skills ID
 		{   0,		0,			0,			0,			0		}, //  0
 
-		// 1번 직군 기본 스킬
+		// 1 Job title basic skills
 		{   4,		1,			31,			61,			91		}, //  1
 		{   4,		2,			32,			62,			92		}, //  2
 		{   4,		3,			33,			63,			93		}, //  3
@@ -3000,9 +3000,9 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   4,		6,			36,			66,			96		}, //  6
 		{   0,		0,			0,			0,			0		}, //  7
 		{   0,		0,			0,			0,			0		}, //  8
-		// 1번 직군 기본 스킬 끝
+		// 1 End of job basic skills
 
-		// 여유분
+		// Surplus
 		{   0,		0,			0,			0,			0		}, //  9
 		{   0,		0,			0,			0,			0		}, //  10
 		{   0,		0,			0,			0,			0		}, //  11
@@ -3010,9 +3010,9 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   0,		0,			0,			0,			0		}, //  13
 		{   0,		0,			0,			0,			0		}, //  14
 		{   0,		0,			0,			0,			0		}, //  15
-		// 여유분 끝
+		// End of margin
 
-		// 2번 직군 기본 스킬
+		// 2 Job title basic skills
 		{   4,		16,			46,			76,			106		}, //  16
 		{   4,		17,			47,			77,			107		}, //  17
 		{   4,		18,			48,			78,			108		}, //  18
@@ -3021,14 +3021,14 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   4,		21,			51,			81,			111		}, //  21
 		{   0,		0,			0,			0,			0		}, //  22
 		{   0,		0,			0,			0,			0		}, //  23
-		// 2번 직군 기본 스킬 끝
+		// 2 End of job basic skills
 
-		// 여유분
+		// Surplus
 		{   0,		0,			0,			0,			0		}, //  24
 		{   0,		0,			0,			0,			0		}, //  25
-		// 여유분 끝
+		// End of margin
 
-		// 1번 직군 마스터 스킬
+		// 1 Occupation Master Skill
 		{   4,		1,			31,			61,			91		}, //  26
 		{   4,		2,			32,			62,			92		}, //  27
 		{   4,		3,			33,			63,			93		}, //  28
@@ -3037,9 +3037,9 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   4,		6,			36,			66,			96		}, //  31
 		{   0,		0,			0,			0,			0		}, //  32
 		{   0,		0,			0,			0,			0		}, //  33
-		// 1번 직군 마스터 스킬 끝
+		// 1 End of job master skill
 
-		// 여유분
+		// Surplus
 		{   0,		0,			0,			0,			0		}, //  34
 		{   0,		0,			0,			0,			0		}, //  35
 		{   0,		0,			0,			0,			0		}, //  36
@@ -3047,9 +3047,9 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   0,		0,			0,			0,			0		}, //  38
 		{   0,		0,			0,			0,			0		}, //  39
 		{   0,		0,			0,			0,			0		}, //  40
-		// 여유분 끝
+		// End of margin
 
-		// 2번 직군 마스터 스킬
+		// 2 Occupation Master Skill
 		{   4,		16,			46,			76,			106		}, //  41
 		{   4,		17,			47,			77,			107		}, //  42
 		{   4,		18,			48,			78,			108		}, //  43
@@ -3058,14 +3058,14 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   4,		21,			51,			81,			111		}, //  46
 		{   0,		0,			0,			0,			0		}, //  47
 		{   0,		0,			0,			0,			0		}, //  48
-		// 2번 직군 마스터 스킬 끝
+		// 2 End of job master skill
 
-		// 여유분
+		// Surplus
 		{   0,		0,			0,			0,			0		}, //  49
 		{   0,		0,			0,			0,			0		}, //  50
-		// 여유분 끝
+		// End of margin
 
-		// 1번 직군 그랜드 마스터 스킬
+		// 1 Occupation Grand Master Skills
 		{   4,		1,			31,			61,			91		}, //  51
 		{   4,		2,			32,			62,			92		}, //  52
 		{   4,		3,			33,			63,			93		}, //  53
@@ -3074,9 +3074,9 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   4,		6,			36,			66,			96		}, //  56
 		{   0,		0,			0,			0,			0		}, //  57
 		{   0,		0,			0,			0,			0		}, //  58
-		// 1번 직군 그랜드 마스터 스킬 끝
+		// 1 Job title Grand Master skill end
 
-		// 여유분
+		// Surplus
 		{   0,		0,			0,			0,			0		}, //  59
 		{   0,		0,			0,			0,			0		}, //  60
 		{   0,		0,			0,			0,			0		}, //  61
@@ -3084,9 +3084,9 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   0,		0,			0,			0,			0		}, //  63
 		{   0,		0,			0,			0,			0		}, //  64
 		{   0,		0,			0,			0,			0		}, //  65
-		// 여유분 끝
+		// End of margin
 
-		// 2번 직군 그랜드 마스터 스킬
+		// 2 Occupation Grand Master Skills
 		{   4,		16,			46,			76,			106		}, //  66
 		{   4,		17,			47,			77,			107		}, //  67
 		{   4,		18,			48,			78,			108		}, //  68
@@ -3095,14 +3095,14 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   4,		21,			51,			81,			111		}, //  71
 		{   0,		0,			0,			0,			0		}, //  72
 		{   0,		0,			0,			0,			0		}, //  73
-		// 2번 직군 그랜드 마스터 스킬 끝
+		// 2 Job title Grand Master skill end
 
-		//여유분
+		// Surplus
 		{   0,		0,			0,			0,			0		}, //  74
 		{   0,		0,			0,			0,			0		}, //  75
-		// 여유분 끝
+		// End of margin
 
-		// 1번 직군 퍼펙트 마스터 스킬
+		// 1 Job title: Perfect master skill
 		{   4,		1,			31,			61,			91		}, //  76
 		{   4,		2,			32,			62,			92		}, //  77
 		{   4,		3,			33,			63,			93		}, //  78
@@ -3111,9 +3111,9 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   4,		6,			36,			66,			96		}, //  81
 		{   0,		0,			0,			0,			0		}, //  82
 		{   0,		0,			0,			0,			0		}, //  83
-		// 1번 직군 퍼펙트 마스터 스킬 끝
+		// 1 End of job perfect master skill
 
-		// 여유분
+		// Surplus
 		{   0,		0,			0,			0,			0		}, //  84
 		{   0,		0,			0,			0,			0		}, //  85
 		{   0,		0,			0,			0,			0		}, //  86
@@ -3121,9 +3121,9 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   0,		0,			0,			0,			0		}, //  88
 		{   0,		0,			0,			0,			0		}, //  89
 		{   0,		0,			0,			0,			0		}, //  90
-		// 여유분 끝
+		// End of margin
 
-		// 2번 직군 퍼펙트 마스터 스킬
+		// 2 Job title: Perfect master skill
 		{   4,		16,			46,			76,			106		}, //  91
 		{   4,		17,			47,			77,			107		}, //  92
 		{   4,		18,			48,			78,			108		}, //  93
@@ -3132,23 +3132,23 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   4,		21,			51,			81,			111		}, //  96
 		{   0,		0,			0,			0,			0		}, //  97
 		{   0,		0,			0,			0,			0		}, //  98
-		// 2번 직군 퍼펙트 마스터 스킬 끝
+		// 2 End of job perfect master skill
 
-		// 여유분
+		// Surplus
 		{   0,		0,			0,			0,			0		}, //  99
 		{   0,		0,			0,			0,			0		}, //  100
-		// 여유분 끝
+		// End of margin
 
-		// 길드 스킬
+		// Guild Skills
 		{   1,  152,    0,    0,    0}, //  101
 		{   1,  153,    0,    0,    0}, //  102
 		{   1,  154,    0,    0,    0}, //  103
 		{   1,  155,    0,    0,    0}, //  104
 		{   1,  156,    0,    0,    0}, //  105
 		{   1,  157,    0,    0,    0}, //  106
-		// 길드 스킬 끝
+		// Guild skill end
 
-		// 여유분
+		// Surplus
 		{   0,    0,    0,    0,    0}, //  107
 		{   0,    0,    0,    0,    0}, //  108
 		{   0,    0,    0,    0,    0}, //  109
@@ -3163,13 +3163,13 @@ bool CHARACTER::IsUsableSkillMotion(DWORD dwMotionIndex) const
 		{   0,    0,    0,    0,    0}, //  118
 		{   0,    0,    0,    0,    0}, //  119
 		{   0,    0,    0,    0,    0}, //  120
-		// 여유분 끝
+		// End of margin
 
-		// 승마 스킬
+		// horse riding skills
 		{   2,  137,  140,    0,    0}, //  121
 		{   1,  138,    0,    0,    0}, //  122
 		{   1,  139,    0,    0,    0}, //  123
-		// 승마 스킬 끝
+		// End of horse riding skills
 	};
 
 	if (dwMotionIndex >= MOTION_MAX_NUM)
@@ -3323,7 +3323,7 @@ bool CHARACTER::CanUseSkill(DWORD dwSkillVnum) const
 	
 	if (true == IsRiding())
 	{
-		//마운트 탈것중 고급말만 스킬 사용가능
+		// Among mounted mounts, only high-quality horses can use skills.
 		if(GetMountVnum())
 		{
 			if( GetMountVnum() < 20209 && GetMountVnum() > 20212)

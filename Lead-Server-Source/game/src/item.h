@@ -91,7 +91,7 @@ class CItem : public CEntity
 
 		bool		IsPolymorphItem();
 
-		void		ModifyPoints(bool bAdd);	// 아이템의 효과를 캐릭터에 부여 한다. bAdd가 false이면 제거함
+		void		ModifyPoints(bool bAdd);	// Gives the effect of an item to the character . bAdd go false This side is removed.
 
 		bool		CreateSocket(BYTE bSlot, BYTE bGold);
 		const int32_t *	GetSockets()		{ return &m_alSockets[0];	}
@@ -135,7 +135,7 @@ class CItem : public CEntity
 		DWORD		GetLastOwnerPID()	{ return m_dwLastOwnerPID; }
 		void		SetLastOwnerPID(DWORD pid) { m_dwLastOwnerPID = pid; }
 
-		int		GetAttributeSetIndex(); // 속성 붙는것을 지정한 배열의 어느 인덱스를 사용하는지 돌려준다.
+		int		GetAttributeSetIndex(); // Returns which index of the array is used to attach the attribute. .
 		void		AlterToMagicItem();
 		void		AlterToSocketItem(int iSocketCount);
 
@@ -154,7 +154,7 @@ class CItem : public CEntity
 		void		StopTimerBasedOnWearExpireEvent();
 		void		StopAccessorySocketExpireEvent();
 
-		//			일단 REAL_TIME과 TIMER_BASED_ON_WEAR 아이템에 대해서만 제대로 동작함.
+		//			first REAL_TIME class TIMER_BASED_ON_WEAR Only works properly for items .
 		int			GetDuration();
 
 		int		GetAttributeCount();
@@ -169,7 +169,7 @@ class CItem : public CEntity
 		bool	IsSameSpecialGroup(const LPITEM item) const;
 
 		// ACCESSORY_REFINE
-		// 액세서리에 광산을 통해 소켓을 추가
+		// Add a socket via mine to accessories
 		bool		IsAccessoryForSocket();
 
 		int		GetAccessorySocketGrade();
@@ -182,7 +182,7 @@ class CItem : public CEntity
 
 		void		AccessorySocketDegrade();
 
-		// 악세사리 를 아이템에 밖았을때 타이머 돌아가는것( 구리, 등 )
+		// The timer starts when an accessory is placed on an item. ( copper , etc. )
 		void		StartAccessorySocketExpireEvent();
 		void		SetAccessorySocketExpireEvent(LPEVENT pkEvent);
 
@@ -216,7 +216,7 @@ class CItem : public CEntity
 
 	protected:
 		friend class CInputDB;
-		bool		OnAfterCreatedItem();			// 서버상에 아이템이 모든 정보와 함께 완전히 생성(로드)된 후 불리우는 함수.
+		bool		OnAfterCreatedItem();			// Items are fully created on the server with all information ( load ) A function called after .
 
 	public:
 		bool		IsRideItem();
@@ -230,23 +230,23 @@ class CItem : public CEntity
 		int			GiveMoreTime_Fix(DWORD dwTime);
 
 	private:
-		TItemTable const * m_pProto;		// 프로토 타잎
+		TItemTable const * m_pProto;		// prototype
 
 		DWORD		m_dwVnum;
 		LPCHARACTER	m_pOwner;
 
-		BYTE		m_bWindow;		// 현재 아이템이 위치한 윈도우 
-		DWORD		m_dwID;			// 고유번호
-		bool		m_bEquipped;	// 장착 되었는가?
+		BYTE		m_bWindow;		// The window where the current item is located 
+		DWORD		m_dwID;			// Unique number
+		bool		m_bEquipped;	// Is it installed? ?
 		DWORD		m_dwVID;		// VID
-		WORD		m_wCell;		// 위치
-		DWORD		m_dwCount;		// 개수
-		long		m_lFlag;		// 추가 flag
-		DWORD		m_dwLastOwnerPID;	// 마지막 가지고 있었던 사람의 PID
+		WORD		m_wCell;		// location
+		DWORD		m_dwCount;		// count
+		long		m_lFlag;		// addition flag
+		DWORD		m_dwLastOwnerPID;	// the last person who had it PID
 
-		bool		m_bExchanging;	///< 현재 교환중 상태 
+		bool		m_bExchanging;	///< Currently exchanging status 
 
-		int32_t		m_alSockets[ITEM_SOCKET_MAX_NUM];	// 아이템 소캣
+		int32_t		m_alSockets[ITEM_SOCKET_MAX_NUM];	// Item Socket
 		TPlayerItemAttribute	m_aAttr[ITEM_ATTRIBUTE_MAX_NUM];
 
 		LPEVENT		m_pkDestroyEvent;

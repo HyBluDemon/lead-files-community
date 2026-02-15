@@ -8,7 +8,7 @@ class CTableBySkill : public singleton<CTableBySkill>
 		CTableBySkill()
 			: m_aiSkillDamageByLevel(NULL)
 		{
-			//스킬 레벨당 추가데미지 초기화
+			// Reset additional damage per skill level
 			for ( int job = 0; job < JOB_MAX_NUM * 2; ++job )
 				m_aiSkillPowerByLevelFromType[job] = NULL;
 		}
@@ -18,18 +18,18 @@ class CTableBySkill : public singleton<CTableBySkill>
 			DeleteAll();
 		}
 
-		//테이블 세팅 체크
+		// Table setting check
 		bool 	Check() const;
 
-		//삭제
+		// delete
 		void 	DeleteAll();
 
-		//스킬레벨단위 스킬파워 테이블
+		// Skill level unit skill power table
 		int 	GetSkillPowerByLevelFromType( int job, int skillgroup, int skilllevel, bool bMob ) const;
 		void 	SetSkillPowerByLevelFromType( int idx, const int* aTable );
 		void	DeleteSkillPowerByLevelFromType( int idx );
 
-		//레벨당 추가 스킬데미지  테이블
+		// Additional skill damage table per level
 		int 	GetSkillDamageByLevel( int Level ) const;
 		void	SetSkillDamageByLevelTable( const int* aTable );
 		void 	DeleteSkillDamageByLevelTable();

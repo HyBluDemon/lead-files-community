@@ -21,7 +21,7 @@ int CItem::GetAttributeSetIndex()
 		switch (GetSubType())
 		{
 			case ARMOR_BODY:
-//			case COSTUME_BODY: // 코스츔 갑옷은 일반 갑옷과 동일한 Attribute Set을 이용하여 랜덤속성 붙음 (ARMOR_BODY == COSTUME_BODY)
+//			case COSTUME_BODY: // Costume armor is the same as regular armor. Attribute Set Attach random properties using (ARMOR_BODY == COSTUME_BODY)
 				return ATTRIBUTE_SET_BODY;
 
 			case ARMOR_WRIST:
@@ -34,7 +34,7 @@ int CItem::GetAttributeSetIndex()
 				return ATTRIBUTE_SET_NECK;
 
 			case ARMOR_HEAD:
-//			case COSTUME_HAIR: // 코스츔 헤어는 일반 투구 아이템과 동일한 Attribute Set을 이용하여 랜덤속성 붙음 (ARMOR_HEAD == COSTUME_HAIR)
+//			case COSTUME_HAIR: // The costume hair is the same as the regular helmet item. Attribute Set Attach random properties using (ARMOR_HEAD == COSTUME_HAIR)
 				return ATTRIBUTE_SET_HEAD;
 
 			case ARMOR_SHIELD:
@@ -122,7 +122,7 @@ void CItem::PutAttributeWithLevel(BYTE bLevel)
 
 	int total = 0;
 
-	// 붙일 수 있는 속성 배열을 구축
+	// Build an array of attachable properties
 	for (int i = 0; i < MAX_APPLY_NUM; ++i)
 	{
 		const TItemAttrTable & r = g_map_itemAttr[i];
@@ -134,7 +134,7 @@ void CItem::PutAttributeWithLevel(BYTE bLevel)
 		}
 	}
 
-	// 구축된 배열로 확률 계산을 통해 붙일 속성 선정
+	// Select attributes to attach through probability calculation using constructed array
 	unsigned int prob = number(1, total);
 	int attr_idx = APPLY_NONE;
 
@@ -159,7 +159,7 @@ void CItem::PutAttributeWithLevel(BYTE bLevel)
 
 	const TItemAttrTable & r = g_map_itemAttr[attr_idx];
 
-	// 종류별 속성 레벨 최대값 제한
+	// Maximum attribute level limit for each type
 	if (bLevel > r.bMaxLevelBySet[iAttributeSet])
 		bLevel = r.bMaxLevelBySet[iAttributeSet];
 

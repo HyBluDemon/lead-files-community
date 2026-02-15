@@ -1,8 +1,8 @@
 /*
  *    Filename: utils.c
- * Description: 각종 유틸리티
+ * Description: various utilities
  *
- *      Author: 비엽 aka. Cronan
+ *      Author: Rain leaves aka. Cronan
  */
 #define __LIBTHECORE__
 #include "stdafx.h"
@@ -134,7 +134,7 @@ void trim_and_lower(const char * src, char * dest, size_t dest_size)
 	return;
     }
 
-    // 앞에 빈칸 건너 뛰기
+    // Skip the space before
     while (*tmp)
     {
 	if (!isnhspace(*tmp))
@@ -143,12 +143,12 @@ void trim_and_lower(const char * src, char * dest, size_t dest_size)
 	tmp++;
     }
 
-    // \0 확보
+    // \0 secure
     --dest_size;
 
     while (*tmp && len < dest_size)
     {
-	*(dest++) = LOWER(*tmp); // LOWER는 매크로라 ++ 쓰면 안됨
+	*(dest++) = LOWER(*tmp); // LOWER is a macro ++ Do not use
 	++tmp;
 	++len;
     }
@@ -157,7 +157,7 @@ void trim_and_lower(const char * src, char * dest, size_t dest_size)
 
     if (len > 0)
     {
-	// 뒤에 빈칸 지우기
+	// Delete the space after
 	--dest;
 
 	while (*dest && isnhspace(*dest) && len--)
@@ -179,12 +179,12 @@ void lower_string(const char *src, char *dest, size_t dest_size)
 	return;
     }
 
-    // \0 확보
+    // \0 secure
     --dest_size;
 
     while (*tmp && len < dest_size)
     {
-	*(dest++) = LOWER(*tmp); // LOWER는 매크로라 ++ 쓰면 안됨
+	*(dest++) = LOWER(*tmp); // LOWER is a macro ++ Do not use
 	++tmp;
 	++len;
     }
@@ -200,7 +200,7 @@ char *str_dup(const char *source)
     return (strcpy(new_line, source));
 }
 
-/* arg1 이 arg2 의 앞단과 같을 때 1 을 리턴한다. */
+/* arg1 this arg2 When it is the same as the front end of 1 returns . */
 int is_abbrev(char *arg1, char *arg2)
 {
     if (!*arg1)
@@ -232,8 +232,8 @@ int filesize(FILE *fp)
 }
 
 
-/* "Name : 비엽" 과 같이 "항목 : 값" 으로 이루어진 문자열에서 
-   항목을 token 으로, 값을 value 로 복사하여 리턴한다. */
+/* "Name : Rain leaves " as " item : value " In a string consisting of 
+   the item token by , value value Copy and return . */
 void parse_token(char *src, char *token, char *value)
 {
     char *tmp;

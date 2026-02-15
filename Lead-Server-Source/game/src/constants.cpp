@@ -14,7 +14,7 @@ TJobInitialPoints JobInitialPoints[JOB_MAX_NUM] =
    }
  */
 {
-	// str con dex int 초기HP 초기SP  CON/HP INT/SP  HP랜덤/lv   MP랜덤/lv  초기stam  stam/con stam/lv
+	// str con dex int beginning HP beginning SP  CON/HP INT/SP  HP random /lv   MP random /lv  beginning stam  stam/con stam/lv
 	{   6,  4,  3,  3,  600,   200,     40,    20,    36, 44,     18, 22,     800,      5,      1, 3  }, // JOB_WARRIOR  16
 	{   4,  3,  6,  3,  650,   200,     40,    20,    36, 44,     18, 22,     800,      5,      1, 3  }, // JOB_ASSASSIN 16
 	{   5,  3,  3,  5,  650,   200,     40,    20,    36, 44,     18, 22,     800,      5,      1, 3  }, // JOB_SURA	 16
@@ -159,7 +159,7 @@ const DWORD exp_table_common[PLAYER_EXP_TABLE_MAX + 1] =
 	1676898443,		
 	1844588288,		
 	2029047116,		
-	2050000000,	//	99레벨 일 때 필요경험치 (100레벨이 되기 위한)
+	2050000000,	//	99 Required experience at level (100 To become a level )
 	2150000000,	//	100
 	2210000000,		
 	2250000000,		
@@ -186,8 +186,8 @@ const DWORD exp_table_common[PLAYER_EXP_TABLE_MAX + 1] =
 const int * aiPercentByDeltaLev = NULL;
 const int * aiPercentByDeltaLevForBoss = NULL;
 
-// 적과 나와의 레벨차이에 의한 계산에 사용되는 테이블
-// MIN(MAX_EXP_DELTA_OF_LEV - 1, (적렙 + 15) - 내렙))
+// Table used to calculate the level difference between the enemy and me
+// MIN(MAX_EXP_DELTA_OF_LEV - 1, ( Level level + 15) - My level ))
 const int aiPercentByDeltaLevForBoss_euckr[MAX_EXP_DELTA_OF_LEV] =
 {
 	1,      // -15  0
@@ -613,16 +613,16 @@ const TApplyInfo aApplyInfo[MAX_APPLY_NUM] =
 	{ POINT_NORMAL_HIT_DEFEND_BONUS	},	// 74
 	// END_OF_DEFEND_BONUS_ATTRIBUTES
 
-	{ POINT_NONE,		},				// 77 사용시 HP 소모 APPLY_EXTRACT_HP_PCT
+	{ POINT_NONE,		},				// 77 When using HP consumption APPLY_EXTRACT_HP_PCT
 
-	{ POINT_RESIST_WARRIOR,		},		// 78 무사에게 저항 APPLY_RESIST_WARRIOR
-	{ POINT_RESIST_ASSASSIN,	},		// 79 자객에게 저항 APPLY_RESIST_ASSASSIN
-	{ POINT_RESIST_SURA,		},		// 80 수라에게 저항 APPLY_RESIST_SURA
-	{ POINT_RESIST_SHAMAN,		},		// 81 무당에게 저항 APPLY_RESIST_SHAMAN
-	{ POINT_ENERGY				},		// 82 기력 
-	{ POINT_DEF_GRADE			},		// 83 방어력. DEF_GRADE_BONUS는 클라에서 두배로 보여지는 의도된 버그(...)가 있다.
-	{ POINT_COSTUME_ATTR_BONUS	},		// 84 코스튬에 붙은 속성에 대해서만 보너스를 주는 기력
-	{ POINT_MAGIC_ATT_BONUS_PER },			// 85 마법 공격력 +x%
+	{ POINT_RESIST_WARRIOR,		},		// 78 resist the warrior APPLY_RESIST_WARRIOR
+	{ POINT_RESIST_ASSASSIN,	},		// 79 resist the assassin APPLY_RESIST_ASSASSIN
+	{ POINT_RESIST_SURA,		},		// 80 Resist Sura APPLY_RESIST_SURA
+	{ POINT_RESIST_SHAMAN,		},		// 81 resist the shaman APPLY_RESIST_SHAMAN
+	{ POINT_ENERGY				},		// 82 energy 
+	{ POINT_DEF_GRADE			},		// 83 defense . DEF_GRADE_BONUS is an intended bug that appears twice in the client (...) There is .
+	{ POINT_COSTUME_ATTR_BONUS	},		// 84 Energy that gives bonuses only to attributes attached to the costume
+	{ POINT_MAGIC_ATT_BONUS_PER },			// 85 magic attack power +x%
 	{ POINT_MELEE_MAGIC_ATT_BONUS_PER		},			// 86 APPLY_MELEE_MAGIC_ATTBONUS_PER
 	{ POINT_RESIST_ICE,			},   // APPLY_RESIST_ICE,	87
 	{ POINT_RESIST_EARTH,		},   // APPLY_RESIST_EARTH,	88
@@ -868,28 +868,28 @@ TGuildWarInfo KOR_aGuildWarInfo[GUILD_WAR_TYPE_MAX_NUM] =
 };
 
 //
-// 악세서리 소켓용 수치들
+// Dimensions for accessory sockets
 //
 
-// 다이아몬드로 소켓을 추가할 때 확률
+// Chances when adding a socket with diamonds
 const int aiAccessorySocketAddPct[ITEM_ACCESSORY_SOCKET_MAX_NUM] =
 {
 	50, 50, 50
 };
 
-// 악세서리 수치 값의 몇%만큼의 성능을 추가하는지
+// A few of the accessory numerical values % Does it add enough performance?
 const int aiAccessorySocketEffectivePct[ITEM_ACCESSORY_SOCKET_MAX_NUM + 1] = 
 {
 	0, 10, 20, 40
 };
 
-// 소켓 지속시간 24, 12, 6
+// Socket Duration 24, 12, 6
 const int aiAccessorySocketDegradeTime[ITEM_ACCESSORY_SOCKET_MAX_NUM + 1] =
 {
 	0, 3600 * 24, 3600 * 12, 3600 * 6
 };
 
-// 소켓 장착 성공률
+// Socket installation success rate
 const int aiAccessorySocketPutPct[ITEM_ACCESSORY_SOCKET_MAX_NUM + 1] =
 {
 	90, 80, 70, 0
@@ -987,10 +987,10 @@ TValueName c_aApplyTypeNames[] =
     { "RESIST_ASSASSIN",	APPLY_RESIST_ASSASSIN},
     { "RESIST_SURA",		APPLY_RESIST_SURA},
     { "RESIST_SHAMAN",	APPLY_RESIST_SHAMAN},
-    // by mhh game/affect.h 정의되어있음. INFINITE_AFFECT_DURATION = 0x1FFFFFFF
+    // by mhh game/affect.h defined . INFINITE_AFFECT_DURATION = 0x1FFFFFFF
     { "INFINITE_AFFECT_DURATION", 0x1FFFFFFF	},
-	{ "ENERGY", APPLY_ENERGY },		//	기력
-	{ "COSTUME_ATTR_BONUS", APPLY_COSTUME_ATTR_BONUS },		//	기력
+	{ "ENERGY", APPLY_ENERGY },		//	energy
+	{ "COSTUME_ATTR_BONUS", APPLY_COSTUME_ATTR_BONUS },		//	energy
 	{ "MAGIC_ATTBONUS_PER",	APPLY_MAGIC_ATTBONUS_PER	},
     { "MELEE_MAGIC_ATTBONUS_PER",	APPLY_MELEE_MAGIC_ATTBONUS_PER	},
     

@@ -297,7 +297,7 @@ bool CSkillManager::Initialize(TSkillTable * pTab, int iSize)
 
 	if (!bError)
 	{
-		// 기존 테이블의 내용을 지운다.
+		// Delete the contents of an existing table .
 		itertype(m_map_pkSkillProto) it = m_map_pkSkillProto.begin();
 
 		while (it != m_map_pkSkillProto.end()) {
@@ -307,7 +307,7 @@ bool CSkillManager::Initialize(TSkillTable * pTab, int iSize)
 
 		m_map_pkSkillProto.clear();
 
-		// 새로운 내용을 삽입
+		// Insert new content
 		it = map_pkSkillProto.begin();
 
 		while (it != map_pkSkillProto.end())

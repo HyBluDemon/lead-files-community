@@ -29,7 +29,7 @@ void CGrid::Clear()
 
 int CGrid::FindBlank(int w, int h)
 {
-    // 크기가 더 크다면 확인할 필요 없이 그냥 리턴
+    // size more If it's big check necessary without just return
     if (w > m_iWidth || h > m_iHeight)
 	return -1;
 
@@ -90,7 +90,7 @@ bool CGrid::IsEmpty(int iPos, int w, int h)
 
     int iRow = iPos / m_iWidth;
 
-    // Grid 안쪽인가를 먼저 검사
+    // Grid Is it inside? first test
     if (iRow + h > m_iHeight)
 	return false;
 
@@ -130,4 +130,3 @@ unsigned int CGrid::GetSize()
 {
     return m_iWidth * m_iHeight;
 }
-

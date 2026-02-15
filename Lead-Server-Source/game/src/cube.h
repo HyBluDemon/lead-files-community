@@ -2,7 +2,7 @@
  * date        : 2006.11.20
  * file        : cube.h
  * author      : mhh
- * description : 큐브시스템
+ * description : cube system
  */
 
 #ifndef _cube_h_
@@ -30,7 +30,7 @@ struct CUBE_DATA
 	std::vector<CUBE_VALUE>	item;
 	std::vector<CUBE_VALUE>	reward;
 	int						percent;
-	unsigned int			gold;		// 제조시 필요한 금액
+	unsigned int			gold;		// Amount required for manufacturing
 
 	CUBE_DATA();
 

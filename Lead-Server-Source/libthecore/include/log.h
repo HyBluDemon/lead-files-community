@@ -9,11 +9,11 @@ extern "C"
     extern void log_destroy(void);
     extern void log_rotate(void);
 
-	// 로그 레벨 처리 (레벨은 bitvector로 처리된다)
+	// Log level processing ( The level is bitvector is processed as )
 	extern void log_set_level(unsigned int level);
 	extern void log_unset_level(unsigned int level);
 
-	// 로그 파일을 얼만큼 보관하는가에 대한 함수
+	// Function for how long log files are kept
 	extern void log_set_expiration_days(unsigned int days);
 	extern int log_get_expiration_days(void);
 

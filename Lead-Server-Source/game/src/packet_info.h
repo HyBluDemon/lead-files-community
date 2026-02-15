@@ -52,5 +52,6 @@ class CPacketInfoGG : public CPacketInfo
 		CPacketInfoGG();
 		virtual ~CPacketInfoGG();
 };
-
+
+
 #endif

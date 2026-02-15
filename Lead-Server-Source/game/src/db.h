@@ -87,8 +87,8 @@ class DBManager : public singleton<DBManager>
 		void			LoadDBString();
 		const std::string &	GetDBString(const std::string& key);
 
-		template<class Functor> void FuncQuery(Functor f, const char * c_pszFormat, ...); // 결과를 f인자로 호출함 (SQLMsg *) 알아서 해제됨
-		template<class Functor> void FuncAfterQuery(Functor f, const char * c_pszFormat, ...); // 끝나고 나면 f가 호출됨 void			f(void) 형태
+		template<class Functor> void FuncQuery(Functor f, const char * c_pszFormat, ...); // the result f Called with arguments (SQLMsg *) Automatically released
+		template<class Functor> void FuncAfterQuery(Functor f, const char * c_pszFormat, ...); // After it's over f is called void			f(void) form
 
 		size_t EscapeString(char* dst, size_t dstSize, const char *src, size_t srcSize);
 

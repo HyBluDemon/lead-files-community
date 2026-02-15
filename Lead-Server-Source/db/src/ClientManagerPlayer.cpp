@@ -30,7 +30,7 @@ bool CreateItemTableFromRes(MYSQL_RES * res, std::vector<TPlayerItem> * pVec, DW
 
 	int rows;
 
-	if ((rows = mysql_num_rows(res)) <= 0)	// 데이터 없음
+	if ((rows = mysql_num_rows(res)) <= 0)	// no data
 	{
 		pVec->clear();
 		return true;
@@ -157,7 +157,7 @@ size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * p
 		pkTab->horse.sStamina,
 		pkTab->horse_skill_point);
 
-	// Binary 로 바꾸기 위한 임시 공간
+	// Binary temporary space to change to
 	static char text[8192 + 1];
 
 	CDBManager::instance().EscapeString(text, pkTab->skills, sizeof(pkTab->skills));
@@ -206,7 +206,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 	TPlayerTable * pTab;
 	
 	//
-	// 한 계정에 속한 모든 캐릭터들 캐쉬처리
+	// Cash processing of all characters belonging to one account
 	//
 	CLoginData * pLoginData = GetLoginDataByAID(packet->account_id);
 
@@ -218,12 +218,12 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 	}
 
 	//----------------------------------------------------------------
-	// 1. 유저정보가 DBCache 에 존재 : DBCache에서 
-	// 2. 유저정보가 DBCache 에 없음 : DB에서 
+	// 1. User information DBCache exists in : DBCache at 
+	// 2. User information DBCache None in : DB at 
 	// ---------------------------------------------------------------
 	
 	//----------------------------------
-	// 1. 유저정보가 DBCache 에 존재 : DBCache에서 
+	// 1. User information DBCache exists in : DBCache at 
 	//----------------------------------
 	if ((c = GetPlayerCache(packet->player_id)))
 	{
@@ -262,13 +262,13 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		sys_log(0, "[PLAYER_LOAD] ID %s pid %d gold %d ", pTab->name, pTab->id, pTab->gold);
 
 		//--------------------------------------------
-		// 아이템 & AFFECT & QUEST 로딩 : 
+		// item & AFFECT & QUEST loading : 
 		//--------------------------------------------
-		// 1) 아이템이 DBCache 에 존재 : DBCache 에서 가져옴
-		// 2) 아이템이 DBCache 에 없음 : DB 에서 가져옴 
+		// 1) the item DBCache exists in : DBCache Retrieved from
+		// 2) the item DBCache None in : DB Retrieved from 
 
 		/////////////////////////////////////////////
-		// 1) 아이템이 DBCache 에 존재 : DBCache 에서 가져옴
+		// 1) the item DBCache exists in : DBCache Retrieved from
 		/////////////////////////////////////////////
 		if (pSet)
 		{
@@ -283,7 +283,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 				CItemCache * c = *it++;
 				TPlayerItem * p = c->Get();
 
-				if (p->vnum) // vnum이 없으면 삭제된 아이템이다.
+				if (p->vnum) // vnum If not, the item has been deleted. .
 					thecore_memcpy(&s_items[dwCount++], p, sizeof(TPlayerItem));
 			}
 
@@ -310,7 +310,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 			CDBManager::instance().ReturnQuery(szQuery, QID_AFFECT, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id));
 		}
 		/////////////////////////////////////////////
-		// 2) 아이템이 DBCache 에 없음 : DB 에서 가져옴 
+		// 2) the item DBCache None in : DB Retrieved from 
 		/////////////////////////////////////////////
 		else
 		{
@@ -344,7 +344,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		//return;
 	}
 	//----------------------------------
-	// 2. 유저정보가 DBCache 에 없음 : DB에서 
+	// 2. User information DBCache None in : DB at 
 	//----------------------------------
 	else
 	{
@@ -353,7 +353,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		char queryStr[QUERY_MAX_LEN];
 
 		//--------------------------------------------------------------
-		// 캐릭터 정보 얻어오기 : 무조건 DB에서 
+		// Get character information : unconditionally DB at 
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
 				"SELECT "
@@ -369,7 +369,7 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		CDBManager::instance().ReturnQuery(queryStr, QID_PLAYER, peer->GetHandle(), pkInfo);
 
 		//--------------------------------------------------------------
-		// 아이템 가져오기 
+		// Get Item 
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
 				"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
@@ -378,15 +378,15 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		CDBManager::instance().ReturnQuery(queryStr, QID_ITEM, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id));
 
 		//--------------------------------------------------------------
-		// QUEST 가져오기 
+		// QUEST import 
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
 				"SELECT dwPID,szName,szState,lValue FROM quest%s WHERE dwPID=%d",
 				GetTablePostfix(), packet->player_id);
 		CDBManager::instance().ReturnQuery(queryStr, QID_QUEST, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id,packet->account_id));
-		//독일 선물 기능에서 item_award테이블에서 login 정보를 얻기위해 account id도 넘겨준다
+		// From the German Futures feature item_award at the table login to get information account id I also hand it over
 		//--------------------------------------------------------------
-		// AFFECT 가져오기 
+		// AFFECT import 
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
 				"SELECT dwPID,bType,bApplyOn,lApplyValue,dwFlag,lDuration,lSPCost FROM affect%s WHERE dwPID=%d",
@@ -403,21 +403,21 @@ void CClientManager::ItemAward(CPeer * peer,char* login)
 	std::set<TItemAward *> * pSet = ItemAwardManager::instance().GetByLogin(login_t);	
 	if(pSet == NULL)
 		return;
-	typeof(pSet->begin()) it = pSet->begin();	//taken_time이 NULL인것들 읽어옴	
+	typeof(pSet->begin()) it = pSet->begin();	//taken_time this NULL I read these things	
 	while(it != pSet->end() )
 	{				
 		TItemAward * pItemAward = *(it++);		
-		char* whyStr = pItemAward->szWhy;	//why 콜룸 읽기
-		char cmdStr[100] = "";	//why콜룸에서 읽은 값을 임시 문자열에 복사해둠
-		strcpy(cmdStr,whyStr);	//명령어 얻는 과정에서 토큰쓰면 원본도 토큰화 되기 때문
+		char* whyStr = pItemAward->szWhy;	//why call room reading
+		char cmdStr[100] = "";	//why The value read from the call room is copied to a temporary string.
+		strcpy(cmdStr,whyStr);	// This is because if a token is used in the process of obtaining a command, the original is also tokenized.
 		char command[20] = "";
-		strcpy(command,GetCommand(cmdStr));	// command 얻기		
-		if( !(strcmp(command,"GIFT") ))	// command 가 GIFT이면
+		strcpy(command,GetCommand(cmdStr));	// command get		
+		if( !(strcmp(command,"GIFT") ))	// command go GIFT This side
 		{
 			TPacketItemAwardInfromer giftData;
-			strcpy(giftData.login, pItemAward->szLogin);	//로그인 아이디 복사
-			strcpy(giftData.command, command);					//명령어 복사
-			giftData.vnum = pItemAward->dwVnum;				//아이템 vnum도 복사
+			strcpy(giftData.login, pItemAward->szLogin);	// Copy Login ID
+			strcpy(giftData.command, command);					// Copy command
+			giftData.vnum = pItemAward->dwVnum;				// item vnum also copy
 			ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER,&giftData,sizeof(TPacketItemAwardInfromer));
 		}
 	}
@@ -438,7 +438,7 @@ char* CClientManager::GetCommand(char* str)
 
 bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 {
-	if (mysql_num_rows(res) == 0)	// 데이터 없음
+	if (mysql_num_rows(res) == 0)	// no data
 		return false;
 
 	memset(pkTab, 0, sizeof(TPlayerTable));
@@ -516,11 +516,11 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 			int max_point = pkTab->level - 9;
 
 			int skill_point = 
-				MIN(20, pkTab->skills[121].bLevel) +	// SKILL_LEADERSHIP			통솔력
-				MIN(20, pkTab->skills[124].bLevel) +	// SKILL_MINING				채광
-				MIN(10, pkTab->skills[131].bLevel) +	// SKILL_HORSE_SUMMON		말소환
-				MIN(20, pkTab->skills[141].bLevel) +	// SKILL_ADD_HP				HP보강
-				MIN(20, pkTab->skills[142].bLevel);		// SKILL_RESIST_PENETRATE	관통저항
+				MIN(20, pkTab->skills[121].bLevel) +	// SKILL_LEADERSHIP			leadership
+				MIN(20, pkTab->skills[124].bLevel) +	// SKILL_MINING				mining
+				MIN(10, pkTab->skills[131].bLevel) +	// SKILL_HORSE_SUMMON		Summon
+				MIN(20, pkTab->skills[141].bLevel) +	// SKILL_ADD_HP				HP reinforcement
+				MIN(20, pkTab->skills[142].bLevel);		// SKILL_RESIST_PENETRATE	Penetration resistance
 
 			pkTab->sub_skill_point = max_point - skill_point;
 		}
@@ -639,14 +639,14 @@ void CClientManager::RESULT_PLAYER_LOAD(CPeer * peer, MYSQL_RES * pRes, ClientHa
 void CClientManager::RESULT_ITEM_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHandle, DWORD dwPID)
 {
 	static std::vector<TPlayerItem> s_items;
-	//DB에서 아이템 정보를 읽어온다.
+	//DB Read item information from .
 	CreateItemTableFromRes(pRes, &s_items, dwPID);
 	DWORD dwCount = s_items.size();
 
 	peer->EncodeHeader(HEADER_DG_ITEM_LOAD, dwHandle, sizeof(DWORD) + sizeof(TPlayerItem) * dwCount);
 	peer->EncodeDWORD(dwCount);
 
-	//CacheSet을 만든다  
+	//CacheSet makes  
 	CreateItemCacheSet(dwPID);
 
 	// ITEM_LOAD_LOG_ATTACH_PID
@@ -658,7 +658,7 @@ void CClientManager::RESULT_ITEM_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHa
 		peer->Encode(&s_items[0], sizeof(TPlayerItem) * dwCount);
 
 		for (DWORD i = 0; i < dwCount; ++i)
-			PutItemCache(&s_items[i], true); // 로드한 것은 따로 저장할 필요 없으므로, 인자 bSkipQuery에 true를 넣는다.
+			PutItemCache(&s_items[i], true); // There is no need to save what you have loaded. , factor bSkipQuery to true Put in .
 	}
 }
 
@@ -666,7 +666,7 @@ void CClientManager::RESULT_AFFECT_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dw
 {
 	int iNumRows;
 
-	if ((iNumRows = mysql_num_rows(pRes)) == 0) // 데이터 없음
+	if ((iNumRows = mysql_num_rows(pRes)) == 0) // no data
 		return;
 
 	static std::vector<TPacketAffectElement> s_elements;
@@ -763,7 +763,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 	int		queryLen;
 	int		player_id;
 
-	// 한 계정에 X초 내로 캐릭터 생성을 할 수 없다.
+	// in one account X You can't create a character in seconds .
 	time_by_id_map_t::iterator it = s_createTimeByAccountID.find(packet->account_id);
 
 	if (it != s_createTimeByAccountID.end())
@@ -1032,14 +1032,14 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 			return;
 		}
 
-		// 삭제 성공
+		// Delete successful
 		sys_log(0, "PLAYER_DELETE SUCCESS %u", dwPID);
 
 		char account_index_string[16];
 
 		snprintf(account_index_string, sizeof(account_index_string), "player_id%d", m_iPlayerIDStart + pi->account_index);
 
-		// 플레이어 테이블을 캐쉬에서 삭제한다.
+		// Delete the player table from the cache .
 		CPlayerTableCache * pkPlayerCache = GetPlayerCache(pi->player_id);
 
 		if (pkPlayerCache)
@@ -1048,7 +1048,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 			delete pkPlayerCache;
 		}
 
-		// 아이템들을 캐쉬에서 삭제한다.
+		// Delete items from cache .
 		TItemCacheSet * pSet = GetItemCacheSet(pi->player_id);
 
 		if (pSet)
@@ -1111,7 +1111,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 	}
 	else
 	{
-		// 삭제 실패
+		// Deletion failed
 		sys_log(0, "PLAYER_DELETE FAIL NO ROW");
 		peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_FAILED, pi->dwHandle, 1);
 		peer->EncodeBYTE(pi->account_index);
@@ -1169,10 +1169,10 @@ void CClientManager::InsertLogoutPlayer(DWORD pid)
 {
 	TLogoutPlayerMap::iterator it = m_map_logout.find(pid);
 
-	// 존재하지 않을경우 추가
+	// Add if not present
 	if (it != m_map_logout.end())
 	{
-		// 존재할경우 시간만 갱신
+		// If it exists, only the time is updated.
 		if (g_log)
 			sys_log(0, "LOGOUT: Update player time pid(%d)", pid);
 

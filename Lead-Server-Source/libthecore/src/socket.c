@@ -1,8 +1,8 @@
 /*
  *    Filename: socket.c
- * Description: 소켓 관련 소스.
+ * Description: Socket related source .
  *
- *      Author: 비엽 aka. Cronan
+ *      Author: Rain leaves aka. Cronan
  */
 #define __LIBTHECORE__
 #include "stdafx.h"
@@ -25,7 +25,7 @@ int socket_read(socket_t desc, char* read_point, size_t space_left)
     if (ret > 0)
 	return ret;
 
-    if (ret == 0)	// 정상적으로 접속 끊김
+    if (ret == 0)	// Connection disconnected normally
 	return -1;
 
 #ifdef EINTR            /* Interrupted system call - various platforms */
@@ -65,7 +65,7 @@ int socket_write_tcp(socket_t desc, const char *txt, int length)
 {
     int bytes_written = send(desc, txt, length, 0);
 
-    // 성공
+    // success
     if (bytes_written > 0)
 	return (bytes_written);
 
@@ -118,7 +118,7 @@ int socket_write(socket_t desc, const char *data, size_t length)
 	    if (errno == EAGAIN)
 		sys_err("socket write would block, about to close!");
 	    else
-		sys_err("write to desc error");   // '보통' 상대편으로 부터 접속이 끊긴 것이다.
+		sys_err("write to desc error");   // ' commonly ' The connection from the other party was lost. .
 
 	    return -1;
 	}
@@ -161,8 +161,8 @@ int socket_bind(const char * ip, int port, int protocol)
 
     memset(&sa, 0, sizeof(sa));
     sa.sin_family	= AF_INET;
-//윈도우 서버는 개발용으로만 쓰기 때문에 BIND ip를 INADDR_ANY로 고정
-//(테스트의 편의성을 위해)
+// Windows Server is only used for development purposes. BIND ip cast INADDR_ANY fixed to
+//( For convenience of testing )
 #ifndef __WIN32__
     sa.sin_addr.s_addr	= inet_addr(ip);
 #else
@@ -234,7 +234,7 @@ socket_t socket_connect(const char* host, WORD port)
     struct sockaddr_in  server_addr;
     int                 rslt;
 
-    /* 소켓주소 구조체 초기화 */
+    /* Initializing socket address structure */
     memset(&server_addr, 0, sizeof(server_addr));
 
     if (isdigit(*host))
@@ -267,7 +267,7 @@ socket_t socket_connect(const char* host, WORD port)
     socket_timeout(s, 10, 0);
     socket_lingeron(s);
 
-    /*  연결요청 */
+    /*  Connection request */
     if ((rslt = connect(s, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0)
     {
 	socket_close(s);

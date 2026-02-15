@@ -286,7 +286,7 @@ LPITEM CItem::RemoveFromCharacter()
 
 	LPCHARACTER pOwner = m_pOwner;
 
-	if (m_bEquipped)	// 장착되었는가?
+	if (m_bEquipped)	// Is it installed? ?
 	{
 		Unequip();
 		//pOwner->UpdatePacket();
@@ -321,7 +321,7 @@ LPITEM CItem::RemoveFromCharacter()
 			{
 				TItemPos cell(INVENTORY, m_wCell);
 
-				if (false == cell.IsDefaultInventoryPosition() && false == cell.IsBeltInventoryPosition()) // 아니면 소지품에?
+				if (false == cell.IsDefaultInventoryPosition() && false == cell.IsBeltInventoryPosition()) // Or in your belongings ?
 					sys_err("CItem::RemoveFromCharacter: Invalid Item Position");
 				else
 				{
@@ -483,16 +483,16 @@ bool CItem::CanUsedBy(LPCHARACTER ch)
 
 int CItem::FindEquipCell(LPCHARACTER ch, int iCandidateCell)
 {
-	// 코스츔 아이템(ITEM_COSTUME)은 WearFlag 없어도 됨. (sub type으로 착용위치 구분. 귀찮게 또 wear flag 줄 필요가 있나..)
-	// 용혼석(ITEM_DS, ITEM_SPECIAL_DS)도  SUB_TYPE으로 구분. 신규 반지, 벨트는 ITEM_TYPE으로 구분 -_-
+	// Costume item (ITEM_COSTUME) silver WearFlag You don't need it . (sub type Classified by wearing position . Annoying again wear flag Do I need to give it ..)
+	// dragon soul stone (ITEM_DS, ITEM_SPECIAL_DS) do  SUB_TYPE Separated by . new ring , The belt is ITEM_TYPE Separated by -_-
 	if ((0 == GetWearFlag() || ITEM_TOTEM == GetType()) && ITEM_COSTUME != GetType() && ITEM_DS != GetType() && ITEM_SPECIAL_DS != GetType() && ITEM_RING != GetType() && ITEM_BELT != GetType())
 		return -1;
 
-	// 용혼석 슬롯을 WEAR로 처리할 수가 없어서(WEAR는 최대 32개까지 가능한데 용혼석을 추가하면 32가 넘는다.)
-	// 인벤토리의 특정 위치((INVENTORY_MAX_NUM + WEAR_MAX_NUM)부터 (INVENTORY_MAX_NUM + WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX - 1)까지)를
-	// 용혼석 슬롯으로 정함.
-	// return 할 때에, INVENTORY_MAX_NUM을 뺀 이유는,
-	// 본래 WearCell이 INVENTORY_MAX_NUM를 빼고 return 하기 때문.
+	// Dragon Soul Stone slot WEAR Because I can't process it with (WEAR is the maximum 32 Up to 100 pieces are possible, but if you add dragon soul stones, 32 It exceeds .)
+	// Specific location in inventory ((INVENTORY_MAX_NUM + WEAR_MAX_NUM) from (INVENTORY_MAX_NUM + WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX - 1) until ) cast
+	// Determined by Dragon Soul Stone slot .
+	// return When to do , INVENTORY_MAX_NUM The reason for excluding ,
+	// originally WearCell this INVENTORY_MAX_NUM Except return Because .
 	if (GetType() == ITEM_DS || GetType() == ITEM_SPECIAL_DS)
 	{
 		if (iCandidateCell < 0)
@@ -553,7 +553,7 @@ int CItem::FindEquipCell(LPCHARACTER ch, int iCandidateCell)
 			return WEAR_UNIQUE1;		
 	}
 
-	// 수집 퀘스트를 위한 아이템이 박히는곳으로 한번 박히면 절대 뺼수 없다.
+	// This is where items for collection quests are stuck, and once they are stuck, they can never be removed. .
 	else if (GetWearFlag() & WEARABLE_ABILITY)
 	{
 		if (!ch->GetWear(WEAR_ABILITY1))
@@ -600,12 +600,12 @@ void CItem::ModifyPoints(bool bAdd)
 {
 	int accessoryGrade;
 
-	// 무기와 갑옷만 소켓을 적용시킨다.
+	// Only weapons and armor are socketed. .
 	if (false == IsAccessoryForSocket())
 	{
 		if (m_pProto->bType == ITEM_WEAPON || m_pProto->bType == ITEM_ARMOR)
 		{
-			// 소켓이 속성강화에 사용되는 경우 적용하지 않는다 (ARMOR_WRIST ARMOR_NECK ARMOR_EAR)
+			// Does not apply if the socket is used for property enhancement. (ARMOR_WRIST ARMOR_NECK ARMOR_EAR)
 			for (int i = 0; i < ITEM_SOCKET_MAX_NUM; ++i)
 			{
 				DWORD dwVnum;
@@ -664,12 +664,12 @@ void CItem::ModifyPoints(bool bAdd)
 			m_pOwner->ApplyPoint(m_pProto->aApplies[i].bType, bAdd ? value : -value);
 		}
 	}
-	// 초승달의 반지, 할로윈 사탕, 행복의 반지, 영원한 사랑의 펜던트의 경우
-	// 기존의 하드 코딩으로 강제로 속성을 부여했지만,
-	// 그 부분을 제거하고 special item group 테이블에서 속성을 부여하도록 변경하였다.
-	// 하지만 하드 코딩되어있을 때 생성된 아이템이 남아있을 수도 있어서 특수처리 해놓는다.
-	// 이 아이템들의 경우, 밑에 ITEM_UNIQUE일 때의 처리로 속성이 부여되기 때문에,
-	// 아이템에 박혀있는 attribute는 적용하지 않고 넘어간다.
+	// crescent moon ring , halloween candy , ring of happiness , For the pendant of eternal love
+	// Although the property was forced by existing hard coding, ,
+	// remove that part special item group Changed to assign properties to the table .
+	// However, items created when hard coded may remain, so they are handled specially. .
+	// For these items , below ITEM_UNIQUE Because properties are given through processing when ,
+	// embedded in the item attribute skips without applying .
 	if (true == CItemVnumHelper::IsRamadanMoonRing(GetVnum()) || true == CItemVnumHelper::IsHalloweenCandy(GetVnum())
 		|| true == CItemVnumHelper::IsHappinessRing(GetVnum()) || true == CItemVnumHelper::IsLovePendant(GetVnum()))
 	{
@@ -726,7 +726,7 @@ void CItem::ModifyPoints(bool bAdd)
 
 		case ITEM_ARMOR:
 			{
-				// 코스츔 body를 입고있다면 armor는 벗던 입던 상관 없이 비주얼에 영향을 주면 안 됨.
+				// Costume body If you are wearing armor It should not affect the visuals regardless of whether you take it off or wear it. .
 				if (0 != m_pOwner->GetWear(WEAR_COSTUME_BODY))
 					break;
 
@@ -746,33 +746,33 @@ void CItem::ModifyPoints(bool bAdd)
 			}
 			break;
 
-		// 코스츔 아이템 입었을 때 캐릭터 parts 정보 세팅. 기존 스타일대로 추가함..
+		// Character when wearing a costume item parts Information settings . Added to existing style ..
 		case ITEM_COSTUME:
 			{
 				DWORD toSetValue = this->GetVnum();
 				EParts toSetPart = PART_MAX_NUM;
 
-				// 갑옷 코스츔
+				// armor costume
 				if (GetSubType() == COSTUME_BODY)
 				{
 					toSetPart = PART_MAIN;
 
 					if (false == bAdd)
 					{
-						// 코스츔 갑옷을 벗었을 때 원래 갑옷을 입고 있었다면 그 갑옷으로 look 세팅, 입지 않았다면 default look
+						// If you were wearing original armor when you take off the costume armor, you can use that armor. look Setting , If you didn't wear it default look
 						const CItem* pArmor = m_pOwner->GetWear(WEAR_BODY);
 						toSetValue = (NULL != pArmor) ? pArmor->GetVnum() : m_pOwner->GetOriginalPart(PART_MAIN);						
 					}
 					
 				}
 
-				// 헤어 코스츔
+				// hair costume
 				else if (GetSubType() == COSTUME_HAIR)
 				{
 					toSetPart = PART_HAIR;
 
-					// 코스츔 헤어는 shape값을 item proto의 value3에 세팅하도록 함. 특별한 이유는 없고 기존 갑옷(ARMOR_BODY)의 shape값이 프로토의 value3에 있어서 헤어도 같이 value3으로 함.
-					// [NOTE] 갑옷은 아이템 vnum을 보내고 헤어는 shape(value3)값을 보내는 이유는.. 기존 시스템이 그렇게 되어있음...
+					// Costume hair shape value item proto of value3 Set it to . No special reason, just existing armor (ARMOR_BODY) of shape value of proto value3 In the same way as hair value3 Let's do it .
+					// [NOTE] Armor is an item vnum send and break up shape(value3) Why send the value .. The existing system is like that. ...
 					toSetValue = (true == bAdd) ? this->GetValue(3) : 0;
 				}
 
@@ -833,7 +833,7 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 		return false;
 	}
 
-	// 용혼석 슬롯 index는 WEAR_MAX_NUM 보다 큼.
+	// Dragon Soul Stone Slot index Is WEAR_MAX_NUM greater than .
 	if (IsDragonSoul())
 	{
 		if (bWearCell < WEAR_MAX_NUM || bWearCell >= WEAR_MAX_NUM + DRAGON_SOUL_DECK_MAX_NUM * DS_SLOT_MAX)
@@ -860,7 +860,7 @@ bool CItem::EquipTo(LPCHARACTER ch, BYTE bWearCell)
 	if (GetOwner())
 		RemoveFromCharacter();
 
-	ch->SetWear(bWearCell, this); // 여기서 패킷 나감
+	ch->SetWear(bWearCell, this); // Packet goes out here
 
 	m_pOwner = ch;
 	m_bEquipped = true;
@@ -919,7 +919,7 @@ bool CItem::Unequip()
 		return false;
 	}
 
-	//신규 말 아이템 제거시 처리
+	// Handling when new horse item is removed
 	if (IsRideItem())
 		ClearMountAttributeAndAffect();
 
@@ -1220,7 +1220,7 @@ void CItem::AlterToMagicItem()
 		}
 	}
 
-	// 100% 확률로 좋은 속성 하나
+	// 100% One attribute with good probability
 	PutAttribute(aiItemMagicAttributePercentHigh);
 
 	if (number(1, 100) <= iSecondPct)
@@ -1306,8 +1306,8 @@ EVENTFUNC(unique_expire_event)
 		}
 		else
 		{
-			// 게임 내에 시간제 아이템들이 빠릿빠릿하게 사라지지 않는 버그가 있어
-			// 수정
+			// There is a bug in the game where timed items do not disappear quickly.
+			// correction
 			// by rtsummit
 			if (pkItem->GetSocket(ITEM_SOCKET_UNIQUE_REMAIN_TIME) - cur < 600)
 				return PASSES_PER_SEC(pkItem->GetSocket(ITEM_SOCKET_UNIQUE_REMAIN_TIME) - cur);
@@ -1317,9 +1317,9 @@ EVENTFUNC(unique_expire_event)
 	}
 }
 
-// 시간 후불제
-// timer를 시작할 때에 시간 차감하는 것이 아니라, 
-// timer가 발화할 때에 timer가 동작한 시간 만큼 시간 차감을 한다.
+// deferred payment
+// timer Rather than deducting time when starting, , 
+// timer When ignites timer Time is deducted according to the operating time. .
 EVENTFUNC(timer_based_on_wear_expire_event)
 {
 	item_event_info* info = dynamic_cast<item_event_info*>( event->info );
@@ -1338,7 +1338,7 @@ EVENTFUNC(timer_based_on_wear_expire_event)
 		pkItem->SetTimerBasedOnWearExpireEvent(NULL);
 		pkItem->SetSocket(ITEM_SOCKET_REMAIN_SEC, 0);
 	
-		// 일단 timer based on wear 용혼석은 시간 다 되었다고 없애지 않는다.
+		// first timer based on wear The Dragon Soul Stone does not disappear when time runs out. .
 		if (pkItem->IsDragonSoul())
 		{
 			DSManager::instance().DeactivateDragonSoul(pkItem);
@@ -1437,7 +1437,7 @@ void CItem::StartUniqueExpireEvent()
 	if (m_pkUniqueExpireEvent)
 		return;
 
-	//기간제 아이템일 경우 시간제 아이템은 동작하지 않는다
+	// If it is a limited-time item, the limited-time item does not work.
 	if (IsRealTimeItem())
 		return;
 
@@ -1460,14 +1460,14 @@ void CItem::StartUniqueExpireEvent()
 	SetUniqueExpireEvent(event_create(unique_expire_event, info, PASSES_PER_SEC(iSec)));
 }
 
-// 시간 후불제
-// timer_based_on_wear_expire_event 설명 참조
+// deferred payment
+// timer_based_on_wear_expire_event See description
 void CItem::StartTimerBasedOnWearExpireEvent()
 {
 	if (m_pkTimerBasedOnWearExpireEvent)
 		return;
 
-	//기간제 아이템일 경우 시간제 아이템은 동작하지 않는다
+	// If it is a limited-time item, the limited-time item does not work.
 	if (IsRealTimeItem())
 		return;
 
@@ -1476,7 +1476,7 @@ void CItem::StartTimerBasedOnWearExpireEvent()
 
 	int iSec = GetSocket(0);
 	
-	// 남은 시간을 분단위로 끊기 위해...
+	// To cut off the remaining time by minutes ...
 	if (0 != iSec)
 	{
 		iSec %= 60;
@@ -1495,7 +1495,7 @@ void CItem::StopUniqueExpireEvent()
 	if (!m_pkUniqueExpireEvent)
 		return;
 
-	if (GetValue(2) != 0) // 게임시간제 이외의 아이템은 UniqueExpireEvent를 중단할 수 없다.
+	if (GetValue(2) != 0) // Items other than game time UniqueExpireEvent can't stop .
 		return;
 
 	// HARD CODING
@@ -1532,12 +1532,12 @@ int CItem::GetSpecialGroup() const
 }
 
 //
-// 악세서리 소켓 처리.
+// Accessory socket processing .
 //
 bool CItem::IsAccessoryForSocket()
 {
 	return (m_pProto->bType == ITEM_ARMOR && (m_pProto->bSubType == ARMOR_WRIST || m_pProto->bSubType == ARMOR_NECK || m_pProto->bSubType == ARMOR_EAR)) ||
-		(m_pProto->bType == ITEM_BELT);				// 2013년 2월 새로 추가된 '벨트' 아이템의 경우 기획팀에서 악세서리 소켓 시스템을 그대로 이용하자고 함.
+		(m_pProto->bType == ITEM_BELT);				// 2013 year 2 Newly added month ' belt ' In the case of items, the planning team suggested using the accessory socket system as is. .
 }
 
 void CItem::SetAccessorySocketGrade(int iGrade) 
@@ -1682,7 +1682,7 @@ void CItem::ClearMountAttributeAndAffect()
 }
 
 // fixme
-// 이거 지금은 안쓴데... 근데 혹시나 싶어서 남겨둠.
+// I'm not using this right now ... But I left it here just in case. .
 // by rtsummit
 bool CItem::IsNewMountItem()
 {
@@ -1729,7 +1729,7 @@ void CItem::AccessorySocketDegrade()
 	}
 }
 
-// ring에 item을 박을 수 있는지 여부를 체크해서 리턴
+// ring to item Checks whether it is possible to insert and returns
 static const bool CanPutIntoRing(LPITEM ring, LPITEM item)
 {
 	const DWORD vnum = item->GetVnum();
@@ -1938,10 +1938,10 @@ int CItem::GetLevelLimit()
 
 bool CItem::OnAfterCreatedItem()
 {
-	// 아이템을 한 번이라도 사용했다면, 그 이후엔 사용 중이지 않아도 시간이 차감되는 방식
+	// If you used the item even once , After that, time is deducted even if it is not in use.
 	if (-1 != this->GetProto()->cLimitRealTimeFirstUseIndex)
 	{
-		// Socket1에 아이템의 사용 횟수가 기록되어 있으니, 한 번이라도 사용한 아이템은 타이머를 시작한다.
+		// Socket1 The number of times the item has been used is recorded in , Items used even once start a timer. .
 		if (0 != GetSocket(1))
 		{
 			StartRealTimeExpireEvent();
@@ -1976,7 +1976,7 @@ int CItem::GiveMoreTime_Per(float fPercent)
 			return given_time;
 		}
 	}
-	// 우선 용혼석에 관해서만 하도록 한다.
+	// First, let's talk about the dragon soul stone. .
 	else
 		return 0;
 }
@@ -2000,7 +2000,7 @@ int CItem::GiveMoreTime_Fix(DWORD dwTime)
 			return dwTime;
 		}
 	}
-	// 우선 용혼석에 관해서만 하도록 한다.
+	// First, let's talk about the dragon soul stone. .
 	else
 		return 0;
 }
@@ -2025,7 +2025,7 @@ int	CItem::GetDuration()
 
 bool CItem::IsSameSpecialGroup(const LPITEM item) const
 {
-	// 서로 VNUM이 같다면 같은 그룹인 것으로 간주
+	// each other VNUM If this is the same, it is considered to be the same group.
 	if (this->GetVnum() == item->GetVnum())
 		return true;
 

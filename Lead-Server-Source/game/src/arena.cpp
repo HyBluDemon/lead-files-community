@@ -294,7 +294,7 @@ EVENTFUNC(ready_to_start_event)
 				duelStart.header = HEADER_GC_DUEL_START;
 				duelStart.wSize = sizeof(TPacketGCDuelStart) + 4;
 
-				DWORD dwOppList[8]; // 최대 파티원 8명 이므로..
+				DWORD dwOppList[8]; // maximum party members 8 Because it is a person ..
 
 				dwOppList[0] = (DWORD)chB->GetVID();
 				TEMP_BUFFER buf;
@@ -343,7 +343,7 @@ EVENTFUNC(ready_to_start_event)
 
 				TEMP_BUFFER buf;
 				TEMP_BUFFER buf2;
-				DWORD dwOppList[8]; // 최대 파티원 8명 이므로..
+				DWORD dwOppList[8]; // maximum party members 8 Because it is a person ..
 				TPacketGCDuelStart duelStart;
 				duelStart.header = HEADER_GC_DUEL_START;
 				duelStart.wSize = sizeof(TPacketGCDuelStart) + 4;
@@ -682,7 +682,7 @@ bool CArenaMap::CanAttack(LPCHARACTER pCharAttacker, LPCHARACTER pCharVictim)
 
 bool CArena::CanAttack(DWORD dwPIDA, DWORD dwPIDB)
 {
-	// 1:1 전용 다대다 할 경우 수정 필요
+	// 1:1 In case of exclusive many-to-many, modification is required
 	if (m_dwPIDA == dwPIDA && m_dwPIDB == dwPIDB) return true;
 	if (m_dwPIDA == dwPIDB && m_dwPIDB == dwPIDA) return true;
 
@@ -732,7 +732,7 @@ bool CArena::OnDead(DWORD dwPIDA, DWORD dwPIDB)
 
 	if (pCharA == NULL && pCharB == NULL)
 	{
-		// 둘다 접속이 끊어졌다 ?!
+		// Both are disconnected ?!
 		SendChatPacketToObserver(CHAT_TYPE_NOTICE, LC_TEXT("The duel has been stopped because there is a problem in the arena."));
 		restart = false;
 	}
@@ -815,7 +815,7 @@ bool CArena::OnDead(DWORD dwPIDA, DWORD dwPIDB)
 	}
 	else
 	{
-		// 오면 안된다 ?!
+		// You shouldn't come ?!
 	}
 
 	if (restart == false)

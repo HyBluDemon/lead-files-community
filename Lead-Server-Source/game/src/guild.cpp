@@ -413,7 +413,7 @@ void CGuild::SendListPacket(LPCHARACTER ch)
 	   Count (byte)
 	   [
 	   ...
-	   name_flag 1 - 이름을 보내느냐 안보내느냐
+	   name_flag 1 - Are you sending your name or not?
 	   name CHARACTER_NAME_MAX_LEN+1
 	   ] * Count
 
@@ -556,7 +556,7 @@ void CGuild::LoadGuildMemberData(SQLMsg* pmsg)
 void CGuild::LoadGuildGradeData(SQLMsg* pmsg)
 {
 	/*
-    // 15개 아닐 가능성 존재
+    // 15 There is a possibility that it is not a dog
 	if (pmsg->Get()->iNumRows != 15)
 	{
 		sys_err("Query failed: getting guild grade data. GuildID(%d)", GetID());
@@ -695,7 +695,7 @@ void CGuild::__P2PUpdateGrade(SQLMsg* pmsg)
 
 		grade--;
 
-		// 등급 명칭이 현재와 다르다면 업데이트
+		// Update if the grade name is different from the current one
 		if (0 != strcmp(m_data.grade_array[grade].grade_name, name))
 		{
 			strlcpy(m_data.grade_array[grade].grade_name, name, sizeof(m_data.grade_array[grade].grade_name));
@@ -1081,7 +1081,7 @@ void CGuild::RefreshCommentForce(DWORD player_id)
 		d->BufferedPacket(szName, sizeof(szName));
 
 		if (i == pmsg->Get()->uiNumRows - 1)
-			d->Packet(szContent, sizeof(szContent)); // 마지막 줄이면 보내기
+			d->Packet(szContent, sizeof(szContent)); // Send the last line
 		else
 			d->BufferedPacket(szContent, sizeof(szContent));
 	}
@@ -1260,7 +1260,7 @@ void CGuild::UseSkill(DWORD dwVnum, LPCHARACTER ch, DWORD pid)
 
 	if ((pkSk->dwFlag & SKILL_FLAG_SELFONLY))
 	{
-		// 이미 걸려 있으므로 사용하지 않음.
+		// Already hung so don't use it .
 		if (ch->FindAffect(pkSk->dwVnum))
 			return;
 
@@ -1312,7 +1312,7 @@ void CGuild::UseSkill(DWORD dwVnum, LPCHARACTER ch, DWORD pid)
 	switch (dwVnum)
 	{
 		case GUILD_SKILL_TELEPORT:
-			// 현재 서버에 있는 사람을 먼저 시도.
+			// Try whoever is on the current server first .
 			SendDBSkillUpdate(-iNeededSP);
 			if ((victim = (CHARACTER_MANAGER::instance().FindByPID(pid))))
 				ch->WarpSet(victim->GetX(), victim->GetY());
@@ -1320,10 +1320,10 @@ void CGuild::UseSkill(DWORD dwVnum, LPCHARACTER ch, DWORD pid)
 			{
 				if (m_memberP2POnline.find(pid) != m_memberP2POnline.end())
 				{
-					// 다른 서버에 로그인된 사람이 있음 -> 메시지 보내 좌표를 받아오자
-					// 1. A.pid, B.pid 를 뿌림
-					// 2. B.pid를 가진 서버가 뿌린서버에게 A.pid, 좌표 를 보냄
-					// 3. 워프
+					// Someone logged in to another server -> Send a message to receive coordinates
+					// 1. A.pid, B.pid sprinkle
+					// 2. B.pid The server with A.pid, send coordinates
+					// 3. warp
 					CCI * pcci = P2P_MANAGER::instance().FindByPID(pid);
 
 					if (pcci->bChannel != g_bChannel)
@@ -1875,11 +1875,11 @@ bool CGuild::HasLand()
 }
 
 // GUILD_JOIN_BUG_FIX
-/// 길드 초대 event 정보
+/// Guild Invitation event information
 EVENTINFO(TInviteGuildEventInfo)
 {
-	DWORD	dwInviteePID;		///< 초대받은 character 의 PID
-	DWORD	dwGuildID;		///< 초대한 Guild 의 ID
+	DWORD	dwInviteePID;		///< invited character of PID
+	DWORD	dwGuildID;		///< invited Guild of ID
 
 	TInviteGuildEventInfo()
 	: dwInviteePID( 0 )
@@ -1889,8 +1889,8 @@ EVENTINFO(TInviteGuildEventInfo)
 };
 
 /**
- * 길드 초대 event callback 함수.
- * event 가 발동하면 초대 거절로 처리한다.
+ * Guild Invitation event callback function .
+ * event If triggered, the invitation is treated as rejected. .
  */
 EVENTFUNC( GuildInviteEvent )
 {
@@ -1967,7 +1967,7 @@ void CGuild::Invite( LPCHARACTER pchInviter, LPCHARACTER pchInvitee )
 		return;
 
 	//
-	// 이벤트 생성
+	// Event Creation
 	// 
 	TInviteGuildEventInfo* pInfo = AllocEventInfo<TInviteGuildEventInfo>();
 	pInfo->dwInviteePID = pchInvitee->GetPlayerID();
@@ -1976,7 +1976,7 @@ void CGuild::Invite( LPCHARACTER pchInviter, LPCHARACTER pchInvitee )
 	m_GuildInviteEventMap.insert(EventMap::value_type(pchInvitee->GetPlayerID(), event_create(GuildInviteEvent, pInfo, PASSES_PER_SEC(10))));
 
 	//
-	// 초대 받는 character 에게 초대 패킷 전송
+	// invited character Send invitation packet to
 	// 
 
 	DWORD gid = GetID();

@@ -239,7 +239,7 @@ void CDragonLairManager::OnDragonDead(LPCHARACTER pDragon, DWORD KillerGuildID)
 
 	iter->second->OnDragonDead( pDragon );
 
-	// 애들 다 집으로 보내고 맵 없애기
+	// Send all the kids home and get rid of the map.
 
 	tag_DragonLair_Collapse_EventInfo* info;
 	info = AllocEventInfo<tag_DragonLair_Collapse_EventInfo>();

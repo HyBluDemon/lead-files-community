@@ -158,8 +158,8 @@ void CShop::SetShopItems(TShopItemTable * pTable, BYTE bItemCount)
 		if (item.pkItem)
 		{
 			item.vnum = pkItem->GetVnum();
-			item.count = pkItem->GetCount(); // PC 샵의 경우 아이템 개수는 진짜 아이템의 개수여야 한다.
-			item.price = pTable->price; // 가격도 사용자가 정한대로..
+			item.count = pkItem->GetCount(); // PC For shops, the number of items must be the number of actual items. .
+			item.price = pTable->price; // The price is determined by the user ..
 			item.itemid	= pkItem->GetID();
 		}
 		else
@@ -245,7 +245,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 
 	LPITEM item;
 
-	if (m_pkPC) // 피씨가 운영하는 샵은 피씨가 실제 아이템을 가지고있어야 한다.
+	if (m_pkPC) // A shop run by PC requires PC to have actual items. .
 		item = r_item.pkItem;
 	else
 		item = ITEM_MANAGER::instance().CreateItem(r_item.vnum, r_item.count);
@@ -257,7 +257,7 @@ int CShop::Buy(LPCHARACTER ch, BYTE pos)
 	{
 		if (quest::CQuestManager::instance().GetEventFlag("hivalue_item_sell") == 0)
 		{
-			//축복의 구슬 && 만년한철 이벤트 
+			// bead of blessing && All-season event 
 			if (item->GetVnum() == 70024 || item->GetVnum() == 70035)
 			{
 				return SHOP_SUBHEADER_GC_END;
@@ -400,7 +400,7 @@ bool CShop::AddGuest(LPCHARACTER ch, DWORD owner_vid, bool bOtherEmpire)
 		//HIVALUE_ITEM_EVENT
 		if (quest::CQuestManager::instance().GetEventFlag("hivalue_item_sell") == 0)
 		{
-			//축복의 구슬 && 만년한철 이벤트 
+			// bead of blessing && All-season event 
 			if (item.vnum == 70024 || item.vnum == 70035)
 			{				
 				continue;

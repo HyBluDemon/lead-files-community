@@ -31,7 +31,7 @@ namespace quest
 			return 0;
 		}
 
-		if (ch->FindAffect(AFFECT_QUEST_START_IDX, applyOn)) // 퀘스트로 인해 같은 곳에 효과가 걸려있으면 스킵
+		if (ch->FindAffect(AFFECT_QUEST_START_IDX, applyOn)) // If there is an effect in the same place due to a quest, skip it.
 			return 0;
 
 		long value = (long) lua_tonumber(L, 2);
@@ -62,14 +62,14 @@ namespace quest
 		return 0;
 	}
 
-	int affect_remove_bad(lua_State * L) // 나쁜 효과를 없앰
+	int affect_remove_bad(lua_State * L) // Eliminate bad effects
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 		ch->RemoveBadAffect();
 		return 0;
 	}
 
-	int affect_remove_good(lua_State * L) // 좋은 효과를 없앰
+	int affect_remove_good(lua_State * L) // eliminates the good effect
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 		ch->RemoveGoodAffect();
@@ -104,7 +104,7 @@ namespace quest
 		return 0;
 	}
 
-	int affect_remove_hair(lua_State * L) // 헤어 효과를 없앤다.
+	int affect_remove_hair(lua_State * L) // remove hair effect .
 	{
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
@@ -123,7 +123,7 @@ namespace quest
 		return 1;
 	}
 	
-	// 현재 캐릭터가 AFFECT_TYPE affect를 갖고있으면 bApplyOn 값을 반환하고 없으면 nil을 반환하는 함수.
+	// The current character AFFECT_TYPE affect If you have bApplyOn Returns a value, if not nil A function that returns .
 	// usage :	applyOn = affect.get_apply(AFFECT_TYPE) 
 	int affect_get_apply_on(lua_State * L)
 	{

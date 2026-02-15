@@ -5,14 +5,14 @@
 #include "DragonSoul.h"
 #include "log.h"
 
-// 용혼석 초기화
-// 용혼석 on/off는 Affect로 저장되기 때문에,
-// 용혼석 Affect가 있다면 덱에 있는 용혼석을 activate해야한다.
-// 또한 용혼석 사용 자격은 QuestFlag로 저장해 놓았기 때문에, 
-// 퀘스트 Flag에서 용혼석 사용 자격을 읽어온다.
+// Dragon Soul Stone reset
+// dragon soul stone on/off Is Affect Because it is saved as ,
+// dragon soul stone Affect If you have it, use the Dragon Soul Stone in your deck. activate must do .
+// Additionally, the qualifications for using the Dragon Soul Stone are: QuestFlag Because it was saved as , 
+// quest Flag Read the qualifications for using the Dragon Soul Stone from .
 
-// 캐릭터의 affect, quest가 load 되기 전에 DragonSoul_Initialize를 호출하면 안된다.
-// affect가 가장 마지막에 로드되어 LoadAffect에서 호출함.
+// of character affect, quest go load before becoming DragonSoul_Initialize should not be called .
+// affect is loaded last LoadAffect Called from .
 void CHARACTER::DragonSoul_Initialize()
 {
 	for (int i = INVENTORY_MAX_NUM + WEAR_MAX_NUM; i < DRAGON_SOUL_EQUIP_SLOT_END; i++)
@@ -55,7 +55,7 @@ void CHARACTER::DragonSoul_GiveQualification()
 	}
 	AddAffect(AFFECT_DRAGON_SOUL_QUALIFIED, APPLY_NONE, 0, AFF_NONE, INFINITE_AFFECT_DURATION, 0, false, false);
 	//SetQuestFlag("dragon_soul.is_qualified", 1);
-	//// 자격있다면 POINT_DRAGON_SOUL_IS_QUALIFIED는 무조건 1
+	//// If you are qualified POINT_DRAGON_SOUL_IS_QUALIFIED is unconditional 1
 	//PointChange(POINT_DRAGON_SOUL_IS_QUALIFIED, 1 - GetPoint(POINT_DRAGON_SOUL_IS_QUALIFIED));
 }
 

@@ -16,7 +16,7 @@
 
 void exchange_packet(LPCHARACTER ch, BYTE sub_header, bool is_me, DWORD arg1, TItemPos arg2, DWORD arg3, void * pvData = NULL);
 
-// 교환 패킷
+// exchange packet
 void exchange_packet(LPCHARACTER ch, BYTE sub_header, bool is_me, DWORD arg1, TItemPos arg2, DWORD arg3, void * pvData)
 {
 	if (!ch->GetDesc())
@@ -45,10 +45,10 @@ void exchange_packet(LPCHARACTER ch, BYTE sub_header, bool is_me, DWORD arg1, TI
 	ch->GetDesc()->Packet(&pack_exchg, sizeof(pack_exchg));
 }
 
-// 교환을 시작
+// Start the exchange
 bool CHARACTER::ExchangeStart(LPCHARACTER victim)
 {
-	if (this == victim)	// 자기 자신과는 교환을 못한다.
+	if (this == victim)	// You cannot exchange with yourself. .
 		return false;
 
 	if (IsObserverMode())
@@ -75,7 +75,7 @@ bool CHARACTER::ExchangeStart(LPCHARACTER victim)
 	//END_PREVENT_TRADE_WINDOW
 	int iDist = DISTANCE_APPROX(GetX() - victim->GetX(), GetY() - victim->GetY());
 
-	// 거리 체크
+	// distance check
 	if (iDist >= EXCHANGE_MAX_DISTANCE)
 		return false;
 
@@ -143,7 +143,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 	if (!item_pos.IsValidItemPosition())
 		return false;
 
-	// 장비는 교환할 수 없음
+	// Equipment cannot be exchanged
 	if (item_pos.IsEquipPosition())
 		return false;
 
@@ -163,7 +163,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 		return false;
 	}
 
-	// 이미 교환창에 추가된 아이템인가?
+	// Is this item already added to the exchange window? ?
 	if (item->IsExchanging())
 	{
 		sys_log(0, "EXCHANGE under exchanging");
@@ -212,7 +212,7 @@ bool CExchange::AddItem(TItemPos item_pos, BYTE display_pos)
 		return true;
 	}
 
-	// 추가할 공간이 없음
+	// No space to add
 	return false;
 }
 
@@ -248,7 +248,7 @@ bool CExchange::AddGold(long gold)
 
 	if (GetOwner()->GetGold() < gold)
 	{
-		// 가지고 있는 돈이 부족.
+		// I don't have enough money .
 		exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_LESS_GOLD, 0, 0, NPOS, 0);
 		return false;
 	}
@@ -268,7 +268,7 @@ bool CExchange::AddGold(long gold)
 	return true;
 }
 
-// 돈이 충분히 있는지, 교환하려는 아이템이 실제로 있는지 확인 한다.
+// do you have enough money , Make sure the item you want to exchange actually exists .
 bool CExchange::Check(int * piItemCount)
 {
 	if (GetOwner()->GetGold() < m_lGold)
@@ -316,10 +316,10 @@ bool CExchange::CheckSpace()
 		s_grids[page].Put(localPos, 1, item->GetSize());
 	}
 
-	// 아... 뭔가 개병신 같지만... 용혼석 인벤을 노멀 인벤 보고 따라 만든 내 잘못이다 ㅠㅠ
+	// ah ... It seems like a bitch ... It's my fault for making the Dragon Soul Stone inventory based on the normal inventory T_T
 	static std::vector <WORD> s_vDSGrid(DRAGON_SOUL_INVENTORY_MAX_NUM);
 	
-	// 일단 용혼석을 교환하지 않을 가능성이 크므로, 용혼석 인벤 복사는 용혼석이 있을 때 하도록 한다.
+	// First of all, there is a high possibility that the Dragon Soul Stone will not be exchanged. , Dragon Soul Stone inventory copy should be done when Dragon Soul Stone is available. .
 	bool bDSInitialized = false;
 	
 	for (i = 0; i < EXCHANGE_ITEM_MAX_NUM; ++i)
@@ -395,7 +395,7 @@ bool CExchange::CheckSpace()
 	return true;
 }
 
-// 교환 끝 (아이템과 돈 등을 실제로 옮긴다)
+// end of exchange ( Actually move items, money, etc. )
 bool CExchange::Done()
 {
 	int		empty_pos, i;
@@ -471,7 +471,7 @@ bool CExchange::Done()
 	return true;
 }
 
-// 교환을 동의
+// agree to exchange
 bool CExchange::Accept(bool bAccept)
 {
 	if (m_bAccept == bAccept)
@@ -479,7 +479,7 @@ bool CExchange::Accept(bool bAccept)
 
 	m_bAccept = bAccept;
 
-	// 둘 다 동의 했으므로 교환 성립
+	// Since both agreed, the exchange is established
 	if (m_bAccept && GetCompany()->m_bAccept)
 	{
 		int	iItemCount;
@@ -491,9 +491,9 @@ bool CExchange::Accept(bool bAccept)
 		victim->SetExchangeTime();		
 		//END_PREVENT_PORTAL_AFTER_EXCHANGE
 
-		// exchange_check 에서는 교환할 아이템들이 제자리에 있나 확인하고,
-		// 엘크도 충분히 있나 확인한다, 두번째 인자로 교환할 아이템 개수
-		// 를 리턴한다.
+		// exchange_check Check to see if the items to be exchanged are in place. ,
+		// Check if there are enough elk , The number of items to be exchanged as the second argument
+		// returns .
 		if (!Check(&iItemCount))
 		{
 			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough Yang or not enough space in the inventory."));
@@ -501,7 +501,7 @@ bool CExchange::Accept(bool bAccept)
 			goto EXCHANGE_END;
 		}
 
-		// 리턴 받은 아이템 개수로 상대방의 소지품에 남은 자리가 있나 확인한다.
+		// Check whether there is space left in the other person's belongings based on the number of returned items. .
 		if (!CheckSpace())
 		{
 			GetOwner()->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("The other person has no space left in their inventory."));
@@ -509,7 +509,7 @@ bool CExchange::Accept(bool bAccept)
 			goto EXCHANGE_END;
 		}
 
-		// 상대방도 마찬가지로..
+		// Likewise the other party ..
 		if (!GetCompany()->Check(&iItemCount))
 		{
 			victim->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("Not enough Yang or not enough space in the inventory."));
@@ -534,12 +534,12 @@ bool CExchange::Accept(bool bAccept)
 
 		if (Done())
 		{
-			if (m_lGold) // 돈이 있을 떄만 저장
+			if (m_lGold) // Save only when you have money
 				GetOwner()->Save();
 
 			if (GetCompany()->Done())
 			{
-				if (GetCompany()->m_lGold) // 돈이 있을 때만 저장
+				if (GetCompany()->m_lGold) // Save only when you have money
 					victim->Save();
 
 				// INTERNATIONAL_VERSION
@@ -555,14 +555,14 @@ EXCHANGE_END:
 	}
 	else
 	{
-		// 아니면 accept에 대한 패킷을 보내자.
+		// or not accept Let's send a packet for .
 		exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_ACCEPT, true, m_bAccept, NPOS, 0);
 		exchange_packet(GetCompany()->GetOwner(), EXCHANGE_SUBHEADER_GC_ACCEPT, false, m_bAccept, NPOS, 0);
 		return true;
 	}
 }
 
-// 교환 취소
+// Exchange Cancellation
 void CExchange::Cancel()
 {
 	exchange_packet(GetOwner(), EXCHANGE_SUBHEADER_GC_END, 0, 0, NPOS, 0);

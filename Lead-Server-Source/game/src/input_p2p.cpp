@@ -65,7 +65,7 @@ int CInputP2P::Relay(LPDESC d, const char * c_pData, size_t uiBytes)
 	{
 		if (pkChr->IsBlockMode(BLOCK_WHISPER))
 		{
-			// 귓속말 거부 상태에서 귓속말 거부.
+			// Reject a whisper while in the whisper rejection state .
 			return p->lSize;
 		}
 
@@ -73,12 +73,12 @@ int CInputP2P::Relay(LPDESC d, const char * c_pData, size_t uiBytes)
 		memcpy(buf, c_pbData, MIN(p->lSize, sizeof(buf)));
 
 		TPacketGCWhisper* p2 = (TPacketGCWhisper*) buf;
-		// bType 상위 4비트: Empire 번호
-		// bType 하위 4비트: EWhisperType
+		// bType difference 4 bit : Empire number
+		// bType down 4 bit : EWhisperType
 		BYTE bToEmpire = (p2->bType >> 4);
 		p2->bType = p2->bType & 0x0F;
 		if(p2->bType == 0x0F) {
-			// 시스템 메세지 귓속말은 bType의 상위비트까지 모두 사용함.
+			// The system message whisper is bType All upper bits of are used. .
 			p2->bType = WHISPER_TYPE_SYSTEM;
 		} else {
 			if (!pkChr->IsEquipUniqueGroup(UNIQUE_GROUP_RING_OF_LANGUAGE))

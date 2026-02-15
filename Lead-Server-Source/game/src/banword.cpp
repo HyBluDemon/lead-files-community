@@ -3,7 +3,7 @@
 #include "banword.h"
 #include "config.h"
 
-extern void SendLog(const char * c_pszBuf);		// 운영자에게만 공지
+extern void SendLog(const char * c_pszBuf);		// Notice only to the operator
 
 CBanwordManager::CBanwordManager()
 {

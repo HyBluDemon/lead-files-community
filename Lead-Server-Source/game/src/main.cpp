@@ -55,7 +55,7 @@
 
 #include "switchbot.h"
 
-// 게임과 연결되는 소켓
+// Socket connected to the game
 volatile int	num_events_called = 0;
 int             max_bytes_written = 0;
 int             current_bytes_written = 0;
@@ -184,7 +184,7 @@ void heartbeat(LPHEART ht, int pulse)
 
 	t = get_dword_time();
 
-	// 1초마다
+	// 1 every second
 	if (!(pulse % ht->passes_per_sec))
 	{
 		if (!g_bAuthServer)
@@ -213,14 +213,14 @@ void heartbeat(LPHEART ht, int pulse)
 	}
 
 	//
-	// 25 PPS(Pulse per second) 라고 가정할 때
+	// 25 PPS(Pulse per second) Assuming that
 	//
 
-	// 약 1.16초마다
+	// approximately 1.16 every second
 	if (!(pulse % (passes_per_sec + 4)))
 		CHARACTER_MANAGER::instance().ProcessDelayedSave();
 
-	// 약 5.08초마다
+	// approximately 5.08 every second
 	if (!(pulse % (passes_per_sec * 5 + 2)))
 	{
 		ITEM_MANAGER::instance().Update();
@@ -658,7 +658,7 @@ int io_loop(LPFDWATCH fdw)
 	LPDESC	d;
 	int		num_events, event_idx;
 
-	DESC_MANAGER::instance().DestroyClosed(); // PHASE_CLOSE인 접속들을 끊어준다.
+	DESC_MANAGER::instance().DestroyClosed(); // PHASE_CLOSE disconnects the connections .
 	DESC_MANAGER::instance().TryConnect();
 
 	if ((num_events = fdwatch(fdw, 0)) < 0)

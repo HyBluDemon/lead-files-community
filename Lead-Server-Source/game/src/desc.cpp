@@ -206,7 +206,7 @@ bool DESC::Setup(LPFDWATCH _fdw, socket_t _fd, const struct sockaddr_in & c_rSoc
 	m_wPort			= c_rSockAddr.sin_port;
 	m_dwHandle		= _handle;
 
-	//NOTE: 이걸 나라별로 다르게 잡아야할 이유가 있나?
+	//NOTE: Is there a reason to handle this differently in each country? ?
 	m_lpOutputBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE * 2);
 
 	m_iMinInputBufferLen = MAX_INPUT_LEN >> 1;
@@ -264,7 +264,7 @@ int DESC::ProcessInput()
 	{
 		int iBytesProceed = 0;
 
-		// false가 리턴 되면 다른 phase로 바뀐 것이므로 다시 프로세스로 돌입한다!
+		// false When it returns, another phase Since it has been changed to , go back into the process. !
 		while (!m_pInputProcessor->Process(this, buffer_read_peek(m_lpInputBuffer), buffer_size(m_lpInputBuffer), iBytesProceed))
 		{
 			buffer_read_proceed(m_lpInputBuffer, iBytesProceed);
@@ -277,9 +277,9 @@ int DESC::ProcessInput()
 	{
 		int iSizeBuffer = buffer_size(m_lpInputBuffer);
 
-		// 8바이트 단위로만 처리한다. 8바이트 단위에 부족하면 잘못된 암호화 버퍼를 복호화
-		// 할 가능성이 있으므로 짤라서 처리하기로 한다.
-		if (iSizeBuffer & 7) // & 7은 % 8과 같다. 2의 승수에서만 가능
+		// 8 Process only byte by byte . 8 Decrypt the wrong encryption buffer if there are not enough bytes.
+		// Since there is a possibility, we will cut it and deal with it. .
+		if (iSizeBuffer & 7) // & 7 silver % 8 Same as . 2 Only possible at multipliers of
 			iSizeBuffer -= iSizeBuffer & 7;
 
 		if (iSizeBuffer > 0)
@@ -297,7 +297,7 @@ int DESC::ProcessInput()
 
 			int iBytesProceed = 0;
 
-			// false가 리턴 되면 다른 phase로 바뀐 것이므로 다시 프로세스로 돌입한다!
+			// false When it returns, another phase Since it has been changed to , go back into the process. !
 			while (!m_pInputProcessor->Process(this, buffer_read_peek(lpBufferDecrypt), buffer_size(lpBufferDecrypt), iBytesProceed))
 			{
 				if (iBytesProceed > iSizeBuffer)
@@ -372,12 +372,12 @@ void DESC::Packet(const void * c_pvData, int iSize)
 {
 	assert(iSize > 0);
 
-	if (m_iPhase == PHASE_CLOSE) // 끊는 상태면 보내지 않는다.
+	if (m_iPhase == PHASE_CLOSE) // If it's hung up, don't send it. .
 		return;
 
 	if (m_stRelayName.length() != 0)
 	{
-		// Relay 패킷은 암호화하지 않는다.
+		// Relay Packets are not encrypted .
 		TPacketGGRelay p;
 
 		p.bHeader = HEADER_GG_RELAY;
@@ -426,7 +426,7 @@ void DESC::Packet(const void * c_pvData, int iSize)
 			}
 			else
 			{
-				// 암호화에 필요한 충분한 버퍼 크기를 확보한다.
+				// Ensure sufficient buffer size for encryption .
 				/* buffer_adjust_size(m_lpOutputBuffer, iSize + 8); */
 				DWORD * pdwWritePoint = (DWORD *) buffer_write_peek(m_lpOutputBuffer);
 
@@ -468,7 +468,7 @@ void DESC::SetPhase(int _phase)
 	switch (m_iPhase)
 	{
 		case PHASE_CLOSE:
-			// 메신저가 캐릭터단위가 되면서 삭제
+			// Deleted as messenger became character-based
 			//MessengerManager::instance().Logout(GetAccountTable().login);
 			m_pInputProcessor = &m_inputClose;
 			break;
@@ -478,8 +478,8 @@ void DESC::SetPhase(int _phase)
 			break;
 
 		case PHASE_SELECT:
-			// 메신저가 캐릭터단위가 되면서 삭제
-			//MessengerManager::instance().Logout(GetAccountTable().login); // 의도적으로 break 안검
+			// Deleted as messenger became character-based
+			//MessengerManager::instance().Logout(GetAccountTable().login); // intentionally break eyelid
 		case PHASE_LOGIN:
 		case PHASE_LOADING:
 			m_bEncrypted = true;
