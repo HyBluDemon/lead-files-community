@@ -2,7 +2,7 @@
 #include "constants.h"
 #include "config.h"
 #include "event.h"
-#include "minilzo.h"
+#include <lzo-2.10/lzo1x.h>
 #include "packet.h"
 #include "desc_manager.h"
 #include "item_manager.h"

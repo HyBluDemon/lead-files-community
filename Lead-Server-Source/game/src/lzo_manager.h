@@ -1,7 +1,7 @@
 #ifndef __INC_LZO_MANAGER_H
 #define __INC_LZO_MANAGER_H
 
-#include "minilzo.h"
+#include <lzo-2.10/lzo1x.h>
 
 class LZOManager : public singleton<LZOManager>
 {
