@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <dx9/d3d9.h>
 #include <string>

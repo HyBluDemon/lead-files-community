@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "PythonBackground.h"
 
@@ -148,7 +148,7 @@ class CPythonMiniMap : public CScreen, public CSingleton<CPythonMiniMap>
 			DWORD dwDstTime;
 		};
 
-		// 캐릭터 리스트
+		// Character list
 		typedef struct 
 		{
 			float	m_fX;
@@ -180,14 +180,14 @@ class CPythonMiniMap : public CScreen, public CSingleton<CPythonMiniMap>
 
 		float							m_fMiniMapRadius;
 
-		// 맵 그림...
+		// Map picture...
 		LPDIRECT3DTEXTURE9				m_lpMiniMapTexture[AROUND_AREA_NUM];
 
-		// 미니맵 커버
+		// mini map cover
 		CGraphicImageInstance			m_MiniMapFilterGraphicImageInstance;
 		CGraphicExpandedImageInstance	m_MiniMapCameraraphicImageInstance;
 
-		// 캐릭터 마크
+		// character mark
 		CGraphicExpandedImageInstance	m_PlayerMark;
 		CGraphicImageInstance			m_WhiteMark;
 

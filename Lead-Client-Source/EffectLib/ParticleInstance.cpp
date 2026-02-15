@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "ParticleInstance.h"
 #include "ParticleProperty.h"
 
@@ -186,9 +186,9 @@ void CParticleInstance::Transform(const D3DXMATRIX * c_matLocal)
 		case BILLBOARD_TYPE_ALL:
 		default:
 			{
-				// NOTE : Rotation Routine. Camera¿« Up VectorøÕ Cross Vector ¿⁄√º∏¶ View Vector ±‚¡ÿ¿∏∑Œ
-				//        Rotation Ω√≈≤¥Ÿ.
-				// FIXME : π›µÂΩ√ √÷¿˚»≠ «“ ∞Õ!
+				// NOTE: Rotation Routine. Based on the Camera‚Äôs Up Vector and Cross Vector itself as the View Vector
+				// Rotate it.
+				// FIXME: Be sure to optimize!
 				if (m_fRotation==0.0f)
 				{
 					v3Up = -c_rv3Cross;
@@ -240,7 +240,7 @@ void CParticleInstance::Transform(const D3DXMATRIX * c_matLocal)
 				D3DXVec3TransformNormal(&v3Up, &v3Up, c_matLocal);
 		}
 
-		// NOTE: º”µµ∞° ±Ê¿Ãø° ¡÷¥¬ øµ«‚ : log(velocity)∏∏≈≠ ¥√æÓ≥≠¥Ÿ.
+		// NOTE: Effect of speed on length: It increases by log(velocity).
 		float length = D3DXVec3Length(&v3Up);
 		if (length == 0.0f)
 		{
@@ -345,9 +345,9 @@ void CParticleInstance::Transform(const D3DXMATRIX * c_matLocal, const float c_f
 		case BILLBOARD_TYPE_ALL:
 		default:
 			{
-				// NOTE : Rotation Routine. Camera¿« Up VectorøÕ Cross Vector ¿⁄√º∏¶ View Vector ±‚¡ÿ¿∏∑Œ
-				//        Rotation Ω√≈≤¥Ÿ.
-				// FIXME : π›µÂΩ√ √÷¿˚»≠ «“ ∞Õ!
+				// NOTE: Rotation Routine. Based on the Camera‚Äôs Up Vector and Cross Vector itself as the View Vector
+				// Rotate it.
+				// FIXME: Be sure to optimize!
 				if (m_fRotation==0.0f)
 				{
 					v3Up = -c_rv3Cross;
@@ -377,7 +377,7 @@ void CParticleInstance::Transform(const D3DXMATRIX * c_matLocal, const float c_f
 				D3DXVec3TransformNormal(&v3Up, &v3Up, c_matLocal);
 		}
 
-		// NOTE: º”µµ∞° ±Ê¿Ãø° ¡÷¥¬ øµ«‚ : log(velocity)∏∏≈≠ ¥√æÓ≥≠¥Ÿ.
+		// NOTE: Effect of speed on length: It increases by log(velocity).
 		float length = D3DXVec3Length(&v3Up);
 		if (length == 0.0f)
 		{

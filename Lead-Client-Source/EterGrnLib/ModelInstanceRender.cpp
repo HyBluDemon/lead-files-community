@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterlib/StateManager.h"
 #include "ModelInstance.h"
 #include "Model.h"
@@ -24,7 +24,7 @@ void CGrannyModelInstance::DeformNoSkin(const D3DXMATRIX * c_pWorldMatrix)
 // With One Texture
 void CGrannyModelInstance::RenderWithOneTexture()
 {
-	// FIXME : Deform, Render, BlendRender를 묶어 상위에서 걸러주는 것이 더 나을 듯 - [levites]
+	// FIXME: It would be better to bundle Deform, Render, and BlendRender and filter them at the top - [levites]
 	if (IsEmpty())
 		return;
 
@@ -76,7 +76,7 @@ void CGrannyModelInstance::BlendRenderWithOneTexture()
 // With Two Texture
 void CGrannyModelInstance::RenderWithTwoTexture()
 {
-	// FIXME : Deform, Render, BlendRender를 묶어 상위에서 걸러주는 것이 더 나을 듯 - [levites]
+	// FIXME: It would be better to bundle Deform, Render, and BlendRender and filter them at the top - [levites]
 	if (IsEmpty())
 		return;
 

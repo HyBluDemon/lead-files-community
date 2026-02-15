@@ -1,4 +1,4 @@
-#include "stdafx.h"
+癤�#include "stdafx.h"
 #include "SoundManager3D.h"
 #include "../eterBase/Timer.h"
 
@@ -35,11 +35,11 @@ bool CSoundInstance3D::SetSound(CSoundData* pSoundData)
 {
 	assert(m_sample != NULL && pSoundData != NULL);
 
-	// 레퍼런스 카운트가 1이 될 때 로드를 해야 제대로 사이즈가 리턴
-	// 되므로 반드시 Get을 호출 하고 진행해야 한다.
-	// 또, m_pSoundData가 pSoundData와 같고 m_pSoundData의 레퍼런스
-	// 카운터가 1일 경우, 불필요하게 로드가 일어나므로 미리 레퍼런스
-	// 카운터를 올려놔야 한다.
+	// It must be loaded when the reference count becomes 1 to return the correct size.
+	// Therefore, you must call Get before proceeding.
+	// Also, m_pSoundData is the same as pSoundData and is a reference to m_pSoundData.
+	// If the counter is 1, unnecessary loading occurs, so reference is required in advance.
+	// A counter must be put up.
 	LPVOID lpData = pSoundData->Get();
 	
 	if (m_pSoundData != NULL)
@@ -97,7 +97,7 @@ void CSoundInstance3D::Stop()
 {
 	AIL_end_3D_sample(m_sample);
 //	m_sample = NULL;
-// NOTE : IsDone을 체크하려면 m_sample이 살아있어야 합니다 - [levites]
+// NOTE: m_sample must be alive to check IsDone - [levites]
 }
 
 void CSoundInstance3D::GetVolume(float& rfVolume) const
@@ -119,7 +119,7 @@ void CSoundInstance3D::SetPosition(float x, float y, float z) const
 void CSoundInstance3D::SetOrientation(float x_face, float y_face, float z_face, 
 									  float x_normal, float y_normal, float z_normal) const
 {
-	assert(!" CSoundInstance3D::SetOrientation - 사용 하지 않는 함수");
+	assert(!"CSoundInstance3D::SetOrientation - Deprecated functionunctionunctionunction");
 //	AIL_set_3D_orientation(m_sample, 
 //						   x_face, y_face, z_face,
 //						   x_normal, y_normal, z_normal);

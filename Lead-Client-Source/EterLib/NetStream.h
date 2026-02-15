@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 #include "../eterBase/tea.h"
 #include "NetAddress.h"
 
@@ -83,8 +83,8 @@ class CNetworkStream
 
 		// Obsolete encryption stuff here
 		bool	m_isSecurityMode;
-		char	m_szEncryptKey[TEA_KEY_LENGTH]; // Client 에서 보낼 패킷을 Encrypt 할때 사용하는 Key
-		char	m_szDecryptKey[TEA_KEY_LENGTH]; // Server 에서 전송된 패킷을 Decrypt 할때 사용하는 Key
+		char	m_szEncryptKey[TEA_KEY_LENGTH]; // Key used to encrypt packets to be sent from the client
+		char	m_szDecryptKey[TEA_KEY_LENGTH]; // Key used to decrypt packets transmitted from the server
 
 		SOCKET	m_sock;
 

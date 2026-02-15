@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "IME.h"
 #include "TextTag.h"
 #include "../eterBase/Utils.h"
@@ -809,7 +809,7 @@ void CIME::SetCurPos(int offset)
 	}
 	else
 	{
-		// offsetÀº º¸¿©Áö´Â ÅØ½ºÆ®ÀÇ À§Ä¡·Î ¿Â´Ù. µû¶ó¼­ »õ·Î °è»êÇØ¾ßÇÔ.
+		// offsetÃ€Âº ÂºÂ¸Â¿Â©ÃÃ¶Â´Ã‚ Ã…Ã˜Â½ÂºÃ†Â®Ã€Ã‡ Ã€Â§Ã„Â¡Â·ÃŽ Â¿Ã‚Â´Ã™. ÂµÃ»Â¶Ã³Â¼Â­ Â»ÃµÂ·ÃŽ Â°Ã¨Â»ÃªÃ‡Ã˜Â¾ÃŸÃ‡Ã”.
 		//ms_curpos = min(ms_lastpos, offset);
 		ms_curpos = min(ms_lastpos, GetTextTagInternalPosFromRenderPos(m_wText, ms_lastpos, offset));
 	}
@@ -852,10 +852,10 @@ void CIME::InsertString(wchar_t* wString, int iSize)
 	ms_lastpos += iSize;
 }
 
-// Returns true if `c` is a non-printable ASCII control character (0x00–0x1F) or DEL (0x7F).
+// Returns true if `c` is a non-printable ASCII control character (0x00â€“0x1F) or DEL (0x7F).
 //		Examples:
 //			a) IsAsciiControlCharacter('\n') -> true
-//			b) IsAsciiControlChar('A') -> false
+//			b) IsAsciiControlCharacter('A') -> false
 static bool IsAsciiControlCharacter(wchar_t c)
 {
 	return c <= 0x1F || c == 0x7F;
@@ -1502,8 +1502,8 @@ void CIME::CheckInputLocale()
         ms_wszCurrentIndicator[1] = towlower(szLang[1]);
     }
 
-	// ¾Æ¶ø¾î¿¡¼­ ¿µ¾î·Î º¯°æ½Ã ÄÚµå ÆäÀÌÁö¸¦ ¹Ù²ÙÁö ¾Ê´Â´Ù
-	// ³»¿ëµµ Áö¿ìÁö ¾Ê´Â´Ù.
+	// Â¾Ã†Â¶Ã¸Â¾Ã®Â¿Â¡Â¼Â­ Â¿ÂµÂ¾Ã®Â·ÃŽ ÂºÂ¯Â°Ã¦Â½Ãƒ Ã„ÃšÂµÃ¥ Ã†Ã¤Ã€ÃŒÃÃ¶Â¸Â¦ Â¹Ã™Â²Ã™ÃÃ¶ Â¾ÃŠÂ´Ã‚Â´Ã™
+	// Â³Â»Â¿Ã«ÂµÂµ ÃÃ¶Â¿Ã¬ÃÃ¶ Â¾ÃŠÂ´Ã‚Â´Ã™.
 	if(ms_uOutputCodePage != 1256) {
 		ms_uOutputCodePage = ms_uInputCodePage;
 		Clear();
@@ -2146,7 +2146,7 @@ LRESULT CIME::WMComposition(HWND hWnd, UINT /*uiMsg*/, WPARAM /*wParam*/, LPARAM
 		AttributeProcess(hImc);
 	if(lParam&GCS_COMPSTR)
 	{
-		if (ms_uOutputCodePage == 950) // ´ë¸¸ ÁÖÀ½ ÀÔ·Â Ã³¸®
+		if (ms_uOutputCodePage == 950) // Â´Ã«Â¸Â¸ ÃÃ–Ã€Â½ Ã€Ã”Â·Ã‚ ÃƒÂ³Â¸Â®
 		{
 			if (lParam&GCS_COMPATTR) 
 				CompositionProcessBuilding(hImc);

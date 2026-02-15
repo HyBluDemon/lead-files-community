@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "StringCodec.h"
 #include "StringCodec_Vietnamese.h"
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "TextureSet.h"
 
 CTextureSet::CTextureSet()
@@ -19,7 +19,7 @@ void CTextureSet::Create()
 {
 	CResource * pResource = CResourceManager::Instance().GetResourcePointer("d:/ymir work/special/error.tga");
 	m_ErrorTexture.ImageInstance.SetImagePointer(static_cast<CGraphicImage *> (pResource));
-	AddEmptyTexture();	// 지우개 텍스춰를 처음에 추가 해야 함
+	AddEmptyTexture();	// Eraser texture needs to be added first
 }
 
 bool CTextureSet::Load(const char * c_szTextureSetFileName, float fTerrainTexCoordBase)
@@ -194,7 +194,7 @@ bool CTextureSet::AddTexture(const char * c_szFileName,
 {
 	if (GetTextureCount() >= 256)
 	{
-		LogBox("텍스처를 더 이상 추가할 수 없습니다.", "최대 텍스처 개수 255개");
+		LogBox("No more textures can be added.be added.be added.be added.be added.be added.", "Maximum number of textures: 255 of textures: 255 of textures: 255 of textures: 255");
 		return false;
 	}
 
@@ -202,7 +202,7 @@ bool CTextureSet::AddTexture(const char * c_szFileName,
 	{
 		if (0 == m_Textures[i].stFilename.compare(c_szFileName))
 		{
-			LogBox("동일한 이름의 텍스처가 이미 있습니다.", "중복");
+			LogBox("A texture with the same name already exists.me name already exists.me name already exists.me name already exists.me name already exists.", "duplication");
 			return false;
 		}
 	}
@@ -211,7 +211,7 @@ bool CTextureSet::AddTexture(const char * c_szFileName,
 
 	if (!pResource->IsType(CGraphicImage::Type()))
 	{
-		LogBox("CTerrainImpl::GenerateTexture : 이미지 파일이 아닙니다. %s", pResource->GetFileName());
+		LogBox("CTerrainImpl::GenerateTexture : Not an image file. %se. %se. %s", pResource->GetFileName());
 		return false;
 	}
 	
@@ -251,7 +251,7 @@ bool CTextureSet::Save(const char * c_pszFileName)
 	fprintf(pFile, "TextureSet\n");
 	fprintf(pFile, "\n");
 	
-	fprintf(pFile, "TextureCount %ld\n", GetTextureCount() - 1);	// -1 을 하는 이유는 지우개 때문임
+	fprintf(pFile, "TextureCount %ld\n", GetTextureCount() - 1);	// The reason for -1 is because of the eraser.
 	fprintf(pFile, "\n");
 
 	for (DWORD i = 1; i < GetTextureCount(); ++i)

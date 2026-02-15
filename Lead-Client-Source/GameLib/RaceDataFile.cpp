@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterLib/ResourceManager.h"
 
 #include "RaceData.h"
@@ -73,7 +73,7 @@ BOOL CRaceData::LoadRaceData(const char * c_szFileName)
 				}
 
 				/////////////////////////
-				// Temporary - 이벤트를 위한 임시 기능
+				// Temporary - Temporary functionality for events
 				TextFileLoader.GetTokenString("specialpath", &strPathName);
 				/////////////////////////
 
@@ -146,7 +146,7 @@ BOOL CRaceData::LoadRaceData(const char * c_szFileName)
 				}
 
 				/////////////////////////
-				// Temporary - 이벤트를 위한 임시 기능
+				// Temporary - Temporary functionality for events
 				TextFileLoader.GetTokenString("specialpath", &strPathName);
 				/////////////////////////
 

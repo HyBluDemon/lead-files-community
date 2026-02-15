@@ -1,4 +1,4 @@
-#ifndef __INC_GRPIMAGE_H__
+﻿#ifndef __INC_GRPIMAGE_H__
 #define __INC_GRPIMAGE_H__
 
 #include "Ref.h"

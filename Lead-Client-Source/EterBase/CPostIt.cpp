@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "CPostIt.h"
 #include "../eterBase/utils.h"
 

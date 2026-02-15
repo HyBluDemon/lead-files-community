@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonSkill.h"
 
 #include "../EterBase/Poly/Poly.h"
@@ -50,7 +50,7 @@ int SplitLine(const char * c_szText, CTokenVector* pstTokenVector, const char * 
 
 		pstTokenVector->push_back(stLine.substr(beginPos, endPos - beginPos));
 
-		// 추가 코드. 맨뒤에 탭이 있는 경우를 체크한다. - [levites]
+		// Additional code. Check if there is a tab at the end. - [levites]
 		if (int(stLine.find_first_not_of(c_szDelimeter, basePos)) < 0)
 			break;
 	} while (basePos < stLine.length());
@@ -226,7 +226,7 @@ bool CPythonSkill::RegisterSkillTable(const char * c_szFileName)
 								
 				switch (iVnum)
 				{
-					case 1: // 삼연참
+					case 1: // 3 years old
 						affect.strAffectMinFormula += "* 3";
 						affect.strAffectMaxFormula += "* 3";
 						break;					
@@ -405,7 +405,7 @@ bool CPythonSkill::RegisterSkillDesc(const char * c_szFileName)
 			const std::string & c_rstrJob = TokenVector[DESC_TOKEN_TYPE_JOB];
 			const std::string & c_rstrIconName = TokenVector[DESC_TOKEN_TYPE_ICON_NAME];
 
-			// NOTE : Support 스킬임에도 3단계를 지원해야 해서 예외 처리 - [levites]
+			// NOTE: Even though it is a Support skill, it requires level 3 support, so an exception is handled - [levites]
 			if (c_iSkillIndex_Riding == iSkillIndex)
 			{
 				char szIconFileNameHeader[64+1];
@@ -496,7 +496,7 @@ bool CPythonSkill::RegisterSkillDesc(const char * c_szFileName)
 			int numGrade = atoi(TokenVector[DESC_TOKEN_TYPE_MOTION_INDEX_GRADE_NUM].c_str());
 			if (SKILL_EFFECT_COUNT < numGrade)
 			{
-				TraceError("%s[%s] 가 등급 제한[%d]을 넘어갔습니다.",rSkillData.strName.c_str(), TokenVector[DESC_TOKEN_TYPE_MOTION_INDEX_GRADE_NUM].c_str(), SKILL_EFFECT_COUNT);
+				TraceError("%s[%s] has exceeded the level limit [%d].el limit [%d].el limit [%d].el limit [%d].el limit [%d].",rSkillData.strName.c_str(), TokenVector[DESC_TOKEN_TYPE_MOTION_INDEX_GRADE_NUM].c_str(), SKILL_EFFECT_COUNT);
 				return false;
 			}
 			for (int iGrade = 0; iGrade < numGrade; iGrade++)
@@ -1231,7 +1231,7 @@ bool CPythonSkill::SSkillData::GetState(const char * c_szStateName, int * piStat
 	{
 		*piState = 0;
 
-		// 증지술 임시 제외
+		// Temporary exclusion of augmentation surgery
 /*
 		if (0 != ms_dwTimeIncreaseSkillNumber)
 		{
@@ -1307,7 +1307,7 @@ const char * CPythonSkill::SSkillData::GetAffectDescription(DWORD dwIndex, float
 
 	if (CP_ARABIC == ::GetDefaultCodePage())
 	{
-		// #0000870: [M2AE] 한국어 모드일때 특정 아랍어 문장에서 크래쉬 발생 
+		// #0000870: [M2AE] Crash occurs in certain Arabic sentences in Korean mode
 		static std::string strDescription;
 		strDescription = c_rstrAffectDescription;
 		int first = strDescription.find("%.0f");
@@ -1990,7 +1990,7 @@ PyObject * skillIsLevelUpSkill(PyObject * poSelf, PyObject * poArgs)
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
 		return Py_BuildException("skill.IsLevelUpSkill - Failed to find skill by %d", iSkillIndex);
 
-	// 모두 레벨업 가능
+	// Everyone can level up
 
 	return Py_BuildValue("i", TRUE);
 }
@@ -2016,7 +2016,7 @@ PyObject * skillGetIconImage(PyObject * poSelf, PyObject * poArgs)
 
 	CPythonSkill::SSkillData * c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildValue("i", 0);	// 익셉션을 내는 대신 0을 리턴한다.
+		return Py_BuildValue("i", 0);	// Instead of throwing an exception, it returns 0.
 
 	return Py_BuildValue("i", c_pSkillData->pImage);
 }
@@ -2051,7 +2051,7 @@ PyObject * skillGetIconImageNew(PyObject * poSelf, PyObject * poArgs)
 
 	CPythonSkill::SSkillData * c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildValue("i", 0);	// 익셉션을 내는 대신 0을 리턴한다.
+		return Py_BuildValue("i", 0);	// Instead of throwing an exception, it returns 0.
 
 	if (iGradeIndex < 0)
 		iGradeIndex = 0;

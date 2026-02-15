@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "InstanceBase.h"
 
@@ -90,7 +90,7 @@ struct SNetworkUpdateActorData
 	short m_sAlignment;
 	BYTE m_byPKMode;
 	DWORD m_dwMountVnum;
-	DWORD m_dwStateFlags; // 본래 Create 때만 쓰이는 변수임
+	DWORD m_dwStateFlags; // Originally, it is a variable used only in Create.
 	CAffectFlagContainer m_kAffectFlags;
 
 	SNetworkUpdateActorData()

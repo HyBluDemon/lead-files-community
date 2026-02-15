@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "../eterPack/EterPackManager.h"
 
 #include "TextFileLoader.h"
@@ -214,13 +214,13 @@ const char* GetFontFaceFromCodePage9x(WORD codePage)
 	switch( codePage )
 	{
 	case CP_932:
-		return "‚l‚r ‚oƒSƒVƒbƒN";
+		return "Okay, okay, okay.ay, okay.";
 	case CP_949:
-		return "±¼¸²Ã¼";
+		return "Cursive font";
 	case CP_936:
-		return "ËÎÌå";
+		return "èŠ¥ç«Ÿ";
 	case CP_950:
-		return "²Ó©úÅé";
+		return "Top";
 	case CP_874:
 		return "Tahoma";
 	case CP_1252:
@@ -332,7 +332,7 @@ void base64_decode(const char * str,char * resultStr)
 	{
 		i=0;
 		strcpy(szDest, "");
-		while(nCount<length && i<4)	// 4°³ÀÇ ¹ÙÀÌÆ®¸¦ ¾ò´Â´Ù.
+		while(nCount<length && i<4)	// You get 4 bytes.
 		{			
 			r = str[nCount++];
 			result = __base64_get(r);
@@ -340,13 +340,13 @@ void base64_decode(const char * str,char * resultStr)
 			{
 				if(result!=-1)
 					szDest[i++] = result;
-				else szDest[i++] = '@';	// It's end  (64¹øÀº µğÄÚµù½Ã »ç¿ëµÇÁö ¾Ê±â ¶§¹®)
+				else szDest[i++] = '@';	// It's end (because number 64 is not used when decoding)
 			}
 		}
 
-		if(i==4)	// 4°³ÀÇ ¼Ò½º¸¦ ¸ğµÎ ¾ò¾î³Â´Ù. µğÄÚµå ½ÃÀÛ
+		if(i==4)	// All four sources were obtained. Start decode
 		{	
-			if( nCount+3 >= length )	// µ¥ÀÌÅÍÀÇ ³¡¿¡ µµ´ŞÇß´Ù.
+			if( nCount+3 >= length )	// The end of data has been reached.
 			{
 				if( szDest[1] == '@' )
 				{

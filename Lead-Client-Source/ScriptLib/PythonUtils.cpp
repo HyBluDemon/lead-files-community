@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonUtils.h"
 
 IPythonExceptionSender * g_pkExceptionSender = NULL;
@@ -200,7 +200,7 @@ bool PyCallClassMemberFunc(PyObject* poClass, PyObject* poFunc, PyObject* poArgs
 {
 	PyObject* poRet;
 
-	// NOTE : NULL 체크 추가.. - [levites]
+	// NOTE: Added NULL check... - [levites]
 	if (!poClass)
 	{
 		Py_XDECREF(poArgs);
@@ -218,7 +218,7 @@ bool PyCallClassMemberFunc(PyObject* poClass, const char* c_szFunc, PyObject* po
 {
 	PyObject* poRet;
 
-	// NOTE : NULL 체크 추가.. - [levites]
+	// NOTE: Added NULL check... - [levites]
 	if (!poClass)
 	{
 		Py_XDECREF(poArgs);
@@ -236,7 +236,7 @@ bool PyCallClassMemberFunc_ByPyString(PyObject* poClass, PyObject* poFuncName, P
 {
 	PyObject* poRet;
 
-	// NOTE : NULL 체크 추가.. - [levites]
+	// NOTE: Added NULL check... - [levites]
 	if (!poClass)
 	{
 		Py_XDECREF(poArgs);
@@ -285,9 +285,7 @@ bool PyCallClassMemberFunc(PyObject* poClass, const char* c_szFunc, PyObject* po
 }
 
 /*
- *	이 함수를 직접 호출하지 않도록 한다.
- *	부득이 하게 직접 호출할 경우에는 반드시 false 가 리턴 됐을 때
- *	Py_DECREF(poArgs); 를 해준다.
+ * Avoid calling this function directly. If you inevitably call it directly, you must call Py_DECREF(poArgs); when false is returned. It does.
  */
 bool __PyCallClassMemberFunc_ByCString(PyObject* poClass, const char* c_szFunc, PyObject* poArgs, PyObject** ppoRet)
 {

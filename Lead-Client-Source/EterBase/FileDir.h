@@ -1,4 +1,4 @@
-#ifndef __ETER_FILE_DIR__
+﻿#ifndef __ETER_FILE_DIR__
 #define __ETER_FILE_DIR__
 
 #include <windows.h>

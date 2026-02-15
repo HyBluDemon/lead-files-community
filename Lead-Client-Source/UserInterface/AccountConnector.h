@@ -1,4 +1,4 @@
-#pragma 
+﻿#pragma 
 
 #include "../EterLib/NetStream.h"
 #include "../EterLib/FuncObject.h"
@@ -55,8 +55,8 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 		bool __AuthState_RecvHybridCryptSDB(int VarSize);
 
 		bool __AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CAccountConnector::*pfnDispatchPacket)());
-		// TODO:  지금 현재는 임시다.  header뒤에 size 4byte가 무조건 온다는 가정임.
-		// 제대로 하려면  Packet System Refactoring해야 한다. 
+		// TODO: As of now, it is temporary.  The assumption is that size 4 bytes must come after the header.
+		// To do it properly, Packet System Refactoring is required.
 		bool __AnalyzeVarSizePacket(UINT uHeader, bool (CAccountConnector::*pfnDispatchPacket)(int));
 
 		void __BuildClientKey();

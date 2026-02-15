@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include <io.h>
 #include "../eterBase/CRC32.h"
 #include "../eterBase/Timer.h"
@@ -10,9 +10,9 @@
 
 int g_iLoadingDelayTime = 20;
 
-const long c_Deleting_Wait_Time = 30000;			// 삭제 대기 시간 (30초)
-const long c_DeletingCountPerFrame = 30;			// 프레임당 체크 리소스 갯수
-const long c_Reference_Decrease_Wait_Time = 30000;	// 선로딩 리소스의 해제 대기 시간 (30초)
+const long c_Deleting_Wait_Time = 30000;			// Deletion waiting time (30 seconds)
+const long c_DeletingCountPerFrame = 30;			// Number of checked resources per frame
+const long c_Reference_Decrease_Wait_Time = 30000;	// Release waiting time for preloaded resources (30 seconds)
 
 CFileLoaderThread CResourceManager::ms_loadingThread;
 
@@ -56,7 +56,7 @@ void CResourceManager::ProcessBackgroundLoading()
 		ms_loadingThread.Request(stFileName);
 		m_WaitingMap.insert(TResourceRequestMap::value_type(dwFileCRC, stFileName));
 		itor = m_RequestMap.erase(itor);
-		//break; // NOTE: 여기서 break 하면 천천히 로딩 된다.
+		// break; // NOTE: If you break here, it will load slowly.
 	}
 
 	DWORD dwCurrentTime = ELTimer_GetMSec();
@@ -74,7 +74,7 @@ void CResourceManager::ProcessBackgroundLoading()
 				pResource->OnLoad(pData->dwSize, pData->pvBuf);
 				pResource->AddReferenceOnly();
 
-				// 여기서 올라간 레퍼런스 카운트를 일정 시간이 지난 뒤에 풀어주기 위하여
+				// In order to release the reference count raised here after a certain period of time has passed,
 				m_pResRefDecreaseWaitingMap.insert(TResourceRefDecreaseWaitingMap::value_type(dwCurrentTime, pResource));
 			}
 		}
@@ -85,7 +85,7 @@ void CResourceManager::ProcessBackgroundLoading()
 		delete pData;
 	}
 
-	// DO : 일정 시간이 지나고 난뒤 미리 로딩해 두었던 리소스의 레퍼런스 카운트를 감소 시킨다 - [levites]
+	// DO: Decrease the reference count of pre-loaded resources after a certain period of time has passed - [levites]
 	long lCurrentTime = ELTimer_GetMSec();
 
 	TResourceRefDecreaseWaitingMap::iterator itorRef = m_pResRefDecreaseWaitingMap.begin();
@@ -233,7 +233,7 @@ CResource * CResourceManager::GetTypeResourcePointer(const char * c_szFileName, 
 	DWORD dwFileCRC = __GetFileCRC(c_szFileName, &c_pszFile);
 	CResource * pResource = FindResourcePointer(dwFileCRC);
 
-	if (pResource)	// 이미 리소스가 있으면 리턴 한다.
+	if (pResource)	// Returns if a resource already exists.
 		return pResource;
 
 	CResource *	(*newFunc) (const char *) = NULL;
@@ -283,7 +283,7 @@ CResource * CResourceManager::GetResourcePointer(const char * c_szFileName)
 	DWORD dwFileCRC = __GetFileCRC(c_szFileName, &c_pszFile);
 	CResource * pResource = FindResourcePointer(dwFileCRC);
 
-	if (pResource)	// 이미 리소스가 있으면 리턴 한다.
+	if (pResource)	// Returns if a resource already exists.
 		return pResource;
 
 	const char * pcFileExt = strrchr(c_pszFile, '.');

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../eterlib/GrpObjectInstance.h"
 #include "../eterlib/Pool.h"

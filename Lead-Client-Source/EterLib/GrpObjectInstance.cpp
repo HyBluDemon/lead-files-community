@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GrpObjectInstance.h"
 #include "../eterBase/Timer.h"
 

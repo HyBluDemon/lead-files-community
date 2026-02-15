@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+癤�///////////////////////////////////////////////////////////////////////  
 //	SpeedTreeRTExample Class
 //
 //	(c) 2003 IDV, Inc.
@@ -88,8 +88,8 @@ public:
 	virtual void				SetPosition(float x, float y, float z);
 	virtual void				CalculateBBox();
 
-	virtual void				OnRender(); // Render 시에 메소드, 그러나 프리뷰나 특수한 경우에만 직접 Render 콜을 부르며 
-											// 그 이외에는 RenderBranches, RenderFronds 등의 메소드를 CSpeedTreeForest에서 호출한다.
+	virtual void				OnRender(); // Method when rendering, but only in preview or special cases, calls Render directly
+											// Other than that, methods such as RenderBranches and RenderFronds are called from CSpeedTreeForest.
 	virtual void				OnBlendRender() {}
 	virtual void				OnRenderToShadowMap() {}
 	virtual void				OnRenderShadow() {}

@@ -1,4 +1,4 @@
-#ifndef __INC_ETERPACK_INLINE_H__
+﻿#ifndef __INC_ETERPACK_INLINE_H__
 #define __INC_ETERPACK_INLINE_H__
 
 inline void inlinePathCreate(const char* path)

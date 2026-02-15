@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "TargaResource.h"
 
 CTargaResource::CTargaResource(const char * c_pszFileName) : CResource(c_pszFileName)

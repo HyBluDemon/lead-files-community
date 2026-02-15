@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+癤�///////////////////////////////////////////////////////////////////////  
 //	CSpeedTreeForest Class
 
 ///////////////////////////////////////////////////////////////////////  
@@ -78,7 +78,7 @@ BOOL CSpeedTreeForest::GetMainTree(DWORD dwCRC, CSpeedTreeWrapper ** ppMainTree,
 		CMappedFile file;
 		LPCVOID c_pvData;
 
-		// NOTE : 파일이 없을때는 return FALSE 아닌가요? - [levites]
+		// NOTE: Doesn't return FALSE when there is no file? - [levites]
 		if (!CEterPackManager::Instance().Get(file, c_pszFileName, &c_pvData))
 			return FALSE;
 
@@ -126,7 +126,7 @@ void CSpeedTreeForest::DeleteInstance(CSpeedTreeWrapper * pInstance)
 
 void CSpeedTreeForest::UpdateSystem(float fCurrentTime)
 {
-	// 업데이트 할 때 한번
+	// Once when updating
 	static float fLastTime = fCurrentTime;
 	float fElapsedTime = fCurrentTime - fLastTime;
 	CSpeedTreeRT::SetTime(fElapsedTime);

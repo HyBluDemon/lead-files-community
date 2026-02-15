@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "SoundData.h"
 
 #include "../EterPack/EterPackManager.h"
@@ -86,7 +86,7 @@ bool CSoundData::ReadFromDisk()
 			}
 			break;
 
-		case AILFILETYPE_ADPCM_WAV:	// 3D »ç¿îµå´Â decompress ÇØ¾ß ÇÔ.
+		case AILFILETYPE_ADPCM_WAV:	// 3D sound must be decompressed.
 			{
 				AIL_WAV_info(s + 1, &info);
 				AIL_decompress_ADPCM(&info, &m_data, &m_size);

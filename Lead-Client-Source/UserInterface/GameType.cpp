@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "GameType.h"
 
 std::string g_strResourcePath = "d:/ymir work/";
@@ -7,8 +7,8 @@ std::string g_strImagePath = "d:/ymir work/ui/";
 std::string g_strGuildSymbolPathName = "mark/10/";
 
 // DEFAULT_FONT
-static std::string gs_strDefaultFontName = "굴림체:12.fnt";
-static std::string gs_strDefaultItalicFontName = "굴림체:12i.fnt";
+static std::string gs_strDefaultFontName = "Gulim font: 12.fnt";
+static std::string gs_strDefaultItalicFontName = "Arial font: 12i.fnt";
 static CResource* gs_pkDefaultFont = NULL;
 static CResource* gs_pkDefaultItalicFont = NULL;
 
@@ -97,9 +97,9 @@ BYTE c_aSlotTypeToInvenType[SLOT_TYPE_MAX] =
 	RESERVED_WINDOW,		// SLOT_TYPE_EXCHANGE_OWNER
 	RESERVED_WINDOW,		// SLOT_TYPE_EXCHANGE_TARGET
 	RESERVED_WINDOW,		// SLOT_TYPE_QUICK_SLOT
-	RESERVED_WINDOW,		// SLOT_TYPE_SAFEBOX	<- SAFEBOX, MALL의 경우 하드 코딩되어있는 LEGACY 코드를 유지함.
+	RESERVED_WINDOW,		// SLOT_TYPE_SAFEBOX <- In case of SAFEBOX and MALL, the hard-coded LEGACY code is maintained.
 	RESERVED_WINDOW,		// SLOT_TYPE_PRIVATE_SHOP
-	RESERVED_WINDOW,		// SLOT_TYPE_MALL		<- SAFEBOX, MALL의 경우 하드 코딩되어있는 LEGACY 코드를 유지함.
+	RESERVED_WINDOW,		// SLOT_TYPE_MALL <- SAFEBOX, in case of MALL, the hard-coded LEGACY code is maintained.
 	DRAGON_SOUL_INVENTORY,	// SLOT_TYPE_DRAGON_SOUL_INVENTORY
 	SWITCHBOT,
 };

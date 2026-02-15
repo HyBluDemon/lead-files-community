@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "GrpMarkInstance.h"
 #include "StateManager.h"
 #include "ResourceManager.h"
@@ -241,7 +241,7 @@ void CGraphicMarkInstance::Initialize()
 
 void CGraphicMarkInstance::Destroy()
 {
-	m_roImage.SetPointer(NULL); // CRef 에서 레퍼런스 카운트가 떨어져야 함.
+	m_roImage.SetPointer(NULL); // The reference count must fall from CRef.
 	Initialize();
 }
 

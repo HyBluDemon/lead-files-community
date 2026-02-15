@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "SimpleLightData.h"
 
 CDynamicPool<CLightData> CLightData::ms_kPool;

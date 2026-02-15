@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 class CPythonSwitchbot : public CSingleton <CPythonSwitchbot>
 {

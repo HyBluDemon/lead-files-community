@@ -1,4 +1,4 @@
-#include "stdafx.h"
+癤�#include "stdafx.h"
 #include "MarkManager.h"
 
 #define sys_err TraceError
@@ -21,7 +21,7 @@ CGuildMarkManager::CGuildMarkManager()
 #if _MSC_VER >= 1200
 	_mkdir("mark");
 #endif
-	// 남은 mark id 셋을 만든다. (서버용)
+	// Create the remaining three mark IDs. (for server)
 	for (DWORD i = 0; i < MAX_IMAGE_COUNT * CGuildMarkImage::MARK_TOTAL_COUNT; ++i)
 		m_setFreeMarkID.insert(i);
 }
@@ -50,7 +50,7 @@ void CGuildMarkManager::SetMarkPathPrefix(const char * prefix)
 	m_pathPrefix = prefix;
 }
 
-// 마크 인덱스 불러오기 (서버에서만 사용)
+// Load mark index (only used on server)
 bool CGuildMarkManager::LoadMarkIndex()
 {
 	char buf[64];
@@ -178,7 +178,7 @@ DWORD CGuildMarkManager::__AllocMarkID(DWORD guildID)
 	DWORD markID = *it;
 	
 	DWORD imgIdx = markID / CGuildMarkImage::MARK_TOTAL_COUNT;
-	CGuildMarkImage * pkImage = __GetImage(imgIdx); // 이미지가 없다면 만들기 위해 
+	CGuildMarkImage * pkImage = __GetImage(imgIdx); // If you don't have an image, create one
 
 	if (pkImage && AddMarkIDByGuildID(guildID, markID))
 		return markID;
@@ -267,7 +267,7 @@ void CGuildMarkManager::GetDiffBlocks(DWORD imgIdx, const DWORD * crcList, std::
 {
 	mapDiffBlocks.clear();
 
-	// 클라이언트에서 서버에 없는 이미지를 요청할 수는 없다.
+	// A client cannot request an image that does not exist on the server.
 	if (m_mapIdx_Image.end() == m_mapIdx_Image.find(imgIdx))
 	{
 		sys_err("invalid idx %u", imgIdx);
@@ -294,7 +294,7 @@ bool CGuildMarkManager::SaveBlockFromCompressedData(DWORD imgIdx, DWORD posBlock
 // CLIENT
 bool CGuildMarkManager::GetBlockCRCList(DWORD imgIdx, DWORD * crcList)
 {
-	// 클라이언트에서 서버에 없는 이미지를 요청할 수는 없다.
+	// A client cannot request an image that does not exist on the server.
 	if (m_mapIdx_Image.end() == m_mapIdx_Image.find(imgIdx))
 	{
 		sys_err("invalid idx %u", imgIdx);

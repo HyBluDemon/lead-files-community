@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "CullingManager.h"
 #include "GrpObjectInstance.h"
 
@@ -93,7 +93,7 @@ void CCullingManager::Reset()
 void CCullingManager::Update()
 {
 	// TODO : update each object
-	// ÇÏÁö¸»°í °¢ÀÚ ÇÏ°Ô ÇØº¸ÀÚ
+	// Instead of doing it, letÃ¢â‚¬â„¢s do it individually.
 
 	//DWORD time = ELTimer_GetMSec();
 	//Reset();

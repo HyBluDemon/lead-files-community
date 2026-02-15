@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "../eterBase/MappedFile.h"
 #include "../eterPack/EterPackManager.h"
 #include "GrpImageTexture.h"
@@ -246,7 +246,7 @@ bool CGraphicImageTexture::CreateFromMemoryFile(UINT bufSize, const void * c_pvB
 
 	static CDXTCImage image;
 
-	if (image.LoadHeaderFromMemory((const BYTE *) c_pvBuf))	// DDS¿Œ∞° »Æ¿Œ
+	if (image.LoadHeaderFromMemory((const BYTE *) c_pvBuf))	// Check if it is DDS
 	{
 		return (CreateDDSTexture(image, (const BYTE *) c_pvBuf));
 	}

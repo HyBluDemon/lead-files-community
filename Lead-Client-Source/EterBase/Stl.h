@@ -1,4 +1,4 @@
-#ifndef __INC_ETERBASE_STL_H__
+﻿#ifndef __INC_ETERBASE_STL_H__
 #define __INC_ETERBASE_STL_H__
 
 #pragma warning(disable:4786)	// identifier was truncated to '255' characters in the browser information

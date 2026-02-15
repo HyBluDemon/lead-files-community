@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterLib/ResourceManager.h"
 
 #include "ItemData.h"
@@ -137,7 +137,7 @@ BOOL CItemData::LoadItemData(const char * c_szFileName)
 	}
 
 	// Attaching Data
-	// Item 에 Attaching Data 일단 없음.
+	// There is no Attaching Data on the Item.
 //	if (TextFileLoader.SetChildNode("attachingdata"))
 //	{
 //		if (!NRaceData::LoadAttachingData(TextFileLoader, &m_AttachingDataVector))
@@ -203,7 +203,7 @@ void CItemData::__SetIconImage(const char * c_szFileName)
 {
 	if (!CResourceManager::Instance().IsFileExist(c_szFileName))
 	{
-		TraceError("%s 파일이 없습니다.CItemData::__SetIconImage",c_szFileName);
+		TraceError("File %s does not exist.CItemData::__SetIconImage",c_szFileName);
 		m_pIconImage = NULL;
 	}
 	else if (m_pIconImage == NULL) 
@@ -389,10 +389,10 @@ long CItemData::GetSocket(BYTE byIndex) const
 	return m_ItemTable.alSockets[byIndex];
 }
 
-//서버와 동일 서버 함수 변경시 같이 변경!!(이후에 합친다)
-//SocketCount = 1 이면 초급무기
-//SocketCount = 2 이면 중급무기
-//SocketCount = 3 이면 고급무기
+// Same as the server, change together when the server function changes!! (combined later)
+// If SocketCount = 1, it is a beginner weapon.
+// If SocketCount = 2, it is a mid-level weapon.
+// If SocketCount = 3, it is a high-end weapon.
 int CItemData::GetSocketCount() const		
 {
 	return m_ItemTable.bGainSocketPct;
@@ -417,7 +417,7 @@ float CItemData::GetSpecularPowerf() const
 	return float(uSpecularPower) / 100.0f;	
 }
 
-//refine 값은 아이템번호 끝자리와 일치한다-_-(테이블이용으로 바꿀 예정)
+// The refine value matches the last digit of the item number -_- (planned to change to use a table)
 UINT CItemData::GetRefine() const
 {
 	return GetIndex()%10;

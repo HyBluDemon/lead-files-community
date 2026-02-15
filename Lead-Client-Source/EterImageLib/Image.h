@@ -1,4 +1,4 @@
-#ifndef __INC_ETERIMAGELIB_IMAGE_H__
+癤�#ifndef __INC_ETERIMAGELIB_IMAGE_H__
 #define __INC_ETERIMAGELIB_IMAGE_H__
 
 #include <windows.h>
@@ -9,11 +9,11 @@
 struct TGA_HEADER
 {
 	char idLen;			// 0
-	char palType;		// 파레트있으면 1, 없음 0
-	char imgType;		// 파레트있으면 1, 없음 2
+	char palType;		// 1 if there is a pallet, 0 if there is no pallet
+	char imgType;		// 1 if there is a pallet, 2 if there is no pallet
 	WORD colorBegin;	// 0
-	WORD colorCount;	// 파레트 있으면 256, 없음 0
-	char palEntrySize;	// 파레트 있으면 24, 없음 0
+	WORD colorCount;	// 256 if pallet is present, 0 if not
+	char palEntrySize;	// 24 if pallet is present, 0 if not
 	WORD left;
 	WORD top;
 	WORD width;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "GrpDevice.h"
 #include "../eterBase/Stl.h"
 #include "../eterBase/Debug.h"
@@ -247,7 +247,7 @@ static DWORD   s_MaxTextureWidth, s_MaxTextureHeight;
 
 BOOL EL3D_ConfirmDevice(D3DCAPS9& rkD3DCaps, UINT uBehavior, D3DFORMAT /*eD3DFmt*/)
 {
-	// PUREDEVICE는 GetTransform / GetViewport 등이 되지 않는다.
+	// PUREDEVICE does not work with GetTransform / GetViewport, etc.
 	if (uBehavior & D3DCREATE_PUREDEVICE) 
         return FALSE;
 	
@@ -467,7 +467,7 @@ RETRY:
 				D3DADAPTER_DEFAULT,
 				D3DDEVTYPE_HAL,
 				hWnd,
-				// 2004. 1. 9 myevan 버텍스 프로세싱 방식 자동 선택 추가
+				// 2004. 1. 9 myevan Vertex processing method automatic selection added
 				ms_dwD3DBehavior,
 				&ms_d3dPresentParameter,
 				pDisplayMode,
@@ -493,7 +493,7 @@ RETRY:
 			return CREATE_DEVICE;
 
 		disableMSAA = true;
-		// 2004. 1. 9 myevan 큰의미 없는 코드인듯.. 에러나면 표시하고 종료하자
+		// 2004. 1. 9 myevan It seems to be a meaningless code... If an error occurs, display it and exit.
 		iReflashRate = 0;
 		++ErrorCorrection;
 		iRet = CREATE_REFRESHRATE;

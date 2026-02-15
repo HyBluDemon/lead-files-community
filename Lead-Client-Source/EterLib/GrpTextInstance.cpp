@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "GrpTextInstance.h"
 #include "StateManager.h"
 #include "IME.h"
@@ -122,12 +122,12 @@ int ReadToken(const char* token)
 
 void CGraphicTextInstance::Update()
 {
-	if (m_isUpdate) // 문자열이 바뀌었을 때만 업데이트 한다.
+	if (m_isUpdate) // Update only when the string changes.
 		return;
 
 	if (m_roText.IsNull())
 	{
-		Tracef("CGraphicTextInstance::Update - 폰트가 설정되지 않았습니다\n");
+		Tracef("CGraphicTextInstance::Update - Font not set\n");
 		return;
 	}
 
@@ -140,7 +140,7 @@ void CGraphicTextInstance::Update()
 
 	UINT defCodePage = GetDefaultCodePage();
 
-	UINT dataCodePage = defCodePage; // 아랍 및 베트남 내부 데이터를 UTF8 을 사용하려 했으나 실패
+	UINT dataCodePage = defCodePage; // An attempt was made to use UTF8 for Arab and Vietnamese internal data, but failed.
 		
 	CGraphicFontTexture::TCharacterInfomation* pSpaceInfo = pFontTexture->GetCharacterInfomation(dataCodePage, ' ');
 
@@ -186,7 +186,7 @@ void CGraphicTextInstance::Update()
 				bool isEnglish = true;
 				int nEnglishBase = wArabicTextLen - 1;
 
-				//<<하이퍼 링크>>
+				// <<Hyperlink>>
 				int x = 0;
 
 				int len;				
@@ -195,7 +195,7 @@ void CGraphicTextInstance::Update()
 				std::wstring hyperlinkBuffer;
 				int no_hyperlink = 0;
 
-				// 심볼로 끝나면 아랍어 모드로 시작해야한다
+				// If it ends with a symbol, it should start in Arabic mode
 				if (Arabic_IsInSymbol(wArabicText[wArabicTextLen - 1]))
 				{
 					isEnglish = false;
@@ -209,24 +209,24 @@ void CGraphicTextInstance::Update()
 					if (isEnglish)
 					{
 
-						// <<심볼의 경우 (ex. 기호, 공백)>> -> 영어 모드 유지.
-						//		<<(심볼이 아닌 것들 : 숫자, 영어, 아랍어)>>
-						//  (1) 맨 앞의 심볼 or
+						// <<In case of symbols (ex. symbols, spaces)>> -> Maintain English mode.
+						// <<(Non-symbols: numbers, English, Arabic)>>
+						// (1) First symbol or
 						//	(2) 
-						//		1) 앞 글자가 아랍어 아님 &&
-						//		2) 뒷 글자가 아랍어 아님 &&
-						//		3) 뒷 글자가 심볼'|'이 아님 &&
+						// 1) The first letter is not Arabic &&
+						// 2) The last letter is not Arabic &&
+						// 3) The last letter is not the symbol '|' &&
 						//		or
-						//	(3) 현재 심볼이 '|'
-						// <<아랍어 모드로 넘어가는 경우 : 심볼에서.>>
-						//	1) 앞글자 아랍어
-						//	2) 뒷글자 아랍어
+						// (3) The current symbol is '|'
+						// <<When switching to Arabic mode: From symbols.>>
+						// 1) First letter Arabic
+						// 2) Arabic last letter
 						//
 						//
 						if (Arabic_IsInSymbol(wArabicChar) && (
 								(i == 0) ||
 								(i > 0 && 
-									!(Arabic_HasPresentation(wArabicText, i - 1) || Arabic_IsInPresentation(wArabicText[i + 1]))  && //앞글자, 뒷글자가 아랍어 아님.
+									!(Arabic_HasPresentation(wArabicText, i - 1) || Arabic_IsInPresentation(wArabicText[i + 1]))  && // The first and last letters are not Arabic.
 									wArabicText[i+1] != '|'
 								) ||
 								wArabicText[i] == '|'
@@ -235,10 +235,10 @@ void CGraphicTextInstance::Update()
 							// pass
 							int temptest = 1;
 						}
-						// (1)아랍어이거나 (2)아랍어 다음의 심볼이라면 아랍어 모드 전환
+						// Switch to Arabic mode if it is (1) Arabic or (2) a symbol following Arabic.
 						else if (Arabic_IsInPresentation(wArabicChar) || Arabic_IsInSymbol(wArabicChar))
 						{
-							//그 전까지의 영어를 그린다.
+							// It depicts English before then.
 							for (int e = i + 1; e <= nEnglishBase;) {
 								int ret = GetTextTag(&wArabicText[e], wArabicTextLen - e, len, hyperlinkBuffer);
 
@@ -252,7 +252,7 @@ void CGraphicTextInstance::Update()
 										kHyperlink.ex += charWidth;
 										//x += charWidth;
 										
-										//기존 추가한 하이퍼링크의 좌표 수정.
+										// Modifying the coordinates of previously added hyperlinks.
 										for (int j = 1; j <= no_hyperlink; j++)
 										{
 											if(m_hyperlinkVector.size() < j)
@@ -280,7 +280,7 @@ void CGraphicTextInstance::Update()
 										if (hyperlinkStep == 1)
 										{
 											++hyperlinkStep;
-											kHyperlink.ex = kHyperlink.sx = 0; // 실제 텍스트가 시작되는 위치
+											kHyperlink.ex = kHyperlink.sx = 0; // Where the actual text begins
 										}
 										else
 										{
@@ -300,7 +300,7 @@ void CGraphicTextInstance::Update()
 							int charWidth = __DrawCharacter(pFontTexture, dataCodePage, Arabic_ConvSymbol(wArabicText[i]), dwColor);
 							kHyperlink.ex += charWidth;
 							
-							//기존 추가한 하이퍼링크의 좌표 수정.
+							// Modifying the coordinates of previously added hyperlinks.
 							for (int j = 1; j <= no_hyperlink; j++)
 							{
 								if(m_hyperlinkVector.size() < j)
@@ -314,16 +314,16 @@ void CGraphicTextInstance::Update()
 							isEnglish = false;
 						}
 					}
-					else //[[[아랍어 모드]]]
+					else // [[[Arabic Mode]]]
 					{
-						// 아랍어이거나 아랍어 출력중 나오는 심볼이라면
+						// If it is Arabic or a symbol that appears while printing Arabic,
 						if (Arabic_IsInPresentation(wArabicChar) || Arabic_IsInSymbol(wArabicChar))
 						{
 							int charWidth = __DrawCharacter(pFontTexture, dataCodePage, Arabic_ConvSymbol(wArabicText[i]), dwColor);
 							kHyperlink.ex += charWidth;
 							x += charWidth;
 							
-							//기존 추가한 하이퍼링크의 좌표 수정.
+							// Modifying the coordinates of previously added hyperlinks.
 							for (int j = 1; j <= no_hyperlink; j++)
 							{
 								if(m_hyperlinkVector.size() < j)
@@ -334,7 +334,7 @@ void CGraphicTextInstance::Update()
 								tempLink.sx += charWidth;
 							}
 						}
-						else //영어이거나, 영어 다음에 나오는 심볼이라면,
+						else // If it is English or a symbol that follows English,
 						{
 							nEnglishBase = i;
 							isEnglish = true;
@@ -356,7 +356,7 @@ void CGraphicTextInstance::Update()
 								int charWidth = __DrawCharacter(pFontTexture, dataCodePage, wArabicText[e], dwColor);
 								kHyperlink.ex += charWidth;
 
-								//기존 추가한 하이퍼링크의 좌표 수정.
+								// Modifying the coordinates of previously added hyperlinks.
 								for (int j = 1; j <= no_hyperlink; j++)
 								{
 									if(m_hyperlinkVector.size() < j)
@@ -384,7 +384,7 @@ void CGraphicTextInstance::Update()
 								if (hyperlinkStep == 1)
 								{
 									++hyperlinkStep;
-									kHyperlink.ex = kHyperlink.sx = 0; // 실제 텍스트가 시작되는 위치
+									kHyperlink.ex = kHyperlink.sx = 0; // Where the actual text begins
 								}
 								else
 								{
@@ -402,7 +402,7 @@ void CGraphicTextInstance::Update()
 
 				}
 			}
-			else	// 아랍외 다른 지역.
+			else	// Regions other than Arab countries.
 			{
 				int x = 0;
 				int len;				
@@ -441,7 +441,7 @@ void CGraphicTextInstance::Update()
 							if (hyperlinkStep == 1)
 							{
 								++hyperlinkStep;
-								kHyperlink.ex = kHyperlink.sx = x; // 실제 텍스트가 시작되는 위치
+								kHyperlink.ex = kHyperlink.sx = x; // Where the actual text begins
 							}
 							else
 							{
@@ -461,7 +461,7 @@ void CGraphicTextInstance::Update()
 		if (token < end)
 		{			
 			int newCodePage = ReadToken(token);			
-			dataCodePage = newCodePage;	// 아랍 및 베트남 내부 데이터를 UTF8 을 사용하려 했으나 실패
+			dataCodePage = newCodePage;	// An attempt was made to use UTF8 for Arab and Vietnamese internal data, but failed.
 			begin = token + 5;			
 		}
 		else
@@ -807,9 +807,9 @@ void CGraphicTextInstance::Render(RECT * pClipRect)
 				sy -= float(m_textHeight) / 2.0f;
 				break;
 		}		
-		// 최적화 사항
-		// 같은텍스쳐를 사용한다면... STRIP을 구성하고, 텍스쳐가 변경되거나 끝나면 DrawPrimitive를 호출해
-		// 최대한 숫자를 줄이도록하자!
+		// Optimizations
+		// If you use the same texture... configure STRIP, and call DrawPrimitive when the texture changes or ends.
+		// Let's try to reduce the number as much as possible!
 
 		TPDTVertex vertices[4];
 		vertices[0].diffuse = diffuse;
@@ -861,13 +861,13 @@ void CGraphicTextInstance::Render(RECT * pClipRect)
 	STATEMANAGER.SetRenderState(D3DRS_FOGENABLE, dwFogEnable);
 	STATEMANAGER.SetRenderState(D3DRS_LIGHTING, dwLighting);
 
-	//금강경 링크 띄워주는 부분.
+	// The part that displays the Diamond Sutra link.
 	if (m_hyperlinkVector.size() != 0)
 	{
 		int lx = gs_mx - m_v3Position.x;
 		int ly = gs_my - m_v3Position.y;
 
-		//아랍은 좌표 부호를 바꿔준다.
+		// Arab changes the coordinate signs.
 		if (GetDefaultCodePage() == CP_ARABIC) {
 			lx = -lx;
 			ly = -ly + m_textHeight;
@@ -1059,7 +1059,7 @@ WORD CGraphicTextInstance::GetTextLineCount()
 		float fFontAdvance=float(pCurCharInfo->advance);
 		//float fFontHeight=float(pCurCharInfo->height);
 
-		// NOTE : 폰트 출력에 Width 제한을 둡니다. - [levites]
+		// NOTE: Width restrictions are placed on font output. - [levites]
 		if (fx+fFontWidth > m_fLimitWidth)
 		{
 			fx = 0.0f;
@@ -1106,7 +1106,7 @@ void CGraphicTextInstance::__Initialize()
 	m_vAlign = VERTICAL_ALIGN_TOP;
 
 	m_iMax = 0;
-	m_fLimitWidth = 1600.0f; // NOTE : 해상도의 최대치. 이보다 길게 쓸 일이 있을까? - [levites]
+	m_fLimitWidth = 1600.0f; // NOTE: Maximum resolution. Is there anything I can write longer than this? - [levites]
 
 	m_isCursor = false;
 	m_isSecret = false;

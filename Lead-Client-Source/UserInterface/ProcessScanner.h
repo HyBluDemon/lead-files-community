@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 typedef std::pair<DWORD, std::string> CRCPair;
 

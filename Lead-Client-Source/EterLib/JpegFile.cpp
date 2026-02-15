@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "JpegFile.h"
 #include <stdio.h> 
 #include <stdlib.h>

@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "SoundBase.h"
 
 HDIGDRIVER				CSoundBase::ms_DIGDriver = NULL;

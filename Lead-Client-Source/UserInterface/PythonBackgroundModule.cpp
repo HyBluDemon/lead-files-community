@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonSystem.h"
 #include "PythonBackground.h"
 #include "../eterlib/StateManager.h"
@@ -95,7 +95,7 @@ PyObject * backgroundRegisterEnvironmentData(PyObject * poSelf, PyObject * poArg
 		TraceError("background.RegisterEnvironmentData(iIndex=%d, szEnvironmentFileName=%s)", iIndex, pszEnvironmentFileName);
 
 		// TODO:
-		// 디폴트 환경 설정 작업을 해주자
+		// Let's do the default environment settings.
 	}
 
 	return Py_BuildNone();
@@ -248,7 +248,7 @@ PyObject * backgroundRenderCharacterShadowToTexture(PyObject * poSelf, PyObject 
 
 PyObject * backgroundRenderDungeon(PyObject * poSelf, PyObject * poArgs)
 {
-	assert(!"background.RenderDungeon() - 사용하지 않는 함수입니다 - [levites]");
+	assert(!"background.RenderDungeon() - Unused function - [levites]vites]s]");
 	return Py_BuildNone();
 }
 

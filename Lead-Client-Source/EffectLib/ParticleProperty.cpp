@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "ParticleProperty.h"
 #include "../eterlib/ResourceManager.h"
 

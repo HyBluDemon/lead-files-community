@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "ActorInstance.h"
 #include "AreaTerrain.h"
 #include "RaceManager.h"
@@ -56,7 +56,7 @@ void CActorInstance::OnUpdate()
 }
 
 
-// 2004.07.05.myevan. ±Ã½ÅÅº¿µ ¸Ê¿¡ ³¢ÀÌ´Â ¹®Á¦ÇØ°á
+// 2004.07.05.myevan. Solved the problem of getting stuck in the Gunshintanyeong map.
 IBackground& CActorInstance::GetBackground()
 {
 	return IBackground::Instance();
@@ -146,7 +146,7 @@ void CActorInstance::SetFishingPosition(D3DXVECTOR3 & rv3Position)
 	m_v3FishingPosition = rv3Position;
 }
 
-// ActorInstanceMotion.cpp ¿¡ ³Öµµ·Ï ÇÏÀÚ
+// LetÃ¢â‚¬â„¢s put it in ActorInstanceMotion.cpp
 void  CActorInstance::Move()
 {
 	if (m_isWalking)
@@ -403,8 +403,8 @@ void CActorInstance::PhysicsProcess()
 
 void CActorInstance::__AccumulationMovement(float fRot)
 {
-	// NOTE - ÀÏ´ÜÀº WAIT·Î ¹Ì²ô·¯Áü ¹æÁö
-	//        ÃßÈÄ¿¡´Â RaceMotionData°¡ ÀÌµ¿µÇ´Â ¸ð¼ÇÀÎÁö¿¡ ´ëÇÑ Flag¸¦ °®°í ÀÖ°Ô²û ÇÑ´Ù. - [levites]
+	// NOTE - First, prevent slipping with WAIT
+	// In the future, RaceMotionData will have a flag indicating whether it is a moving motion. - [levites]
 	if (CRaceMotionData::NAME_WAIT == __GetCurrentMotionIndex())
 		return;
 
@@ -550,9 +550,9 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance * c_pAc
 		return;
 	}
 
-	// NOTE : ±âÁ¸ÀÇ Sphere Overlap‰çÀ»°æ¿ì Ã³¸®°¡ ºñºñ±â¸¦ ÇÏ¸éÀº PenetrationµÉ À§ÇèÀÌ ¸¹¾Æ¼­ ( ½ÇÁ¦·Îµµ ³ª¿Ô°í --)
-	// Sphere°£ CollisionÀÌ »ý°åÀ» °æ¿ì ÀÌÀüÀ§Ä¡·Î RollBackÇÏ´Â ¹æ½ÄÀ¸·Î ¹Ù²å´Ù.
-	// ´Ü BGObject¿¡ ´ëÇØ¼­¸¸.
+	// NOTE: If the existing sphere overlaps, there is a high risk of penetration if the processing is mixed (this actually happened --)
+	// In case of collision between spheres, the method was changed to rollback to the previous position.
+	// But only for BGObject.
 
 	if (isAttacking() )
 		return;
@@ -562,7 +562,7 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance * c_pAc
 	{
 		BlockMovement();
 
-		//MovementÃÊ±âÈ­
+		// Movement initialization
 	/*	m_v3Movement = D3DXVECTOR3(0.f,0.f,0.f);
 
 		TCollisionPointInstanceListIterator itMain = m_BodyPointInstanceList.begin();
@@ -626,7 +626,7 @@ void CActorInstance::__AdjustCollisionMovement(const CGraphicObjectInstance * c_
 		return;
 	}
 
-	// Body´Â ÇÏ³ªÀÓÀ» °¡Á¤ÇÕ´Ï´Ù.
+	// The Body is assumed to be one.
 
 	if (m_v3Movement.x == 0.0f && m_v3Movement.y == 0.0f && m_v3Movement.z == 0.0f) 
 		return;

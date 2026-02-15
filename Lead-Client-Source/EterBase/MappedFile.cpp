@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "MappedFile.h"
 #include "Debug.h"
 
@@ -85,7 +85,7 @@ BYTE* CMappedFile::AppendDataBlock( const void* pBlock, DWORD dwBlockSize )
 
 void CMappedFile::Destroy()
 {
-	if (m_pLZObj)	// 압축된 데이터가 이 포인터로 연결 된다
+	if (m_pLZObj)	// Compressed data is linked to this pointer.
 	{
 		delete m_pLZObj;
 		m_pLZObj = NULL;
@@ -144,7 +144,7 @@ int CMappedFile::Seek(DWORD offset, int iSeekType)
 	return m_seekPosition;
 }
 
-// 2004.09.16.myevan.MemoryMappedFile 98/ME 개수 제한 문제 체크
+// 2004.09.16.myevan.MemoryMappedFile 98/ME Check number limit issue
 //DWORD g_dwCount=0;
 
 int CMappedFile::Map(const void **dest, int offset, int size)
@@ -192,7 +192,7 @@ int CMappedFile::Map(const void **dest, int offset, int size)
 		return 0;
 	}
 	
-	// 2004.09.16.myevan.MemoryMappedFile 98/ME 개수 제한 문제 체크
+	// 2004.09.16.myevan.MemoryMappedFile 98/ME Check number limit issue
 	//g_dwCount++;
 	//Tracenf("MAPFILE %d", g_dwCount);
 	
@@ -247,7 +247,7 @@ void CMappedFile::Unmap(LPCVOID data)
 {	
 	if (UnmapViewOfFile(data))
 	{
-		// 2004.09.16.myevan.MemoryMappedFile 98/ME 개수 제한 문제 체크
+		// 2004.09.16.myevan.MemoryMappedFile 98/ME Check number limit issue
 		//g_dwCount--;
 		//Tracenf("UNMAPFILE %d", g_dwCount);
 	}

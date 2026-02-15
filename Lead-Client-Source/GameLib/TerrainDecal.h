@@ -1,4 +1,4 @@
-// TerrainDecal.h: interface for the CTerrainDecal class.
+﻿// TerrainDecal.h: interface for the CTerrainDecal class.
 //
 //////////////////////////////////////////////////////////////////////
 

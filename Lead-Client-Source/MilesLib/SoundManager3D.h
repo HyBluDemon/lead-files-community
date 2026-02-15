@@ -1,4 +1,4 @@
-#ifndef __MILESLIB_CSOUNDMANAGER3D_H__
+﻿#ifndef __MILESLIB_CSOUNDMANAGER3D_H__
 #define __MILESLIB_CSOUNDMANAGER3D_H__
 
 #include "SoundBase.h"

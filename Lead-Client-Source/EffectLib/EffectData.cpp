@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "EffectData.h"
 
 CDynamicPool<CEffectData> CEffectData::ms_kPool;

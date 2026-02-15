@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "ActorInstance.h"
 
 void CActorInstance::SetXYRotation(float fRotX, float fRotY)
@@ -62,7 +62,7 @@ void CActorInstance::RotationProcess()
 		m_fcurRotation = m_rotEnd;
 	}
 
-	// FIXME : "∞«π∞¿œ∂ß∏∏ √º≈©"∑Œ πŸ≤€¥Ÿ. - [levites]
+	// FIXME: Change to ‚ÄúCheck only when building.‚Äù - [levites]
 	if (0.0f != m_rotX || 0.0f != m_rotY)
 	{
 		CGraphicObjectInstance::SetRotation(m_rotX, m_rotY, m_fcurRotation);

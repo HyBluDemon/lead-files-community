@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../eterlib/GrpVertexBuffer.h"
 #include "../eterlib/GrpIndexBuffer.h"

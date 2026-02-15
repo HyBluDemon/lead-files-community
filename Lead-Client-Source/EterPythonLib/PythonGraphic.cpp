@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../eterLib/StateManager.h"
 #include "../eterLib/JpegFile.h"
 #include "PythonGraphic.h"

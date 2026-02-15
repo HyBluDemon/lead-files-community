@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// 2004.07.05.myevan.±Ã½ÅÅº¿µ ¸Ê¿¡ ³¢ÀÌ´Â ¹®Á¦ÇØ°á
+// 2004.07.05.myevan. Solved the problem of getting stuck in the Gungsin Tanyeong map.
 class IBackground : public CSingleton<IBackground>
 {
 	public:

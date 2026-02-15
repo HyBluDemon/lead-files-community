@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "FileDir.h"
 #include <string>
 
@@ -60,9 +60,9 @@ bool CDir::Create(const char * c_szFilter, const char* c_szPath, BOOL bCheckedEx
 			if (!c_szExtension)
 				continue;
 
-			// NOTE : 임시 변수 - [levites]
-			//        최종적으로는 무조건 TRUE 형태로 만든다.
-			//        그전에 전 프로젝트의 CDir을 사용하는 곳에서 Extension을 "wav", "gr2" 이런식으로 넣게끔 한다. - [levites]
+			// NOTE: Temporary variable - [levites]
+			// Ultimately, it is set to TRUE.
+			// Before that, where the CDir of the previous project is used, the extension should be entered as "wav" or "gr2". - [levites]
 			if (bCheckedExtension)
 			{
 				std::string strFilter = c_szFilter;

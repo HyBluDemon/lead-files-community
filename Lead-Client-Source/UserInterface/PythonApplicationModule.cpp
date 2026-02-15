@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "Resource.h"
 #include "PythonApplication.h"
 #include "../EterLib/Camera.h"
@@ -1318,7 +1318,7 @@ void initapp()
 	PyModule_AddIntConstant(poModule, "VK_DELETE",	     VK_DELETE);
 
 	PyModule_AddIntConstant(poModule, "DIK_ESCAPE",      DIK_ESCAPE);
-	PyModule_AddIntConstant(poModule, "DIK_ESC",         DIK_ESCAPE);	// ∆Ì¿«∏¶ ¿ß«ÿ
+	PyModule_AddIntConstant(poModule, "DIK_ESC",         DIK_ESCAPE);	// For your convenience
 	PyModule_AddIntConstant(poModule, "DIK_1",           DIK_1);
 	PyModule_AddIntConstant(poModule, "DIK_2",           DIK_2);
 	PyModule_AddIntConstant(poModule, "DIK_3",           DIK_3);

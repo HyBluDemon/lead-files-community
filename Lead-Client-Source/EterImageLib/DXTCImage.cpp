@@ -1,4 +1,4 @@
-// need the d3d.h for things in format of .dds file
+﻿// need the d3d.h for things in format of .dds file
 #include "StdAfx.h"
 
 #include <d3d.h>

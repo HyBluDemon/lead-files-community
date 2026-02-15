@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include <stdlib.h>
 #include <lzo-2.10/lzoLibLink.h>
 
@@ -121,9 +121,9 @@ void CLZObject::BeginCompress(const void * pvIn, UINT uiInLen)
     m_pbIn = (const BYTE *) pvIn;
 	
     // sizeof(SHeader) +
-    // 암호화를 위한 fourCC 4바이트
-    // 압축된 후 만들어질 수 있는 최대 용량 +
-    // 암호화를 위한 8 바이트
+    // fourCC 4 bytes for encryption
+    // Maximum capacity that can be created after compression +
+    // 8 bytes for encryption
     m_dwBufferSize = sizeof(THeader) + sizeof(DWORD) + (uiInLen + uiInLen / 64 + 16 + 3) + 8;
 	
     m_pbBuffer = gs_freeMemMgr.Alloc(m_dwBufferSize);
@@ -140,9 +140,9 @@ void CLZObject::BeginCompressInBuffer(const void * pvIn, UINT uiInLen, void * /*
     m_pbIn = (const BYTE *) pvIn;
 	
     // sizeof(SHeader) +
-    // 암호화를 위한 fourCC 4바이트
-    // 압축된 후 만들어질 수 있는 최대 용량 +
-    // 암호화를 위한 8 바이트
+    // fourCC 4 bytes for encryption
+    // Maximum capacity that can be created after compression +
+    // 8 bytes for encryption
     m_dwBufferSize = sizeof(THeader) + sizeof(DWORD) + (uiInLen + uiInLen / 64 + 16 + 3) + 8;
 	
     m_pbBuffer = gs_freeMemMgr.Alloc(m_dwBufferSize);

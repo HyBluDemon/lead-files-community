@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "InstanceBase.h"
 
 CActorInstance::IEventHandler& CInstanceBase::GetEventHandlerRef()

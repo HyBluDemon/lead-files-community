@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EffectElementBaseInstance.h"
 #include "ParticleInstance.h"

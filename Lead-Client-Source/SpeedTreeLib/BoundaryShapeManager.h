@@ -1,4 +1,4 @@
-//         Name: BoundaryShapeManager.h
+﻿//         Name: BoundaryShapeManager.h
 //
 //  *** INTERACTIVE DATA VISUALIZATION (IDV) PROPRIETARY INFORMATION ***
 //

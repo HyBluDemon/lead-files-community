@@ -252,32 +252,11 @@ bool GetIPInfo()
 	return false;
 }
 
-void config_init(const string& st_localeServiceName)
+static bool __LoadConnectionDetailConfigurations(const char *configName)
 {
-	FILE	*fp;
-
-	char	buf[256];
-	char	token_string[256];
-	char	value_string[256];
-
-	// LOCALE_SERVICE
-	string	st_configFileName;
-
-	st_configFileName.reserve(32);
-	st_configFileName = "CONFIG";
-
-	if (!st_localeServiceName.empty())
-	{
-		st_configFileName += ".";
-		st_configFileName += st_localeServiceName;
-	}
-	// END_OF_LOCALE_SERVICE
-
-	if (!(fp = fopen(st_configFileName.c_str(), "r")))
-	{
-		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
-		exit(1);
-	}
+	char buf[256];
+	char token_string[256];
+	char value_string[256];
 
 	char db_host[2][64], db_user[2][64], db_pwd[2][64], db_db[2][64];
 	// ... ah ... db_port already exists ... What should I do with the naming? ...
@@ -310,20 +289,15 @@ void config_init(const string& st_localeServiceName)
 
 	FILE* fpOnlyForDB;
 
-	if (!(fpOnlyForDB = fopen(st_configFileName.c_str(), "r")))
+	if (!(fpOnlyForDB = fopen(configName, "r")))
 	{
-		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
+		fprintf(stderr, "Can not open [%s]\n", configName);
 		exit(1);
 	}
 
 	while (fgets(buf, 256, fpOnlyForDB))
 	{
 		parse_token(buf, token_string, value_string);
-
-		TOKEN("BLOCK_LOGIN")
-		{
-			g_stBlockDate = value_string;
-		}
 
 		TOKEN("hostname")
 		{
@@ -447,7 +421,7 @@ void config_init(const string& st_localeServiceName)
 
 	fprintf(stdout, "CommonSQL connected\n");
 
-	// Let's get locale information 
+	// Let's get locale information
 	// < warning > Absolute conditional statement in query statement (WHERE) Don't sweeten it . ( Problems may arise in other areas )
 	{
 		char szQuery[512];
@@ -461,7 +435,7 @@ void config_init(const string& st_localeServiceName)
 			exit(1);
 		}
 
-		MYSQL_ROW row; 
+		MYSQL_ROW row;
 
 		while (NULL != (row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
 		{
@@ -526,7 +500,7 @@ void config_init(const string& st_localeServiceName)
 			exit(1);
 		}
 
-		MYSQL_ROW row; 
+		MYSQL_ROW row;
 
 		row = mysql_fetch_row(pMsg->Get()->pSQLResult);
 
@@ -575,7 +549,7 @@ void config_init(const string& st_localeServiceName)
 
 			fprintf(stdout, "SKILL_POWER_BY_JOB %d %s\n", job, p);
 			while (*p != '\0' && cnt < (SKILL_MAX_LEVEL + 1))
-			{			
+			{
 				p = one_argument(p, num, sizeof(num));
 				aiSkillTable[cnt++] = atoi(num);
 
@@ -594,56 +568,30 @@ void config_init(const string& st_localeServiceName)
 			}
 
 			CTableBySkill::instance().SetSkillPowerByLevelFromType(job, aiSkillTable);
-		}		
+		}
 	}
 	// END_SKILL_POWER_BY_LEVEL
+	return true;
+}
 
-	// LOG_KEEP_DAYS_EXTEND
-	log_set_expiration_days(2);
-	// END_OF_LOG_KEEP_DAYS_EXTEND
+static bool __LoadCoreSpecificConfigurations(const char *configName)
+{
+	FILE *fp;
+
+	char buf[256];
+	char token_string[256];
+	char value_string[256];
+
+	if (!(fp = fopen(configName, "r")))
+		return false;
 
 	while (fgets(buf, 256, fp))
 	{
 		parse_token(buf, token_string, value_string);
 
-		TOKEN("empire_whisper")
-		{
-			bool b_value = 0;
-			str_to_number(b_value, value_string);
-			g_bEmpireWhisper = !!b_value;
-			continue;
-		}
-
-		TOKEN("mark_server")
-		{
-			guild_mark_server = is_string_true(value_string);
-			continue;
-		}
-
-		TOKEN("mark_min_level")
-		{
-			str_to_number(guild_mark_min_level, value_string);
-			guild_mark_min_level = MINMAX(0, guild_mark_min_level, GUILD_MAX_LEVEL);
-			continue;
-		}
-
 		TOKEN("port")
 		{
 			str_to_number(mother_port, value_string);
-			continue;
-		}
-
-		TOKEN("log_keep_days")
-		{
-			int i = 0;
-			str_to_number(i, value_string);
-			log_set_expiration_days(MINMAX(1, i, 90));
-			continue;
-		}
-
-		TOKEN("passes_per_sec")
-		{
-			str_to_number(passes_per_sec, value_string);
 			continue;
 		}
 
@@ -669,6 +617,128 @@ void config_init(const string& st_localeServiceName)
 					db_addr[n] = '\0';
 			}
 
+			continue;
+		}
+
+		TOKEN("map_allow")
+		{
+			char * p = value_string;
+			string stNum;
+
+			for (; *p; p++)
+			{
+				if (isnhspace(*p))
+				{
+					if (stNum.length())
+					{
+						int	index = 0;
+						str_to_number(index, stNum.c_str());
+						map_allow_add(index);
+						stNum.clear();
+					}
+				}
+				else
+					stNum += *p;
+			}
+
+			if (stNum.length())
+			{
+				int	index = 0;
+				str_to_number(index, stNum.c_str());
+				map_allow_add(index);
+			}
+
+			continue;
+		}
+
+		TOKEN("auth_server")
+		{
+			char szIP[32];
+			char szPort[32];
+
+			two_arguments(value_string, szIP, sizeof(szIP), szPort, sizeof(szPort));
+
+			if (!*szIP || (!*szPort && strcasecmp(szIP, "master")))
+			{
+				fprintf(stderr, "AUTH_SERVER: syntax error: <ip|master> <port>\n");
+				exit(1);
+			}
+
+			g_bAuthServer = true;
+
+			LoadBanIP("BANIP");
+
+			if (!strcasecmp(szIP, "master"))
+				fprintf(stdout, "AUTH_SERVER: I am the master\n");
+			else
+			{
+				g_stAuthMasterIP = szIP;
+				str_to_number(g_wAuthMasterPort, szPort);
+
+				fprintf(stdout, "AUTH_SERVER: master %s %u\n", g_stAuthMasterIP.c_str(), g_wAuthMasterPort);
+			}
+			continue;
+		}
+
+		TOKEN("mark_server")
+		{
+			guild_mark_server = is_string_true(value_string);
+			continue;
+		}
+
+	}
+
+	fclose(fp);
+	return true;
+}
+
+static bool __LoadGeneralConfigurations(const char *configName)
+{
+	FILE *fp;
+
+	char buf[256];
+	char token_string[256];
+	char value_string[256];
+
+	if (!(fp = fopen(configName, "r")))
+		return false;
+
+	while (fgets(buf, 256, fp))
+	{
+		parse_token(buf, token_string, value_string);
+
+		TOKEN("BLOCK_LOGIN")
+		{
+			g_stBlockDate = value_string;
+			continue;
+		}
+
+		TOKEN("empire_whisper")
+		{
+			bool b_value = 0;
+			str_to_number(b_value, value_string);
+			g_bEmpireWhisper = !!b_value;
+			continue;
+		}
+
+		TOKEN("mark_min_level")
+		{
+			str_to_number(guild_mark_min_level, value_string);
+			guild_mark_min_level = MINMAX(0, guild_mark_min_level, GUILD_MAX_LEVEL);
+			continue;
+		}
+
+		TOKEN("log_keep_days")
+		{
+			int i = 0;
+			str_to_number(i, value_string);
+			log_set_expiration_days(MINMAX(1, i, 90));
+			continue;
+		}
+
+		TOKEN("passes_per_sec")
+		{
+			str_to_number(passes_per_sec, value_string);
 			continue;
 		}
 
@@ -715,43 +785,12 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("map_allow")
-		{
-			char * p = value_string;
-			string stNum;
-
-			for (; *p; p++)
-			{   
-				if (isnhspace(*p))
-				{
-					if (stNum.length())
-					{
-						int	index = 0;
-						str_to_number(index, stNum.c_str());
-						map_allow_add(index);
-						stNum.clear();
-					}
-				}
-				else
-					stNum += *p;
-			}
-
-			if (stNum.length())
-			{
-				int	index = 0;
-				str_to_number(index, stNum.c_str());
-				map_allow_add(index);
-			}
-
-			continue;
-		}
-
 		TOKEN("no_wander")
 		{
 			no_wander = true;
 			continue;
 		}
-		
+
 		TOKEN("create_documentation_files")
 		{
 			int tmp = 0;
@@ -775,35 +814,6 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("skill_disable")
 		{
 			str_to_number(g_bSkillDisable, value_string);
-			continue;
-		}
-
-		TOKEN("auth_server")
-		{
-			char szIP[32];
-			char szPort[32];
-
-			two_arguments(value_string, szIP, sizeof(szIP), szPort, sizeof(szPort));
-
-			if (!*szIP || (!*szPort && strcasecmp(szIP, "master")))
-			{
-				fprintf(stderr, "AUTH_SERVER: syntax error: <ip|master> <port>\n");
-				exit(1);
-			}
-
-			g_bAuthServer = true;
-
-			LoadBanIP("BANIP");
-
-			if (!strcasecmp(szIP, "master"))
-				fprintf(stdout, "AUTH_SERVER: I am the master\n");
-			else
-			{
-				g_stAuthMasterIP = szIP;
-				str_to_number(g_wAuthMasterPort, szPort);
-
-				fprintf(stdout, "AUTH_SERVER: master %s %u\n", g_stAuthMasterIP.c_str(), g_wAuthMasterPort);
-			}
 			continue;
 		}
 
@@ -926,7 +936,7 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("death_exp_loss_cap")
 		{
 			str_to_number(g_DeathExpLossCap, value_string);
-			
+
 			g_DeathExpLossCap = MAX(0, g_DeathExpLossCap);
 
 			fprintf(stderr, "DEATH_EXP_LOSS_CAP: %d\n", g_DeathExpLossCap);
@@ -962,46 +972,16 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 	}
-
-	if (g_setQuestObjectDir.empty())
-		g_setQuestObjectDir.insert(g_stDefaultQuestObjectDir);
-
-	if (0 == db_port)
-	{
-		fprintf(stderr, "DB_PORT not configured\n");
-		exit(1);
-	}
-
-	if (0 == g_bChannel)
-	{
-		fprintf(stderr, "CHANNEL not configured\n");
-		exit(1);
-	}
-
-	if (g_stHostname.empty())
-	{
-		fprintf(stderr, "HOSTNAME must be configured.\n");
-		exit(1);
-	}
-
-	// LOCALE_SERVICE 
-	LocaleService_LoadLocaleStringFile();
-	LocaleService_TransferDefaultSetting();
-	LocaleService_LoadEmpireTextConvertTables();
-	// END_OF_LOCALE_SERVICE
-
-	if (g_szPublicIP[0] == '0')
-	{
-		if (!GetIPInfo())
-		{
-			fprintf(stderr, "BIND_IP not configured and cannot get IP automatically\n");
-			exit(1);
-		}
-	}
-
 	fclose(fp);
+	return true;
+}
 
-	if ((fp = fopen("CMD", "r")))
+static bool __LoadDefaultCMDFile(const char *cmdName)
+{
+	FILE *fp;
+	char buf[256];
+
+	if ((fp = fopen(cmdName, "r")))
 	{
 		while (fgets(buf, 256, fp))
 		{
@@ -1039,6 +1019,96 @@ void config_init(const string& st_localeServiceName)
 
 		fclose(fp);
 	}
+
+	return false;
+}
+
+void config_init(const string& st_localeServiceName)
+{
+	FILE	*fp;
+
+	char	buf[256];
+	char	token_string[256];
+	char	value_string[256];
+
+	// LOCALE_SERVICE
+	string	st_configFileName;
+
+	st_configFileName.reserve(32);
+	st_configFileName = "CONFIG";
+
+	if (!st_localeServiceName.empty())
+	{
+		st_configFileName += ".";
+		st_configFileName += st_localeServiceName;
+	}
+	// END_OF_LOCALE_SERVICE
+
+	// LOG_KEEP_DAYS_EXTEND
+	log_set_expiration_days(2);
+	// END_OF_LOG_KEEP_DAYS_EXTEND
+
+	// load connection and core specific configurations
+	if (!__LoadConnectionDetailConfigurations(st_configFileName.c_str()) ||
+		!__LoadCoreSpecificConfigurations(st_configFileName.c_str()))
+	{
+		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
+		exit(1);
+	}
+
+	// load general configuration
+	{
+		char szFileName[256];
+		snprintf(szFileName, sizeof(szFileName), "./conf/GENERAL_CONFIG");
+		if (__LoadGeneralConfigurations(szFileName))
+			fprintf(stderr, "GENERAL CONFIG LOAD OK [%s]\n", szFileName);
+	}
+
+	// load default configurations (overwrite general one if set)
+	if (!__LoadGeneralConfigurations(st_configFileName.c_str()))
+	{
+		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
+		exit(1);
+	}
+
+	if (g_setQuestObjectDir.empty())
+		g_setQuestObjectDir.insert(g_stDefaultQuestObjectDir);
+
+	if (0 == db_port)
+	{
+		fprintf(stderr, "DB_PORT not configured\n");
+		exit(1);
+	}
+
+	if (0 == g_bChannel)
+	{
+		fprintf(stderr, "CHANNEL not configured\n");
+		exit(1);
+	}
+
+	if (g_stHostname.empty())
+	{
+		fprintf(stderr, "HOSTNAME must be configured.\n");
+		exit(1);
+	}
+
+	// LOCALE_SERVICE
+	LocaleService_LoadLocaleStringFile();
+	LocaleService_TransferDefaultSetting();
+	LocaleService_LoadEmpireTextConvertTables();
+	// END_OF_LOCALE_SERVICE
+
+	if (g_szPublicIP[0] == '0')
+	{
+		if (!GetIPInfo())
+		{
+			fprintf(stderr, "BIND_IP not configured and cannot get IP automatically\n");
+			exit(1);
+		}
+	}
+
+	std::string st_cmdFileName("CMD");
+	__LoadDefaultCMDFile(st_cmdFileName.c_str());
 
 	LoadValidCRCList();
 	LoadStateUserCount();

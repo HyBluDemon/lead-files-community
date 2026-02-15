@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 wchar_t Arabic_ConvSymbol(wchar_t c);
 

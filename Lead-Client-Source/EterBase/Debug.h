@@ -1,4 +1,4 @@
-#ifndef __INC_ETERLIB_DEBUG_H__
+﻿#ifndef __INC_ETERLIB_DEBUG_H__
 #define __INC_ETERLIB_DEBUG_H__
 
 #include <windows.h>

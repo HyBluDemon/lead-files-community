@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "PythonWindow.h"
 
@@ -24,7 +24,7 @@ namespace UI
 		SLOT_STATE_LOCK		= (1 << 0),
 		SLOT_STATE_CANT_USE	= (1 << 1),
 		SLOT_STATE_DISABLE	= (1 << 2),
-		SLOT_STATE_ALWAYS_RENDER_COVER = (1 << 3),			// ÇöÀç Cover ¹öÆ°Àº ½½·Ô¿¡ ¹«¾ð°¡ µé¾î¿Í ÀÖÀ» ¶§¿¡¸¸ ·»´õ¸µ ÇÏ´Âµ¥, ÀÌ flag°¡ ÀÖÀ¸¸é ºó ½½·ÔÀÌ¾îµµ Ä¿¹ö ·»´õ¸µ
+		SLOT_STATE_ALWAYS_RENDER_COVER = (1 << 3),			// Currently, the Cover button is only rendered when there is something in the slot, but if this flag is present, the cover is rendered even if the slot is empty.
 	};
 
 	class CSlotWindow : public CWindow
@@ -44,9 +44,9 @@ namespace UI
 			{
 				DWORD	dwState;
 				DWORD	dwSlotNumber;
-				DWORD	dwCenterSlotNumber;		// NOTE : »çÀÌÁî°¡ Å« ¾ÆÀÌÅÛÀÇ °æ¿ì ¾ÆÀÌÅÛÀÇ ½ÇÁ¦ À§Ä¡ ¹øÈ£
-				DWORD	dwItemIndex;			// NOTE : ¿©±â¼­ »ç¿ëµÇ´Â ItemÀÌ¶ó´Â ´Ü¾î´Â Á¼Àº °³³äÀÇ °ÍÀÌ ¾Æ´Ñ,
-				BOOL	isItem;					//        "½½·ÔÀÇ ³»¿ë¹°"ÀÌ¶ó´Â Æ÷°ýÀûÀÎ °³³ä¾î. ´õ ÁÁÀº °ÍÀÌ ÀÖÀ»±î? - [levites]
+				DWORD	dwCenterSlotNumber;		// NOTE: For larger size items, the actual location number of the item
+				DWORD	dwItemIndex;			// NOTE: The word item used here is not a narrow concept,
+				BOOL	isItem;					// A comprehensive term for â€œcontents of a slot.â€ Is there anything better? - [levites]
 
 				// CoolTime
 				float	fCoolTime;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonNetworkStream.h"
 #include "NetworkActorManager.h"
 #include "PythonBackground.h"
@@ -62,8 +62,8 @@ void __SetWeaponPower(IAbstractPlayer& rkPlayer, DWORD dwWeaponID)
 	rkPlayer.SetWeaponPower(minPower, maxPower, minMagicPower, maxMagicPower, addPower);
 }
 
-//테이블에서 이름이 "." 인 것들
-//차후에 서버에서 보내주지 않게 되면 없어질 함수..(서버님께 꼭!!협박; )
+// In the table the name is "." things that are
+// A function that will disappear if the server no longer sends it in the future. (Be sure to threaten the server!)
 bool IsInvisibleRace(WORD raceNum)
 {
 	switch(raceNum)
@@ -115,7 +115,7 @@ bool CPythonNetworkStream::RecvCharacterAppendPacket()
 	kNetActorData.m_dwHair=0;/*chrAddPacket.awPart[CHR_EQUIPPART_HAIR]*/;	
 	kNetActorData.m_dwMountVnum=0;/*chrAddPacket.dwMountVnum*/;	
 
-	kNetActorData.m_dwLevel = 0; // 몬스터 레벨 표시 안함
+	kNetActorData.m_dwLevel = 0; // No monster level display
 
 	if(kNetActorData.m_bType != CActorInstance::TYPE_PC && 
 		kNetActorData.m_bType != CActorInstance::TYPE_NPC)
@@ -198,10 +198,10 @@ bool CPythonNetworkStream::RecvCharacterUpdatePacket()
 
 void CPythonNetworkStream::__RecvCharacterAppendPacket(SNetworkActorData * pkNetActorData)
 {
-	// NOTE : 카메라가 땅에 묻히는 문제의 해결을 위해 메인 캐릭터가 지형에 올려지기
-	//        전에 맵을 업데이트 해 높이를 구할 수 있도록 해놓아야 합니다.
-	//        단, 게임이 들어갈때가 아닌 이미 캐릭터가 추가 된 이후에만 합니다.
-	//        헌데 이동인데 왜 Move로 안하고 Append로 하는지..? - [levites]
+	// NOTE: To resolve the issue of the camera being buried in the ground, the main character was placed on the terrain.
+	// You need to update the map before so you can get the height.
+	// However, this is done only after the character has already been added, not when entering the game.
+	// But when it comes to movement, why do you use Append instead of Move? - [levites]
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	if (rkPlayer.IsMainCharacterIndex(pkNetActorData->m_dwVID))
 	{
@@ -214,7 +214,7 @@ void CPythonNetworkStream::__RecvCharacterAppendPacket(SNetworkActorData * pkNet
 			CPythonBackground::Instance().Update(pkNetActorData->m_lCurX, pkNetActorData->m_lCurY, 0.0f);
 			CPythonCharacterManager::Instance().Update();
 
-			// NOTE : 사귀 타워일 경우 GOTO 로 이동시에도 맵 이름을 출력하도록 처리
+			// NOTE: In case of a private tower, the map name is displayed even when moving with GOTO.
 			{
 				std::string strMapName = CPythonBackground::Instance().GetWarpMapName();
 				if (strMapName == "metin2_map_deviltower1")
@@ -273,8 +273,8 @@ bool CPythonNetworkStream::RecvCharacterDeletePacket()
 
 	m_rokNetActorMgr->RemoveActor(chrDeletePacket.id);
 
-	// 캐릭터가 사라질때 개인 상점도 없애줍니다.
-	// Key Check 를 하기때문에 없어도 상관은 없습니다.
+	// When a character disappears, the personal store is also deleted.
+	// It doesn't matter if you don't have it because we do a key check.
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], 
 		"BINARY_PrivateShop_Disappear", 
 		Py_BuildValue("(i)", chrDeletePacket.id)

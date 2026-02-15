@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "ModelInstance.h"
 #include "Model.h"
 
@@ -161,7 +161,7 @@ void CGrannyModelInstance::__CreateMeshMatrices()
 {
 	assert(m_pModel != NULL);
 	
-	if (m_pModel->GetMeshCount() <= 0) // 메쉬가 없는 (카메라 같은) 모델도 간혹 있다..
+	if (m_pModel->GetMeshCount() <= 0) // There are also some models (such as cameras) that do not have a mesh.
 		return;
 	
 	int meshCount = m_pModel->GetMeshCount();	
@@ -274,14 +274,14 @@ const float * CGrannyModelInstance::GetBoneMatrixPointer(int iBone) const
 
 const float * CGrannyModelInstance::GetCompositeBoneMatrixPointer(int iBone) const
 {
-	// NOTE : GrannyGetWorldPose4x4는 스케일 값등이 잘못나올 수 있음.. 그래니가 속도를 위해
-	//        GrannyGetWorldPose4x4에 모든 matrix 원소를 제 값으로 넣지 않음
+	// NOTE: GrannyGetWorldPose4x4 may display incorrect scale values.. Granny Gets WorldPose4x4 for speed.
+	// GrannyGetWorldPose4x4 does not include all matrix elements with correct values.
 	return GrannyGetWorldPoseComposite4x4(__GetWorldPosePtr(), iBone);
 }
 
 void CGrannyModelInstance::ReloadTexture()
 {
-	assert("현재 사용하지 않음 - CGrannyModelInstance::ReloadTexture()");
+	assert("Currently deprecated - CGrannyModelInstance::ReloadTexture()dTexture()dTexture()");
 /*
 	assert(m_pModel != NULL);
 	const CGrannyMaterialPalette & c_rGrannyMaterialPalette = m_pModel->GetMaterialPalette();

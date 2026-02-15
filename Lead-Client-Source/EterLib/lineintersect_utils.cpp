@@ -1,4 +1,4 @@
-/**************************************************************************************
+﻿/**************************************************************************************
  |           File: lineintersect_utils.cpp
  |        Purpose: Implementation of line segment intersection utility functions
  |     Book Title: Game Programming Gems II

@@ -1,4 +1,4 @@
-#ifndef __INC_SCRIPT_PARSER_H__
+癤�#ifndef __INC_SCRIPT_PARSER_H__
 #define __INC_SCRIPT_PARSER_H__
 
 #include <list>
@@ -55,31 +55,20 @@ namespace script
 			~Group();
 			
 		public:
-			/** 스트링으로 부터 스크립트 그룹을 만든다.
-			*
-			* 실패하면 GetError 메소드로 확인할 수 있다.
-			*
-			* @param stSource 이 스트링으로 부터 그룹이 만들어 진다.
-			* @return 성공시 true, 실패하면 false
-			*/
+			/*
+ * Create a script group from a string.  If it fails, you can check it with the GetError method.  @param stSource A group is created from this string. @return true on success, false on failure
+ */
 			bool                Create(const std::string & stSource);
 			
-			/** 명령어를 받는 메소드
-			*
-			* @param cmd 성공시에 이 구조체로 명령어가 복사 된다.
-			* @return 명령어가 남아 있다면 true, 없다면 false
-			*/
+			/*
+ * Method that receives the command @param cmd When successful, the command is copied to this structure. @return true if there are any remaining instructions, false if not
+ */
 			bool                GetCmd(TCmd & cmd);
 
-			/*
-				명령어를 가져오되 꺼내지는 않는다.
-			*/
+			/* Get the command, but don't take it out. */
 			bool                ReadCmd(TCmd & cmd);
 			
-			/** 에러를 출력 받는 메소드
-			*
-			* @return stError 이 곳으로 에러가 출력 된다.
-			*/
+			/* Method that outputs errors @return stError Errors are output here. */
 			std::string &       GetError();
 			
 		private:

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../EffectLib/EffectManager.h"
 #include "FlyingObjectManager.h"

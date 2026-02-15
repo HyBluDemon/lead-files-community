@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "ActorInstance.h"
 
 const TPixelPosition& CActorInstance::NEW_GetLastPixelPositionRef()

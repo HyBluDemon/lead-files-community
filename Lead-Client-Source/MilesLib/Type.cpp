@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "Type.h"
 #include "../EterLib/TextFileLoader.h"
 
@@ -26,7 +26,7 @@ bool NSound::LoadSoundInformationPiece(const char * c_szFileName, NSound::TSound
 	CTextFileLoader& rkTextFileLoader=*pkTextFileLoader;
 	if (rkTextFileLoader.IsEmpty())
 	{
-		SetResultString((strResult + " 읽기용 파일을 열 수 없음").c_str());
+		SetResultString((strResult + "Unable to open file for readingfile for readingfile for readingfile for readingfile for reading").c_str());
 		return false;
 	}
 
@@ -35,7 +35,7 @@ bool NSound::LoadSoundInformationPiece(const char * c_szFileName, NSound::TSound
 	int iCount;
 	if (!rkTextFileLoader.GetTokenInteger("sounddatacount", &iCount))
 	{
-		SetResultString((strResult + " 파일 포멧 에러, SoundDataCount를 찾을 수 없음").c_str());
+		SetResultString((strResult + "File format error, SoundDataCount not foundnot foundnot foundnot foundnot foundnot foundnot found").c_str());
 		return false;
 	}
 
@@ -49,13 +49,13 @@ bool NSound::LoadSoundInformationPiece(const char * c_szFileName, NSound::TSound
 		CTokenVector * pTokenVector;
 		if (!rkTextFileLoader.GetTokenVector(szSoundDataHeader, &pTokenVector))
 		{
-			SetResultString((strResult + " 파일 포멧 에러: " + szSoundDataHeader + " 를 찾을 수 없음").c_str());
+			SetResultString((strResult + "File format error: " + szSoundDataHeader + "not found").c_str());
 			return false;
 		}
 
 		if (2 != pTokenVector->size())
 		{
-			SetResultString((strResult + " 파일 포멧 에러: 벡터 크기가 2가 아님").c_str());
+			SetResultString((strResult + "File format error: vector size not 2").c_str());
 			return false;
 		}
 
@@ -71,17 +71,17 @@ bool NSound::LoadSoundInformationPiece(const char * c_szFileName, NSound::TSound
 		}
 	}
 
-	SetResultString((strResult + " 불러옴").c_str());
+	SetResultString((strResult + "loaded").c_str());
 	return true;
 }
 
 bool NSound::SaveSoundInformationPiece(const char * c_szFileName, NSound::TSoundDataVector & rSoundDataVector)
 {
-	if (rSoundDataVector.empty())	// 데이터가 없으면 성공으로 간주
+	if (rSoundDataVector.empty())	// If there is no data, it is considered a success
 	{
-		if (IsFile(c_szFileName))	// 데이터는 비어있는데 파일이 있다면
+		if (IsFile(c_szFileName))	// If the data is empty but there is a file
 		{
-			_unlink(c_szFileName);		// 지운다.
+			_unlink(c_szFileName);		// erase
 		}
 		return true;
 	}
@@ -95,8 +95,8 @@ bool NSound::SaveSoundInformationPiece(const char * c_szFileName, NSound::TSound
 	{
 		char szErrorText[256+1];
 		_snprintf(szErrorText, sizeof(szErrorText), "Failed to save file (%s).\nPlease check if it is read-only or you have no space on the disk.\n", c_szFileName);
-		LogBox(szErrorText, "에러");
-		SetResultString((strResult + " 쓰기용 파일을 열 수 없음").c_str());
+		LogBox(szErrorText, "error");
+		SetResultString((strResult + "Unable to open file for writingfile for writingfile for writingfile for writingfile for writing").c_str());
 		return false;
 	}
 

@@ -2,37 +2,37 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CWebBrowser", "CWebBrowser\CWebBrowser_VC90.vcxproj", "{D64AE35F-F982-46D4-8E38-09E5C9752955}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CWebBrowser", "CWebBrowser\CWebBrowser.vcxproj", "{D64AE35F-F982-46D4-8E38-09E5C9752955}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectLib", "EffectLib\EffectLib_VC90.vcxproj", "{790B152D-6582-467F-B767-8603C5A9E613}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectLib", "EffectLib\EffectLib.vcxproj", "{790B152D-6582-467F-B767-8603C5A9E613}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterPack", "EterPack\EterPack_VC90.vcxproj", "{4950BA04-3877-4F66-BCA0-60E00DE3770B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterPack", "EterPack\EterPack.vcxproj", "{4950BA04-3877-4F66-BCA0-60E00DE3770B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PRTerrainLib", "PRTerrainLib\PRTerrainLib_VC90.vcxproj", "{8B1D0DDE-A521-4EB2-9544-F606376278CC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PRTerrainLib", "PRTerrainLib\PRTerrainLib.vcxproj", "{8B1D0DDE-A521-4EB2-9544-F606376278CC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpeedTreeLib", "SpeedTreeLib\SpeedTreeLib_VC90.vcxproj", "{0FDDD886-1EB5-4655-80C3-EF08087FAEFD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpeedTreeLib", "SpeedTreeLib\SpeedTreeLib.vcxproj", "{0FDDD886-1EB5-4655-80C3-EF08087FAEFD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SphereLib", "SphereLib\SphereLib_VC90.vcxproj", "{A5D7AF9F-0A4F-4ED3-B209-2553B1ADD17D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SphereLib", "SphereLib\SphereLib.vcxproj", "{A5D7AF9F-0A4F-4ED3-B209-2553B1ADD17D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UserInterface", "UserInterface\UserInterface_VC90.vcxproj", "{F6CEB04C-4403-4CD4-84A2-D6A372BD4334}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UserInterface", "UserInterface\UserInterface.vcxproj", "{F6CEB04C-4403-4CD4-84A2-D6A372BD4334}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eterBase", "EterBase\eterBase_VC90.vcxproj", "{678C47DC-B3EF-460E-A932-56F3208FC65E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterBase", "EterBase\EterBase.vcxproj", "{678C47DC-B3EF-460E-A932-56F3208FC65E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eterGrnLib", "eterGrnLib\eterGrnLib_VC90.vcxproj", "{E1FF7630-628F-4AD0-BF66-F14D86A04035}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterGrnLib", "EterGrnLib\EterGrnLib.vcxproj", "{E1FF7630-628F-4AD0-BF66-F14D86A04035}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eterImageLib", "eterImageLib\eterImageLib_VC90.vcxproj", "{FE95382C-8E3E-40AC-8060-634D1A0D4CF5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterImageLib", "EterImageLib\EterImageLib.vcxproj", "{FE95382C-8E3E-40AC-8060-634D1A0D4CF5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eterPythonLib", "eterPythonLib\eterPythonLib_VC90.vcxproj", "{24516A87-8544-46A9-A0C8-0A01269642D9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterPythonLib", "EterPythonLib\EterPythonLib.vcxproj", "{24516A87-8544-46A9-A0C8-0A01269642D9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eterlib", "EterLib\eterlib_VC90.vcxproj", "{887F89DF-A1A2-47DF-A869-F3FC84704E3E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterLib", "EterLib\EterLib.vcxproj", "{887F89DF-A1A2-47DF-A869-F3FC84704E3E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gamelib", "GameLib\gamelib_VC90.vcxproj", "{1801F0ED-7DE6-4175-BF25-6FA98AAA350B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameLib", "GameLib\GameLib.vcxproj", "{1801F0ED-7DE6-4175-BF25-6FA98AAA350B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mileslib", "MilesLib\mileslib_VC90.vcxproj", "{9189BA90-1997-4B47-A673-A54C7DF4A4F7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MilesLib", "MilesLib\MilesLib.vcxproj", "{9189BA90-1997-4B47-A673-A54C7DF4A4F7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scriptLib", "scriptLib\scriptLib_VC90.vcxproj", "{E682CEA2-1D79-4DE9-A2CE-6AED27E4170E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptLib", "ScriptLib\ScriptLib.vcxproj", "{E682CEA2-1D79-4DE9-A2CE-6AED27E4170E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterLocale", "EterLocale\EterLocale_VC90.vcxproj", "{05207E97-C83A-49C6-8E08-403679963A7B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EterLocale", "EterLocale\EterLocale.vcxproj", "{05207E97-C83A-49C6-8E08-403679963A7B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared", "..\Lead-Shared-Source\Lead-Shared-Source.vcxproj", "{76C68FB7-46A0-464F-B0D2-EEDB6E2A450B}"
 EndProject

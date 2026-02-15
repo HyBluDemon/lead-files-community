@@ -1,4 +1,4 @@
-#include "stdafx.h"
+癤�#include "stdafx.h"
 #include "../eterLib/StateManager.h"
 #include "../eterLib/Camera.h"
 
@@ -83,8 +83,8 @@ void CFlyTrace::Update()
 	
 }
 
-//1. 알파를 쓰려면 색깔만 줄수있다.
-//2. 텍스쳐를 쓰려면 알파 없다-_-
+// 1. To use alpha, you can only give color.
+// 2. There is no alpha to use texture -_-
 
 
 struct TFlyVertex

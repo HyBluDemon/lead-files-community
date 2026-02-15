@@ -1,4 +1,4 @@
-#ifndef __INC_ETERBASE_RANDOM_H__
+﻿#ifndef __INC_ETERBASE_RANDOM_H__
 #define __INC_ETERBASE_RANDOM_H__
 
 extern void				srandom(unsigned long seed);

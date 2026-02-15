@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 
 #include "../eterLib/ResourceManager.h"
 #include "../eterLib/StateManager.h"
@@ -485,7 +485,7 @@ void CArea::__Load_BuildObjectInstances()
 
 		__SetObjectInstance(*it, c_pObjectData);
 
-		// 최적화용
+		// For optimization
 		if ((*it)->dwType == prt::PROPERTY_TYPE_BUILDING)
 			m_GraphicThingInstanceCRCMap.insert(TGraphicThingInstanceCRCMap::value_type( (*it)->pThingInstance, c_pObjectData->dwCRC ) );
 	}
@@ -720,7 +720,7 @@ void CArea::__SetObjectInstance_SetDungeonBlock(TObjectInstance * pObjectInstanc
 
 void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_szAttributeFileName)
 {
-	// OBB를 사용한 충돌 정보 자동 생성.
+	// Automatic generation of collision information using OBB.
 	const bool bFileExist = CResourceManager::Instance().IsFileExist(c_szAttributeFileName);
 	
 	CAttributeData * pAttributeData = (CAttributeData *) CResourceManager::Instance().GetResourcePointer(c_szAttributeFileName);
@@ -735,7 +735,7 @@ void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_sz
 		boost::algorithm::to_lower(attrFileName);
 		const bool bIsDungeonObject = (std::string::npos != attrFileName.find("/dungeon/")) || (std::string::npos != attrFileName.find("\\dungeon\\"));
 
-		// NOTE: dungeon 오브젝트는 Dummy Collision을 자동으로 생성하지 않도록 함 (던전의 경우 더미 컬리전때문에 문제가 된 경우가 수차례 있었음. 이렇게 하기로 그래픽 팀과 협의 완료)
+		// NOTE: Dungeon objects do not automatically generate Dummy Collision (in the case of dungeons, there were several cases where problems occurred due to dummy collision. Discussion was completed with the graphics team to do this).
 		if (pAttributeData->IsEmpty() && false == bIsDungeonObject)
 		{
 			if (NULL != pObjectInstance && NULL != pObjectInstance->pThingInstance)
@@ -776,101 +776,101 @@ void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_sz
 
 /*
 void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_szAttributeFileName)
-{
-	// AABB를 사용한 충돌 정보 자동 생성.
+{ 
+	// Automatic generation of conflict information using AABB.
 	const bool bFileExist = CResourceManager::Instance().IsFileExist(c_szAttributeFileName);
 	
 	CAttributeData * pAttributeData = (CAttributeData *) CResourceManager::Instance().GetResourcePointer(c_szAttributeFileName);
-
+	
 	CAttributeInstance * pAttrInstance = ms_AttributeInstancePool.Alloc();
-	pAttrInstance->Clear();
-	pAttrInstance->SetObjectPointer(pAttributeData);
-
-	if (false == bFileExist)
-	{
-		if (pAttributeData->IsEmpty())
-		{
-			if (NULL != pObjectInstance && NULL != pObjectInstance->pThingInstance)
-			{
+	pAttrInstance->Clear(); 
+	pAttrInstance->SetObjectPointer(pAttributeData);  
+	
+	if (false == bFileExist) 
+	{ 
+		if (pAttributeData->IsEmpty()) 
+		{ 
+			if (NULL != pObjectInstance && NULL != pObjectInstance->pThingInstance) 
+			{ 
 				CGraphicThingInstance* object = pObjectInstance->pThingInstance;
-
-				D3DXVECTOR3 v3Min, v3Max;
-
-				object->GetBoundingAABB(v3Min, v3Max);
-
-				CStaticCollisionData collision;
-				collision.dwType = COLLISION_TYPE_AABB;
-				collision.quatRotation = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
-				strcpy(collision.szName, "DummyCollisionAABB");
-				collision.v3Position = (v3Min + v3Max) * 0.5f;
-
-				D3DXVECTOR3 vDelta = (v3Max - v3Min);
-				collision.fDimensions[0] = vDelta.x * 0.5f; // v3Min, v3Max를 구하기 위한 가로, 세로, 높이의 절반값 저장
-				collision.fDimensions[1] = vDelta.y * 0.5f;
-				collision.fDimensions[2] = vDelta.z * 0.5f;
 				
-
-				pAttributeData->AddCollisionData(collision);
-			}
-		}
+				D3DXVECTOR3 v3Min, v3Max;  
+				
+				object->GetBoundingAABB(v3Min, v3Max);  
+				
+				CStaticCollisionData collision; 
+				collision.dwType = COLLISION_TYPE_AABB; 
+				collision.quatRotation = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f); 
+				strcpy(collision.szName, "DummyCollisionAABB"); 
+				collision.v3Position = (v3Min + v3Max) * 0.5f;  
+				
+				D3DXVECTOR3 vDelta = (v3Max - v3Min); 
+				collision.fDimensions[0] = vDelta.x * 0.5f; // Store half of the width, height, and height to find v3Min and v3Max 
+				collision.fDimensions[1] = vDelta.y * 0.5f; 
+				collision.fDimensions[2] = vDelta.z * 0.5f;   
+				
+				
+				pAttributeData->AddCollisionData(collision); 
+			} 
+		} 
 	}
-
+	
 	if (!pAttributeData->IsEmpty())
-	{
-		pObjectInstance->pAttributeInstance = pAttrInstance;
+	{ 
+		pObjectInstance->pAttributeInstance = pAttrInstance; 
 	}
 	else
-	{
-		pAttrInstance->Clear();
-		ms_AttributeInstancePool.Free(pAttrInstance);
-	}
+	{ 
+		pAttrInstance->Clear(); 
+		ms_AttributeInstancePool.Free(pAttrInstance); 
+	} 
 }
 */
 /*
-void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_szAttributeFileName)
+void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_szAttributeFileName) 
 {
-	// Sphere를 사용한 충돌 정보 자동 생성.
-	const bool bFileExist = CResourceManager::Instance().IsFileExist(c_szAttributeFileName);
+	// Automatic generation of collision information using Sphere.
+	const bool bFileExist = CResourceManager::Instance().IsFileExist(c_szAttributeFileName);  
 	
 	CAttributeData * pAttributeData = (CAttributeData *) CResourceManager::Instance().GetResourcePointer(c_szAttributeFileName);
 
-	CAttributeInstance * pAttrInstance = ms_AttributeInstancePool.Alloc();
-	pAttrInstance->Clear();
-	pAttrInstance->SetObjectPointer(pAttributeData);
-
-	if (false == bFileExist)
-	{
-		if (pAttributeData->IsEmpty())
+	CAttributeInstance * pAttrInstance = ms_AttributeInstancePool.Alloc(); 
+	pAttrInstance->Clear(); 
+	pAttrInstance->SetObjectPointer(pAttributeData);  
+	
+	if (false == bFileExist) 
+	{ 
+		if (pAttributeData->IsEmpty()) 
 		{
-			if (NULL != pObjectInstance && NULL != pObjectInstance->pThingInstance)
-			{
-				CGraphicThingInstance* object = pObjectInstance->pThingInstance;
-
-				D3DXVECTOR3 v3Center;
-				float fRadius = 0.0f;
-
-				object->GetBoundingSphere(v3Center, fRadius);
-
-				CStaticCollisionData collision;
-				collision.dwType = COLLISION_TYPE_SPHERE;
-				collision.quatRotation = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f);
-				strcpy(collision.szName, "DummyCollisionSphere");
-				collision.fDimensions[0] = fRadius * 0.25;
-				collision.v3Position = v3Center;
-
-				pAttributeData->AddCollisionData(collision);
-			}
-		}
-	}
-
-	if (!pAttributeData->IsEmpty())
-	{
-		pObjectInstance->pAttributeInstance = pAttrInstance;
-	}
-	else
-	{
-		pAttrInstance->Clear();
-		ms_AttributeInstancePool.Free(pAttrInstance);
+			if (NULL != pObjectInstance && NULL != pObjectInstance->pThingInstance) 
+			{ 
+				CGraphicThingInstance* object = pObjectInstance->pThingInstance;  
+				
+				D3DXVECTOR3 v3Center; 
+				float fRadius = 0.0f;  
+				
+				object->GetBoundingSphere(v3Center, fRadius);  
+				
+				CStaticCollisionData collision; 
+				collision.dwType = COLLISION_TYPE_SPHERE; 
+				collision.quatRotation = D3DXQUATERNION(0.0f, 0.0f, 0.0f, 1.0f); 
+				strcpy(collision.szName, "DummyCollisionSphere"); 
+				collision.fDimensions[0] = fRadius * 0.25; 
+				collision.v3Position = v3Center;  
+				
+				pAttributeData->AddCollisionData(collision); 
+			} 
+		} 
+	} 
+	
+	if (!pAttributeData->IsEmpty()) 
+	{ 
+		pObjectInstance->pAttributeInstance = pAttrInstance; 
+	} 
+	else 
+	{ 
+		pAttrInstance->Clear(); 
+		ms_AttributeInstancePool.Free(pAttrInstance); 
 	}
 }
 
@@ -939,7 +939,7 @@ bool CArea::__Load_LoadObject(const char * c_szFileName)
 		ObjectData.Position.z = atof(c_rstrzPosition.c_str());
 		ObjectData.dwCRC = atoi	(c_rstrCRC.c_str());
 
-		// 20041217.myevan.로테이션 공식 변경
+		// 20041217.myevan.Rotation formula changed
 		ObjectData.InitializeRotation(); //ObjectData.m_fYaw = ObjectData.m_fPitch = ObjectData.m_fRoll = 0;
 		if (rVector.size() > 4)
 		{
@@ -1039,7 +1039,7 @@ bool CArea::__Load_LoadAmbience(const char * c_szFileName)
 		ObjectData.dwCRC = atoi	(c_rstrCRC.c_str());
 		ObjectData.dwRange = atoi(c_rstrRange.c_str());
 
-		// 20041217.myevan.로테이션 초기화
+		// 20041217.myevan.Rotation reset
 		ObjectData.InitializeRotation();
 		ObjectData.m_fHeightBias = 0.0f;
 		ObjectData.fMaxVolumeAreaPercentage = 0.0f;
@@ -1273,7 +1273,7 @@ void CArea::__Clear_DestroyObjectInstance(TObjectInstance * pObjectInstance)
 
 
 //////////////////////////////////////////////////////////////////////////
-// Coordination 관련
+// Coordination-related
 void CArea::GetCoordinate(unsigned short * usCoordX, unsigned short * usCoordY)
 {
 	*usCoordX = m_wX;

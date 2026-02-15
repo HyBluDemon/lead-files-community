@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GrpVertexBufferDynamic.h"
 
 bool CDynamicVertexBuffer::Create(int vtxCount, int fvf)

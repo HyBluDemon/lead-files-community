@@ -1,4 +1,4 @@
-#include "CWebBrowser.h"
+﻿#include "CWebBrowser.h"
 #include <windows.h>
 #include <objbase.h> // Required for COM interfaces if WIN32_LEAN_AND_MEAN is used
 #include <string>

@@ -1,4 +1,4 @@
-/* Write Python objects to files and read them back.
+﻿/* Write Python objects to files and read them back.
    This is intended for writing and reading compiled Python code only;
    a true persistent storage facility would be much harder, since
    it would have to take circular links and sharing into account. */

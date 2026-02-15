@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "PythonApplication.h"
 
 static bool bInitializedLogo = false;
@@ -23,7 +23,7 @@ int CPythonApplication::OnLogoOpen(char* szName)
 	m_nLeft = 0; m_nRight = 0; m_nTop = 0; m_nBottom = 0;
 
 
-	// Ã³À½¿¡´Â 1/1 Å©±âÀÇ ÅØ½ºÃÄ¸¦ »ý¼ºÇØµÐ´Ù.
+	// First, create a texture of 1/1 size.
 	if(!m_pLogoTex->Create(1, 1, D3DFMT_A8R8G8B8)) { return 0; }
 
 	// Set GraphBuilder / SampleGrabber
@@ -60,7 +60,7 @@ int CPythonApplication::OnLogoOpen(char* szName)
 	// Media Event
 	if(FAILED(m_pGraphBuilder->QueryInterface(IID_IMediaEventEx, (VOID**) &m_pMediaEvent))) { return 0; }
 
-	// Window ¾Èº¸ÀÌ°Ô
+	// Window not visible
 	m_pVideoWnd->SetWindowPosition( 3000, 3000, 0, 0 );
 	m_pVideoWnd->put_Visible(0);
 	m_pSampleGrabber->SetBufferSamples(TRUE);
@@ -80,8 +80,8 @@ int CPythonApplication::OnLogoUpdate()
 	//osvi.dwOSVersionInfoSize = sizeof(osvi);
 	//GetVersionEx(&osvi);
 
-	//// windows xp ÀÌÇÏÀÎ ¹öÀüÀº logo skip.
-	////	m_pSampleGrabber->GetCurrentBuffer(&m_lBufferSize,  (LONG*)m_pCaptureBuffer) fail ³ª±â ¶§¹®.
+	// // For versions lower than Windows XP, skip the logo.
+	// // Because m_pSampleGrabber->GetCurrentBuffer(&m_lBufferSize, (LONG*)m_pCaptureBuffer) fails.
 	//if (osvi.dwMajorVersion <= 5)
 	//{
 	//	return 0;
@@ -94,10 +94,10 @@ int CPythonApplication::OnLogoUpdate()
 
 	BYTE* pBuffer = m_pCaptureBuffer; LONG lBufferSize = m_lBufferSize;
 
-	// Àç»ýÀÌ ¾È‰çÀ?°æ¿ì Àç»ý.
+	// If it doesn't play, play it.
 	if(!m_bLogoPlay) { m_pMediaCtrl->Run(); m_bLogoPlay = true; }
 
-	// ÀÐ¾î¿Â ¹öÆÛ°¡ 0ÀÎ°æ¿ì ¹öÆÛ¸¦ ÀçÇÒ´ç.
+	// If the read buffer is 0, reallocate the buffer.
 	if( lBufferSize == 0  ) {
 		m_pSampleGrabber->GetCurrentBuffer(&m_lBufferSize, NULL);
 
@@ -107,8 +107,8 @@ int CPythonApplication::OnLogoUpdate()
 		lBufferSize = m_lBufferSize;
 	}
 	
-	// ¿µ»ó ·ÎµùÁß¿¡ UpdateµÇ´Â °æ¿ì, ¹öÆÛ ¾ò±â¿¡ ½ÇÆÐÇÏ´Â °æ¿ì°¡ ¸¹´Ù.
-	// ½ÇÆÐÇÏ´õ¶óµµ ¿ÏÀüÈ÷ Á¾·áµÇ´Â °æ¿ì´Â ¾Æ´Ï¹Ç·Î, ½ÇÇàÀ» Áß´ÜÇÏÁö´Â ¾Ê´Â´Ù.
+	// If the video is updated while loading, obtaining the buffer often fails.
+	// Even if it fails, it does not completely terminate, so execution does not stop.
 	if(FAILED(m_pSampleGrabber->GetCurrentBuffer(&m_lBufferSize,  (LONG*)m_pCaptureBuffer)))
 	{
 		m_bLogoError = true;
@@ -117,7 +117,7 @@ int CPythonApplication::OnLogoUpdate()
 		D3DLOCKED_RECT rt;
 		ZeroMemory(&rt, sizeof(rt));
 
-		// ½ÇÆÐÇÑ °æ¿ì¿¡´Â ÅØ½ºÃÄ¸¦ ±î¸Ä°Ô ºñ¿î´Ù.
+		// In case of failure, the texture is blanked out in black.
 		tex->LockRect(0, &rt, 0, 0);
 		BYTE* destb = static_cast<byte*>(rt.pBits);
 		for(int a = 0; a < 4; a+= 4)
@@ -150,14 +150,14 @@ int CPythonApplication::OnLogoUpdate()
 
 
 
-	// Å©±â°¡ 1, Áï ÅØ½ºÃÄ °ø°£ÀÌ Á¦´ë·Î ÁØºñ ¾ÈµÈ°æ¿ì ´Ù½Ã ¸¸µç´Ù.
+	// If the size is 1, that is, the texture space is not properly prepared, it is created again.
 	if(m_pLogoTex->GetWidth() == 1)
 	{
 		m_pLogoTex->Destroy(); m_pLogoTex->Create(lWidth, lHeight, D3DFMT_A8R8G8B8);
 		
 	}
 
-	// ÁØºñ‰çÀ¸¸?¹öÆÛ¿¡¼­ ÅØ½ºÃÄ·Î º¹»çÇØ¿Â´Ù.
+	// Are you ready? Copy it from the buffer to the texture.
 	LPDIRECT3DTEXTURE9 tex = m_pLogoTex->GetD3DTexture();
 	D3DLOCKED_RECT rt;
 	ZeroMemory(&rt, sizeof(rt));
@@ -171,7 +171,7 @@ int CPythonApplication::OnLogoUpdate()
 	}
 	tex->UnlockRect(0);
 
-	// ¿µ»óÀÇ »óÅÂ Ã¼Å© (Á¾·áµÇ¾ú´ÂÁö)
+	// Check the status of the video (whether it is finished)
 	long evCode, param1, param2;
 	while(SUCCEEDED(m_pMediaEvent->GetEvent(&evCode, &param1, &param2, 0)))
 	{
@@ -206,7 +206,7 @@ void CPythonApplication::OnLogoRender()
 
 void CPythonApplication::OnLogoClose()
 {
-	// NOTE: LOGO µ¿¿µ»óÀÌ ÇÑ ¹øµµ ¾È ºÒ·ÈÀ» °æ¿ì¿¡´Â OnLogoClose °úÁ¤¿¡¼­ Å©·¡½Ã°¡ ³ª´Â ¹®Á¦ ¼öÁ¤
+	// NOTE: Fixed an issue where a crash occurred during the OnLogoClose process if the LOGO video was never loaded.
 	if (false == bInitializedLogo)
 		return;
 
