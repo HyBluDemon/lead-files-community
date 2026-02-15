@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "InstanceBase.h"
 #include "PythonBackground.h"
 #include "PythonNonPlayer.h"
@@ -140,10 +140,10 @@ UINT CInstanceBase::SHORSE::GetLevel()
 			case 20107:
 			case 20108:
 			case 20109:
-			case 20110: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨 
-			case 20111: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨 
-			case 20112: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨 
-			case 20113: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨 
+			case 20110: // #0000673: [M2EU] Cannot attack while riding a new vehicle
+			case 20111: // #0000673: [M2EU] Cannot attack while riding a new vehicle
+			case 20112: // #0000673: [M2EU] Cannot attack while riding a new vehicle
+			case 20113: // #0000673: [M2EU] Cannot attack while riding a new vehicle
 			case 20114:
 			case 20115:
 			case 20116:
@@ -156,26 +156,26 @@ UINT CInstanceBase::SHORSE::GetLevel()
 			case 20124:
 			case 20125:
 				return 3;
-			case 20119: // 라마단 이벤트용 흑마는 스킬불가, 공격가능한 레벨2로 설정
-			case 20219: // 할로윈 이벤트용 흑마는 스킬불가, 공격가능한 레벨2로 설정 (=라마단 흑마 클론)
+			case 20119: // The black horse for the Ramadan event is set to level 2, unable to use skills and able to attack.
+			case 20219: // The dark horse for the Halloween event has no skills and is set to attack level 2 (=Ramadan dark horse clone)
 			case 20220:
 			case 20221:
 			case 20222:
 				return 2;
 		}
 
-		// 마운트 확장 시스템용 특수 처리 (20201 ~ 20212 대역을 사용하고 순서대로 4개씩 나눠서 초급, 중급, 고급임)
-		//	-- 탈것 레벨을 클라에서 측정하고 공격/스킬 사용가능 여부도 클라에서 처리하는 것 자체에 문제가 있는 듯.. [hyo]
+		// Special processing for the mount expansion system (using the 20201 to 20212 bands, divided into 4 parts in that order: Beginner, Intermediate, Advanced)
+		// -- There seems to be a problem with measuring the vehicle level in the class and processing attack/skill availability in the class itself. [hyo]
 		{
-			// 중급 탈것은 레벨2 (공격 가능, 스킬 불가)
+			// Intermediate mount is level 2 (can attack, cannot use skills)
 			if ((20205 <= mount &&  20208 >= mount) ||
-				(20214 == mount) || (20217 == mount)			// 난폭한 전갑순순록, 난폭한 전갑암순록
+				(20214 == mount) || (20217 == mount)			// Violent all-armored reindeer, violent all-armored reindeer
 				)
 				return 2;
 
-			// 고급 탈것은 레벨3 (공격 가능, 스킬 가능)
+			// Advanced mounts are level 3 (can attack, can use skills)
 			if ((20209 <= mount &&  20212 >= mount) || 
-				(20215 == mount) || (20218 == mount) ||			// 용맹한 전갑순순록, 용맹한 전갑암순록
+				(20215 == mount) || (20218 == mount) ||			// Brave reindeer, brave reindeer
 				(20220 == mount)
 				)
 				return 3;
@@ -191,13 +191,13 @@ bool CInstanceBase::SHORSE::IsNewMount()
 	DWORD mount = m_pkActor->GetRace();
 
 	if ((20205 <= mount &&  20208 >= mount) ||
-		(20214 == mount) || (20217 == mount)			// 난폭한 전갑순순록, 난폭한 전갑암순록
+		(20214 == mount) || (20217 == mount)			// Violent all-armored reindeer, violent all-armored reindeer
 		)
 		return true;
 
-	// 고급 탈것
+	// luxury mount
 	if ((20209 <= mount &&  20212 >= mount) || 
-		(20215 == mount) || (20218 == mount) ||			// 용맹한 전갑순순록, 용맹한 전갑암순록
+		(20215 == mount) || (20218 == mount) ||			// Brave reindeer, brave reindeer
 		(20220 == mount)
 		)
 		return true;
@@ -206,7 +206,7 @@ bool CInstanceBase::SHORSE::IsNewMount()
 }
 bool CInstanceBase::SHORSE::CanUseSkill()
 {
-	// 마상스킬은 말의 레벨이 3 이상이어야만 함.
+	// For horseback riding skills, the horse must be level 3 or higher.
 	if (IsMounting())
 		return 2 < GetLevel();
 
@@ -304,7 +304,7 @@ bool __ArmorVnumToShape(int iVnum, DWORD * pdwShape)
 	return true;
 }
 
-// 2004.07.05.myevan.궁신탄영 끼이는 문제
+// 2004.07.05.myevan.Problem of Gungshin Tanyeong getting stuck
 class CActorInstanceBackground : public IBackground
 {
 	public:
@@ -411,7 +411,7 @@ void CInstanceBase::__EnableSkipCollision()
 {
 	if (__IsMainInstance())
 	{
-		TraceError("CInstanceBase::__EnableSkipCollision - 자신은 충돌검사스킵이 되면 안된다!!");
+		TraceError("CInstanceBase::__EnableSkipCollision - You must not skip collision checking!!llision checking!!llision checking!!llision checking!!");
 		return;
 	}
 	m_GraphicThingInstance.EnableSkipCollision();
@@ -685,7 +685,7 @@ void CInstanceBase::__ClearMainInstance()
 	rkChrMgr.ClearMainInstance();
 }
 
-/* 실제 플레이어 캐릭터인지 조사.*/
+/* Investigate whether it is a real player character. */
 bool CInstanceBase::__IsMainInstance()
 {
 	if (this==__GetMainInstancePtr())
@@ -793,10 +793,10 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 	SetMoveSpeed(c_rkCreateData.m_dwMovSpd);
 	SetAttackSpeed(c_rkCreateData.m_dwAtkSpd);
 	
-	// NOTE : Dress 를 입고 있으면 Alpha 를 넣지 않는다.
+	// NOTE: If you are wearing a dress, do not enter Alpha.
 	if (!IsWearingDress())
 	{
-		// NOTE : 반드시 Affect 셋팅 윗쪽에 있어야 함
+		// NOTE: Must be at the top of Affect settings
 		m_GraphicThingInstance.SetAlphaValue(0.0f);
 		m_GraphicThingInstance.BlendAlphaValue(1.0f, 0.5f);
 	}
@@ -806,7 +806,7 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 		SetAffectFlagContainer(c_rkCreateData.m_kAffectFlags);
 	}	
 
-	// NOTE : 반드시 Affect 셋팅 후에 해야 함
+	// NOTE: Must be done after setting the Affect.
 	AttachTextTail();
 	RefreshTextTail();
 
@@ -852,7 +852,7 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 
 	__AttachHorseSaddle();
 
-	// 길드 심볼을 위한 임시 코드, 적정 위치를 찾는 중
+	// Temporary code for guild symbol, finding appropriate location
 	const int c_iGuildSymbolRace = 14200;
 	if (c_iGuildSymbolRace == GetRace())
 	{
@@ -921,7 +921,7 @@ bool CInstanceBase::SetRace(DWORD eRace)
 
 BOOL CInstanceBase::__IsChangableWeapon(int iWeaponID)
 {	
-	// 드레스 입고 있을때는 부케외의 장비는 나오지 않게..
+	// When wearing a dress, do not bring any equipment other than the bouquet out.
 	if (IsWearingDress())
 	{
 		const int c_iBouquets[] =
@@ -930,7 +930,7 @@ BOOL CInstanceBase::__IsChangableWeapon(int iWeaponID)
 			50202,	// Bouquet for Shaman
 			50203,
 			50204,
-			0, // #0000545: [M2CN] 웨딩 드레스와 장비 착용 문제
+			0, // #0000545: [M2CN] Problem wearing wedding dress and equipment
 		};
 
 		for (int i = 0; c_iBouquets[i] != 0; ++i)
@@ -1208,8 +1208,8 @@ void CInstanceBase::PushTCPState(DWORD dwCmdTime, const TPixelPosition& c_rkPPos
 {	
 	if (__IsMainInstance())
 	{
-		//assert(!"CInstanceBase::PushTCPState 플레이어 자신에게 이동패킷은 오면 안된다!");
-		TraceError("CInstanceBase::PushTCPState 플레이어 자신에게 이동패킷은 오면 안된다!");
+		// assert(!"CInstanceBase::PushTCPState No movement packets should reach the player!");
+		TraceError("CInstanceBase::PushTCPState No movement packets should be sent to the player!uld be sent to the player!uld be sent to the player!uld be sent to the player!uld be sent to the player!");
 		return;
 	}
 
@@ -1218,14 +1218,8 @@ void CInstanceBase::PushTCPState(DWORD dwCmdTime, const TPixelPosition& c_rkPPos
 	m_nAverageNetworkGap=(m_nAverageNetworkGap*70+nNetworkGap*30)/100;
 	
 	/*
-	if (m_dwBaseCmdTime == 0)
-	{
-		m_dwBaseChkTime = ELTimer_GetFrameMSec()-nNetworkGap;
-		m_dwBaseCmdTime = dwCmdTime;
-
-		Tracenf("VID[%d] 네트웍갭 [%d]", GetVirtualID(), nNetworkGap);
-	}
-	*/
+ * if (m_dwBaseCmdTime == 0) { m_dwBaseChkTime = ELTimer_GetFrameMSec()-nNetworkGap; m_dwBaseCmdTime = dwCmdTime;  Tracenf("VID[%d] Network Gap [%d]", GetVirtualID(), nNetworkGap); }
+ */
 
 	//m_dwBaseChkTime-m_dwBaseCmdTime+ELTimer_GetServerMSec();
 
@@ -1241,7 +1235,7 @@ void CInstanceBase::PushTCPState(DWORD dwCmdTime, const TPixelPosition& c_rkPPos
 	//int nApplyGap=kCmdNew.m_dwChkTime-ELTimer_GetServerFrameMSec();
 
 	//if (nApplyGap<-500 || nApplyGap>500)
-	//	Tracenf("VID[%d] NAME[%s] 네트웍갭 [cur:%d ave:%d] 작동시간 (%d)", GetVirtualID(), GetNameString(), nNetworkGap, m_nAverageNetworkGap, nApplyGap);
+	// Tracenf("VID[%d] NAME[%s] Network Gap [cur:%d ave:%d] Operation Time (%d)", GetVirtualID(), GetNameString(), nNetworkGap, m_nAverageNetworkGap, nApplyGap);
 }
 
 /*
@@ -1332,11 +1326,11 @@ void CInstanceBase::StateProcess()
 		TPixelPosition kPPosDir = kPPosDst - kPPosCur;
 		float fDirLen = (float)sqrt(kPPosDir.x * kPPosDir.x + kPPosDir.y * kPPosDir.y);
 
-		//Tracenf("거리 %f", fDirLen);
+		// Tracenf("Distance %f", fDirLen);
 
 		if (!__CanProcessNetworkStatePacket())
 		{
-			Lognf(0, "vid=%d 움직일 수 없는 상태라 스킵 IsDead=%d, IsKnockDown=%d", uVID, m_GraphicThingInstance.IsDead(), m_GraphicThingInstance.IsKnockDown());
+			Lognf(0, "vid=%d Cannot move, so skip IsDead=%d, IsKnockDown=%dwn=%dwn=%dwn=%dwn=%d", uVID, m_GraphicThingInstance.IsDead(), m_GraphicThingInstance.IsKnockDown());
 			return;
 		}
 
@@ -1349,7 +1343,7 @@ void CInstanceBase::StateProcess()
 		{
 			case FUNC_WAIT:
 			{
-				//Tracenf("%s (%f, %f) -> (%f, %f) 남은거리 %f", GetNameString(), kPPosCur.x, kPPosCur.y, kPPosDst.x, kPPosDst.y, fDirLen);
+				// Tracenf("%s (%f, %f) -> (%f, %f) remaining distance %f", GetNameString(), kPPosCur.x, kPPosCur.y, kPPosDst.x, kPPosDst.y, fDirLen);
 				if (fDirLen > 1.0f)
 				{
 					//NEW_GetSrcPixelPositionRef() = kPPosCur;
@@ -1367,11 +1361,11 @@ void CInstanceBase::StateProcess()
 					if (!IsWalking())
 						StartWalking();
 
-					//Tracen("목표정지");
+					// Tracen("Target Stop");
 				}
 				else
 				{
-					//Tracen("현재 정지");
+					// Tracen("current stop");
 
 					m_isGoing = FALSE;
 
@@ -1400,12 +1394,12 @@ void CInstanceBase::StateProcess()
 
 				if (!IsWalking())
 				{
-					//Tracen("걷고 있지 않아 걷기 시작");
+					// Tracen("Not walking, start walking");
 					StartWalking();
 				}
 				else
 				{
-					//Tracen("이미 걷는중 ");
+					// Tracen("Already walking ");
 				}
 				break;
 			}
@@ -1428,7 +1422,7 @@ void CInstanceBase::StateProcess()
 				}
 				else
 				{
-					//Tracen("대기 공격 정지");
+					// Tracen("Stop waiting attack");
 
 					m_isGoing = FALSE;
 
@@ -1459,11 +1453,11 @@ void CInstanceBase::StateProcess()
 					if (!IsWalking())
 						StartWalking();
 
-					//Tracen("너무 멀어서 이동 후 공격");
+					// Tracen("Too far away, move then attack");
 				}
 				else
 				{
-					//Tracen("노말 공격 정지");
+					// Tracen("Stop Normal Attack");
 
 					m_isGoing = FALSE;
 
@@ -1475,7 +1469,7 @@ void CInstanceBase::StateProcess()
 
 					RunNormalAttack(fRotDst);
 
-					//Tracen("가깝기 때문에 워프 공격");
+					// Tracen("warp attack because it's close");
 				}
 				break;
 			}
@@ -1559,11 +1553,11 @@ void CInstanceBase::StateProcess()
 						if (!IsWalking())
 							StartWalking();
 
-						//Tracen("너무 멀어서 이동 후 공격");
+						// Tracen("Too far away, move then attack");
 					}
 					else
 					{
-						//Tracen("스킬 정지");
+						// Tracen("Skill Stop");
 
 						m_isGoing = FALSE;
 
@@ -1575,7 +1569,7 @@ void CInstanceBase::StateProcess()
 						SetRotation(fRotDst);
 
 						NEW_UseSkill(0, eFunc & 0x7f, uArg&0x0f, (uArg>>4) ? true : false);
-						//Tracen("가깝기 때문에 워프 공격");
+						// Tracen("warp attack because it's close");
 					}
 				}
 				break;
@@ -1590,7 +1584,7 @@ void CInstanceBase::MovementProcess()
 	TPixelPosition kPPosCur;
 	NEW_GetPixelPosition(&kPPosCur);
 
-	// 렌더링 좌표계이므로 y를 -화해서 더한다.
+	// Since it is a rendering coordinate system, y is minus and added.
 
 	TPixelPosition kPPosNext;
 	{
@@ -1623,7 +1617,7 @@ void CInstanceBase::MovementProcess()
 				if (IsWalking())
 					EndWalking();
 
-				//Tracen("목표 도달 정지");
+				// Tracen("Stop reaching target");
 
 				m_isGoing = FALSE;
 
@@ -1648,33 +1642,33 @@ void CInstanceBase::MovementProcess()
 
 			SetAdvancingRotation(fDstRot);
 
-			// 만약 렌턴시가 늦어 너무 많이 이동했다면..
+			// If the rental was late and you moved too much...
 			if (fRestLen < -100.0f)
 			{
 				NEW_SetSrcPixelPosition(kPPosCur);
 
 				float fDstRot = NEW_GetAdvancingRotationFromPixelPosition(kPPosCur, NEW_GetDstPixelPositionRef());
 				SetAdvancingRotation(fDstRot);
-				//Tracenf("VID %d 오버 방향설정 (%f, %f) %f rest %f", GetVirtualID(), kPPosCur.x, kPPosCur.y, fDstRot, fRestLen);			
+				// Tracenf("VID %d over direction setting (%f, %f) %f rest %f", GetVirtualID(), kPPosCur.x, kPPosCur.y, fDstRot, fRestLen);
 
-				// 이동중이라면 다음번에 멈추게 한다
+				// If you are moving, stop next time.
 				if (FUNC_MOVE == m_kMovAfterFunc.eFunc)
 				{
 					m_kMovAfterFunc.eFunc = FUNC_WAIT;
 				}
 			}
-			// 도착했다면...
+			// If you arrived...
 			else if (fCurLen <= fTotalLen && fTotalLen <= fNextLen)
 			{
 				if (m_GraphicThingInstance.IsDead() || m_GraphicThingInstance.IsKnockDown())
 				{
 					__DisableSkipCollision();
 
-					//Tracen("사망 상태라 동작 스킵");
+					// Tracen("Skip action due to death status");
 
 					m_isGoing = FALSE;
 
-					//Tracen("행동 불능 상태라 이후 동작 스킵");
+					// Tracen("Skip the next action because you are incapable of action");
 				}
 				else
 				{
@@ -1756,7 +1750,7 @@ void CInstanceBase::MovementProcess()
 							}
 							else
 							{
-								//Tracenf("VID %d 스킬 공격 (%f, %f) rot %f", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot);
+								// Tracenf("VID %d skill attack (%f, %f) rot %f", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot);
 
 								__DisableSkipCollision();
 								m_isGoing = FALSE;
@@ -1770,7 +1764,7 @@ void CInstanceBase::MovementProcess()
 									EndWalking();
 								}
 
-								//Tracenf("VID %d 정지 (%f, %f) rot %f IsWalking %d", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot, IsWalking());
+								// Tracenf("VID %d stop (%f, %f) rot %f IsWalking %d", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot, IsWalking());
 							}
 							break;
 						}
@@ -1955,7 +1949,7 @@ void CInstanceBase::Transform()
 
 void CInstanceBase::Deform()
 {
-	// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
+	// 2004.07.17.levites.isShow changed to ViewFrustumCheck
 	if (!__CanRender())
 		return;
 
@@ -1979,7 +1973,7 @@ void CInstanceBase::RenderTrace()
 
 void CInstanceBase::Render()
 {
-	// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
+	// 2004.07.17.levites.isShow changed to ViewFrustumCheck
 	if (!__CanRender())
 		return;
 
@@ -2271,13 +2265,13 @@ bool CInstanceBase::IsTargetableInstance(CInstanceBase& rkInstVictim)
 	return rkInstVictim.CanPickInstance();
 }
 
-// 2004. 07. 07. [levites] - 스킬 사용중 타겟이 바뀌는 문제 해결을 위한 코드
+// 2004. 07. 07. [levites] - Code to solve the problem of the target changing while using a skill
 bool CInstanceBase::CanChangeTarget()
 {
 	return m_GraphicThingInstance.CanChangeTarget();
 }
 
-// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
+// 2004.07.17.levites.isShow changed to ViewFrustumCheck
 bool CInstanceBase::CanPickInstance()
 {
 	if (!__IsInViewFrustum())
@@ -2346,7 +2340,7 @@ BOOL CInstanceBase::IsStone()
 }
 
 
-BOOL CInstanceBase::IsGuildWall()	//IsBuilding 길드건물전체 IsGuildWall은 담장벽만(문은 제외)
+BOOL CInstanceBase::IsGuildWall()	// IsBuilding The entire guild building IsGuildWall is only the wall (excluding the door)
 {
 	return IsWall(m_dwRace);		
 }
@@ -2410,9 +2404,9 @@ BOOL CInstanceBase::IsWoodenDoor()
 	if (m_GraphicThingInstance.IsDoor())
 	{
 		int vnum = GetVirtualNumber();
-		if (vnum == 13000) // 나무문
+		if (vnum == 13000) // wooden door
 			return true;
-		else if (vnum >= 30111 && vnum <= 30119) // 사귀문
+		else if (vnum >= 30111 && vnum <= 30119) // dating
 			return true;
 		else
 			return false;
@@ -2466,7 +2460,7 @@ DWORD CInstanceBase::GetVirtualNumber()
 	return m_dwVirtualNumber;
 }
 
-// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
+// 2004.07.17.levites.isShow changed to ViewFrustumCheck
 bool CInstanceBase::__IsInViewFrustum()
 {
 	return m_GraphicThingInstance.isShow();
@@ -2708,7 +2702,7 @@ UINT CInstanceBase::__GetRefinedEffect(CItemData* pItem)
 	{
 	case CItemData::ITEM_TYPE_WEAPON:
 		__ClearWeaponRefineEffect();		
-		if (refine < 7)	//현재 제련도 7 이상만 이펙트가 있습니다.
+		if (refine < 7)	// Currently, only refinements level 7 or higher have the effect.
 			return 0;
 		switch(pItem->GetSubType())
 		{
@@ -2737,7 +2731,7 @@ UINT CInstanceBase::__GetRefinedEffect(CItemData* pItem)
 	case CItemData::ITEM_TYPE_ARMOR:
 		__ClearArmorRefineEffect();
 
-		// 갑옷 특화 이펙트
+		// Armor specialized effects
 		if (pItem->GetSubType() == CItemData::ARMOR_BODY)
 		{
 			DWORD vnum = pItem->GetIndex();
@@ -2749,7 +2743,7 @@ UINT CInstanceBase::__GetRefinedEffect(CItemData* pItem)
 			}
 		}
 
-		if (refine < 7)	//현재 제련도 7 이상만 이펙트가 있습니다.
+		if (refine < 7)	// Currently, only refinements level 7 or higher have the effect.
 			return 0;
 
 		if (pItem->GetSubType() == CItemData::ARMOR_BODY)
@@ -2816,7 +2810,7 @@ bool CInstanceBase::ChangeArmor(DWORD dwArmor)
 	if (IsWalking())
 		EndWalking();
 
-	// 2004.07.25.myevan.이펙트 안 붙는 문제
+	// 2004.07.25.myevan.Effect not working problem
 	//////////////////////////////////////////////////////
 	__ClearAffects();
 	//////////////////////////////////////////////////////
@@ -2838,7 +2832,7 @@ bool CInstanceBase::ChangeArmor(DWORD dwArmor)
 
 	RefreshState(CRaceMotionData::NAME_WAIT, TRUE);
 
-	// 2004.07.25.myevan.이펙트 안 붙는 문제
+	// 2004.07.25.myevan.Effect not working problem
 	/////////////////////////////////////////////////
 	SetAffectFlagContainer(kAffectFlagContainer);
 	/////////////////////////////////////////////////
@@ -2987,9 +2981,9 @@ void CInstanceBase::RefreshState(DWORD dwMotIndex, bool isLoop)
 
 void CInstanceBase::RegisterBoundingSphere()
 {
-	// Stone 일 경우 DeforomNoSkin 을 하면
-	// 낙하하는 애니메이션 같은 경우 애니메이션이
-	// 바운드 박스에 영향을 미쳐 컬링이 제대로 이루어지지 않는다.
+	// In case of Stone, if you do DeforomNoSkin
+	// In the case of a falling animation, the animation
+	// It affects the bounding box, so culling does not work properly.
 	if (!IsStone())
 	{
 		m_GraphicThingInstance.DeformNoSkin();

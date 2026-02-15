@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "InstanceBase.h"
 #include "PythonBackground.h"
 #include "PythonCharacterManager.h"
@@ -49,7 +49,7 @@ void CInstanceBase::ClearFlyTargetInstance()
 
 void CInstanceBase::SetFlyTargetInstance(CInstanceBase& rkInstDst)
 {
-// NOTE : NEW_Attack 때 Target을 바꿀때 여기서 리턴 되어버림 - [levites]
+// NOTE: When changing the target during NEW_Attack, it returns here - [levites]
 //	if (isLock())
 //		return;
 
@@ -188,7 +188,7 @@ bool CInstanceBase::NEW_GetFrontInstance(CInstanceBase ** ppoutTargetInstance, f
 	return true;
 }
 
-// 2004.07.21.levites - 비파부 다중 타겟 지원
+// 2004.07.21.levites - Bipabu multi-target support
 bool CInstanceBase::NEW_GetInstanceVectorInFanRange(float fSkillDistance, CInstanceBase& rkInstTarget, std::vector<CInstanceBase*>* pkVct_pkInst)
 {
 	const float HALF_FAN_ROT_MIN = 20.0f;
@@ -198,7 +198,7 @@ bool CInstanceBase::NEW_GetInstanceVectorInFanRange(float fSkillDistance, CInsta
 
 	float fDstDirRot=NEW_GetRotationFromDestInstance(rkInstTarget);
 
-	// 2004.07.24.myevan - 비파부 가까이 있는 적부터 공격
+	// 2004.07.24.myevan - Attack enemies close to the bipabu first.
 	std::multimap<float, CInstanceBase*> kMap_pkInstNear;
 	{
 		CPythonCharacterManager& rkChrMgr=CPythonCharacterManager::Instance();
@@ -209,11 +209,11 @@ bool CInstanceBase::NEW_GetInstanceVectorInFanRange(float fSkillDistance, CInsta
 			if (pkInstEach==this)
 				continue;
 
-			// 2004.07.25.myevan - 적인 경우만 추가한다
+			// 2004.07.25.myevan - Add only negative cases
 			if (!IsAttackableInstance(*pkInstEach))
 				continue;
 
-			// 2004.07.21.levites - 비파부 다중 타겟 지원
+			// 2004.07.21.levites - Bipabu multi-target support
 			if (m_GraphicThingInstance.IsClickableDistanceDestInstance(pkInstEach->m_GraphicThingInstance, fSkillDistance))
 			{
 				float fEachInstDistance=min(NEW_GetDistanceFromDestInstance(*pkInstEach), HALF_FAN_ROT_MIN_DISTANCE);
@@ -253,11 +253,11 @@ bool CInstanceBase::NEW_GetInstanceVectorInCircleRange(float fSkillDistance, std
 		{
 			CInstanceBase* pkInstEach=*i;
 
-			// 자신인 경우 추가하지 않는다
+			// If it's you, don't add it
 			if (pkInstEach==this)
 				continue;
 
-			// 적인 경우만 추가한다
+			// Add only the rare cases
 			if (!IsAttackableInstance(*pkInstEach))
 				continue;
 
@@ -423,7 +423,7 @@ void CInstanceBase::AttackProcess()
 		CInstanceBase* pkInstEach=*i;
 		++i;
 
-		// 서로간의 InstanceType 비교
+		// Comparison of InstanceTypes between each other
 		if (!IsAttackableInstance(*pkInstEach))
 			continue;
 
@@ -465,7 +465,7 @@ void CInstanceBase::RunComboAttack(float fAtkDirRot, DWORD wMotionIndex)
 	m_GraphicThingInstance.ComboAttack(wMotionIndex, fAtkDirRot);
 }
 
-// 리턴값 TRUE가 무엇인가가 있다
+// The return value TRUE has something to do with it.
 BOOL CInstanceBase::CheckAdvancing()
 {
 #ifdef __MOVIE_MODE__
@@ -497,7 +497,7 @@ BOOL CInstanceBase::CheckAdvancing()
 
 	if (m_GraphicThingInstance.CanSkipCollision())
 	{
-		//Tracenf("%x VID %d 충돌 스킵", ELTimer_GetMSec(), GetVirtualID());
+		// Tracenf("%x VID %d conflict skipped", ELTimer_GetMSec(), GetVirtualID());
 		return FALSE;
 	}
 
@@ -521,11 +521,11 @@ BOOL CInstanceBase::CheckAdvancing()
 		CActorInstance& rkActorSelf=m_GraphicThingInstance;
 		CActorInstance& rkActorEach=pkInstEach->GetGraphicThingInstanceRef();
 
-		//NOTE : Skil을 쓰더라도 Door Type과는 Collision체크 한다.
+		// NOTE: Even if you use Skil, check Collision with Door Type.
 		if( bUsingSkill && !rkActorEach.IsDoor() )
 			continue;
 			
-		// 앞으로 전진할수 있는가?
+		// Can we move forward?
 		if (rkActorSelf.TestActorCollision(rkActorEach))
 		{
 			uCollisionCount++;
@@ -548,13 +548,13 @@ BOOL CInstanceBase::CheckAdvancing()
 		}
 	}
 
-	// 맵속성 체크
+	// Check map properties
 	CPythonBackground& rkBG=CPythonBackground::Instance();
 	const D3DXVECTOR3 & rv3Position = m_GraphicThingInstance.GetPosition();
 	const D3DXVECTOR3 & rv3MoveDirection = m_GraphicThingInstance.GetMovementVectorRef();
 
-	// NOTE : 만약 이동 거리가 크다면 쪼개서 구간 별로 속성을 체크해 본다
-	//        현재 설정해 놓은 10.0f는 임의의 거리 - [levites]
+	// NOTE: If the travel distance is large, split it into sections and check the properties for each section.
+	// The currently set 10.0f is an arbitrary distance - [levites]
 	int iStep = int(D3DXVec3Length(&rv3MoveDirection) / 10.0f);
 	D3DXVECTOR3 v3CheckStep = rv3MoveDirection / float(iStep);
 	D3DXVECTOR3 v3CheckPosition = rv3Position;
@@ -699,7 +699,7 @@ void CInstanceBase::Die()
 	if (IsAffect(AFFECT_SPAWN))
 		__AttachEffect(EFFECT_SPAWN_DISAPPEAR);
 
-	// 2004.07.25.이펙트 안붙는 문제해결
+	// 2004.07.25.Solving the problem of effects not appearing
 	////////////////////////////////////////
 	__ClearAffects();
 	////////////////////////////////////////

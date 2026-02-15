@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "../eterBase/CRC32.h"
 #include "PythonGridSlotWindow.h"
 
@@ -18,10 +18,10 @@ void CGridSlotWindow::OnRenderPickingSlot()
 		DWORD dwSlotNumber = UI::CWindowManager::Instance().GetAttachingSlotNumber();
 		DWORD dwItemIndex = UI::CWindowManager::Instance().GetAttachingIndex();
 
-		// UseMode ¿Ã∞Ì..
+		// It's UseMode...
 		if (m_isUseMode)
 		{
-			// Pick µ» æ∆¿Ã≈€¿Ã ¿÷¿∏∏È..
+			// If there is a picked item...
 			TSlot * pSlot = *SlotList.begin();
 			TSlot * pCenterSlot;
 			if (GetSlotPointer(pSlot->dwCenterSlotNumber, &pCenterSlot))
@@ -40,7 +40,7 @@ void CGridSlotWindow::OnRenderPickingSlot()
 			}
 		}
 
-		// æ∆¥œ∏È ±◊≥… ø≈±‚±‚
+		// Or just move it
 		if (CheckMoving(dwSlotNumber, dwItemIndex, SlotList))
 			CPythonGraphic::Instance().SetDiffuseColor(1.0f, 1.0f, 1.0f, 0.5f);
 		else
@@ -85,8 +85,8 @@ BOOL CGridSlotWindow::GetPickedSlotPointer(TSlot ** ppSlot)
 	{
 		TSlot * pSlot = *itor;
 
-		// NOTE : «— ΩΩ∑‘ ¿ÃªÛ ªÁ¿Ã¡Ó¿« æ∆¿Ã≈€¿« ∞ÊøÏ ∞°¿Â øﬁ¬  ¿ß¿« ΩΩ∑‘ ∆˜¿Œ≈Õ∏¶ ∏Æ≈œ«—¥Ÿ.
-		//        ∏ÌΩ√¿˚¿Ã¡ˆ ∏¯«— ƒ⁄µÂ.. ¥ı ¡¡¿∫ πÊπ˝¿∫ æ¯¥¬∞°? - [levites]
+		// NOTE: For items larger than one slot, the upper leftmost slot pointer is returned.
+		// Code that is not explicit.. Is there a better way? - [levites]
 		if (!pMinSlot)
 		{
 			pMinSlot = pSlot;
@@ -119,7 +119,7 @@ BOOL CGridSlotWindow::GetPickedSlotPointer(TSlot ** ppSlot)
 
 		*ppSlot = pCenterSlot;
 
-		// «ˆ¿Á æ∆¿Ã≈€¿ª µÈ∞Ì ¿÷¥¬ ¡ﬂ¿Ã∞Ì..
+		// I'm currently holding an item...
 		if (UI::CWindowManager::Instance().IsAttaching())
 		{
 			DWORD dwSlotNumber = UI::CWindowManager::Instance().GetAttachingSlotNumber();
@@ -159,7 +159,7 @@ BOOL CGridSlotWindow::GetPickedSlotList(int iWidth, int iHeight, std::list<TSlot
 		int ixStart = int(ix) - int(ixHalfStep - (ixHalfStep % 2));
 		int ixEnd = int(ix) + int(ixHalfStep);
 
-		// FIXME : ¡¶¥Î∑Œ µ» ∞ËªÍ ∞¯Ωƒ¿ª √£¿⁄ - [levites]
+		// FIXME: Let√¢‚Ç¨‚Ñ¢s find the right calculation formula - [levites]
 		int iyStart = 0, iyEnd = 0;
 
 		if (1 == iHeight)
@@ -214,7 +214,7 @@ BOOL CGridSlotWindow::GetPickedSlotList(int iWidth, int iHeight, std::list<TSlot
 			}
 		}
 
-		// Refine Scroll µÓ¿ª ¿ß«— øπø‹ √≥∏Æ
+		// Exception handling for Refine Scroll, etc.
 		if (m_isUseMode && 1 == pSlotPointerList->size())
 		{
 			TSlot * pMainSlot = *pSlotPointerList->begin();
@@ -349,11 +349,11 @@ BOOL CGridSlotWindow::CheckMoving(DWORD dwSlotNumber, DWORD dwItemIndex, const s
 	{
 		TSlot * pSlot = *itor;
 
-		if (dwSlotNumber != pSlot->dwCenterSlotNumber) // µÈæ˙¥¯ ¿⁄∏Æ∞° æ∆¥“ ∞ÊøÏø°
+		if (dwSlotNumber != pSlot->dwCenterSlotNumber) // In case it is not where you heard it
 		{
-			if (0 != pSlot->dwItemIndex || pSlot->dwCenterSlotNumber != pSlot->dwSlotNumber) // æ∆¿Ã≈€¿Ã ¿÷∞Ì
+			if (0 != pSlot->dwItemIndex || pSlot->dwCenterSlotNumber != pSlot->dwSlotNumber) // There is an item
 			{
-				if (dwItemIndex != pSlot->dwItemIndex) // ¥Ÿ∏• æ∆¿Ã≈€¿Ã∏È ∏¯ ø≈±Ë
+				if (dwItemIndex != pSlot->dwItemIndex) // If it is a different item, it cannot be moved.
 					return false;
 			}
 		}

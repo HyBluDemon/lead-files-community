@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonPlayer.h"
 #include "PythonTextTail.h"
 #include "PythonNetworkStream.h"
@@ -38,7 +38,7 @@ void CPythonPlayer::SetAffect(UINT uAffect)
 
 void CPythonPlayer::ResetAffect(UINT uAffect)
 {
-	// 2004.07.17.myevan.스킬 아닌 이펙트가 안 사라지는 문제 
+	// 2004.07.17.myevan.Problem where non-skill effects do not disappear
 	PyCallClassMemberFunc(m_ppyGameWindow, "ResetAffect", Py_BuildValue("(i)", uAffect));
 
 	DWORD dwSkillIndex;
@@ -196,8 +196,8 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 		}
 	}
 
-	// 2004.07.26.levites - 안전지대에서 공격 못하도록 수정
-	// NOTE : 공격 스킬은 안전지대에서 사용하지 못합니다 - [levites]
+	// 2004.07.26.levites - Modified to prevent attacks in safe areas
+	// NOTE: Attack skills cannot be used in the safe zone - [levites]
 	if (pSkillData->IsAttackSkill())
 	{
 		if (pkInstMain->IsInSafe())
@@ -208,13 +208,13 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 		}
 	}	
 
-	// NOTE : 패시브 스킬은 사용하지 못합니다 - [levites]
+	// NOTE: Passive skills cannot be used - [levites]
 	if (!pSkillData->IsCanUseSkill())
 		return false;
 //	if (CPythonSkill::SKILL_TYPE_PASSIVE == pSkillData->byType)
 //		return false;
 
-	// NOTE : [Only Assassin] 빈병이 있는지 체크 합니다.
+	// NOTE: [Only Assassin] Check to see if there are any empty bottles.
 	if (pSkillData->IsNeedEmptyBottle())
 	{
 		if (!__HasItem(27995))
@@ -224,7 +224,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 		}
 	}
 
-	// NOTE : [Only Assassin] 독병이 있는지 체크 합니다.
+	// NOTE: [Only Assassin] Check if there is a poison bottle.
 	if (pSkillData->IsNeedPoisonBottle())
 	{
 		if (!__HasItem(27996))
@@ -234,14 +234,14 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 		}
 	}
 
-	// NOTE : 낚시 중일때는 스킬을 사용하지 못합니다.
+	// NOTE: Skills cannot be used while fishing.
 	if (pkInstMain->IsFishingMode())
 	{
 		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "REMOVE_FISHING_ROD"));
 		return false;
 	}
 
-	// NOTE : 레벨 체크
+	// NOTE: Level check
 	if (m_sysIsLevelLimit)
 	{
 		if (rkSkillInst.iLevel <= 0)
@@ -251,19 +251,19 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 		}
 	}
 
-	// NOTE : 들고 있는 무기 체크
+	// NOTE: Check the weapon you are holding
 	if (!pSkillData->CanUseWeaponType(pkInstMain->GetWeaponType()))
 	{
 		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_MATCHABLE_WEAPON"));
 		return false;
 	}
 
-	if (!pSkillData->IsHorseSkill()) // HORSE 스킬 중에 화살을 쓰지 않는 스킬이 있기 때문에
+	if (!pSkillData->IsHorseSkill()) // Because there are HORSE skills that do not use arrows.
 	{
 		if (__CheckShortArrow(rkSkillInst, *pSkillData))
 			return false;
 
-		// NOTE : 활이 필요할 경우 화살 개수 체크
+		// NOTE: If you need a bow, check the number of arrows
 		if (pSkillData->IsNeedBow())
 		{
 			if (!__HasEnoughArrow())
@@ -326,7 +326,7 @@ bool CPythonPlayer::__CheckShortMana(TSkillInstance& rkSkillInst, CPythonSkill::
 	int iNeedSP = rkSkillData.GetNeedSP(rkSkillInst.fcurEfficientPercentage);
 	int icurSP = GetStatus(POINT_SP);
 
-	// NOTE : ToggleSkill 이 아닌데 소모 SP 가 0 이다.
+	// NOTE: It is not a ToggleSkill, but SP consumption is 0.
 	if (!rkSkillData.IsToggleSkill())
 	{
 		if (iNeedSP == 0)
@@ -400,13 +400,13 @@ bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CI
 	if (fSkillTargetRange <= 0.0f)
 		return true;
 
-	// #0000806: [M2EU] 수룡에게 무사(나한군) 탄환격 스킬 사용 안됨	
+	// #0000806: [M2EU] Musa (Arhat Army) bullet attack skill cannot be used on water dragons
 	float fTargetDistance = rkInstMain.GetDistance(&rkInstTarget);
 
 	extern bool IS_HUGE_RACE(unsigned int vnum);
 	if (IS_HUGE_RACE(rkInstTarget.GetRace()))
 	{
-		fTargetDistance -= 200.0f; // TEMP: 일단 하드 코딩 처리. 정석적으로는 바운드 스피어를 고려해야함
+		fTargetDistance -= 200.0f; // TEMP: Hard coded first. In principle, bound sphere should be considered.
 	}
 
 	if (fTargetDistance >= fSkillTargetRange)
@@ -422,7 +422,7 @@ bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CI
 		return false;
 	}
 
-	// 2004.07.05.myevan. 궁신탄영 사용시 맵에 끼임. 사용하기전 갈수 있는곳 체크
+	// 2004.07.05.myevan. When using Gunshin Bullet, you get stuck on the map. Check where you can go before using it
 	TPixelPosition kPPosTarget;
 	rkInstTarget.NEW_GetPixelPosition(&kPPosTarget);
 
@@ -446,8 +446,8 @@ bool CPythonPlayer::__CanUseSkill()
 		return false;
 
 	// Fix me
-	// 뉴마운트. 승마스킬레벨 20 미만인 경우, 고급 마운트를 타고 승마 관련 스킬 못 쓰도록 못하도록 하드 코딩... 
-	// 나중에 시간 나면 can use skill 체크를 서버에서 해주자...
+	// New Mount. If your horseback riding skill level is below 20, it is hard coded to prevent you from using horseback riding skills while riding a high-quality mount...
+	// Later, when I have time, I'll check the can use skill on the server...
 	if (pkInstMain->IsMountingHorse() && (GetSkillGrade(109) < 1 && GetSkillLevel(109) < 20))
 	{
 		return false;
@@ -518,7 +518,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 
 	CInstanceBase * pkInstTarget = NULL;
 
-	// NOTE : 타겟이 필요한 경우
+	// NOTE: If you need a target
 	if (pSkillData->IsNeedTarget() ||
 		pSkillData->CanChangeDirection() ||
 		pSkillData->IsAutoSearchTarget())
@@ -528,13 +528,13 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 		else
 			pkInstTarget=__GetAliveTargetInstancePtr();
 
-		// 현재 타겟이 없으면..
+		// If there is no current target...
 		if (!pkInstTarget)
 		{
-			// 업데이트하고..
+			// Update and...
 			__ChangeTargetToPickedInstance();
 
-			// 다시 얻어낸다.
+			// get it again
 			if (pSkillData->IsNeedCorpse())
 				pkInstTarget=__GetDeadTargetInstancePtr();
 			else
@@ -572,7 +572,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 					if (pSkillData->CanUseForMe())
 					{
 						pkInstTarget = pkInstMain;
-						Tracef(" [ALERT] 동료에게 사용하는 기술임에도 적에게 타겟팅 되어있어서 자신에게로 재설정\n");
+						Tracef("[ALERT] Even though it is a skill used on a colleague, it is targeted at the enemy, so it is reset to yourself\ngue, it is targeted at the enemy, so it is reset to yourself\ngue, it is targeted at the enemy, so it is reset to yourself\ngue, it is targeted at the enemy, so it is reset to yourself\ngue, it is targeted at the enemy, so it is reset to yourself\ngue, it is targeted at the enemy, so it is reset to yourself\ngue, it is targeted at the enemy, so it is reset to yourself\ngue, it is targeted at the enemy, so it is reset to yourself\n");
 					}
 					else
 					{
@@ -636,7 +636,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 			{
 				pkInstTarget = pkInstMain;
 				pkInstMain->SetFlyTargetInstance(*pkInstMain);
-				Tracef(" [ALERT] 타겟이 없어서 플레이어에게 사용합니다\n");
+				Tracef("[ALERT] There is no target so it will be used on the player\nt will be used on the player\nt will be used on the player\nt will be used on the player\n");
 			}
 			else if (pSkillData->IsNeedCorpse())
 			{
@@ -672,11 +672,11 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 		}
 		else
 		{
-			Tracenf("CPythonPlayer::__UseSkill(%d) - 화면 기준 방향 설정을 해야함", dwSlotIndex);
+			Tracenf("CPythonPlayer::__UseSkill(%d) - Requires setting the orientation based on the screen the orientation based on the screen the orientation based on the screen the orientation based on the screen the orientation based on the screen", dwSlotIndex);
 		}
 	}
 
-	// 관격술 처리
+	// vasculature treatment
 	DWORD dwTargetMaxCount = pSkillData->GetTargetCount(rkSkillInst.fcurEfficientPercentage);
 	DWORD dwRange = __GetSkillTargetRange(*pSkillData);
 	if (dwTargetMaxCount>0 && pkInstTarget)
@@ -748,7 +748,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 	}
 
 	/////
-	// NOTE : 멀리서 적을 클릭해놓고 스킬을 쓰면 스킬을 쓴뒤 바로 적을 공격하는 문제를 수정하기 위한 코드 - [levites]
+	// NOTE: Code to fix an issue where if you click on an enemy from afar and use a skill, it attacks the enemy immediately after using the skill - [levites]
 	__ClearReservedAction();
 	/////
 

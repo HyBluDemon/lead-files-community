@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "ParticleSystemData.h"
 #include "EffectUpdateDecorator.h"
 #include "ParticleInstance.h"

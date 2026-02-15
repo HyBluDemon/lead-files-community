@@ -1,20 +1,16 @@
-#ifndef _EL_CPOSTIT_H_
+ï»¿#ifndef _EL_CPOSTIT_H_
 #define _EL_CPOSTIT_H_
 
 // _CPostItMemoryBlock is defined in CPostIt.cpp
 class _CPostItMemoryBlock;
 
-/**
- * @class	CPostIt
- * @brief	°ÔÀÓ·±Ã³¿¡¼­ °ÔÀÓ Å¬¶óÀÌ¾ğÆ®·Î Á¤º¸¸¦ Àü´Ş ¹× Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¼ö½ÅÇÏ±â À§ÇÏ¿© »ç¿ëµÇ´Â Å¬·¡½º
+/*
+ * @class CPostIt @brief Class used to transmit information from the game launcher to the game client and receive it from the client.
  */
 class CPostIt
 {
 public:
-	/**
-	 * @brief	CPostIt constructor
-	 * @param [in]	szAppName	: °ÔÀÓÀÇ ÀÌ¸§ÀÌ µé¾î°£´Ù.
-	 */
+	/* @brief CPostIt constructor @param [in] szAppName: Enters the name of the game. */
 	explicit CPostIt( LPCSTR szAppName );
 
 	/**
@@ -22,49 +18,37 @@ public:
 	 */
 	~CPostIt( void );
 
-	/**
-	 * @brief	CPostIt class¿¡¼­ º¸À¯ÇÏ°í ÀÖ´Â µ¥ÀÌÅ¸¸¦ Å¬¸³º¸µå¿¡ ÀúÀåÇÑ´Ù.
-	 */
+	/* @brief Saves the data held in the CPostIt class to the clipboard. */
 	BOOL	Flush( void );
 
-	/**
-	 * @brief	CPostIt class¿¡¼­ º¸À¯ÇÏ°í ÀÖ´Â µ¥ÀÌÅ¸ ¹× Å¬¸³º¸µå¿¡ ÀÖ´Â ³»¿ëÀ» Áö¿î´Ù.
-	 */
+	/*
+ * @brief Deletes the data held by the CPostIt class and the contents of the clipboard.
+ */
 	void	Empty( void );
 
-	/**
-	 * @brief	µ¥ÀÌÅ¸¸¦ ÀĞ¾î¿Â´Ù.
-	 * @param [in]	lpszKeyName	: ºÒ·¯¿Ã µ¥ÀÌÅ¸ÀÇ Å°. "KEY" ½ÄÀÇ ³»¿ëÀ» ³Ö´Â´Ù.
-	 * @param [in]	lpszData	: ºÒ·¯¿Ã µ¥ÀÌÅ¸ÀÇ ¹öÆÛ
-	 * @param [in]	nSize		: lpszData ¹öÆÛÀÇ ÃÖ´ë»çÀÌÁî
-	 */
+	/*
+ * @brief Reads data. @param [in] lpszKeyName: Key of data to load. Enter â€œKEYâ€ type content. @param [in] lpszData: Buffer of data to load @param [in] nSize: Maximum size of lpszData buffer
+ */
 	BOOL	Get( LPCSTR lpszKeyName, LPSTR lpszData, DWORD nSize );
 
-	/**
-	 * @brief	ÀúÀåÇÒ µ¥ÀÌÅ¸¸¦ ³Ö´Â´Ù.
-	 * @param [in]	lpBuffer	: ÀúÀåÇÒ µ¥ÀÌÅ¸. "KEY=DATA" ½ÄÀÇ ³»¿ëÀ» ³Ö´Â´Ù.
-	 */
+	/*
+ * @brief Enter the data to be saved. @param [in] lpBuffer: Data to save. Enter content in the format â€œKEY=DATAâ€.
+ */
 	BOOL	Set( LPCSTR lpszData );
 
-	/**
-	 * @brief	ÀúÀåÇÒ µ¥ÀÌÅ¸¸¦ ³Ö´Â´Ù.
-	 * @param [in]	lpszKeyName	: ÀúÀåÇÒ µ¥ÀÌÅ¸ÀÇ Å°. "KEY" ½ÄÀÇ ³»¿ëÀ» ³Ö´Â´Ù.
-	 * @param [in]	lpszData	: ÀúÀåÇÒ µ¥ÀÌÅ¸. "DATA" ½ÄÀÇ ³»¿ëÀ» ³Ö´Â´Ù.
-	 */
+	/*
+ * @brief Enter the data to be saved. @param [in] lpszKeyName: Key of data to save. Enter â€œKEYâ€ type content. @param [in] lpszData: Data to save. Enter â€œDATAâ€ type content.
+ */
 	BOOL	Set( LPCSTR lpszKeyName, LPCSTR lpszData );
 
-	/**
-	 * @brief	ÀúÀåÇÒ µ¥ÀÌÅ¸(DWORD)¸¦ ³Ö´Â´Ù.
-	 * @param [in]	lpBuffer	: ÀúÀåÇÒ µ¥ÀÌÅ¸. "KEY=DATA" ½ÄÀÇ µ¥ÀÌÅ¸¸¦ ³Ö´Â´Ù.
-	 * @param [in]	dwValue		: ÀúÀåÇÒ µ¥ÀÌÅ¸. (DWORD)
-	 */
+	/*
+ * @brief Enter the data (DWORD) to be saved. @param [in] lpBuffer: Data to save. Enter data in the format â€œKEY=DATAâ€. @param [in] dwValue: Data to save. (DWORD)
+ */
 	BOOL	Set( LPCSTR lpszKeyName, DWORD dwValue );
 
-	/**
-	 * @brief	CPostIt class¸¦ º¹»çÇÑ´Ù. (Å¬·¡½º constructor¿¡ ÀÌ¸§ ÀÎÀÚ°¡ ÀÖ±â ¶§¹®¿¡, »õ ÀÌ¸§À» ÁöÁ¤ÇØ¾ßÇÔ)
-	 * @param [in]	pPostIt		: Destination class
-	 * @param [in]	lpszKeyName	: Destination class's new app-name
-	 */
+	/*
+ * @brief Copy the CPostIt class. (Because the class constructor has a name argument, a new name must be specified) @param [in] pPostIt : Destination class @param [in] lpszKeyName : Destination class's new app-name
+ */
 	BOOL	CopyTo( CPostIt *pPostIt, LPCSTR lpszKeyName );
 
 protected:

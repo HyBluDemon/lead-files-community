@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "FileBase.h"
 
 CFileBase::CFileBase() : m_hFile(NULL), m_dwSize(0)

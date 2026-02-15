@@ -1,33 +1,16 @@
-/*
-*    Filename: tea.c
-* Description: TEA ¾ÏÈ£È­ ¸ğµâ
-*
-*      Author: ±èÇÑÁÖ (aka. ºñ¿±, Cronan), ¼Û¿µÁø (aka. myevan, ºøÀÚ·ç)
-*/
+ï»¿/*
+ * Filename: tea.c Description: TEA encryption module Author: Hanju Kim (aka. Biyeop, Cronan), Youngjin Song (aka. myevan, broom)
+ */
 #include "StdAfx.h"
 #include "tea.h"
 #include <memory.h>
 
 /*
-* TEA Encryption Module Instruction
-*					Edited by ±èÇÑÁÖ aka. ºñ¿±, Cronan
-*
-* void tea_code(const unsigned long sz, const unsigned long sy, const unsigned long *key, unsigned long *dest)
-* void tea_decode(const unsigned long sz, const unsigned long sy, const unsigned long *key, unsigned long *dest)
-*   8¹ÙÀÌÆ®¸¦ ¾ÏÈ£/º¹È£È­ ÇÒ¶§ »ç¿ëµÈ´Ù. key ´Â 16 ¹ÙÀÌÆ®¿©¾ß ÇÑ´Ù.
-*   sz, sy ´Â 8¹ÙÀÌÆ®ÀÇ ¿ª¼øÀ¸·Î ´ëÀÔÇÑ´Ù. 
-* 
-* int tea_decrypt(unsigned long *dest, const unsigned long *src, const unsigned long *key, int size);
-* int tea_encrypt(unsigned long *dest, const unsigned long *src, const unsigned long *key, int size);
-*   ÇÑ²¨¹ø¿¡ 8 ¹ÙÀÌÆ® ÀÌ»óÀ» ¾ÏÈ£/º¹È£È­ ÇÒ¶§ »ç¿ëÇÑ´Ù. ¸¸¾à size °¡
-*   8ÀÇ ¹è¼ö°¡ ¾Æ´Ï¸é 8ÀÇ ¹è¼ö·Î Å©±â¸¦ "´Ã·Á¼­" ¾ÏÈ£È­ ÇÑ´Ù. 
-*
-* ex. tea_code(pdwSrc[1], pdwSrc[0], pdwKey, pdwDest);
-*     tea_decrypt(pdwDest, pdwSrc, pdwKey, nSize);
-*/
+ * TEA Encryption Module Instruction Edited by Hanjoo Kim aka. Rain, Cronan void tea_code(const unsigned long sz, const unsigned long sy, const unsigned long *key, unsigned long *dest) void tea_decode(const unsigned long sz, const unsigned long sy, const unsigned long *key, unsigned long *dest) Used to encrypt/decrypt 8 bytes. key must be 16 bytes. sz and sy are assigned in reverse order of 8 bytes.  int tea_decrypt(unsigned long *dest, const unsigned long *src, const unsigned long *key, int size); int tea_encrypt(unsigned long *dest, const unsigned long *src, const unsigned long *key, int size); Used to encrypt/decrypt more than 8 bytes at once. If size is not a multiple of 8, encrypt by â€œincreasingâ€ the size to a multiple of 8.  ex. tea_code(pdwSrc[1], pdwSrc[0], pdwKey, pdwDest); tea_decrypt(pdwDest, pdwSrc, pdwKey, nSize);
+ */
 
-#define TEA_ROUND		32		// 32 ¸¦ ±ÇÀåÇÏ¸ç, ³ôÀ» ¼ö·Ï °á°ú°¡ ³­ÇØÇØ Áø´Ù.
-#define DELTA			0x9E3779B9	// DELTA °ª ¹Ù²ÙÁö ¸»°Í.
+#define TEA_ROUND		32		// 32 is recommended; the higher it is, the more difficult the results become.
+#define DELTA			0x9E3779B9	// Do not change the DELTA value.
 
 void tea_code(const unsigned long sz, const unsigned long sy, const unsigned long *key, unsigned long *dest)
 {

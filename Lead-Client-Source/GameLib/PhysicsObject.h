@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "MapUtil.h"
 
@@ -29,8 +29,8 @@ private:
 };
 
 class CActorInstance;
-//NOTE : 맘에 안들지만 Dependency Inversion을 막고 이전과 동일한 interface를 유지하기 위해서 이방식대로 간다
-//하지만 제대로 설계를 한다면 world와 live object들의 관리는 조금더 base project에서 (gamelib이나 더 base project에서 해야 한다 )
+// NOTE: I don't like it, but I'm going this way to prevent Dependency Inversion and maintain the same interface as before.
+// However, if designed properly, the management of the world and live objects should be done in the base project (gamelib or more base project).
 class IObjectManager 
 {
 public:

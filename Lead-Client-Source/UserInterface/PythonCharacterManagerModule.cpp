@@ -1,11 +1,11 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonCharacterManager.h"
 #include "PythonBackground.h"
 #include "InstanceBase.h"
 #include "../gamelib/RaceManager.h"
 
 //////////////////////////////////////////////////////////////////////////
-// RaceData 관련 시작
+// Start with RaceData
 //////////////////////////////////////////////////////////////////////////
 
 PyObject * chrmgrSetEmpireNameMode(PyObject* poSelf, PyObject* poArgs)
@@ -230,7 +230,7 @@ PyObject * chrmgrRegisterNormalAttack(PyObject* poSelf, PyObject* poArgs)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// 없어질 함수들
+// Functions that will disappear
 PyObject * chrmgrReserveComboAttack(PyObject* poSelf, PyObject* poArgs)
 {
 	int iMode;
@@ -270,7 +270,7 @@ PyObject * chrmgrRegisterComboAttack(PyObject* poSelf, PyObject* poArgs)
 	pRaceData->RegisterComboAttack(iMode, 0, iComboIndex, iMotionIndex);
 	return Py_BuildNone();
 }
-// 없어질 함수들
+// Functions that will disappear
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 PyObject * chrmgrReserveComboAttackNew(PyObject* poSelf, PyObject* poArgs)
@@ -520,7 +520,7 @@ PyObject * chrmgrAppendShapeSkin(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 //////////////////////////////////////////////////////////////////////////
-// RaceData 관련 끝
+// End related to RaceData
 //////////////////////////////////////////////////////////////////////////
 
 PyObject * chrmgrSetMovingSpeed(PyObject* poSelf, PyObject* poArgs)
@@ -730,7 +730,7 @@ void initchrmgr()
 {
 	static PyMethodDef s_methods[] =
 	{
-		// RaceData 관련		
+		// RaceData related
 		{ "SetEmpireNameMode",			chrmgrSetEmpireNameMode,				METH_VARARGS },
 		{ "GetVIDInfo",					chrmgrGetVIDInfo,						METH_VARARGS },
 		{ "GetPickedVID",				chrmgrGetPickedVID,						METH_VARARGS },
@@ -841,13 +841,13 @@ void initchrmgr()
 	PyModule_AddIntConstant(poModule, "EFFECT_SUCCESS",				CInstanceBase::EFFECT_SUCCESS) ;
 	PyModule_AddIntConstant(poModule, "EFFECT_FAIL",				CInstanceBase::EFFECT_FAIL) ;
 	PyModule_AddIntConstant(poModule, "EFFECT_FR_SUCCESS",				CInstanceBase::EFFECT_FR_SUCCESS) ;	
-	PyModule_AddIntConstant(poModule, "EFFECT_LEVELUP_ON_14_FOR_GERMANY", CInstanceBase::EFFECT_LEVELUP_ON_14_FOR_GERMANY );	//레벨업 14일때 ( 독일전용 )
-	PyModule_AddIntConstant(poModule, "EFFECT_LEVELUP_UNDER_15_FOR_GERMANY", CInstanceBase::EFFECT_LEVELUP_UNDER_15_FOR_GERMANY );//레벨업 15일때 ( 독일전용 )
+	PyModule_AddIntConstant(poModule, "EFFECT_LEVELUP_ON_14_FOR_GERMANY", CInstanceBase::EFFECT_LEVELUP_ON_14_FOR_GERMANY );	// Level up at 14 (Germany only)
+	PyModule_AddIntConstant(poModule, "EFFECT_LEVELUP_UNDER_15_FOR_GERMANY", CInstanceBase::EFFECT_LEVELUP_UNDER_15_FOR_GERMANY );// Level up at 15 (Germany only)
 	PyModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE1",				CInstanceBase::EFFECT_PERCENT_DAMAGE1);	
 	PyModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE2",				CInstanceBase::EFFECT_PERCENT_DAMAGE2);	
 	PyModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE3",				CInstanceBase::EFFECT_PERCENT_DAMAGE3);
 
-	// 자동물약 HP, SP
+	// Automatic potion HP, SP
 	PyModule_AddIntConstant(poModule, "EFFECT_AUTO_HPUP",					CInstanceBase::EFFECT_AUTO_HPUP);
 	PyModule_AddIntConstant(poModule, "EFFECT_AUTO_SPUP",					CInstanceBase::EFFECT_AUTO_SPUP);
 

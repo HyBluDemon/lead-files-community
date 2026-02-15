@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "GrpDetector.h"
 #include "Ray.h"
@@ -233,7 +233,7 @@ class CGraphicBase
 		void		UpdatePipeLineMatrix();
 
 	protected:
-		// 각종 D3DX Mesh 들 (컬루젼 데이터 등을 표시활 때 쓴다)
+		// Various D3DX Meshes (used to display collusion data, etc.)
 		static LPD3DXMESH				ms_lpSphereMesh;
 		static LPD3DXMESH				ms_lpCylinderMesh;
 
@@ -277,7 +277,7 @@ class CGraphicBase
 		static float					ms_fNearY;
 		static float					ms_fFarY;
 
-		// 2004.11.18.myevan.DynamicVertexBuffer로 교체
+		// 2004.11.18.myevan.Replaced with DynamicVertexBuffer
 		/*
 		static std::vector<TIndex>		ms_lineIdxVector;
 		static std::vector<TIndex>		ms_lineTriIdxVector;
@@ -295,7 +295,7 @@ class CGraphicBase
 		static DWORD					ms_dwFlashingEndTime;
 		static D3DXCOLOR				ms_FlashingColor;
 
-		// Terrain picking용 Ray... CCamera 이용하는 버전.. 기존의 Ray와 통합 필요...
+		// Ray for terrain picking... Version using CCamera... Requires integration with existing Ray...
  		static CRay						ms_Ray;
 
 		// 

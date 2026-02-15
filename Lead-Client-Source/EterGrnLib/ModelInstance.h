@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 //#define CACHE_DEFORMED_VERTEX
 #include "../eterlib/GrpImage.h"
@@ -55,12 +55,12 @@ class CGrannyModelInstance : public CGraphicCollisionObject
 		void	DeformNoSkin(const D3DXMATRIX * c_pWorldMatrix);
 		void	Deform(const D3DXMATRIX * c_pWorldMatrix);
 
-		// FIXME : 현재는 하드웨어의 한계로 2장의 텍스춰로 제한이 되어있는 상태이기에 이런
-		//         불안정한 아키텍춰가 가능하지만, 궁극적인 방향은 (모델 텍스춰 전부) + (효과용 텍스춰)
-		//         이런식의 자동 셋팅이 이뤄져야 되지 않나 생각합니다. - [levites]
-		// NOTE : 내부에 if문을 포함 시키기 보다는 조금은 번거롭지만 이렇게 함수 콜 자체를 분리
-		//        시키는 것이 퍼포먼스 적인 측면에서는 더 나은 것 같습니다. - [levites]
-		// NOTE : 건물은 무조건 OneTexture. 캐릭터는 경우에 따라 TwoTexture.
+		// FIXME: This is currently limited to 2 textures due to hardware limitations.
+		// Unstable architecture is possible, but the ultimate direction is (all model textures) + (effect textures)
+		// I think this kind of automatic setting should be done. - [levites]
+		// NOTE: It is a little more cumbersome than including an if statement inside, but the function call itself can be separated like this.
+		// I think it's better in terms of performance to do it. - [levites]
+		// NOTE: Buildings must be OneTexture. Characters are sometimes TwoTexture.
 		void	RenderWithOneTexture();
 		void	RenderWithTwoTexture();
 		void	BlendRenderWithOneTexture();
@@ -160,7 +160,7 @@ class CGrannyModelInstance : public CGraphicCollisionObject
 		// Granny Data
 		granny_model_instance *			m_pgrnModelInstance;
 
-		//granny_world_pose *				m_pgrnWorldPose;		// 현재 월드 포즈 포인터
+		// granny_world_pose * m_pgrnWorldPose;		// Current world pose pointer
 
 		granny_control *				m_pgrnCtrl;
 		granny_animation *				m_pgrnAni;
@@ -182,7 +182,7 @@ class CGrannyModelInstance : public CGraphicCollisionObject
 		CGrannyMaterialPalette			m_kMtrlPal;
 
 		// WORK
-		granny_world_pose*					m_pgrnWorldPoseReal;	// 실제 메모리는 여기에 할당
+		granny_world_pose*					m_pgrnWorldPoseReal;	// Real memory is allocated here
 		std::vector<granny_mesh_binding*>	m_vct_pgrnMeshBinding;		
 
 		// Dynamic Vertex Buffer

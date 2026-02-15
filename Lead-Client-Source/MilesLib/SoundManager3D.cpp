@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+癤�#include "Stdafx.h"
 #include "SoundManager3D.h"
 
 CSoundManager3D::CSoundManager3D()
@@ -150,7 +150,7 @@ int CSoundManager3D::SetInstance(const char * c_pszFileName)
 			if (!pkInst->SetSound(pkSoundData))
 			{
 				TraceError("CSoundManager3D::GetInstance (filename: %s)", c_pszFileName);
-				// NOTE : 사운드가 없을 경우 Failed to set. return NULL. - [levites]
+				// NOTE: If there is no sound, Failed to set. return NULL. - [levites]
 				return -1;
 			}
 
@@ -159,7 +159,7 @@ int CSoundManager3D::SetInstance(const char * c_pszFileName)
 
 		++start;
 
-		// 설마 DWORD 한계값을 넘어갈리야 없겠지만.. 그래도.. 혹시나.. - [levites]
+		// It's unlikely that it will exceed the DWORD limit... but... just in case... - [levites]
 		if (start > 50000)
 		{
 			start = 0;

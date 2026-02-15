@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonWindow.h"
 #include "PythonSlotWindow.h"
 #include "PythonGridSlotWindow.h"
@@ -467,7 +467,7 @@ namespace UI
 		if (m_pActiveWindow)
 			m_pActiveWindow->OnKillFocus();
 
-		// 이미 락된 윈도우리스트안에 있다면 제거한다..
+		// If it is already in the list of locked windows, remove it.
 		m_LockWindowList.remove(pWin);
 
 		if (m_pLockWindow)
@@ -508,8 +508,8 @@ namespace UI
 
 		if (m_pActiveWindow)
 		{
-			// NOTE : 누적된 Window가 많아지면 Clear를 해줘야 할까?
-			//        일단은 중복 누적이 안되며 포커스 되는 갯수 자체가 5개 미만이니 굳이 필요하지는 않을 듯.. - [levites]
+			// NOTE: If the number of accumulated windows increases, should I clear them?
+			// First of all, there is no duplicate accumulation and the number of focuses itself is less than 5, so it is not necessary. - [levites]
 			m_ActiveWindowList.push_back(m_pActiveWindow);
 			m_pActiveWindow->OnKillFocus();
 		}
@@ -551,8 +551,8 @@ namespace UI
 		CWindow * pParentWindow = pWin->GetParent();
 		pParentWindow->SetTop(pWin);
 
-		// NOTE : Capture가 리셋된다..? - [levites]
-		// NOTE : 인벤토리에서 아이템을 드래그 해서 밖에다 놓을때 캡춰가 남아서 창의 버튼을 두번 눌러야 하는 버그를 위해 추가
+		// NOTE: Capture is reset..? - [levites]
+		// NOTE: Added to address a bug where when you drag an item from the inventory and place it outside, the capture remains and you have to press the window button twice.
 //		ResetCapture();
 	}
 
@@ -561,7 +561,7 @@ namespace UI
 		if (m_pLockWindow)
 			return;
 
-		// GameLayer에 속해 있는 윈도우가 피킹 됐다면 무조건 SetTop을 해준다.
+		// If a window belonging to the GameLayer is picked, SetTop is unconditionally performed.
 		TLayerContainer::iterator itor = m_LayerWindowMap.find("UI");
 		if (itor == m_LayerWindowMap.end())
 			return;
@@ -826,7 +826,7 @@ namespace UI
 		{
 			if (m_pLeftCaptureWindow->OnMouseLeftButtonUp())
 			{
-				// NOTE : 여기서 m_pLeftCaptureWindow가 NULL 일 수 있습니다!! - [levites]
+				// NOTE: Here m_pLeftCaptureWindow may be NULL!! - [levites]
 				m_pLeftCaptureWindow = NULL;
 				return;
 			}
@@ -1029,7 +1029,7 @@ namespace UI
 				return;
 		}
 
-		// NOTE : 전체로 돌리지 않고 Activate되어있는 EditLine에만 보내는 이벤트
+		// NOTE: This event is sent only to the activated EditLine, not to the entire system.
 	}
 
 	void CWindowManager::RunChangeCodePage()

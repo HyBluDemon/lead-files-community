@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PropertyLoader.h"
 #include "PropertyManager.h"
 #include "Property.h"
@@ -33,10 +33,10 @@ DWORD CPropertyLoader::RegisterFile(const char * c_szPathName, const char * c_sz
 	stl_lowers(stExt);
 	stl_lowers(strFileName);
 
-	// 패스를 소문자로 만들고 \\ 는 / 로 바꾼다.
+	// Make the path lowercase and replace \\ with /.
 	StringPath(strFileName);
 
-	// 예약된 CRC 처리 (지워진 CRC)
+	// Reserved CRC processing (cleared CRC)
 	if (0 == strFileName.compare("property/reserve"))
 	{
 		m_pPropertyManager->LoadReservedCRC(strFileName.c_str());

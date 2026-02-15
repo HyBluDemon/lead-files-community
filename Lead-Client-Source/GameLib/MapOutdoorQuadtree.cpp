@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "MapOutdoor.h"
 #include "TerrainQuadtree.h"
 
@@ -9,7 +9,7 @@ void CMapOutdoor::BuildQuadTree()
 {
 	FreeQuadTree();
 
-	// m_wPatchCount는 ConvertPatchSplat에서도 정한다, 안전을 위해 여기서 체크한다.
+	// m_wPatchCount is also set in ConvertPatchSplat, check it here for safety.
 	if (0 == m_wPatchCount)
 	{
 		TraceError("MapOutdoor::BuildQuadTree : m_wPatchCount is zero, you must call ConvertPatchSplat before call this method.");

@@ -1,4 +1,4 @@
-// EnvironmentMap.cpp: implementation of the CEnvironmentMap class.
+﻿// EnvironmentMap.cpp: implementation of the CEnvironmentMap class.
 //
 //////////////////////////////////////////////////////////////////////
 

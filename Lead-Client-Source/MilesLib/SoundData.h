@@ -1,4 +1,4 @@
-#ifndef __MILESLIB_CSOUNDDATA_H__
+﻿#ifndef __MILESLIB_CSOUNDDATA_H__
 #define __MILESLIB_CSOUNDDATA_H__
 
 #include <miles/mss.h>

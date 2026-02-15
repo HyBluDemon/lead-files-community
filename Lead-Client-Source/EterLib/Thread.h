@@ -1,4 +1,4 @@
-#ifndef __INC_ETERLIB_THREAD_H__
+癤�#ifndef __INC_ETERLIB_THREAD_H__
 #define __INC_ETERLIB_THREAD_H__
 
 class CThread
@@ -10,8 +10,8 @@ class CThread
 	protected:
 		static UINT CALLBACK	EntryPoint(void * pThis);
 
-		virtual UINT			Setup() = 0;				// Execute이 불려지기 전에 불려진다.
-		virtual UINT			Execute(void * arg) = 0;	// 실제 쓰레드가 하는 일이 들어가는 곳
+		virtual UINT			Setup() = 0;				// Called before Execute is called.
+		virtual UINT			Execute(void * arg) = 0;	// This is where the actual thread work goes.
 
 		UINT					Run(void * arg);
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "Material.h"
 #include "Mesh.h"
 #include "../eterbase/Filename.h"
@@ -238,7 +238,7 @@ bool CGrannyMaterial::CreateFromGrannyMaterialPointer(granny_material * pgrnMate
 			pgrnOpacityTexture = GrannyGetMaterialTextureByType(m_pgrnMaterial, GrannyOpacityTexture);
 		}
 
-		// Two-Side 렌더링이 필요한 지 검사
+		// Check if Two-Side Rendering is Required
 		{			
 			granny_int32 twoSided = 0;
 			granny_data_type_definition TwoSidedFieldType[] =
@@ -263,7 +263,7 @@ bool CGrannyMaterial::CreateFromGrannyMaterialPointer(granny_material * pgrnMate
 	if (pgrnOpacityTexture)
 		m_roImage[1].SetPointer(__GetImagePointer(pgrnOpacityTexture->FromFileName));
 
-	// 오퍼시티가 있으면 블렌딩 메쉬
+	// Blending mesh if you have opercity
 	if (!m_roImage[1].IsNull())
 		m_eType = TYPE_BLEND_PNT;
 	else
@@ -286,7 +286,7 @@ void CGrannyMaterial::__ApplyDiffuseRenderState()
 
 	if (m_bTwoSideRender)
 	{
-		// -_-렌더링 프로세스가 좀 구려서... Save & Restore 하면 순서때문에 좀 꼬인다. 귀찮으니 Save & Restore 대신 따로 저장해 둠.
+		// -_-The rendering process is a bit lame... When you save & restore, it's a bit confusing because of the order. It's annoying, so I save it separately instead of Save & Restore.
 		m_dwLastCullRenderStateForTwoSideRendering = STATEMANAGER.GetRenderState(D3DRS_CULLMODE);
 		STATEMANAGER.SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	}
@@ -512,7 +512,7 @@ DWORD CGrannyMaterialPalette::GetMaterialCount() const
 /*
 void CActorInstance::BeginSpecularRender()
 {
-	// NOTE - Blending해서 찍는 부분은 Specular를 적용시키지 않는다 - [levites]
+	// NOTE - Specular is not applied to the part taken by blending - [levites]
 	STATEMANAGER.SaveRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 	STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, D3DXCOLOR(1.0f, 1.0f, 1.0f, m_AddColor.r));

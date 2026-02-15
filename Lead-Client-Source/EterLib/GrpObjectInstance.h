@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GrpColorInstance.h"
 #include "GrpScreen.h"

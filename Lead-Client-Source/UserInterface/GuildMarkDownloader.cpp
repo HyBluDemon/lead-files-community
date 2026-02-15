@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "GuildMarkDownloader.h"
 #include "PythonCharacterManager.h"
 #include "Packet.h"
@@ -168,7 +168,7 @@ UINT CGuildMarkDownloader::__GetPacketSize(UINT header)
 			return sizeof(TPacketGCMarkBlock);
 		case HEADER_GC_SYMBOL_DATA:
 			return sizeof(TPacketGCSymbolData);
-		case HEADER_CG_MARK_CRCLIST:	// 사용하지 않음
+		case HEADER_CG_MARK_CRCLIST:	// Not used
 			return sizeof(BYTE);
 	}
 	return 0;
@@ -190,7 +190,7 @@ bool CGuildMarkDownloader::__DispatchPacket(UINT header)
 			return __LoginState_RecvMarkBlock();
 		case HEADER_GC_SYMBOL_DATA:
 			return __LoginState_RecvSymbolData();
-		case HEADER_CG_MARK_CRCLIST: // 사용하지 않음
+		case HEADER_CG_MARK_CRCLIST: // Not used
 			return true;
 	}
 	return false;	
@@ -305,11 +305,11 @@ bool CGuildMarkDownloader::__LoginState_RecvMarkIndex()
 		Recv(sizeof(WORD), &guildID);
 		Recv(sizeof(WORD), &markID);
 
-		// 길드ID -> 마크ID 인덱스 등록
+		// Guild ID -> Mark ID index registration
 		CGuildMarkManager::Instance().AddMarkIDByGuildID(guildID, markID);
 	}
 
-	// 모든 마크 이미지 파일을 로드한다. (파일이 없으면 만들어짐)
+	// Load all mark image files. (If the file does not exist, it is created)
 	CGuildMarkManager::Instance().LoadMarkImages();
 
 	m_currentRequestingImageIndex = 0;
@@ -364,17 +364,17 @@ bool CGuildMarkDownloader::__LoginState_RecvMarkBlock()
 		else
 		{
 			Recv(compSize, compBuf);
-			// 압축된 이미지를 실제로 저장한다. CRC등 여러가지 정보가 함께 빌드된다.
+			// Actually saves the compressed image. Various information such as CRC is built together.
 			CGuildMarkManager::Instance().SaveBlockFromCompressedData(kPacket.imgIdx, posBlock, (const BYTE *) compBuf, compSize);
 		}
 	}
 
 	if (kPacket.count > 0)
 	{
-		// 마크 이미지 저장
+		// Save mark image
 		CGuildMarkManager::Instance().SaveMarkImage(kPacket.imgIdx);
 
-		// 리소스 리로딩 (재접속을 안해도 본인것은 잘 보이게 함)
+		// Resource reloading (makes yours visible even if you don't reconnect)
 		std::string imagePath;
 
 		if (CGuildMarkManager::Instance().GetMarkImageFilename(kPacket.imgIdx, imagePath))
@@ -388,7 +388,7 @@ bool CGuildMarkDownloader::__LoginState_RecvMarkBlock()
 		}
 	}
 
-	// 더 요청할 것이 있으면 요청하고 아니면 이미지를 저장하고 종료
+	// If you need more, ask for it, otherwise save the image and exit.
 	if (m_currentRequestingImageIndex < CGuildMarkManager::Instance().GetMarkImageCount())
 		__SendMarkCRCList();
 	else

@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #pragma warning(disable:4786)
 
@@ -269,7 +269,7 @@ class CGrannyLODController : public CGraphicBase
 
 		BOOL	isModelInstance();
 		CGrannyModelInstance*	GetModelInstance();
-		bool	HaveBlendThing() { return 0 != GetModelInstance() ? GetModelInstance()->HaveBlendThing() : false; }		// NOTE: GetModelInstance() == 0일 때 클라 크래쉬나는 문제 수정(2012. 05. 07)
+		bool	HaveBlendThing() { return 0 != GetModelInstance() ? GetModelInstance()->HaveBlendThing() : false; }		// NOTE: Fixed the issue of a crash when GetModelInstance() == 0 (2012. 05. 07)
 
 	protected:
 		void	SetCurrentModelInstance(CGrannyModelInstance * pgrnModelInstance);

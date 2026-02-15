@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterPack/EterPackManager.h"
 
 #include "PropertyManager.h"
@@ -53,8 +53,8 @@ bool CPropertyManager::Initialize(const char * c_pszPackFileName)
 	else
 	{
 		m_isFileMode = true;
-		// NOTE : 여기서 Property를 등록시키면 WorldEditor에서 이상이 생김 ;
-		//        또한, Property Tree List에도 등록을 시켜야 되기 때문에 바깥쪽에서.. - [levites]
+		// NOTE: If you register a property here, an error may occur in WorldEditor;
+		// Also, since it must be registered in the Property Tree List, from the outside... - [levites]
 	}
 
 	return true;
@@ -193,7 +193,7 @@ bool CPropertyManager::Put(const char * c_pszFileName, const char * c_pszSourceF
 	if (!CopyFile(c_pszSourceFileName, c_pszFileName, FALSE))
 		return false;
 
-	if (!m_isFileMode)	// 팩 파일에도 넣음
+	if (!m_isFileMode)	// Also included in pack file
 	{
 		if (!m_pack.Put(c_pszFileName, NULL, COMPRESSED_TYPE_NONE,""))
 		{
@@ -219,13 +219,13 @@ bool CPropertyManager::Erase(DWORD dwCRC)
 	DeleteFile(pProperty->GetFileName());
 	ReserveCRC(pProperty->GetCRC());
 
-	if (!m_isFileMode)	// 파일 모드가 아니면 팩에서도 지움
+	if (!m_isFileMode)	// If not in file mode, erase from pack
 		m_pack.Delete(pProperty->GetFileName());
 
 	FILE * fp = fopen("property/reserve", "a+");
 
 	if (!fp)
-		LogBox("예약 CRC 파일을 열 수 없습니다.");
+		LogBox("Cannot open reservation CRC file.ion CRC file.ion CRC file.ion CRC file.ion CRC file.");
 	else
 	{
 		char szCRC[64 + 1];

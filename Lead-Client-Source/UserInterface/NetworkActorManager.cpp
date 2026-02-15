@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "NetworkActorManager.h"
 #include "PythonCharacterManager.h"
 #include "PythonItem.h"
@@ -273,7 +273,7 @@ bool CNetworkActorManager::__IsVisibleActor(const SNetworkActorData& c_rkNetActo
 	if (__IsMainActorVID(c_rkNetActorData.m_dwVID))
 		return true;
 
-	// 2004.08.02.myevan.항상 보이기 플래그
+	// 2004.08.02.myevan.Always show flag
 	if (c_rkNetActorData.m_kAffectFlags.IsSet(CInstanceBase::AFFECT_SHOW_ALWAYS))
 		return true;
 
@@ -293,7 +293,7 @@ bool CNetworkActorManager::__IsVisiblePos(LONG lPosX, LONG lPosY)
 	LONG len = (LONG)sqrt(double(dx * dx + dy * dy));
 
 	extern int CHAR_STAGE_VIEW_BOUND;
-	if (len < CHAR_STAGE_VIEW_BOUND) // 거리제한 cm
+	if (len < CHAR_STAGE_VIEW_BOUND) // Distance limit cm
 		return true;
 
 	return false;

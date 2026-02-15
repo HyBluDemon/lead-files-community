@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "../eterBase/CRC32.h"
 #include "PythonWindow.h"
 #include "PythonSlotWindow.h"
@@ -66,10 +66,10 @@ namespace UI
 
 	void CWindow::Clear()
 	{
-		// FIXME : ChildrenÀ» Áï½Ã DeleteÇÏÁö´Â ¾Ê´Â´Ù.
-		//         ¾îÂ÷ÇÇ PythonÂÊ¿¡¼­ Destroy°¡ ÇÏ³ª¾¿ ´Ù½Ã È£Ãâ µÉ °ÍÀÌ¹Ç·Î..
-		//         ÇÏÁö¸¸ ¸¸¾àÀ» À§ÇØ ¸µÅ©´Â ²÷¾î ³õ´Â´Ù.
-		//         ´õ ÁÁÀº ÇüÅÂ´Â ÀÖ´Â°¡? - [levites]
+		// FIXME: Children are not deleted immediately.
+		// Since Destroy will be called again one by one on the Python side anyway...
+		// But just in case, I leave the link disconnected.
+		// Is there a better form? - [levites]
 		std::for_each(m_pChildList.begin(), m_pChildList.end(), FClear());
 		m_pChildList.clear();
 
@@ -93,8 +93,8 @@ namespace UI
 		m_bShow = false;
 	}
 
-	// NOTE : IsShow´Â "ÀÚ½ÅÀÌ º¸ÀÌ´Â°¡?" ÀÌÁö¸¸, __IsShowingÀº "ÀÚ½ÅÀÌ ±×·ÁÁö°í ÀÖ´Â°¡?" ¸¦ Ã¼Å©ÇÑ´Ù
-	//        ÀÚ½ÅÀº Show Áö¸¸ Tree À§ÂÊÀÇ Parent Áß ÇÏ³ª´Â Hide ÀÏ ¼ö ÀÖÀ¸¹Ç·Î.. - [levites]
+	// NOTE: IsShow means â€œDo you see yourself?â€ However, __IsShowing is "Are you being shown?" check
+	// You may be a Show, but one of the Parents above the Tree may be a Hide... - [levites]
 	bool CWindow::IsRendering()
 	{
 		if (!IsShow())
@@ -577,7 +577,7 @@ namespace UI
 	BOOL CWindow::OnMouseLeftButtonUp()
 	{
 		PyCallClassMemberFunc(m_poHandler, "OnMouseLeftButtonUp", BuildEmptyTuple());
-		return TRUE; // NOTE : ButtonUpÀº ¿¹¿Ü·Î ¹«Á¶°Ç TRUE
+		return TRUE; // NOTE: ButtonUp is an exception and is always TRUE.
 	}
 
 	BOOL CWindow::OnMouseLeftButtonDoubleClick()
@@ -1291,7 +1291,7 @@ namespace UI
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
-	// MarkBox - ¸¶Å© Ãâ·Â¿ë UI À©µµ¿ì
+	// MarkBox - UI window for mark output
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	CMarkBox::CMarkBox(PyObject * ppyObject) : CWindow(ppyObject)
 	{

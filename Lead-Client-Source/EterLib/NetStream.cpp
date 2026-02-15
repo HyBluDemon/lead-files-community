@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "NetStream.h"
 #include "../eterBase/tea.h"
 #include "../UserInterface/PacketDebug.h"

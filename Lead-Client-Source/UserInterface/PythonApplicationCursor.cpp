@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "PythonApplication.h"
 #include "resource.h"
 
@@ -122,9 +122,9 @@ BOOL CPythonApplication::SetCursorNum(int iCursorNum)
 	}
 	else
 	{
-		if (__IsContinuousChangeTypeCursor(m_iCursorNum))		// 현재 커서가 지속 커서일때만
+		if (__IsContinuousChangeTypeCursor(m_iCursorNum))		// Only when the current cursor is a persistent cursor
 		{
-			m_iContinuousCursorNum = m_iCursorNum;			// 현재의 커서를 저장한다.
+			m_iContinuousCursorNum = m_iCursorNum;			// Save the current cursor.
 		}
 	}
 

@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "../SpeedTreeLib/SpeedTreeWrapper.h"
 #include "../eterGrnLib/ThingInstance.h"
@@ -157,7 +157,7 @@ class CArea
 		typedef std::vector<CDungeonBlock *>				TDungeonBlockInstanceVector;
 		typedef std::vector<TObjectInstance *>				TObjectInstanceVector;
 		typedef std::vector<TAmbienceInstance *>			TAmbienceInstanceVector;
-		typedef std::map<CGraphicThingInstance *, DWORD>	TGraphicThingInstanceCRCMap;	// 최적화용 by 동현
+		typedef std::map<CGraphicThingInstance *, DWORD>	TGraphicThingInstanceCRCMap;	// Optimization by Donghyun
 		typedef std::set<int>								TShowingPortalIDSet;
 
 		typedef struct SCRCWithNumber
@@ -264,7 +264,7 @@ class CArea
 
 	protected:
 		// Static Data
-		TObjectDataVector				m_ObjectDataVector;		// Area 상에 있는 오브젝트들
+		TObjectDataVector				m_ObjectDataVector;		// Objects in Area
 
 		// Rendering Instances
 		TObjectInstanceVector			m_ObjectInstanceVector;
@@ -280,7 +280,7 @@ class CArea
 		TCRCWithNumberVector			m_kRenderedThingInstanceCRCWithNumberVector;
 		TThingInstanceVector			m_kRenderedGrapphicThingInstanceVector;
 
-		// 좌표 : 심리스 맵 전체 중에서의 좌표... 둘다 0~999
+		// Coordinates: Coordinates within the entire seamless map... both 0 to 999
 		WORD							m_wX;
 		WORD							m_wY;
 

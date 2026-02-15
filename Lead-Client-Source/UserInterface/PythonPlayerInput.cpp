@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "PythonPlayer.h"
 #include "PythonPlayerEventHandler.h"
 #include "PythonApplication.h"
@@ -115,7 +115,7 @@ void CPythonPlayer::SetTarget(DWORD dwVID, BOOL bForceChange)
 	if (!pkInstMain)
 		return;
 
-	// 2004. 07. 07. [levites] - ½ºÅ³ »ç¿ëÁß Å¸°ÙÀÌ ¹Ù²î´Â ¹®Á¦ ÇØ°áÀ» À§ÇÑ ÄÚµå
+	// 2004. 07. 07. [levites] - Code to solve the problem of the target changing while using a skill
 	if (!pkInstMain->CanChangeTarget())
 	{
 		return;
@@ -259,15 +259,15 @@ void CPythonPlayer::__OnClickItem(CInstanceBase& rkInstMain, DWORD dwItemID)
 
 void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, DWORD dwPickedActorID, bool isAuto)
 {
-	// ¸¸¾à ½ºÅ³À» ½á¼­ Á¢±ÙÁßÀÌ¶ó¸é..
+	// If you are approaching using a skill...
 	if (MODE_USE_SKILL == m_eReservedMode)
 	{
-		// °°Àº Ä³¸¯ÅÍ¸¦ Å¬¸¯ ÇßÀ¸¸é ¸®ÅÏ
+		// Returns when the same character is clicked
 		if (__GetTargetVID() == dwPickedActorID)
 			return;
 
 		// 2005.03.25.levites
-		// ÅºÈ¯°ÝÀ» ¾²°í ´Þ·Á°¡´ÂÁß °ø°ÝÇÒ ¼ö ÀÖ´Â ´Ù¸¥ Å¸°ÙÀ» Å¬¸¯ÇÏ¸é
+		// If you click on another target that can be attacked while running using a bullet attack,
 		if (__CheckDashAffect(rkInstMain))
 		{
 			m_dwVIDReserved = dwPickedActorID;
@@ -283,7 +283,7 @@ void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, DWORD dwPickedActo
 		return;
 	
 	// 2005.01.28.myevan
-	// ÃÊ±Þ¸» »óÅÂ¿¡¼­´Â °ø°ÝÀÌ ¾ÈµÇ³ª NPC Å¬¸¯ÀÌµÇ¾î¾ßÇÔ
+	// You cannot attack in beginner mode, but you must click on the NPC.
 	if (rkInstMain.IsAttackableInstance(*pkInstVictim))
 		if (!__CanAttack())
 			return;
@@ -305,15 +305,15 @@ void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, DWORD dwPickedActo
 
 void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, DWORD dwPickedActorID, bool isAuto)
 {
-	// ¸¸¾à ½ºÅ³À» ½á¼­ Á¢±ÙÁßÀÌ¶ó¸é..
+	// If you are approaching using a skill...
 	if (MODE_USE_SKILL == m_eReservedMode)
 	{
-		// °°Àº Ä³¸¯ÅÍ¸¦ Å¬¸¯ ÇßÀ¸¸é ¸®ÅÏ
+		// Returns when the same character is clicked
 		if (__GetTargetVID() == dwPickedActorID)
 			return;
 
 		// 2005.03.25.levites
-		// ÅºÈ¯°ÝÀ» ¾²°í ´Þ·Á°¡´ÂÁß °ø°ÝÇÒ ¼ö ÀÖ´Â ´Ù¸¥ Å¸°ÙÀ» Å¬¸¯ÇÏ¸é
+		// If you click on another target that can be attacked while running using a bullet attack,
 		if (__CheckDashAffect(rkInstMain))
 		{
 			m_dwVIDReserved = dwPickedActorID;
@@ -335,7 +335,7 @@ void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, DWORD dwPickedActo
 
 	if (isAuto)
 	{
-		// 2004.10.21.myevan.°ø°Ý°¡´ÉÇÑ »ó´ë¸¸ ÀÚµ¿ °ø°Ý
+		// 2004.10.21.myevan.Automatic attack only on opponents that can attack
 		if (rkInstMain.IsAttackableInstance(rkInstVictim))
 			__SetAutoAttackTargetActorID(rkInstVictim.GetVirtualID());
 	}
@@ -463,7 +463,7 @@ bool CPythonPlayer::NEW_MoveToDirection(float fDirRot)
 	{
 		float fCmrCurRot=CameraRotationToCharacterRotation(pkCmrCur->GetRoll());
 
-		// ÇöÀç 
+		// today
 		if (m_isCmrRot)
 		{
 			float fSigDirRot=fDirRot;
@@ -612,7 +612,7 @@ void CPythonPlayer::NEW_Attack()
 	}
 	else
 	{
-		//!@# ¸»¿¡ Åº »óÅÂ¿¡¼­ ¸Ç¼Õ °ø°ÝÀº Áö¿øµÇÁö ¾Ê´Â´Ù - [levites]
+		// !@# Bare-handed attacks are not supported while on horseback - [levites]
 		if (pkInstMain->IsMountingHorse())
 		{
 			if (pkInstMain->IsHandMode())
@@ -752,10 +752,10 @@ bool CPythonPlayer::__CanAttack()
 		return false;
 	
 	// Fix me
-	// ´º¸¶¿îÆ® 25·¹º§ ÀÌ»ó 35·¹º§ ¹Ì¸¸ÀÎ °æ¿ì Áß±Þ ¸¶¿îÆ®¸¦ Å¸°í °ø°Ý¸øÇÏµµ·Ï ÇÏµå ÄÚµù... 
-	// ³ªÁß¿¡ ½Ã°£ ³ª¸é can attack Ã¼Å©¸¦ ¼­¹ö¿¡¼­ ÇØÁÖÀÚ...
-	// ¤Ñ_¤Ñ unique ½½·Ô¿¡ Â÷´Â Å»°ÍÀº ÀÌ Á¶°ÇÀÌ¶û °ü°è¾øÀÌ °ø°ÝÇÒ ¼ö ÀÖ¾î¾ß ÇÑ´Ù ¤Ñ_¤Ñ
-	// ¤Ñ_¤Ñ ´º¸¶¿îÆ®¸¸ ÀÌ Ã¼Å©¸¦ ÇÏ°Ô ÇÔ... ¤Ñ_¤Ñ_¤Ñ_¤Ñ_¤Ñ
+	// New Mount Hard coded so that if you are level 25 or higher but lower than level 35, you cannot attack using a mid-level mount...
+	// Later, when I have time, I'll do a can attack check on the server...
+	// ã…¡_ã…¡ A mount placed in a unique slot must be able to attack regardless of this condition ã…¡_ã…¡
+	// ã…¡_ã…¡ Only Newmount makes this check... ã…¡_ã…¡_ã…¡_ã…¡_ã…¡
 	if (pkInstMain->IsMountingHorse() && pkInstMain->IsNewMount() && (GetSkillGrade(109) < 1 && GetSkillLevel(109) < 11))
 	{
 		return false;
@@ -858,7 +858,7 @@ void CPythonPlayer::__ReserveUseSkill(DWORD dwActorID, DWORD dwSkillSlotIndex, D
 	m_dwSkillSlotIndexReserved=dwSkillSlotIndex;
 	m_dwSkillRangeReserved=dwRange;
 
-	// NOTE : ¾Æ½½¾Æ½½ÇÏ°Ô °Å¸®°¡ ²¿ÀÌ´Â ¹®Á¦°¡ ÀÖ¾î¼­ ¾à°£ ´À½¼ÇÏ°Ô..
+	// NOTE: There is a problem with the distance being dangerously twisted, so it is a bit loose..
 	if (m_dwSkillRangeReserved > 100)
 		m_dwSkillRangeReserved -= 10;
 }
@@ -920,7 +920,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 		return;
 	}
 
-	// ÅºÈ¯°Ý ¾²°í ´Þ·Á°¡´Â µµÁß¿¡´Â °ø°ÝÇÏÁö ¾Ê´Â´Ù.
+	// It does not attack while using bullets and running.
 	if (__CheckDashAffect(*pkInstMain))
 	{
 		return;

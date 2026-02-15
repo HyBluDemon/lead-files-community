@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../EterPack/EterPackManager.h"
 #include "FileLoaderThread.h"
 #include "ResourceManager.h"
@@ -79,7 +79,7 @@ void CFileLoaderThread::Shutdown()
 	}
 	while (!bRet);
 
-	WaitForSingleObject(m_hThread, 10000);	// 쓰레드가 종료 되기를 10초 기다림
+	WaitForSingleObject(m_hThread, 10000);	// Wait 10 seconds for the thread to terminate
 }
 
 UINT CFileLoaderThread::Execute(void * /*pvArg*/)

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 
 #include <stdio.h>
 #include <time.h>
@@ -144,9 +144,9 @@ LONG __stdcall EterExceptionFilter(_EXCEPTION_POINTERS* pExceptionInfo)
 		fException = NULL;
 		
 		//WinExec()
-		/*CreateProcess("cmd.exe",NULL,NULL,NULL,FALSE,
-			CREATE_NEW_PROCESS_GROUP|DETACHED_PROCESS,NULL,NULL,NULL,NULL);
-		MessageBox(NULL,"게임 실행에 치명적인 문제가 발생하였습니다.\n게임을 종료하고 에러 로그를 남깁니다.\n에러 로그를 서버에 보내시겠습니까?","에러 발생!",MB_YESNO);*/
+		/*
+ * CreateProcess("cmd.exe",NULL,NULL,NULL,FALSE, CREATE_NEW_PROCESS_GROUP|DETACHED_PROCESS,NULL,NULL,NULL,NULL); MessageBox(NULL,"A fatal problem occurred while running the game.\nQuit the game and leave an error log.\nDo you want to send the error log to the server?","An error occurred!",MB_YESNO);
+ */
 
 		/*
 		__l.BeginCompressInBuffer(__msg,__idx,__cmsg);

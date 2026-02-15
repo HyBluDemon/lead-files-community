@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 
 #include <io.h>
 #include <assert.h>
@@ -48,7 +48,7 @@ void CEterPackManager::SetRelativePathMode()
 }
 
 
-// StringPath std::string 버전
+// StringPath std::string version
 int CEterPackManager::ConvertFileName(const char * c_szFileName, std::string & rstrFileName)
 {
 	rstrFileName = c_szFileName;
@@ -226,7 +226,7 @@ bool CEterPackManager::GetFromPack(CMappedFile & rMappedFile, const char * c_szF
 	return false;
 }
 
-const time_t g_tCachingInterval = 10; // 10초
+const time_t g_tCachingInterval = 10; // 10 seconds
 void CEterPackManager::ArrangeMemoryMappedPack()
 {
 	//time_t curTime = time(NULL);
@@ -250,8 +250,8 @@ bool CEterPackManager::GetFromFile(CMappedFile & rMappedFile, const char * c_szF
 #ifndef _DEBUG
 	//const char *pcExt = strchr(c_szFileName, '.');
 	//if (pcExt && 
-	//	_strnicmp(pcExt, ".py", 3) == 0 && // python 스크립트 중
-	//	_stricmp(c_szFileName, "logininfo.py") != 0 && // 로그인 정보 파일이 아니고
+	// _strnicmp(pcExt, ".py", 3) == 0 && // in python script
+	// _stricmp(c_szFileName, "logininfo.py") != 0 && // Not a login information file.
 	//	strnicmp(c_szFileName, "locale", 6) != 0
 	//	)
 	//{
@@ -289,7 +289,7 @@ bool CEterPackManager::isExistInPack(const char * c_szFileName)
 				return pkFileItem->pkPack->IsExist(strFileName.c_str());
 	}
 
-	// NOTE : 매치 되는 팩이 없다면 false - [levites]
+	// NOTE: false if there is no matching pack - [levites]
 	return false;
 }
 
@@ -447,7 +447,7 @@ void CEterPackManager::RetrieveHybridCryptPackKeys(const BYTE *pStream)
 	{
 		int iRecvedCryptKeySize = 0;
 		memcpy( &iRecvedCryptKeySize, pStream + iMemOffset, sizeof(iRecvedCryptKeySize) );
-		iRecvedCryptKeySize -= sizeof(dwPackageNameHash); // 서버에서 받은 key stream에는 filename hash가 포함되어 있으므로, hash 사이즈 만큼 배줌.
+		iRecvedCryptKeySize -= sizeof(dwPackageNameHash); // Since the key stream received from the server includes the filename hash, it is multiplied by the hash size.
 		iMemOffset += sizeof(iRecvedCryptKeySize); 
 
 		memcpy( &dwPackageNameHash, pStream + iMemOffset, sizeof(dwPackageNameHash) );

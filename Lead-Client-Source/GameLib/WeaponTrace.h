@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // change CatMull to cubic spline
 #include "../eterGrnLib/ThingInstance.h"

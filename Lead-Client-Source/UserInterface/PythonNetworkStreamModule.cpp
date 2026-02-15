@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "PythonNetworkStream.h"
 #include "AccountConnector.h"
 #include "PythonGuild.h"
@@ -1466,7 +1466,7 @@ PyObject* netSendRequestRefineInfoPacket(PyObject* poSelf, PyObject* poArgs)
 
 //	CPythonNetworkStream& rns=CPythonNetworkStream::Instance();
 //	rns.SendRequestRefineInfoPacket(iSlotIndex);
-	assert(!"netSendRequestRefineInfoPacket - 더이상 사용하지 않는 함수 입니다");
+	assert(!"netSendRequestRefineInfoPacket - This function is no longer used.o longer used.o longer used.o longer used.o longer used.");
 
 	return Py_BuildNone();
 }

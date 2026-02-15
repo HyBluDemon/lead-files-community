@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "PythonBackground.h"
 #include "../eterlib/Camera.h"
 
 //////////////////////////////////////////////////////////////////////////
-// ¸Þ¼¼Áö
+// message
 
 extern void SetHeightLog(bool isLog);
 
@@ -136,7 +136,7 @@ void CCamera::ProcessBuildingCollision()
 	Vector3d aVector3d;
 	aVector3d.Set(m_v3Eye.x, m_v3Eye.y, m_v3Eye.z);
 
-	// µÚ
+	// back
 
 	CCullingManager & rkCullingMgr = CCullingManager::Instance();
 
@@ -188,7 +188,7 @@ void CCamera::ProcessBuildingCollision()
 		}
 	}
 
-	// À§
+	// stomach
 	{
 		v3CheckVector = m_v3Eye + 2.0f * m_fObjectCollisionRadius * m_v3Up;
 		s.v3Position = v3CheckVector;
@@ -205,7 +205,7 @@ void CCamera::ProcessBuildingCollision()
 		}
 	}
 
-	// ÁÂ
+	// left
 	{
 		v3CheckVector = m_v3Eye + 3.0f * m_fObjectCollisionRadius * m_v3Cross;
 		s.v3Position = v3CheckVector;
@@ -225,7 +225,7 @@ void CCamera::ProcessBuildingCollision()
 		}
 	}
 
-	// ¿ì
+	// right
 	{
 		v3CheckVector = m_v3Eye - 3.0f * m_fObjectCollisionRadius * m_v3Cross;
 		s.v3Position = v3CheckVector;
@@ -245,7 +245,7 @@ void CCamera::ProcessBuildingCollision()
 		}
 	}
 
-	// ¾Æ·¡
+	// under
 	{
 		v3CheckVector = m_v3Eye - 2.0f * m_fTerrainCollisionRadius * m_v3Up;
 		s.v3Position = v3CheckVector;
@@ -265,7 +265,7 @@ void CCamera::ProcessBuildingCollision()
 		}
 	}
 
-	// ¾Õ
+	// front
 	{
 		v3CheckVector = m_v3Eye + 4.0f * m_fObjectCollisionRadius * m_v3View;
 		s.v3Position = v3CheckVector;

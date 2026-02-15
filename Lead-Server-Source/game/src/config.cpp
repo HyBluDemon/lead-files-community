@@ -252,35 +252,13 @@ bool GetIPInfo()
 	return false;
 }
 
-void config_init(const string& st_localeServiceName)
+static bool __LoadConnectionDetailConfigurations(const char *configName)
 {
-	FILE	*fp;
-
-	char	buf[256];
-	char	token_string[256];
-	char	value_string[256];
-
-	// LOCALE_SERVICE
-	string	st_configFileName;
-
-	st_configFileName.reserve(32);
-	st_configFileName = "CONFIG";
-
-	if (!st_localeServiceName.empty())
-	{
-		st_configFileName += ".";
-		st_configFileName += st_localeServiceName;
-	}
-	// END_OF_LOCALE_SERVICE
-
-	if (!(fp = fopen(st_configFileName.c_str(), "r")))
-	{
-		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
-		exit(1);
-	}
+	char buf[256];
+	char token_string[256];
+	char value_string[256];
 
 	char db_host[2][64], db_user[2][64], db_pwd[2][64], db_db[2][64];
-	// ... 아... db_port는 이미 있는데... 네이밍 어찌해야함...
 	int mysql_db_port[2];
 
 	for (int n = 0; n < 2; ++n)
@@ -300,30 +278,20 @@ void config_init(const string& st_localeServiceName)
 	*log_pwd = '\0';
 	*log_db = '\0';
 
-
-	// DB에서 로케일정보를 세팅하기위해서는 다른 세팅값보다 선행되어서
-	// DB정보만 읽어와 로케일 세팅을 한후 다른 세팅을 적용시켜야한다.
-	// 이유는 로케일관련된 초기화 루틴이 곳곳에 존재하기 때문.
-
-	bool isCommonSQL = false;	
+	bool isCommonSQL = false;
 	bool isPlayerSQL = false;
 
 	FILE* fpOnlyForDB;
 
-	if (!(fpOnlyForDB = fopen(st_configFileName.c_str(), "r")))
+	if (!(fpOnlyForDB = fopen(configName, "r")))
 	{
-		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
+		fprintf(stderr, "Can not open [%s]\n", configName);
 		exit(1);
 	}
 
 	while (fgets(buf, 256, fpOnlyForDB))
 	{
 		parse_token(buf, token_string, value_string);
-
-		TOKEN("BLOCK_LOGIN")
-		{
-			g_stBlockDate = value_string;
-		}
 
 		TOKEN("hostname")
 		{
@@ -410,7 +378,6 @@ void config_init(const string& st_localeServiceName)
 		}
 	}
 
-	//처리가 끝났으니 파일을 닫자.
 	fclose(fpOnlyForDB);
 
 	// CONFIG_SQL_INFO_ERROR
@@ -436,7 +403,6 @@ void config_init(const string& st_localeServiceName)
 		exit(1);
 	}
 
-	// Common DB 가 Locale 정보를 가지고 있기 때문에 가장 먼저 접속해야 한다.
 	AccountDB::instance().Connect(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1]);
 
 	if (false == AccountDB::instance().IsConnected())
@@ -447,8 +413,6 @@ void config_init(const string& st_localeServiceName)
 
 	fprintf(stdout, "CommonSQL connected\n");
 
-	// 로케일 정보를 가져오자 
-	// <경고> 쿼리문에 절대 조건문(WHERE) 달지 마세요. (다른 지역에서 문제가 생길수 있습니다)
 	{
 		char szQuery[512];
 		snprintf(szQuery, sizeof(szQuery), "SELECT mKey, mValue FROM locale");
@@ -461,11 +425,10 @@ void config_init(const string& st_localeServiceName)
 			exit(1);
 		}
 
-		MYSQL_ROW row; 
+		MYSQL_ROW row;
 
 		while (NULL != (row = mysql_fetch_row(pMsg->Get()->pSQLResult)))
 		{
-			// 로케일 세팅
 			if (strcasecmp(row[0], "LOCALE") == 0)
 			{
 				if (LocaleService_Init(row[1]) == false)
@@ -477,15 +440,12 @@ void config_init(const string& st_localeServiceName)
 		}
 	}
 
-	// 로케일 정보를 COMMON SQL에 세팅해준다.
-	// 참고로 g_stLocale 정보는 LocaleService_Init() 내부에서 세팅된다.
 	fprintf(stdout, "Setting DB to locale %s\n", g_stLocale.c_str());
 
 	AccountDB::instance().SetLocale(g_stLocale);
 
 	AccountDB::instance().ConnectAsync(db_host[1], mysql_db_port[1], db_user[1], db_pwd[1], db_db[1], g_stLocale.c_str());
 
-	// Player DB 접속
 	DBManager::instance().Connect(db_host[0], mysql_db_port[0], db_user[0], db_pwd[0], db_db[0]);
 
 	if (!DBManager::instance().IsConnected())
@@ -496,9 +456,8 @@ void config_init(const string& st_localeServiceName)
 
 	fprintf(stdout, "PlayerSQL connected\n");
 
-	if (false == g_bAuthServer) // 인증 서버가 아닐 경우
+	if (false == g_bAuthServer)
 	{
-		// Log DB 접속
 		LogManager::instance().Connect(log_host, log_port, log_user, log_pwd, log_db);
 
 		if (!LogManager::instance().IsConnected())
@@ -513,8 +472,6 @@ void config_init(const string& st_localeServiceName)
 	}
 
 	// SKILL_POWER_BY_LEVEL
-	// 스트링 비교의 문제로 인해서 AccountDB::instance().SetLocale(g_stLocale) 후부터 한다.
-	// 물론 국내는 별로 문제가 안된다(해외가 문제)
 	{
 		char szQuery[256];
 		snprintf(szQuery, sizeof(szQuery), "SELECT mValue FROM locale WHERE mKey='SKILL_POWER_BY_LEVEL'");
@@ -526,7 +483,7 @@ void config_init(const string& st_localeServiceName)
 			exit(1);
 		}
 
-		MYSQL_ROW row; 
+		MYSQL_ROW row;
 
 		row = mysql_fetch_row(pMsg->Get()->pSQLResult);
 
@@ -555,13 +512,11 @@ void config_init(const string& st_localeServiceName)
 			}
 		}
 
-		// 종족별 스킬 세팅
 		for (int job = 0; job < JOB_MAX_NUM * 2; ++job)
 		{
 			snprintf(szQuery, sizeof(szQuery), "SELECT mValue from locale where mKey='SKILL_POWER_BY_LEVEL_TYPE%d' ORDER BY CAST(mValue AS unsigned)", job);
 			std::unique_ptr<SQLMsg> pMsg(AccountDB::instance().DirectQuery(szQuery));
 
-			// 세팅이 안되어있으면 기본테이블을 사용한다.
 			if (pMsg->Get()->uiNumRows == 0)
 			{
 				CTableBySkill::instance().SetSkillPowerByLevelFromType(job, aiBaseSkillPowerByLevelTable);
@@ -575,7 +530,7 @@ void config_init(const string& st_localeServiceName)
 
 			fprintf(stdout, "SKILL_POWER_BY_JOB %d %s\n", job, p);
 			while (*p != '\0' && cnt < (SKILL_MAX_LEVEL + 1))
-			{			
+			{
 				p = one_argument(p, num, sizeof(num));
 				aiSkillTable[cnt++] = atoi(num);
 
@@ -594,56 +549,30 @@ void config_init(const string& st_localeServiceName)
 			}
 
 			CTableBySkill::instance().SetSkillPowerByLevelFromType(job, aiSkillTable);
-		}		
+		}
 	}
 	// END_SKILL_POWER_BY_LEVEL
+	return true;
+}
 
-	// LOG_KEEP_DAYS_EXTEND
-	log_set_expiration_days(2);
-	// END_OF_LOG_KEEP_DAYS_EXTEND
+static bool __LoadCoreSpecificConfigurations(const char *configName)
+{
+	FILE *fp;
+
+	char buf[256];
+	char token_string[256];
+	char value_string[256];
+
+	if (!(fp = fopen(configName, "r")))
+		return false;
 
 	while (fgets(buf, 256, fp))
 	{
 		parse_token(buf, token_string, value_string);
 
-		TOKEN("empire_whisper")
-		{
-			bool b_value = 0;
-			str_to_number(b_value, value_string);
-			g_bEmpireWhisper = !!b_value;
-			continue;
-		}
-
-		TOKEN("mark_server")
-		{
-			guild_mark_server = is_string_true(value_string);
-			continue;
-		}
-
-		TOKEN("mark_min_level")
-		{
-			str_to_number(guild_mark_min_level, value_string);
-			guild_mark_min_level = MINMAX(0, guild_mark_min_level, GUILD_MAX_LEVEL);
-			continue;
-		}
-
 		TOKEN("port")
 		{
 			str_to_number(mother_port, value_string);
-			continue;
-		}
-
-		TOKEN("log_keep_days")
-		{
-			int i = 0;
-			str_to_number(i, value_string);
-			log_set_expiration_days(MINMAX(1, i, 90));
-			continue;
-		}
-
-		TOKEN("passes_per_sec")
-		{
-			str_to_number(passes_per_sec, value_string);
 			continue;
 		}
 
@@ -669,6 +598,128 @@ void config_init(const string& st_localeServiceName)
 					db_addr[n] = '\0';
 			}
 
+			continue;
+		}
+
+		TOKEN("map_allow")
+		{
+			char * p = value_string;
+			string stNum;
+
+			for (; *p; p++)
+			{
+				if (isnhspace(*p))
+				{
+					if (stNum.length())
+					{
+						int	index = 0;
+						str_to_number(index, stNum.c_str());
+						map_allow_add(index);
+						stNum.clear();
+					}
+				}
+				else
+					stNum += *p;
+			}
+
+			if (stNum.length())
+			{
+				int	index = 0;
+				str_to_number(index, stNum.c_str());
+				map_allow_add(index);
+			}
+
+			continue;
+		}
+
+		TOKEN("auth_server")
+		{
+			char szIP[32];
+			char szPort[32];
+
+			two_arguments(value_string, szIP, sizeof(szIP), szPort, sizeof(szPort));
+
+			if (!*szIP || (!*szPort && strcasecmp(szIP, "master")))
+			{
+				fprintf(stderr, "AUTH_SERVER: syntax error: <ip|master> <port>\n");
+				exit(1);
+			}
+
+			g_bAuthServer = true;
+
+			LoadBanIP("BANIP");
+
+			if (!strcasecmp(szIP, "master"))
+				fprintf(stdout, "AUTH_SERVER: I am the master\n");
+			else
+			{
+				g_stAuthMasterIP = szIP;
+				str_to_number(g_wAuthMasterPort, szPort);
+
+				fprintf(stdout, "AUTH_SERVER: master %s %u\n", g_stAuthMasterIP.c_str(), g_wAuthMasterPort);
+			}
+			continue;
+		}
+
+		TOKEN("mark_server")
+		{
+			guild_mark_server = is_string_true(value_string);
+			continue;
+		}
+
+	}
+
+	fclose(fp);
+	return true;
+}
+
+static bool __LoadGeneralConfigurations(const char *configName)
+{
+	FILE *fp;
+
+	char buf[256];
+	char token_string[256];
+	char value_string[256];
+
+	if (!(fp = fopen(configName, "r")))
+		return false;
+
+	while (fgets(buf, 256, fp))
+	{
+		parse_token(buf, token_string, value_string);
+
+		TOKEN("BLOCK_LOGIN")
+		{
+			g_stBlockDate = value_string;
+			continue;
+		}
+
+		TOKEN("empire_whisper")
+		{
+			bool b_value = 0;
+			str_to_number(b_value, value_string);
+			g_bEmpireWhisper = !!b_value;
+			continue;
+		}
+
+		TOKEN("mark_min_level")
+		{
+			str_to_number(guild_mark_min_level, value_string);
+			guild_mark_min_level = MINMAX(0, guild_mark_min_level, GUILD_MAX_LEVEL);
+			continue;
+		}
+
+		TOKEN("log_keep_days")
+		{
+			int i = 0;
+			str_to_number(i, value_string);
+			log_set_expiration_days(MINMAX(1, i, 90));
+			continue;
+		}
+
+		TOKEN("passes_per_sec")
+		{
+			str_to_number(passes_per_sec, value_string);
 			continue;
 		}
 
@@ -715,43 +766,12 @@ void config_init(const string& st_localeServiceName)
 			continue;
 		}
 
-		TOKEN("map_allow")
-		{
-			char * p = value_string;
-			string stNum;
-
-			for (; *p; p++)
-			{   
-				if (isnhspace(*p))
-				{
-					if (stNum.length())
-					{
-						int	index = 0;
-						str_to_number(index, stNum.c_str());
-						map_allow_add(index);
-						stNum.clear();
-					}
-				}
-				else
-					stNum += *p;
-			}
-
-			if (stNum.length())
-			{
-				int	index = 0;
-				str_to_number(index, stNum.c_str());
-				map_allow_add(index);
-			}
-
-			continue;
-		}
-
 		TOKEN("no_wander")
 		{
 			no_wander = true;
 			continue;
 		}
-		
+
 		TOKEN("create_documentation_files")
 		{
 			int tmp = 0;
@@ -775,35 +795,6 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("skill_disable")
 		{
 			str_to_number(g_bSkillDisable, value_string);
-			continue;
-		}
-
-		TOKEN("auth_server")
-		{
-			char szIP[32];
-			char szPort[32];
-
-			two_arguments(value_string, szIP, sizeof(szIP), szPort, sizeof(szPort));
-
-			if (!*szIP || (!*szPort && strcasecmp(szIP, "master")))
-			{
-				fprintf(stderr, "AUTH_SERVER: syntax error: <ip|master> <port>\n");
-				exit(1);
-			}
-
-			g_bAuthServer = true;
-
-			LoadBanIP("BANIP");
-
-			if (!strcasecmp(szIP, "master"))
-				fprintf(stdout, "AUTH_SERVER: I am the master\n");
-			else
-			{
-				g_stAuthMasterIP = szIP;
-				str_to_number(g_wAuthMasterPort, szPort);
-
-				fprintf(stdout, "AUTH_SERVER: master %s %u\n", g_stAuthMasterIP.c_str(), g_wAuthMasterPort);
-			}
 			continue;
 		}
 
@@ -926,7 +917,7 @@ void config_init(const string& st_localeServiceName)
 		TOKEN("death_exp_loss_cap")
 		{
 			str_to_number(g_DeathExpLossCap, value_string);
-			
+
 			g_DeathExpLossCap = MAX(0, g_DeathExpLossCap);
 
 			fprintf(stderr, "DEATH_EXP_LOSS_CAP: %d\n", g_DeathExpLossCap);
@@ -961,6 +952,104 @@ void config_init(const string& st_localeServiceName)
 
 			continue;
 		}
+	}
+	fclose(fp);
+	return true;
+}
+
+static bool __LoadDefaultCMDFile(const char *cmdName)
+{
+	FILE *fp;
+	char buf[256];
+
+	if ((fp = fopen(cmdName, "r")))
+	{
+		while (fgets(buf, 256, fp))
+		{
+			char cmd[32], levelname[32];
+			int level;
+
+			two_arguments(buf, cmd, sizeof(cmd), levelname, sizeof(levelname));
+
+			if (!*cmd || !*levelname)
+			{
+				fprintf(stderr, "CMD syntax error: <cmd> <DISABLE | LOW_WIZARD | WIZARD | HIGH_WIZARD | GOD>\n");
+				exit(1);
+			}
+
+			if (!strcasecmp(levelname, "LOW_WIZARD"))
+				level = GM_LOW_WIZARD;
+			else if (!strcasecmp(levelname, "WIZARD"))
+				level = GM_WIZARD;
+			else if (!strcasecmp(levelname, "HIGH_WIZARD"))
+				level = GM_HIGH_WIZARD;
+			else if (!strcasecmp(levelname, "GOD"))
+				level = GM_GOD;
+			else if (!strcasecmp(levelname, "IMPLEMENTOR"))
+				level = GM_IMPLEMENTOR;
+			else if (!strcasecmp(levelname, "DISABLE"))
+				level = GM_IMPLEMENTOR + 1;
+			else
+			{
+				fprintf(stderr, "CMD syntax error: <cmd> <DISABLE | LOW_WIZARD | WIZARD | HIGH_WIZARD | GOD>\n");
+				exit(1);
+			}
+
+			interpreter_set_privilege(cmd, level);
+		}
+
+		fclose(fp);
+	}
+
+	return false;
+}
+
+void config_init(const string& st_localeServiceName)
+{
+	FILE	*fp;
+
+	char	buf[256];
+	char	token_string[256];
+	char	value_string[256];
+
+	// LOCALE_SERVICE
+	string	st_configFileName;
+
+	st_configFileName.reserve(32);
+	st_configFileName = "CONFIG";
+
+	if (!st_localeServiceName.empty())
+	{
+		st_configFileName += ".";
+		st_configFileName += st_localeServiceName;
+	}
+	// END_OF_LOCALE_SERVICE
+
+	// LOG_KEEP_DAYS_EXTEND
+	log_set_expiration_days(2);
+	// END_OF_LOG_KEEP_DAYS_EXTEND
+
+	// load connection and core specific configurations
+	if (!__LoadConnectionDetailConfigurations(st_configFileName.c_str()) ||
+		!__LoadCoreSpecificConfigurations(st_configFileName.c_str()))
+	{
+		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
+		exit(1);
+	}
+
+	// load general configuration
+	{
+		char szFileName[256];
+		snprintf(szFileName, sizeof(szFileName), "./conf/GENERAL_CONFIG");
+		if (__LoadGeneralConfigurations(szFileName))
+			fprintf(stderr, "GENERAL CONFIG LOAD OK [%s]\n", szFileName);
+	}
+
+	// load default configurations (overwrite general one if set)
+	if (!__LoadGeneralConfigurations(st_configFileName.c_str()))
+	{
+		fprintf(stderr, "Can not open [%s]\n", st_configFileName.c_str());
+		exit(1);
 	}
 
 	if (g_setQuestObjectDir.empty())
@@ -999,46 +1088,8 @@ void config_init(const string& st_localeServiceName)
 		}
 	}
 
-	fclose(fp);
-
-	if ((fp = fopen("CMD", "r")))
-	{
-		while (fgets(buf, 256, fp))
-		{
-			char cmd[32], levelname[32];
-			int level;
-
-			two_arguments(buf, cmd, sizeof(cmd), levelname, sizeof(levelname));
-
-			if (!*cmd || !*levelname)
-			{
-				fprintf(stderr, "CMD syntax error: <cmd> <DISABLE | LOW_WIZARD | WIZARD | HIGH_WIZARD | GOD>\n");
-				exit(1);
-			}
-
-			if (!strcasecmp(levelname, "LOW_WIZARD"))
-				level = GM_LOW_WIZARD;
-			else if (!strcasecmp(levelname, "WIZARD"))
-				level = GM_WIZARD;
-			else if (!strcasecmp(levelname, "HIGH_WIZARD"))
-				level = GM_HIGH_WIZARD;
-			else if (!strcasecmp(levelname, "GOD"))
-				level = GM_GOD;
-			else if (!strcasecmp(levelname, "IMPLEMENTOR"))
-				level = GM_IMPLEMENTOR;
-			else if (!strcasecmp(levelname, "DISABLE"))
-				level = GM_IMPLEMENTOR + 1;
-			else
-			{
-				fprintf(stderr, "CMD syntax error: <cmd> <DISABLE | LOW_WIZARD | WIZARD | HIGH_WIZARD | GOD>\n");
-				exit(1);
-			}
-
-			interpreter_set_privilege(cmd, level);
-		}
-
-		fclose(fp);
-	}
+	std::string st_cmdFileName("CMD");
+	__LoadDefaultCMDFile(st_cmdFileName.c_str());
 
 	LoadValidCRCList();
 	LoadStateUserCount();

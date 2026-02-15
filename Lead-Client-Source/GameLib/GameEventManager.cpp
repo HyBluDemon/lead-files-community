@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GameEventManager.h"
 
 void CGameEventManager::SetCenterPosition(float fx, float fy, float fz)

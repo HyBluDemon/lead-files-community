@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "../eterBase/CRC32.h"
 #include "GrpExpandedImageInstance.h"
 #include "StateManager.h"
@@ -116,7 +116,7 @@ void CGraphicExpandedImageInstance::OnRender()
 			break;
 	}
 
-	// 2004.11.18.myevan.ctrl+alt+del ¹Ýº¹ »ç¿ë½Ã Æ¨±â´Â ¹®Á¦ 	
+	// 2004.11.18.myevan.Jumping issue when using ctrl+alt+del repeatedly
 	if (CGraphicBase::SetPDTStream(vertices, 4))
 	{
 		CGraphicBase::SetDefaultIndexBuffer(CGraphicBase::DEFAULT_IB_FILL_RECT);

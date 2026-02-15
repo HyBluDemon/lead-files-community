@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "ActorInstance.h"
 
@@ -6,10 +6,10 @@
 //
 //	CGameEventManager
 //
-//		Note : Game상에서 일어나는 폭발, 화면 흔들림, Range 무기들의 움직임과 타격 등의 Event
-//             를 종합적으로 관리하는 클래스. - [levites]
+// Note: Events such as explosions, screen shakes, and movement and strikes of range weapons that occur in the game.
+// A class that comprehensively manages . - [levites]
 //
-//		Note : 게임상의 Cinematic Event 를 컨트롤하는 매니져로 사용한다. 2004.07.19 - [levites]
+// Note: Used as a manager to control cinematic events in the game. 2004.07.19 - [levites]
 //
 
 class CGameEventManager : public CSingleton<CGameEventManager>, public CScreen

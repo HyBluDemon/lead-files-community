@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "PythonPlayer.h"
 
 #include "InstanceBase.h"

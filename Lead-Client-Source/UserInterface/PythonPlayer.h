@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "common/tables.h"
 #include "AbstractPlayer.h"
@@ -7,13 +7,7 @@
 class CInstanceBase;
 
 /*
- *	메인 캐릭터 (자신이 조정하는 캐릭터) 가 가진 정보들을 관리한다.
- *
- * 2003-01-12 Levites	본래는 CPythonCharacter가 가지고 있었지만 규모가 너무 커져 버린데다
- *						위치도 애매해서 따로 분리
- * 2003-07-19 Levites	메인 캐릭터의 이동 처리 CharacterInstance에서 떼어다 붙임
- *						기존의 데이타 보존의 역할에서 완벽한 메인 플레이어 제어 클래스로
- *						탈바꿈 함.
+ * Manage the information held by the main character (the character you control).  2003-01-12 Levites It was originally owned by CPythonCharacter, but the size became too large and the location was ambiguous, so it was separated. 2003-07-19 Levites It was removed and attached to CharacterInstance to handle the movement of the main character. Transformed from the existing data preservation role into a perfect main player control class.
  */
 
 class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
@@ -88,8 +82,8 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 			float fnextEfficientPercentage;
 			BOOL isCoolTime;
 
-			float fCoolTime;			// NOTE : 쿨타임 중인 스킬 슬롯을
-			float fLastUsedTime;		//        퀵창에 등록할 때 사용하는 변수
+			float fCoolTime;			// NOTE: Skill slots on cooldown
+			float fLastUsedTime;		// Variables used when registering in quick window
 			BOOL bActive;
 		} TSkillInstance;
 
@@ -162,15 +156,15 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 			SKILL_PERFECT_MASTER,
 		};
 
-		// 자동물약 상태 관련 특화 구조체.. 이런식의 특화 처리 작업을 안 하려고 최대한 노력했지만 실패하고 결국 특화처리.
+		// Specialized structure related to automatic potion status... I tried my best not to do this kind of specialized processing, but I failed and ended up doing specialized processing.
 		struct SAutoPotionInfo
 		{
 			SAutoPotionInfo() : bActivated(false), totalAmount(0), currentAmount(0) {}
 
-			bool bActivated;					// 활성화 되었는가?			
-			long currentAmount;					// 현재 남은 양
-			long totalAmount;					// 전체 양
-			long inventorySlotIndex;			// 사용중인 아이템의 인벤토리상 슬롯 인덱스
+			bool bActivated;					// Is it activated?
+			long currentAmount;					// Current remaining amount
+			long totalAmount;					// full amount
+			long inventorySlotIndex;			// Slot index in the inventory of the item in use
 		};
 
 		enum EAutoPotionType
@@ -228,7 +222,7 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 
 
 		// Reserved
-		bool	NEW_IsEmptyReservedDelayTime(float fElapsedtime);	// 네이밍 교정 논의 필요 - [levites]
+		bool	NEW_IsEmptyReservedDelayTime(float fElapsedtime);	// Naming correction needs to be discussed - [levites]
 
 
 		// Dungeon
@@ -241,7 +235,7 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 
 		// flying target set
 		void	Clear();
-		void	ClearSkillDict(); // 없어지거나 ClearGame 쪽으로 포함될 함수
+		void	ClearSkillDict(); // Functions that will be removed or included towards ClearGame
 		void	NEW_ClearSkillData(bool bAll = false);
 
 		void	Update();

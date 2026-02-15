@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterPack/EterPackManager.h"
 #include "../eterBase/CRC32.h"
 #include "../eterBase/Timer.h"
@@ -131,8 +131,8 @@ int CResource::ConvertPathName(const char * c_szPathName, char * pszRetPathName,
 
 void CResource::SetFileName(const char* c_szFileName)
 {
-	// 2004. 2. 1. myevan. 쓰레드가 사용되는 상황에서 static 변수는 사용하지 않는것이 좋다.
-	// 2004. 2. 1. myevan. 파일 이름 처리를 std::string 사용
+	// 2004. 2. 1. myevan. It is best not to use static variables in situations where threads are used.
+	// 2004. 2. 1. myevan. Use std::string for file name handling
 	m_stFileName=c_szFileName;
 }
 

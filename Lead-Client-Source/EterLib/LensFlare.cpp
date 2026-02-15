@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+ï»¿///////////////////////////////////////////////////////////////////////  
 //	CLensFlare Class
 //
 //	(c) 2003 IDV, Inc.
@@ -205,8 +205,8 @@ void CLensFlare::DrawBeforeFlare()
 	STATEMANAGER.SaveRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	STATEMANAGER.SaveRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	/*
-	if (m_fBeforeBright != 0.0f && m_bDrawFlare && m_bDrawBrightScreen && false)	// ¿Ø false?
-	{
+	if (m_fBeforeBright != 0.0f && m_bDrawFlare && m_bDrawBrightScreen && false)	// Why false? 
+	{ 
 		glColor4f(1.0f, 1.0f, 1.0f, m_fBeforeBright);
 		glDisable(GL_TEXTURE_2D);
 		glBegin(GL_TRIANGLE_STRIP);

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../EffectLib/EffectManager.h"
 #include "../milesLib/SoundManager.h"
 
@@ -303,7 +303,7 @@ void CActorInstance::ProcessMotionEventWarp(const CRaceMotionData::TMotionEventD
 	if (CRaceMotionData::MOTION_EVENT_TYPE_WARP != c_pData->iType)
 		return;
 	
-	// FIXME : TMotionWarpEventData로 뺄 변수 - [levites]
+	// FIXME: Variables to subtract with TMotionWarpEventData - [levites]
 	static const float sc_fDistanceFromTarget = 270.0f;
 
 	if (m_kFlyTarget.IsValidTarget())
@@ -315,7 +315,7 @@ void CActorInstance::ProcessMotionEventWarp(const CRaceMotionData::TMotionEventD
 		D3DXVec3Normalize(&v3Distance, &v3Distance);
 		TPixelPosition DestPixelPosition = c_rv3TargetPosition - (v3Distance * sc_fDistanceFromTarget);
 
-		// 2004.07.05.myevan.궁신탄영 맵에 끼이는 문제해결. 목표위치가 이동 못하는 곳일 경우 이동하지 않는다
+		// 2004.07.05.myevan. Solved the problem of getting stuck in the Gungsin Tanyeong map. If the target location is a place that cannot be moved, do not move.
 		IBackground& rkBG=GetBackground();
 		if (!rkBG.IsBlock(DestPixelPosition.x, -DestPixelPosition.y))
 			SetPixelPosition(DestPixelPosition);

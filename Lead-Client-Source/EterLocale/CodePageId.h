@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define CP_874				874			// Thai
 #define CP_THAI				CP_874

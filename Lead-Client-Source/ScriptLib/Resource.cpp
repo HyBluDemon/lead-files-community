@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "../eterLib/GrpExpandedImageInstance.h"
 #include "../eterLib/GrpTextInstance.h"
 #include "../eterLib/GrpMarkInstance.h"

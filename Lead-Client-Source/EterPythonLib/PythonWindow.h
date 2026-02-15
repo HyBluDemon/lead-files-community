@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "../eterBase/Utils.h"
 
@@ -28,16 +28,16 @@ namespace UI
 
 			enum EFlags
 			{
-				FLAG_MOVABLE			= (1 <<  0),	// 움직일 수 있는 창
-				FLAG_LIMIT				= (1 <<  1),	// 창이 화면을 벗어나지 않음
-				FLAG_SNAP				= (1 <<  2),	// 스냅 될 수 있는 창
+				FLAG_MOVABLE			= (1 <<  0),	// movable window
+				FLAG_LIMIT				= (1 <<  1),	// Window does not leave the screen
+				FLAG_SNAP				= (1 <<  2),	// window that can be snapped
 				FLAG_DRAGABLE			= (1 <<  3),
-				FLAG_ATTACH				= (1 <<  4),	// 완전히 부모에 붙어 있는 창 (For Drag / ex. ScriptWindow)
-				FLAG_RESTRICT_X			= (1 <<  5),	// 좌우 이동 제한
-				FLAG_RESTRICT_Y			= (1 <<  6),	// 상하 이동 제한
+				FLAG_ATTACH				= (1 <<  4),	// A window that is completely attached to its parent (For Drag / ex. ScriptWindow)
+				FLAG_RESTRICT_X			= (1 <<  5),	// Left and right movement restrictions
+				FLAG_RESTRICT_Y			= (1 <<  6),	// Up and down movement restrictions
 				FLAG_NOT_CAPTURE		= (1 <<  7),
-				FLAG_FLOAT				= (1 <<  8),	// 공중에 떠있어서 순서 재배치가 되는 창
-				FLAG_NOT_PICK			= (1 <<  9),	// 마우스에 의해 Pick되지 않는 창
+				FLAG_FLOAT				= (1 <<  8),	// A window that floats in the air and can be reordered
+				FLAG_NOT_PICK			= (1 <<  9),	// Window not picked up by mouse
 				FLAG_IGNORE_SIZE		= (1 << 10),
 				FLAG_RTL				= (1 << 11),	// Right-to-left
 			};
@@ -91,8 +91,8 @@ namespace UI
 			bool			IsIn(long x, long y);
 			bool			IsIn();
 			CWindow *		PickWindow(long x, long y);
-			CWindow *		PickTopWindow(long x, long y);	// NOTE : Children으로 내려가지 않고 상위에서만 
-															//        체크 하는 특화된 함수
+			CWindow *		PickTopWindow(long x, long y);	// NOTE: Only at the top, not down to Children
+															// Specialized function to check
 
 			void			__RemoveReserveChildren();
 
@@ -166,10 +166,10 @@ namespace UI
 
 			EHorizontalAlign	m_HorizontalAlign;
 			EVerticalAlign		m_VerticalAlign;
-			long				m_x, m_y;				// X,Y 상대좌표
-			long				m_lWidth, m_lHeight;	// 크기
-			RECT				m_rect;					// Global 좌표
-			RECT				m_limitBiasRect;		// limit bias 값
+			long				m_x, m_y;				// X,Y relative coordinates
+			long				m_lWidth, m_lHeight;	// size
+			RECT				m_rect;					// Global coordinates
+			RECT				m_limitBiasRect;		// limit bias value
 
 			bool				m_bMovable;
 			bool				m_bShow;

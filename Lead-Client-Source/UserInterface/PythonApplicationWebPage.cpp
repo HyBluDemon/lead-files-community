@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "PythonApplication.h"
 #include "../CWebBrowser/CWebBrowser.h"
 

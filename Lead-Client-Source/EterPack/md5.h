@@ -1,4 +1,4 @@
-#ifndef __INC_ETERPACKLIB_MD5_H__
+﻿#ifndef __INC_ETERPACKLIB_MD5_H__
 #define __INC_ETERPACKLIB_MD5_H__
 
 /*

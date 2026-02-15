@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "ActorInstance.h"
 
 void CActorInstance::__OnSyncing()

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file PacketDebug.h
  * @brief Minimal Packet Debug Middleware

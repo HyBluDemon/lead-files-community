@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // bool GrannyMeshGetTextureAnimation(granny_mesh* pgrnMesh, float* puVelocity, float* pvVelocity);
 // bool GrannyMeshIsTextureAnimation(granny_mesh* pgrnMesh);

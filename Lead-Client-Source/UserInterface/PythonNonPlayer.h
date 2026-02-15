@@ -1,8 +1,6 @@
-#pragma once
+癤�#pragma once
 
-/*
- *	NPC 데이터 프로토 타잎을 관리 한다.
- */
+/* Manages NPC data prototypes. */
 class CPythonNonPlayer : public CSingleton<CPythonNonPlayer>
 {
 	public:

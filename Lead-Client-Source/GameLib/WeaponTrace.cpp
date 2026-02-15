@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "../eterLib/ResourceManager.h"
 #include "../eterLib/StateManager.h"
 
@@ -32,7 +32,7 @@ void CWeaponTrace::Update(float fReachScale)
 	if (!m_pInstance)
 		return;
 	{
-		// 잔상을 남기는 시간 범위 내의 점들만 유지합니다.
+		// Only points within the time range that leave an afterimage are retained.
 		TTimePointList::iterator it;
 		for(it=m_ShortTimePointList.begin();it!=m_ShortTimePointList.end();++it)
 		{
@@ -69,7 +69,7 @@ void CWeaponTrace::Update(float fReachScale)
 			mat._41 = pBoneMat->_41;
 			mat._42 = pBoneMat->_42;
 			mat._43 = pBoneMat->_43;
-			// 현재 위치를 추가합니다.
+			// Add your current location.
 			D3DXMATRIX matPoint;
 			D3DXMATRIX matTranslation;
 			D3DXMATRIX matRotation;

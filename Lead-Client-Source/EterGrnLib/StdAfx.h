@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-#pragma warning(disable:4786)	// character 255 ³Ñ¾î°¡´Â°Å ²ô±â
+#pragma warning(disable:4786)	// Turn off anything that goes beyond character 255
 
 //#include <crtdbg.h>
 #include <granny/granny.h>

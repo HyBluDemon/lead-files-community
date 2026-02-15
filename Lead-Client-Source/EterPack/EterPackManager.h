@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include <windows.h>
 #include <boost/unordered_map.hpp>
@@ -59,12 +59,12 @@ class CEterPackManager : public CSingleton<CEterPackManager>
 		void RetrieveHybridCryptPackKeys( const BYTE* pStream );
 		void RetrieveHybridCryptPackSDB( const BYTE* pStream );
 
-		// 메모리에 매핑된 팩들 가운데, 정리해야할 것들 정리.
+		// Among the packs mapped to memory, organize the things that need to be organized.
 	public:
 		void ArrangeMemoryMappedPack();
 
 	protected:
-		int ConvertFileName(const char * c_szFileName, std::string & rstrFileName); // StringPath std::string 버전
+		int ConvertFileName(const char * c_szFileName, std::string & rstrFileName); // StringPath std::string version
 		bool CompareName(const char * c_szDirectoryName, DWORD iLength, const char * c_szFileName);
 
 		CEterPack* FindPack(const char* c_szPathName);

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "GameType.h"
 #include "../effectLib/EffectManager.h"
 
@@ -82,8 +82,8 @@ BOOL NRaceData::LoadMotionAttackData(CTextFileLoader & rTextFileLoader, TMotionA
 	if (!LoadAttackData(rTextFileLoader, pData))
 		return FALSE;
 
-	// NOTE : 기존의 AttackingType이 MotionType으로 바뀌었음
-	//        기존 데이타의 경우 없으면 기존 것으로 읽게끔..
+	// NOTE: The existing AttackingType has been changed to MotionType.
+	// In the case of existing data, if there is no existing data, it is read as existing data.
 	if (!rTextFileLoader.GetTokenInteger("motiontype", &pData->iMotionType))
 	{
 		if (!rTextFileLoader.GetTokenInteger("attackingtype", &pData->iMotionType))

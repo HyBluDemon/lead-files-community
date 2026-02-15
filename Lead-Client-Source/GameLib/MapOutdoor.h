@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #include "../eterLib/SkyBox.h"
 #include "../eterLib/LensFlare.h"
@@ -27,7 +27,7 @@
 
 typedef struct SOutdoorMapCoordinate
 {
-	short m_sTerrainCoordX;		// Terrain 좌표
+	short m_sTerrainCoordX;		// Terrain coordinates
 	short m_sTerrainCoordY;
 } TOutdoorMapCoordinate;
 
@@ -161,7 +161,7 @@ class CMapOutdoor : public CMapBase
 		bool			isTerrainLoaded(WORD wX, WORD wY);
 		bool			isAreaLoaded(WORD wX, WORD wY);
 
-		void			AssignTerrainPtr();				// 현재 좌표에서 주위(ex. 3x3)에 있는 것들의 포인터를 연결한다. (업데이트 시 불려짐)
+		void			AssignTerrainPtr();				// Connects pointers to things around (ex. 3x3) the current coordinates. (called upon update)
 
 		void			SaveAlphaFogOperation();
 		void			RestoreAlphaFogOperation();
@@ -169,7 +169,7 @@ class CMapOutdoor : public CMapBase
 		//////////////////////////////////////////////////////////////////////////
 		// New
 		//////////////////////////////////////////////////////////////////////////
-		// 여러가지 맵들을 얻는다.
+		// Get various maps.
 		void			GetHeightMap(const BYTE & c_rucTerrainNum, WORD ** pwHeightMap);
 		void			GetNormalMap(const BYTE & c_rucTerrainNum, char ** pucNormalMap);
 
@@ -182,19 +182,19 @@ class CMapOutdoor : public CMapBase
 	// Terrain
 	//////////////////////////////////////////////////////////////////////////
 	protected:
-		// 데이터
+		// data
 		CTerrain *					m_pTerrain[AROUND_AREA_NUM];	// Terrain
-		CTerrainPatchProxy *		m_pTerrainPatchProxyList;			// CTerrain을 랜더링 할때 실제로 랜더링하는 폴리곤 패치들... Seamless Map 을 위해 CTerrain으로부터 독립...
+		CTerrainPatchProxy *		m_pTerrainPatchProxyList;			// Polygon patches that are actually rendered when rendering CTerrain... Independent from CTerrain for Seamless Map...
 
-		long						m_lViewRadius;				// 시야 거리.. 셀단위임..
-		float						m_fHeightScale;				// 높이 스케일... 1.0일때 0~655.35미터까지 표현 가능.
+		long						m_lViewRadius;				// Viewing distance is in cell units.
+		float						m_fHeightScale;				// Height scale... When set to 1.0, it can express from 0 to 655.35 meters.
 
-		short						m_sTerrainCountX, m_sTerrainCountY;		// seamless map 안에 들어가는 Terrain개수
+		short						m_sTerrainCountX, m_sTerrainCountY;		// Number of Terrains in seamless map
 
-		TOutdoorMapCoordinate		m_CurCoordinate;		// 현재의 좌표
+		TOutdoorMapCoordinate		m_CurCoordinate;		// current coordinates
 
 		long						m_lCurCoordStartX, m_lCurCoordStartY;
-		TOutdoorMapCoordinate		m_PrevCoordinate;		// 현재의 좌표
+		TOutdoorMapCoordinate		m_PrevCoordinate;		// current coordinates
 		TOutdoorMapCoordinateMap	m_EntryPointMap;
 
 		WORD						m_wPatchCount;
@@ -316,7 +316,7 @@ class CMapOutdoor : public CMapBase
 		//////////////////////////////////////////////////////////////////////////
 		// New
 		//////////////////////////////////////////////////////////////////////////
-		long					m_lCenterX, m_lCenterY;		// Terrain 좌표 내의 셀 좌표...
+		long					m_lCenterX, m_lCenterY;		// Cell coordinates within Terrain coordinates...
 		long					m_lOldReadX, m_lOldReadY;	/* Last center */
 
 		//////////////////////////////////////////////////////////////////////////

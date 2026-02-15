@@ -1,4 +1,4 @@
-#pragma once
+癤�#pragma once
 
 #define Clamp(x, min, max)  x = (x<min  ? min : x<max ? x : max);
 #define GRAVITY			D3DXVECTOR3(0.0f, 0.0f, -9.8f)
@@ -71,12 +71,12 @@ enum EBillBoardType
 	BILLBOARD_TYPE_ALL,
 	BILLBOARD_TYPE_Y,
 	
-	BILLBOARD_TYPE_LIE, // 바닥에 누은 형상
+	BILLBOARD_TYPE_LIE, // shape lying on the floor
 
 	BILLBOARD_TYPE_2FACE, //     / and
 	BILLBOARD_TYPE_3FACE, //     / and \ and -
 
-	//BILLBOARD_TYPE_RAY, // 잔상
+	// BILLBOARD_TYPE_RAY, // Afterimage
 
 };
 
@@ -220,8 +220,8 @@ typedef std::vector<TTimeEventTypeVector2>		TTimeEventTableVector2;
 typedef std::vector<TTimeEventTypeVector3>		TTimeEventTableVector3;
 
 
-// NOTE : TimeEventValue 함수들은 값을 넘겨 받지 말아야 하는 때도 있으므로
-//        값의 직접 리턴이 아닌 포인터 리턴으로 작성 했습니다. - [levites]
+// NOTE: There are times when TimeEventValue functions should not receive values.
+// It was written as a pointer return rather than a direct return of the value. - [levites]
 
 template <typename T>
 __forceinline void GetTimeEventBlendValue(float fElapsedTime, std::vector<CTimeEvent<T> >& rVector, T * pReturnValue)

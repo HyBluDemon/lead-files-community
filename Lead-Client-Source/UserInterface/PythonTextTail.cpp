@@ -1,5 +1,5 @@
-//
-// 캐릭터를 따라다니는 텍스트 관련 소스 (이름, 길드이름, 길드마크 등)
+癤�//
+// Text-related sources that follow the character (name, guild name, guild mark, etc.)
 //
 #include "stdafx.h"
 #include "InstanceBase.h"
@@ -75,7 +75,7 @@ void CPythonTextTail::UpdateAllTextTail()
 		{
 			UpdateDistance(pixelPos, itorChat->second);
 
-			// NOTE : Chat TextTail이 있으면 캐릭터 이름도 출력한다.
+			// NOTE: If Chat TextTail exists, the character name is also printed.
 			if (itorChat->second->bNameFlag)
 			{
 				DWORD dwVID = itorChat->first;
@@ -104,7 +104,7 @@ void CPythonTextTail::UpdateShowingTextTail()
 		TTextTail * pTextTail = *itor;
 		UpdateTextTail(pTextTail);
 
-		// NOTE : Chat TextTail이 있을 경우 위치를 바꾼다.
+		// NOTE: If there is a Chat TextTail, change its location.
 		TChatTailMap::iterator itor = m_ChatTailMap.find(pTextTail->dwVirtualID);
 		if (m_ChatTailMap.end() != itor)
 		{
@@ -138,7 +138,7 @@ void CPythonTextTail::UpdateTextTail(TTextTail * pTextTail)
 	pTextTail->x = floorf(pTextTail->x);
 	pTextTail->y = floorf(pTextTail->y);
 
-	// NOTE : 13m 밖에 있을때만 깊이를 넣습니다 - [levites]
+	// NOTE: Only add depth when outside 13m - [levites]
 	if (pTextTail->fDistanceFromPlayer < 1300.0f)
 	{
 		pTextTail->z = 0.0f;
@@ -215,7 +215,7 @@ void CPythonTextTail::ArrangeTextTail()
 
 		float fxAdd = 0.0f;
 
-		// Mark 위치 업데이트
+		// Mark location update
 		CGraphicMarkInstance * pMarkInstance = pTextTail->pMarkInstance;
 		CGraphicTextInstance * pGuildNameInstance = pTextTail->pGuildNameTextInstance;
 		if (pMarkInstance && pGuildNameInstance)
@@ -232,7 +232,7 @@ void CPythonTextTail::ArrangeTextTail()
 		int iNameWidth, iNameHeight;
 		pTextTail->pTextInstance->GetTextSize(&iNameWidth, &iNameHeight);
 
-		// Title 위치 업데이트
+		// Title location update
 		CGraphicTextInstance * pTitle = pTextTail->pTitleTextInstance;
 		if (pTitle)
 		{			
@@ -241,7 +241,7 @@ void CPythonTextTail::ArrangeTextTail()
 
 			fxAdd = 8.0f;
 
-			if (LocaleService_IsEUROPE()) // 독일어는 명칭이 길어 오른정렬
+			if (LocaleService_IsEUROPE()) // German names are right-aligned because their names are long.
 			{
 				if( GetDefaultCodePage() == CP_ARABIC )
 				{
@@ -258,14 +258,14 @@ void CPythonTextTail::ArrangeTextTail()
 			}			
 			pTitle->Update();
 
-			// Level 위치 업데이트
+			// Level location update
 			CGraphicTextInstance * pLevel = pTextTail->pLevelTextInstance;
 			if (pLevel)
 			{
 				int iLevelWidth, iLevelHeight;
 				pLevel->GetTextSize(&iLevelWidth, &iLevelHeight);
 				
-				if (LocaleService_IsEUROPE()) // 독일어는 명칭이 길어 오른정렬
+				if (LocaleService_IsEUROPE()) // German names are right-aligned because their names are long.
 				{
 					if( GetDefaultCodePage() == CP_ARABIC )
 					{
@@ -288,14 +288,14 @@ void CPythonTextTail::ArrangeTextTail()
 		{
 			fxAdd = 4.0f;
 
-			// Level 위치 업데이트
+			// Level location update
 			CGraphicTextInstance * pLevel = pTextTail->pLevelTextInstance;
 			if (pLevel)
 			{
 				int iLevelWidth, iLevelHeight;
 				pLevel->GetTextSize(&iLevelWidth, &iLevelHeight);
 				
-				if (LocaleService_IsEUROPE()) // 독일어는 명칭이 길어 오른정렬
+				if (LocaleService_IsEUROPE()) // German names are right-aligned because their names are long.
 				{
 					if( GetDefaultCodePage() == CP_ARABIC )
 					{
@@ -382,7 +382,7 @@ void CPythonTextTail::Render()
 
 void CPythonTextTail::RenderTextTailBox(TTextTail * pTextTail)
 {
-	// 검은색 테두리
+	// black border
 	CPythonGraphic::Instance().SetDiffuseColor(0.0f, 0.0f, 0.0f, 1.0f);
 	CPythonGraphic::Instance().RenderBox2d(pTextTail->x + pTextTail->xStart,
 										   pTextTail->y + pTextTail->yStart,
@@ -390,7 +390,7 @@ void CPythonTextTail::RenderTextTailBox(TTextTail * pTextTail)
 										   pTextTail->y + pTextTail->yEnd,
 										   pTextTail->z);
 
-	// 검은색 투명박스
+	// black transparent box
 	CPythonGraphic::Instance().SetDiffuseColor(0.0f, 0.0f, 0.0f, 0.3f);
 	CPythonGraphic::Instance().RenderBar2d(pTextTail->x + pTextTail->xStart,
 										   pTextTail->y + pTextTail->yStart,
@@ -406,8 +406,8 @@ void CPythonTextTail::RenderTextTailName(TTextTail * pTextTail)
 
 void CPythonTextTail::HideAllTextTail()
 {
-	// NOTE : Show All을 해준뒤 Hide All을 해주지 않으면 문제 발생 가능성 있음
-	//        디자인 자체가 그렇게 깔끔하게 되지 않았음 - [levites]
+	// NOTE: Problems may occur if you do not Hide All after Show All.
+	// The design itself wasn't that neat - [levites]
 	m_CharacterTextTailList.clear();
 	m_ItemTextTailList.clear();
 }
@@ -447,12 +447,12 @@ void CPythonTextTail::ShowCharacterTextTail(DWORD VirtualID)
 
 	if (m_CharacterTextTailList.end() != std::find(m_CharacterTextTailList.begin(), m_CharacterTextTailList.end(), pTextTail))
 	{
-		//Tracef("이미 리스트에 있음 : %d\n", VirtualID);
+		// Tracef("Already in the list: %d\n", VirtualID);
 		return;
 	}
 
-	// NOTE : ShowAll 시에는 모든 Instance 의 Pointer 를 찾아서 체크하므로 부하가 걸릴 가능성도 있다.
-	//        CInstanceBase 가 TextTail 을 직접 가지고 있는 것이 가장 좋은 형태일 듯..
+	// NOTE: When ShowAll, the pointers of all instances are found and checked, so there is a possibility of load.
+	// It seems that the best form would be for CInstanceBase to have TextTail directly.
 	if (!pTextTail->pOwner->isShow())
 		return;
 	
@@ -478,7 +478,7 @@ void CPythonTextTail::ShowItemTextTail(DWORD VirtualID)
 
 	if (m_ItemTextTailList.end() != std::find(m_ItemTextTailList.begin(), m_ItemTextTailList.end(), pTextTail))
 	{
-		//Tracef("이미 리스트에 있음 : %d\n", VirtualID);
+		// Tracef("Already in the list: %d\n", VirtualID);
 		return;
 	}
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+癤�#include "stdafx.h"
 #include "SoundManager2D.h"
 
 CSoundInstance2D::CSoundInstance2D() : m_sample(NULL), m_pSoundData(NULL)
@@ -34,11 +34,11 @@ bool CSoundInstance2D::SetSound(CSoundData * pSoundData)
 {
 	assert(m_sample != NULL && pSoundData != NULL);
 
-	// 레퍼런스 카운트가 1이 될 때 로드를 해야 제대로 사이즈가 리턴
-	// 되므로 반드시 Get을 호출 하고 진행해야 한다.
-	// 또, m_pSoundData가 pSoundData와 같고 m_pSoundData의 레퍼런스
-	// 카운터가 1일 경우, 불필요하게 로드가 일어나므로 미리 레퍼런스
-	// 카운터를 올려놔야 한다.
+	// It must be loaded when the reference count becomes 1 to return the correct size.
+	// Therefore, you must call Get before proceeding.
+	// Also, m_pSoundData is the same as pSoundData and is a reference to m_pSoundData.
+	// If the counter is 1, unnecessary loading occurs, so reference is required in advance.
+	// A counter must be put up.
 	LPVOID lpData = pSoundData->Get();
 
 	AIL_init_sample(m_sample);

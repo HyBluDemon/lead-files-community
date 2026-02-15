@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "ColorTransitionHelper.h"
 
 void CColorTransitionHelper::Clear(const float & c_rfRed,

@@ -1,4 +1,4 @@
-#ifndef __INC_ETERLIB_GRPTEXTINSTANCE_H__
+﻿#ifndef __INC_ETERLIB_GRPTEXTINSTANCE_H__
 #define __INC_ETERLIB_GRPTEXTINSTANCE_H__
 
 #include "Pool.h"

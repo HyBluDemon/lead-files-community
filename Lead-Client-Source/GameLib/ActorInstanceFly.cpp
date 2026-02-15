@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+癤�#include "StdAfx.h"
 #include "ActorInstance.h"
 
 D3DXVECTOR3 CActorInstance::OnGetFlyTargetPosition()
@@ -107,7 +107,7 @@ void CActorInstance::SetFlyEventHandler(IFlyEventHandler * pHandler)
 	m_pFlyEventHandler = pHandler;
 }
 
-// 2004. 07. 07. [levites] - 스킬 사용중 타겟이 바뀌는 문제 해결을 위한 코드
+// 2004. 07. 07. [levites] - Code to solve the problem of the target changing while using a skill
 bool CActorInstance::CanChangeTarget()
 {
 	if (__IsNeedFlyTargetMotion())
