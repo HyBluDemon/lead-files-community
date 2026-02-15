@@ -855,7 +855,7 @@ void CIME::InsertString(wchar_t* wString, int iSize)
 // Returns true if `c` is a non-printable ASCII control character (0x00–0x1F) or DEL (0x7F).
 //		Examples:
 //			a) IsAsciiControlCharacter('\n') -> true
-//			b) IsAsciiControlChar('A') -> false
+//			b) IsAsciiControlCharacter('A') -> false
 static bool IsAsciiControlCharacter(wchar_t c)
 {
 	return c <= 0x1F || c == 0x7F;
